@@ -16,3 +16,13 @@ nástroj by mal byť schopný:
 - rozumný čas spracovania mapového súboru
 - rozumný čas hľadania najrýchlejšej cesty vo vygenerovanom grafe
 - možnoť rozširitelnosti programu o rôzne metódy hľadania najr. cesty
+
+## Dizajnová špecifikácia
+
+- GUI nástroju bude spravené pomocou knižnice *win forms*
+- **TODO: vyzor**
+
+## Technická špecifikácia
+
+- pre reporezentáciu mapy využiť elastické grafy
+- 
