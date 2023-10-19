@@ -30,6 +30,8 @@ nástroj bude zložený z troch hlavných častí:
 2. algoritmická časť hľadania najkratšej cesty vo vygenerovanom grafe
 3. grafická časť pre komunikáciu s uživateľom a následné grafické znázornenie výstupu algoritmickej časti
 
+Súčasťou by mala byť aj možnosť spravovať nastavenia nástroju (jazyk, stiahnute výškove dáta, ...) a inštalačný balíček
+
 Vybraným programovacím jazykom, v ktorom bude nástroj napísaný, bude jazyk C#. Tento jazyk bol vybraný z dôvodov:
 
 - Nástroj bude vytvárať reprezentáciu mapy a následne na nej hľadať optimálnu cestu. Takáto funkcionalita vyžaduje vyšiu výpočetnú rýchlosť a preto je lepšou voľbou ako napríklad jazyk typu python.
@@ -40,12 +42,25 @@ Vybraným programovacím jazykom, v ktorom bude nástroj napísaný, bude jazyk 
 - Ďalším možným jazykom je jazyk Java ale ako som zmienil vyššie, rád by som využil knižnicu *win-forms* a taktiež niesom s jazykom Java dostatočne oboznámený
 - V neposlednom rade je programovanie v jazyku c# veľmi pohodlné a bezpečné
 
+### Inštalácia
+
+- TODO:
+
+### Nastavenia
+
+- nastavenie jazyka, sprava vyskovych dat
+
 ### 1. extrakcia grafu
 
 - pre reporezentáciu mapy využiť elastické grafy
 
+- pre výškové informácie využijem globálny dataset SRTM s rozlíšením 30 metrov
+- uživatel si bude môcť vybrať, ktoré regióny si chce stiahnuť alebo po pridaní mapového súboru si môže nechať stiahnuť automaticky regióny, ktoré sú potrebné ku danému súboru
+
+
 ### 2. hľadanie najkratšej cesty
 
+- využitie *relevance feedbeck* pre nastavenie parametrov modelu
 
 ### 3. uživatelské rozhranie
 

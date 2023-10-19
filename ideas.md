@@ -1,11 +1,6 @@
 # Myslienky
 
-- spravit nejaky research toho, aky je rozdiel medzi behanim v roznych porastoch
-- nemetricke MDS
-- pouzit nieco, co mi bude simulovat rozhodovaci proces pretekara...ze ked vidim ze to inakadial nejde, tak tomu proste trocha zvysimm preferenciu
-- alebo vazne to robit nejak iterativne s tym ze vstup bude len porovnanie tych typov porastu a terenu
 - riadit sa proste standardnymi hodnotami z ISOM-u
-
 - vyuzit reinforcement learningu, na urcenie konkretnych hodnot zpomalenia behu jednotlivymi porastami
   - tie su standartne urcene v isome do intervalov a teda by bolo fajn nechat uzivatela nech si vyberie hodnotu z danych intervalov taku, aby popisovala co najlepsie jeho predstavu idealneho postupu
 
@@ -31,9 +26,16 @@
 - vzdialenost, v ktorej sa vrcholy snapnu na objekt
 - pruznost grafu
 
-
-
 ## TODO:
 
 naucit sa elasticke grafy
 spravne si rozvrhnut projekt
+poriadne premysliet ako pritahovat tie vrcholy k tym objektom, hlavne v pripadoch, kedy mi jeden objekt krizuje hranu viac krat
+
+## Stare myslienky
+
+
+- spravit nejaky research toho, aky je rozdiel medzi behanim v roznych porastoch
+- nemetricke MDS
+- pouzit nieco, co mi bude simulovat rozhodovaci proces pretekara...ze ked vidim ze to inakadial nejde, tak tomu proste trocha zvysimm preferenciu
+- alebo vazne to robit nejak iterativne s tym ze vstup bude len porovnanie tych typov porastu a terenu
