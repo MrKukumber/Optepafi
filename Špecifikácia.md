@@ -19,7 +19,7 @@ nástroj by mal byť schopný:
 
 ## Dizajnová špecifikácia
 
-- GUI nástroju bude spravené pomocou knižnice *win forms*
+- GUI nástroju bude spravené pomocou knižnice *win forms / WPF ????*
 - **TODO: vyzor**
 
 ## Technická špecifikácia
@@ -32,15 +32,7 @@ nástroj bude zložený z troch hlavných častí:
 
 Súčasťou by mala byť aj možnosť spravovať nastavenia nástroju (jazyk, stiahnute výškove dáta, ...) a inštalačný balíček
 
-Vybraným programovacím jazykom, v ktorom bude nástroj napísaný, bude jazyk C#. Tento jazyk bol vybraný z dôvodov:
-
-- Nástroj bude vytvárať reprezentáciu mapy a následne na nej hľadať optimálnu cestu. Takáto funkcionalita vyžaduje vyšiu výpočetnú rýchlosť a preto je lepšou voľbou ako napríklad jazyk typu python.
-- Pre efektívnejšie výpočty by sa taktiež dal použiť jazyk c++ alebo jazyk c, ale v týchto jazykoch nemám dostatočné skúsenosti a efektivita jazyku c# nieje o mnoho horšia ako efektivita spomenutých nízko-úrovňových jazykov
-- Taktiež nakoľko sa nechystám využívať metódy hlbokého strojového učenia, nebudú potrebné python-ovské vysokovýkonné knižnice strojového učenia
-  - TODO: (prípadná možnosť využitia takýchto metód následne bude volaním externého kódu) ???
-- Zároveň c# obsahuje vstavanú knižnicu *win-forms* pre vytváranie uživatelského rozhrania s ktorou som dobre oboznámený
-- Ďalším možným jazykom je jazyk Java ale ako som zmienil vyššie, rád by som využil knižnicu *win-forms* a taktiež niesom s jazykom Java dostatočne oboznámený
-- V neposlednom rade je programovanie v jazyku c# veľmi pohodlné a bezpečné
+Vybraným programovacím jazykom, v ktorom bude nástroj napísaný, bude jazyk C#.
 
 ### Inštalácia
 
@@ -56,7 +48,7 @@ Vybraným programovacím jazykom, v ktorom bude nástroj napísaný, bude jazyk 
 
 - pre výškové informácie využijem globálny dataset SRTM s rozlíšením 30 metrov
 - uživatel si bude môcť vybrať, ktoré regióny si chce stiahnuť alebo po pridaní mapového súboru si môže nechať stiahnuť automaticky regióny, ktoré sú potrebné ku danému súboru
-
+- sťahovanie budem riešiť pomocou práce s USGS EROS Api a dotazovania sa nanho o data
 
 ### 2. hľadanie najkratšej cesty
 
@@ -64,7 +56,8 @@ Vybraným programovacím jazykom, v ktorom bude nástroj napísaný, bude jazyk 
 
 ### 3. uživatelské rozhranie
 
-- bude sa skaldať z viacerých okien - výber mapy, relevance feddback okno, okno pre vykreslenie výstupu
+- bude sa skaldať z viacerých okien - výber mapy, relevance feddback okno, okno pre vykreslenie výstupu, okno nastavení, development okno
+  - uživatel si bude môcť vytvoriť vlastný parametrický model a uložiť si ho
 - bude potrebné vytvoriť konvertor z súboru typu omap do vektorovej grafiky
 - TODO: bud pouzijem knizinicu Graphics zo c# alebo draw svg z pythonu
 
