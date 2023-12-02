@@ -94,3 +94,8 @@ dneska som sa zobudil na to, ze som nedokazal prestat premyslat nad sposobom, ak
 ## 24.11.2023
 
 - moznost spustit viac relacii vyhladavania naraz, kazdu na zvlast vlakne
+
+## 27.11.2023 23:40:00
+
+- pokrok v navrhu aplikacie
+- rozpisem zajtra
