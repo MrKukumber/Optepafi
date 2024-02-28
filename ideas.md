@@ -4,24 +4,36 @@
 - vyuzit reinforcement learningu, na urcenie konkretnych hodnot zpomalenia behu jednotlivymi porastami
   - tie su standartne urcene v isome do intervalov a teda by bolo fajn nechat uzivatela nech si vyberie hodnotu z danych intervalov taku, aby popisovala co najlepsie jeho predstavu idealneho postupu
 - nechať uživatela si vytvárať vlasnté modely pre dné formáty máp
-  - v modelu môžeme nastaviť, či chceme využiť relevance feedback a v akom intervale sa ma dany parameter nastavovany relevance feedbackom nastavovat
 - spravit to cele co najobecnjesie
-  - teda dovolit rozsiriteolnost o ine mapove subory
+  - teda dovolit rozsiritelnost o ine mapove subory a ich graficku repre
   - dovolit rozsiritelnost o nove optimalizacne algoritmy
-  - 
+  - o rozne sposoby vytvarania grafu z mapoveho suboru (proste uzavriet tu agregaciu toho grafu do nejakej triedy tak, aby sa to dalo jednoucho vymenit za nieco ine), asi o vsak nebudem uvadzat ako moznost na vyber v nastaveniach....len proste keby to tam chcel niekto v buducnosti prid, tak nech to neni pain
+- MVVM architektúra
+  - model view bude pocuvat na prikazy view a na zaklade nich bude podnecovat session controller-y k vykonavaniu postupnych cinnosti za pomoci modelu
 
-## reprezentacia mapy
+## reprezentacia mapy grafom
 
-- reprezentovat mapu sietovym grafom (napriklad trojuholnikovim alebo akymkolvek inym druhom) a nechat ho ako tak pruzny v tom smere, ze ked pridam nejaky mapovy objekt, tak sa mi na jeho hrany pritiahnu najblizsie body k tymto hranam
-- zaroven sa mi zmenia indikatory hran v bodoch siete na take aby zodpovedali danemu pridanemu mapovemu objektu
-- taketo pritiahnute vrcholy na hranu objektu zafixujeme a nenechame nimi hybat okrem pripadu, ze su prekryte inym objektom, ktory ma vyssi level kreslenia ako ten predchadzajuci
+- reprezentovat mapu pruznym grafom
+- postupne pridavame jednotlive aspekty mapy a podla potreby vytvarame husty graf
+- zaroven nastavim indikatory vrcholov siete na take aby zodpovedali danemu pridanemu mapovemu objektu
+- vrcholy na hranach objektov zafixujeme a nenechame nimi hybat okrem pripadu, ze su prekryte inym objektom, ktory ma vyssi level kreslenia ako ten predchadzajuci
   - v tom pripade odblokujeme vrchol a nechame ho, nech sa znova moze snapnut na hranu
 - objekty budeme pridavat na zaklade ich levelu kreslenia
-- ak dostaneme neprekonatelny polygon, mozeme vnutorne vrcholy odstranit z grafu
-- vrchol bude bud zafixovany alebo nie, ak nebude zafixovany, bude v najmenej energeticky narocnej polohe...
-- graf bude mat na zaciatku styri zafixovane vrcholy a to v rohoch siete...popriade po stranach tiez
+- ak dostaneme neprekonatelny polygon, nemusime davat vrcholy do jeho obsahu
+- vrchol bude bud zafixovany alebo nie, ak nebude zafixovany, bude v najmenej energeticky narocnej polohe
 
-- ku krivke budeme pritahovatvzdy jeden vrchol z hrany, ktoru dana krivka prekrizi a vzdy to bude ten, ktory je blizzsie ku prekrizeniu
+### parametre, ktore treba nastavit pri tvorbe grafu
+
+- vzdialenost medzi pridavanymi vrcholmi
+- pruznost grafu
+- spomalovanie jednotlivych kombinacii porastov
+- pomer medzi spomalenim previsenim a mapovymi prvkami
+
+## relevance feedback
+
+- v modelu môžeme nastaviť, či chceme využiť relevance feedback a v akom intervale sa ma dany parameter nastavovany relevance feedbackom nastavovat
+- mal by obecne fungovat pre akykolvek tameplate
+- proste sa bude pozerat, ktore hodnoty este treba donastavit, najde vyskyty v grafe tychto hodnot a v danom regione vyberie nahodne dva body a nechat medzi tymito dvomi bodmi prebehnut relevance feedback a donastavit parametre
 
 ## specifikacia
 
@@ -29,16 +41,7 @@
 
 - zmienit, ze sa budeme drzat ISOM 2017
 
-## parametre, ktore treba nastavit
-
-- vzdialenost, v ktorej sa vrcholy snapnu na objekt
-- pruznost grafu
-- spomalovanie jednotlivych kombinacii porastov
-- pomer medzi spomalenim previsenim a mapovymi prvkami
-
-- parametre si ulozit ako samostatny model, a aj si to udrzovat ako instanciu nejakej triedy, popripade asi skor spravit potomka danje trieda konkretne pre omap....mohol by som to spravit versitile, aby sa na to dali hladat cesty v roznych mapach....s tym ze si dotycny bude musiet napisat konvertor do svg a hlavne do grafu
-
-## Co tam teda chcem mat
+## Co tam chcem mat
 
 - GUI
   - hlavne menu
@@ -48,24 +51,23 @@
     - uzivatelske rozhranie pre stahovanie srtm dat
       - vyber zdroja vyskovych dat
       - stahovanie podla statov/vyber jednoho daneho chunk-u na mape
-    - bud zapamatat posledny vyber/pracu alebo:
-      - vyber defaultneho modeloveho template-u
-      - vyber defaultneho algoritmu (zavisi na modelovom template-e)
-      - vyber defaultného uzivatelskeho modelu(zavisi na modelovom template-e)
+    - vyber defaultneho algoritmu (zavisi na modelovom template-e)
   - model-creating window
     - vytvaranie instancie uzivatelskeho modelu
-      - vyber modeloveho template-u
-      - vyber uzivatelskeho modelu
-      - vyber vyhladavacieho algoritmu
-      - nastavenie parametrov jednotlivych atributov instancie uzivatelskeho modelu
+      - nastavenie parametrov jednotlivych atributov instancie uzivatelskeho modelu daneho modeloveho tameplate-u
       - kolko prikladov sa naraz ukaze pri relevance feedback-u/kolko krat spravit relevance feedback
     - ulozenie modelu
-  - map choosing window
+  - model-creating setting window
+    - upravit uz existujuci
+      - vyber uzivatelskeho modelu
+    - vytvorit novy
+      - vyber modeloveho template-u
+      - vyber vyhladavacieho algoritmu
+  - path fiding setting window
     - vyber modeloveho template-u
     - vyber mapoveho suboru(format suboru zavisli na template-u)
-    - stiahnutie potrebnych vyskovych dat (s povolenim a ak sa da), nevyzadovat, ak niesu potrebne
     - vyber modelu (v zavislosti na modelovom template-u)
-    - vyber algoritmu (v zavislosti na modelovom template-u)
+    - stiahnutie potrebnych vyskovych dat (s povolenim a ak sa da), nevyzadovat, ak niesu potrebne
     - moznost vratit sa do hlavneho menu
     - prechod do relevance feedback okna
     - multiThreading, moznost zapinania viacerych vyhladavani a kazdu relaciu pustit na zvlast vlakne, obmedzit nejakym sposobom pocet spustenych relacii, potazmo vlakien
@@ -74,25 +76,39 @@
     - navrat do map choosing okna
   - path-finding window
     - vykreslenie cesty na jednoduchoej mape, ktoru si nakreslim sam a vytvorenie suboru, ktory budem moct otvorti v oomapperu a ukaze sa mi tam aj ta moja cesta
-- omap to vector image/graphics/wpf-canvas convertor
-- omap to MyGraf convertor
-- vyhladavaci algoritmus (A*)
-- interface pre MyGraph
+
+- graficke vykreslovanie mapovych formatov
+  - **implementacia** pre *omap* format
+- interface pre Graf
+  - **implementacia** pruzny graf ktory sa tvori postupnym pridavanim elementov pre *omap* format a *Orienteering* tameplate
 - interface pre hladanie najrychlejsej cesty v grafe
   - necha algoritmu cely graf, nech si s nim robi co chce
   - bude vyzadovat nejaky standartny vystup z algoritmu, ktory nasledne pre vykreslovaciemu modulu, aby ho vykreslil
+  - **implementacia** jednoduchy *A\**(popripade nieco  komplexnejsie ak vyjde cas) pre *Orienteering* tameplate
 - interaktivne vykreslovanie najdenych ciest v mape
-  - vykreslovanie vo mnou vytvorenej mape v aplikacii
-  - generovanie .omap suboru s vykreslenou trasou
+  - vykreslovanie vo vytvorenej grafickej reprezentacii mapy v aplikacii
+  - generovanie suboru s vykreslenou trasou (nepovynne)
+  - **impelementacia** pre *omap* format
 - vytvaranie uzivatelskych rozhrani/modelov(parametrov pre graf)
   - moznost pevneho nastavenia parametrov alebo intervalov pre relevance feeback
-- requestovanie vyskovych srtm dat
-  - uzivatelske rozhranie pre spravu vyskovych dat
 - interface pre spracovane vyskove data
-  - spracovanie SRTM dat
+  - spracovanie vyskovych dat
+  - requestovanie vyskovych dat
+    - uzivatelske rozhranie pre spravu vyskovych dat
+  - **implementacia** pre *srtm* data
 - relevance feedback mechanizmus
+  - mal by obecne fungovat pre akykolvek tameplate
 - instalacny balicek
 - lokalizacia
+
+## Co budem ukaldat
+
+- vyskove data (pre kazdy zdroj zvlast)
+- uzivatelske modely
+- mapove formaty s pridanymi najdenymi cestami
+- ukladame pre opatovne spustenie aplikacie
+  - posledne pouzity algoritmus, tameplate, model
+  - posledne pouzity zdroj vyskovych dat 
 
 ## TODO:
 
@@ -135,3 +151,13 @@ nevyhody:
 - alebo vazne to robit nejak iterativne s tym ze vstup bude len porovnanie tych typov porastu a terenu
 
 Předpokládá se možnost parametrizace vyhledávácích algoritmů např. údaji o rychlosti postupu v různých typech terénu spolu s interaktívnym donastavením parametrov, ako aj možnost porovnání nalezených tras pro různé přístupy k vyhledávání (různé algoritmy, parametry pro rychlosti, uvažování výškových dat apod.)
+
+
+- reprezentovat mapu sietovym grafom (napriklad trojuholnikovim alebo akymkolvek inym druhom) a nechat ho ako tak pruzny v tom smere, ze ked pridam nejaky mapovy objekt, tak sa mi na jeho hrany pritiahnu najblizsie body k tymto hranam
+- zaroven sa mi zmenia indikatory hran v bodoch siete na take aby zodpovedali danemu pridanemu mapovemu objektu
+- taketo pritiahnute vrcholy na hranu objektu zafixujeme a nenechame nimi hybat okrem pripadu, ze su prekryte inym objektom, ktory ma vyssi level kreslenia ako ten predchadzajuci
+  - v tom pripade odblokujeme vrchol a nechame ho, nech sa znova moze snapnut na hranu
+- objekty budeme pridavat na zaklade ich levelu kreslenia
+- ak dostaneme neprekonatelny polygon, mozeme vnutorne vrcholy odstranit z grafu
+- vrchol bude bud zafixovany alebo nie, ak nebude zafixovany, bude v najmenej energeticky narocnej polohe...
+- graf bude mat na zaciatku styri zafixovane vrcholy a to v rohoch siete...popriade po stranach tiez

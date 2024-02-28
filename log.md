@@ -28,8 +28,6 @@ hladal som vyskove data pokryvajuce celu zem
 
 ## 19.10.2023
 
-dneska som sa zobudil na to, ze som nedokazal prestat premyslat nad sposobom, akym budem nahravat vyskove udaje do aplikacie a sposobom instalacie aplikacie
-
 - premyslam nad tym, ze uzivatel si vzdy bude moct stiahnut alebo vymazat vyskove data pre danu krajinu
 - nasledne oblasti, ktore mam stiahnute by sa mohli vykreslit na nejakej mapke v gui
 - premyslal som, ci tuto manipulaciu s datami a ich požadovanie nebude lahsie robit v pythonu
@@ -70,7 +68,7 @@ dneska som sa zobudil na to, ze som nedokazal prestat premyslat nad sposobom, ak
 
 - najprv spravit graficke znazornenie toho omapu
 - potom si v druom kroku vytvorim okno, v ktorom budem moct robit s tou grafovou reprezentaciou a popri tom vytvarat tu grafovu reprezentaciu
-- napada na dizajn - mapa na pozadi a v popredi ovladacie prvky, ktore ju prekryvaju
+- napad na dizajn - mapa na pozadi a v popredi ovladacie prvky, ktore ju prekryvaju
 
 ## 8.11.2023
 
@@ -99,3 +97,37 @@ dneska som sa zobudil na to, ze som nedokazal prestat premyslat nad sposobom, ak
 
 - pokrok v navrhu aplikacie
 - rozpisem zajtra
+
+## 2.12.2023
+
+- aplikacia rozdelena na frontend a backend
+- frontend obsahuje gui a triedy priamo pracujuce s danym uzivatelskym rozhranim
+- tieto triedy nasledne komunikuju s backend-om, ktory spracovava ich pokyny a vracia odpovede, ktore nasledne tieto triedy ukazuju v GUI
+- kazdy ukon, ktory bude chciet uzivatel robit v aplikacii pripadne k tzv. session
+- session bude v podste izolovane vlakno, ktore bude robit nejaku konkretnu cinnost
+- nateraz budu len dva typy takychto session-ov a to jeden pre vyhaldavanie cesty a jeden pre vytvaranie instancii uzivatelskych modelov
+- tym padom bude mozne mat otvorene viacero takychto session akehokolvek typu naraz....myslim si ze je to preveditelne
+- kazdy session  bude mat svoj *controler*, ktory bude zabezpecovat komunikaciu s frontend-om a vracat mu pozadovane data
+- kontroler nasledne komunikuje s jednotlivymi triedami, ktore zabezpecuju resource management, spracovavanie grafov, vykreslovanie grafov, spracovanvanie uzivatelskch modelov, hladanie ciest v algoritme, spracovanie vyskovych dat, ...
+- tym padom kazdy kontroler je zavisly na jeho oknach a okna su zavisle na svojom kontroleru....teda session je vlastne definovany bud oknami a ich poziadavkami, ktore im kontroloer vyplna, alebo konstrukciou kontroleru, ktory ovlada svoje okna v gui a vydava cez ne uzivatelovi vystup...este sa treba rozhodnut, jak tam budu fungovat ta hierarchia
+
+## 3.12.2023
+
+- uvazujem vymenu WPF kniznice za multiplatformnu AvaloniaUI
+
+## 26.2.2024
+
+- znovuzoznamenie sa s problematikou, upravene poznamky trocha
+
+## 27.2 2024
+
+- ucenie sa Avalonia UI
+
+## 28.2.2024
+
+- upraveny navrh/diagram aplikacie
+  - back end/front end navrh prerobeny na MVVM styl architektury
+  - doplnenie jednotlyvych dat, ktore tecu v aplikacii
+  - premyslel som si, akym sposobom bude fungovat prepojenie medzi modelom a model view-om - model view zbiera pokyny od view a zadava prislusne prikazy session controlerom ktory od modelu tahaju data a algoritmy pre zadovazenie pozadovanych vystupov, controlery si vsetko nechavaju u seba, len pocuvaju prikazy model view-vu, kedy maju zacat ktoru fazu riesenia
+  - **uzavretie polemyzovania o tom, co chcem mat v aplikacii - nadalej uz nic nepridavam**
+  - pridany subo s pociatkom programu, zatial je tam len nejaky nezmyselny kod...ale uz to pridam do gitu
