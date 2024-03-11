@@ -130,4 +130,14 @@ hladal som vyskove data pokryvajuce celu zem
   - doplnenie jednotlyvych dat, ktore tecu v aplikacii
   - premyslel som si, akym sposobom bude fungovat prepojenie medzi modelom a model view-om - model view zbiera pokyny od view a zadava prislusne prikazy session controlerom ktory od modelu tahaju data a algoritmy pre zadovazenie pozadovanych vystupov, controlery si vsetko nechavaju u seba, len pocuvaju prikazy model view-vu, kedy maju zacat ktoru fazu riesenia
   - **uzavretie polemyzovania o tom, co chcem mat v aplikacii - nadalej uz nic nepridavam**
-  - pridany subo s pociatkom programu, zatial je tam len nejaky nezmyselny kod...ale uz to pridam do gitu
+  - pridany subor s pociatkom programu, zatial je tam len nejaky nezmyselny kod...ale uz to pridam do gitu
+
+## 1.3.2024
+
+- zmena v navrhu:
+  - grafiku si budu riesit entity z Windows ViewModels
+
+## 11.3.2024
+
+- nastudoval som si Avalonia UI kniznicu
+- zacal som tvorit UI aplikacie

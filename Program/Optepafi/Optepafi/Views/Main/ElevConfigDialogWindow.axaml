@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Optepafi.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="Optepafi.Views.Main.ElevConfigDialogWindow"
+        x:DataType="vm:ElevConfigWindowViewModel"
+        Title="Elevation configuration" Name="ElevConfigDialogWin" Width="700" Height="500">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:ElevConfigWindowViewModel/>
+    </Design.DataContext>    
+    <DockPanel>
+        <TextBlock Name="ElevConfigTopTextBlock" Text="Elevation configuration" 
+                   HorizontalAlignment="Center" DockPanel.Dock="Top"></TextBlock>
+        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="* *" Margin="10">
+            <Button Name="CloseButton" Content="Close" 
+                    Grid.Column="1" HorizontalAlignment="Right"></Button>
+        </Grid>
+        <StackPanel Margin="0 20 0 0">
+            <ComboBox Name="ElevSourceComboBox" Grid.Column="0" HorizontalAlignment="Left" >
+                <ComboBoxItem>
+                    <TextBlock> ahoj avalonia</TextBlock>
+                </ComboBoxItem>
+            </ComboBox>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Width="{Binding #ElevConfigDialogWin.Width}" Height="310">
+                <Canvas Name="DownloadedElevMapCanvas" Width="{Binding #ElevConfigDialogWin.Width}" Height="300" Margin="0 0 10 10">
+                    <Image Source="{SvgImage /Assets/world.svg}" Canvas.Top="0" Canvas.Left="0" Width="{Binding #DownloadedElevMapCanvas.Width}" Height="{Binding #DownloadedElevMapCanvas.Height}"/>
+                </Canvas>
+            </ScrollViewer>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Name="ZoomButton"></Button>
+                <Button Name="UnZoomButton"></Button>
+            </StackPanel>
+            <Grid ColumnDefinitions="* *" Margin="20">
+                <ComboBox Name="DownloadRegionComboBox" Grid.Column="0" HorizontalAlignment="Center"></ComboBox>
+                <ComboBox Name="RemoveRegionComboBox" Grid.Column="1" HorizontalAlignment="Center"></ComboBox>
+            </Grid>
+        </StackPanel>
+    </DockPanel>
+</Window>

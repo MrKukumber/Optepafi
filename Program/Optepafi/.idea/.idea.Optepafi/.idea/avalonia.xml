@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Optepafi/App.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/Main/ElevConfigDialogWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/Main/MainMenuView.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/Main/MainWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/MainConfigView.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/MainMenuView.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/MainWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/ModelCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/PathFinding/PathFindingWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/PathFindingWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/SettingsWindow.axaml" value="Optepafi/Optepafi.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

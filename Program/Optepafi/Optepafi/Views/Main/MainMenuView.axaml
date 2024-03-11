@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Optepafi.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+             x:Class="Optepafi.Views.Main.MainMenuView"
+             x:DataType="vm:MainMenuViewModel">
+    
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Label HorizontalAlignment="Center">Optepafi</Label>
+        </StackPanel>
+        <Button Name="SettingsButton" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20">Settings</Button>
+        <ListBox >
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+    </DockPanel>
+</UserControl>
