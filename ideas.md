@@ -10,6 +10,7 @@
   - o rozne sposoby vytvarania grafu z mapoveho suboru (proste uzavriet tu agregaciu toho grafu do nejakej triedy tak, aby sa to dalo jednoucho vymenit za nieco ine), asi o vsak nebudem uvadzat ako moznost na vyber v nastaveniach....len proste keby to tam chcel niekto v buducnosti prid, tak nech to neni pain
 - MVVM architektúra
   - model view bude pocuvat na prikazy view a na zaklade nich bude podnecovat session controller-y k vykonavaniu postupnych cinnosti za pomoci modelu
+- vytvorit converter medzi geo suradnicovym systemom a canvas suradnicami, kde vstupom je velkost canvas
 
 ## reprezentacia mapy grafom
 
@@ -34,6 +35,13 @@
 - v modelu môžeme nastaviť, či chceme využiť relevance feedback a v akom intervale sa ma dany parameter nastavovany relevance feedbackom nastavovat
 - mal by obecne fungovat pre akykolvek tameplate
 - proste sa bude pozerat, ktore hodnoty este treba donastavit, najde vyskyty v grafe tychto hodnot a v danom regione vyberie nahodne dva body a nechat medzi tymito dvomi bodmi prebehnut relevance feedback a donastavit parametre
+
+## elevation data configuration
+
+- pre kazdy zdroj vyskovych dat
+  - pytat od neho regiony, ktore poskytuje a su mozne ku stiahnutiu
+  - vyzadovat aby reprezentacia stiahnutych datovych poloziek obsahovala data tameplate pre tieto polozky, aby sa mohli vykreslit na mape
+
 
 ## specifikacia
 
@@ -113,7 +121,6 @@
 ## TODO:
 
 naucit sa elasticke grafy
-spravne si rozvrhnut projekt
 poriadne premysliet ako pritahovat tie vrcholy k tym objektom, hlavne v pripadoch, kedy mi jeden objekt krizuje hranu viac krat
 
 ## toto si tu odlozim

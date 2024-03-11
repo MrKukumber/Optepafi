@@ -141,3 +141,5 @@ hladal som vyskove data pokryvajuce celu zem
 
 - nastudoval som si Avalonia UI kniznicu
 - zacal som tvorit UI aplikacie
+  - teraz sa zaoberam oknom pre konfiguraciu vyskovych dat
+  - treba este doriesit sposob vyberu regionov

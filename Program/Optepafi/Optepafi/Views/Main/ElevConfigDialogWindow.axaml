@@ -19,25 +19,30 @@
             <Button Name="CloseButton" Content="Close" 
                     Grid.Column="1" HorizontalAlignment="Right"></Button>
         </Grid>
-        <StackPanel Margin="0 20 0 0">
-            <ComboBox Name="ElevSourceComboBox" Grid.Column="0" HorizontalAlignment="Left" >
-                <ComboBoxItem>
-                    <TextBlock> ahoj avalonia</TextBlock>
-                </ComboBoxItem>
-            </ComboBox>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Width="{Binding #ElevConfigDialogWin.Width}" Height="310">
-                <Canvas Name="DownloadedElevMapCanvas" Width="{Binding #ElevConfigDialogWin.Width}" Height="300" Margin="0 0 10 10">
-                    <Image Source="{SvgImage /Assets/world.svg}" Canvas.Top="0" Canvas.Left="0" Width="{Binding #DownloadedElevMapCanvas.Width}" Height="{Binding #DownloadedElevMapCanvas.Height}"/>
-                </Canvas>
-            </ScrollViewer>
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button Name="ZoomButton"></Button>
-                <Button Name="UnZoomButton"></Button>
+        <Grid Margin="0 20 0 0" RowDefinitions="Auto Auto 4* Auto *">
+            <StackPanel Grid.Row="0">
+                <TextBlock Name="ElevSourceTextBlock" Text="Source of elevation"></TextBlock>
+                <ComboBox Name="ElevSourceComboBox" HorizontalAlignment="Left"></ComboBox>
             </StackPanel>
-            <Grid ColumnDefinitions="* *" Margin="20">
-                <ComboBox Name="DownloadRegionComboBox" Grid.Column="0" HorizontalAlignment="Center"></ComboBox>
-                <ComboBox Name="RemoveRegionComboBox" Grid.Column="1" HorizontalAlignment="Center"></ComboBox>
+                <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="False" Height="1"></ProgressBar>
+                <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" Padding="0 0 10 10">
+                    <Canvas Name="DownloadedElevMapCanvas" Width="2000" Height="1000">
+                        <Image Source="{SvgImage /Assets/world.svg}" Canvas.Top="0" Canvas.Left="0" Width="{Binding #DownloadedElevMapCanvas.Width}" Height="{Binding #DownloadedElevMapCanvas.Height}"/>
+                    </Canvas>
+                </ScrollViewer>
+                <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button Name="ZoomButton"></Button>
+                    <Button Name="UnZoomButton"></Button>
+                </StackPanel>
+            <Grid ColumnDefinitions="* *" Margin="20" Grid.Row="4">
+                <StackPanel Grid.Column="0" HorizontalAlignment="Center" >
+                    <TextBlock Name="DownloadRegionTextBlock"></TextBlock>
+                    <ComboBox Name="DownloadRegionComboBox" ></ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" >
+                    <ComboBox Name="RemoveRegionComboBox" ></ComboBox>
+                </StackPanel>
             </Grid>
-        </StackPanel>
+        </Grid>
     </DockPanel>
 </Window>
