@@ -20,29 +20,57 @@
                     Grid.Column="1" HorizontalAlignment="Right"></Button>
         </Grid>
         <Grid Margin="0 20 0 0" RowDefinitions="Auto Auto 4* Auto *">
-            <StackPanel Grid.Row="0">
+            <StackPanel Grid.Row="0" Margin="10 0 0 10">
                 <TextBlock Name="ElevSourceTextBlock" Text="Source of elevation"></TextBlock>
                 <ComboBox Name="ElevSourceComboBox" HorizontalAlignment="Left"></ComboBox>
             </StackPanel>
-                <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="False" Height="1"></ProgressBar>
-                <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" Padding="0 0 10 10">
-                    <Canvas Name="DownloadedElevMapCanvas" Width="2000" Height="1000">
-                        <Image Source="{SvgImage /Assets/world.svg}" Canvas.Top="0" Canvas.Left="0" Width="{Binding #DownloadedElevMapCanvas.Width}" Height="{Binding #DownloadedElevMapCanvas.Height}"/>
-                    </Canvas>
-                </ScrollViewer>
-                <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button Name="ZoomButton"></Button>
-                    <Button Name="UnZoomButton"></Button>
-                </StackPanel>
-            <Grid ColumnDefinitions="* *" Margin="20" Grid.Row="4">
-                <StackPanel Grid.Column="0" HorizontalAlignment="Center" >
-                    <TextBlock Name="DownloadRegionTextBlock"></TextBlock>
-                    <ComboBox Name="DownloadRegionComboBox" ></ComboBox>
-                </StackPanel>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Center" >
-                    <ComboBox Name="RemoveRegionComboBox" ></ComboBox>
-                </StackPanel>
-            </Grid>
+            <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="False" Height="1"></ProgressBar>
+            <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" Padding="0 0 10 10">
+                <Canvas Name="DownloadedElevMapCanvas" Width="800" Height="400">
+                    <Button Canvas.Top="10" Canvas.Left="10" Content="Slovakia">
+                        <Button.Template><!-- kazdy button vytvarovat do tvaru krajiny ak stihnem a umiestnit na spravne miesto --></Button.Template>
+                    </Button>
+                </Canvas>
+            </ScrollViewer>
+            <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Name="ZoomButton"></Button>
+                <Button Name="UnZoomButton"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="4">
+                <TextBlock Text="Country name:" Margin="20"></TextBlock>
+                <Button Name="DownloadButton" Content="Download" Margin="0 0 20 0"></Button>
+                <Button Name="DeleteButton" Content="Delete"></Button>
+            </StackPanel>
         </Grid>
     </DockPanel>
 </Window>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!-- <Image Source="{SvgImage /Assets/world.svg}" Canvas.Top="0" Canvas.Left="0" Width="{Binding #DownloadedElevMapCanvas.Width}" Height="{Binding #DownloadedElevMapCanvas.Height}"/> -->
+
+                    <!-- <Rectangle ToolTip.Tip="Slovensko" Canvas.Top="100" Canvas.Left="300" Width="200" Height="100" Fill="Red"> -->
+                        <!-- <Rectangle.ContextMenu> -->
+                            <!-- <ContextMenu> -->
+                                <!-- <MenuItem Header="Download"></MenuItem> -->
+                            <!-- </ContextMenu> -->
+                        <!-- </Rectangle.ContextMenu> -->
+                    <!-- </Rectangle> -->

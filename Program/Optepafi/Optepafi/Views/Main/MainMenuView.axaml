@@ -12,12 +12,17 @@
             <Label HorizontalAlignment="Center">Optepafi</Label>
         </StackPanel>
         <Button Name="SettingsButton" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20">Settings</Button>
-        <ListBox >
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-        </ListBox>
+        <!-- <ListBox> -->
+            <!-- ... -->
+            <!-- <ListBox.ItemsPanel> -->
+                <!-- <ItemsPanelTemplate> -->
+                    <!-- <WrapPanel /> -->
+                <!-- </ItemsPanelTemplate> -->
+            <!-- </ListBox.ItemsPanel> -->
+        <!-- </ListBox> -->
+        <WrapPanel>
+            <Button Content="Pathfinding session" Margin="10 10 0 0" Height="80" VerticalContentAlignment="Center"></Button>
+            <Button Content="Model creating session" Margin="10 10 0 0" Height="80" VerticalContentAlignment="Center"></Button>
+        </WrapPanel>
     </DockPanel>
 </UserControl>

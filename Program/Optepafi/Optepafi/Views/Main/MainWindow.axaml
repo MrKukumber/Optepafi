@@ -13,5 +13,5 @@
         <Design.DataContext>
                 <vm:MainWindowViewModel/>
         </Design.DataContext>               
-        <mainViews:MainWindow/>
+        <mainViews:MainSettingsView/>
 </Window>
