@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using Optepafi.ViewModels;
 using Optepafi.Views;
 using Optepafi.Views.Main;
+using Optepafi.Views.PathFinding;
 using MainWindow = Optepafi.Views.Main.MainWindow;
 
 namespace Optepafi;
@@ -19,7 +20,7 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
+            desktop.MainWindow = new PathFindingWindow
             {
                 DataContext = new MainWindowViewModel(),
             };

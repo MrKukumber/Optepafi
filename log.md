@@ -143,3 +143,9 @@ hladal som vyskove data pokryvajuce celu zem
 - zacal som tvorit UI aplikacie
   - teraz sa zaoberam oknom pre konfiguraciu vyskovych dat
   - treba este doriesit sposob vyberu regionov
+
+## 12.3.2024
+
+- doriesil som, ako bude fungovat elevation configuration
+  - kazdy region ma svoj button a po jeho stlaceni sa zobrazi dany region pod "mapou" a moze sa stiahnut/vymazat
+- teraz reisim ako spravim main menu view

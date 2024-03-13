@@ -7,7 +7,7 @@
              x:Class="Optepafi.Views.Main.MainSettingsView"
              x:DataType="vm:MainSettingsViewModel">
     <DockPanel>
-        <TextBlock Name="MainSettingsTopTextBlock" Text="Settings"
+        <TextBlock Name="MainSettingsHeaderTextBlock" Text="Settings"
                    DockPanel.Dock="Top" HorizontalAlignment="Center"></TextBlock>
         <Button Content="Main menu" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"></Button>
         <Grid ColumnDefinitions="* *" RowDefinitions="*">

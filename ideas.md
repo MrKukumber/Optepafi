@@ -40,8 +40,8 @@
 
 - pre kazdy zdroj vyskovych dat
   - pytat od neho regiony, ktore poskytuje a su mozne ku stiahnutiu
-  - vyzadovat aby reprezentacia stiahnutych datovych poloziek obsahovala data tameplate pre tieto polozky, aby sa mohli vykreslit na mape
-
+  - pre kazdy region jeden button, po ktoreho zmacknuti sa dany region zobrazi pod "mapou" s moznostou stiahnutia/vymazania
+- napad pre znazorneneie mapy...vyuzit nejake geo json data k nakresleniu mapy
 
 ## specifikacia
 
@@ -116,7 +116,7 @@
 - mapove formaty s pridanymi najdenymi cestami
 - ukladame pre opatovne spustenie aplikacie
   - posledne pouzity algoritmus, tameplate, model
-  - posledne pouzity zdroj vyskovych dat 
+  - posledne pouzity zdroj vyskovych dat, stiahnute regiony
 
 ## TODO:
 

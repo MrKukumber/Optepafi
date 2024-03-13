@@ -32,8 +32,23 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/Main/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/ModelCreating/ModelCreatingSettingsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/ModelCreating/ModelCreatingView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/ModelCreating/ModelCreatingWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/PathFinding/PathFindingSettingsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/PathFinding/PathFindingView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/PathFinding/PathFindingWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/PathFinding/RelevanceFeedbackView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
