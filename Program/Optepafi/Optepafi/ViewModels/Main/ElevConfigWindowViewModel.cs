@@ -1,4 +1,4 @@
-namespace Optepafi.ViewModels;
+namespace Optepafi.ViewModels.Main;
 
 public class ElevConfigWindowViewModel : ViewModelBase
 {

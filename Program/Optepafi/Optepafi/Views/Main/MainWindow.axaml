@@ -1,17 +1,17 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Optepafi.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mainViews="using:Optepafi.Views.Main"
+        xmlns:mainVm="clr-namespace:Optepafi.ViewModels.Main"
         mc:Ignorable="d" 
         x:Class="Optepafi.Views.Main.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
+        x:DataType="mainVm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Optepafi" Width="700" Height="500">
+        Title="Optepafi" Width="700" Height="500"
+        Content="{Binding CurrentViewModel}">
         
-        <Design.DataContext>
-                <vm:MainWindowViewModel/>
-        </Design.DataContext>               
-        <mainViews:MainSettingsView/>
+        <!-- <Design.DataContext> -->
+                <!-- <mainVm:MainWindowViewModel/> -->
+        <!-- </Design.DataContext>                -->
 </Window>

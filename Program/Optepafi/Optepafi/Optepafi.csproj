@@ -11,6 +11,8 @@
     <ItemGroup>
         <Folder Include="Models\"/>
         <AvaloniaResource Include="Assets\**"/>
+        <Folder Include="ViewModels\ModelCreating\" />
+        <Folder Include="ViewModels\PathFinding\" />
     </ItemGroup>
 
 

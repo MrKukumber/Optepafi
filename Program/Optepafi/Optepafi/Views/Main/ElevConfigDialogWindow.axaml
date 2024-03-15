@@ -3,14 +3,15 @@
         xmlns:vm="using:Optepafi.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:main="clr-namespace:Optepafi.ViewModels.Main"
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
         x:Class="Optepafi.Views.Main.ElevConfigDialogWindow"
-        x:DataType="vm:ElevConfigWindowViewModel"
+        x:DataType="main:ElevConfigWindowViewModel"
         Title="Elevation configuration" Name="ElevConfigDialogWin" Width="700" Height="500">
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:ElevConfigWindowViewModel/>
+        <main:ElevConfigWindowViewModel/>
     </Design.DataContext>    
     <DockPanel>
         <TextBlock Name="ElevConfigHeaderTextBlock" Text="Elevation configuration" 

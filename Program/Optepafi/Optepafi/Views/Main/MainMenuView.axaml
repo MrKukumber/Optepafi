@@ -3,15 +3,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Optepafi.ViewModels"
+             xmlns:main="clr-namespace:Optepafi.ViewModels.Main"
              mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
              x:Class="Optepafi.Views.Main.MainMenuView"
-             x:DataType="vm:MainMenuViewModel">
+             x:DataType="main:MainMenuViewModel">
     
     <DockPanel>
         <StackPanel DockPanel.Dock="Top">
             <Label HorizontalAlignment="Center">Optepafi</Label>
         </StackPanel>
-        <Button Name="SettingsButton" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20">Settings</Button>
+        <Button Name="SettingsButton" Content="Settings" Click="SettingsButton_OnClick" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"></Button>
         <!-- <ListBox> -->
             <!-- ... -->
             <!-- <ListBox.ItemsPanel> -->

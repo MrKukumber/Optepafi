@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="Optepafi.Views.PathFinding.RelevanceFeedbackView">
+    <DockPanel>
+        <TextBlock Name="RelevanceFeedbackHeaderTextBlock" Text="Choose the most relevant option:" DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="10"></TextBlock>
+        <Button Name="SelectFeedbacButton" Content="Select" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="10"></Button>
+        <Grid RowDefinitions="Auto *">
+            <ProgressBar IsIndeterminate="True" IsVisible="False" Grid.Row="0"></ProgressBar>
+            <ListBox Grid.Row="1">
+                <Border BorderThickness="2" BorderBrush="Black">
+                    <Canvas Width="250" Height="150"></Canvas>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="Black">
+                    <Canvas Width="250" Height="150"></Canvas>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="Black">
+                    <Canvas Width="250" Height="150"></Canvas>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="Black">
+                    <Canvas Width="250" Height="150"></Canvas>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="Black">
+                    <Canvas Width="250" Height="150"></Canvas>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="Black">
+                    <Canvas Width="250" Height="150"></Canvas>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="Black">
+                    <Canvas Width="250" Height="150"></Canvas>
+                </Border>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel></WrapPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ListBox>
+        </Grid>
+    </DockPanel>
+</UserControl>

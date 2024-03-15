@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             x:Class="Optepafi.Views.ModelCreating.ModelCreatingView">
+    <DockPanel>
+        <Panel DockPanel.Dock="Top" Margin="10">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Name="OpenMenuItem" Header="Open"></MenuItem>
+                    <MenuItem Name="SaveMenuItem" Header="Save"></MenuItem>
+                    <MenuItem Name="SaveAsMenuItem" Header="Save as"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Settings">
+                    <MenuItem Header="Choose template">
+                        <MenuItem Header="Orienteering"></MenuItem>
+                        <!-- vycet tempalate-ov
+                             pokial mapovy format aktualnej mapy nekoresponduje s vybranym templatom, je odstranena
+                             a je pozadovany novy vhodny subor-->
+                    </MenuItem>
+                    <MenuItem Header="Choose map"> <!-- otvori dialogove okno pre vyber mapoveho suboru --></MenuItem>
+                </MenuItem>
+            </Menu>
+            <TextBlock Name="ModelCreatingHeaderTextBlock" Text="Model Creating" HorizontalAlignment="Center"></TextBlock>
+            <Button Name="ExitButton" Content="Exit" HorizontalAlignment="Right"></Button>
+        </Panel>
+        <Grid RowDefinitions="* 2 *">
+            <Grid Grid.Row="0" ColumnDefinitions="* auto">
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <ToggleButton Name="StartSettingToggleButton" Content="Set Start" Margin="5"></ToggleButton>
+                    <ToggleButton Name="FinishSettingToggleButton" Content="Set Finish" Margin="5"></ToggleButton>
+                    <Button Name="ComputePathButton" Content="Compute" Margin="5"></Button>
+                </StackPanel>
+                <Grid Grid.Column="0" RowDefinitions="* Auto">
+                    <Border Grid.Row="0" BorderBrush="Black" BorderThickness="2">
+                        <ScrollViewer>
+                            <Canvas></Canvas>
+                        </ScrollViewer>
+                    </Border>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Name="ZoomButton"></Button>
+                        <Button Name="UnZoomButton"></Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <GridSplitter Grid.Row="1" ResizeDirection="Rows"></GridSplitter>
+            <Border Grid.Row="2" BorderBrush="Black" BorderThickness="2">
+                <DockPanel>
+                    <TextBlock Name="TemplateNameTextBlock" Text="Orienteering" HorizontalAlignment="Center"></TextBlock>
+                    <!-- Here will be configurations for current template-->
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>
