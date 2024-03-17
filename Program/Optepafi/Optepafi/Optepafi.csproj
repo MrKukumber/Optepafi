@@ -11,8 +11,6 @@
     <ItemGroup>
         <Folder Include="Models\"/>
         <AvaloniaResource Include="Assets\**"/>
-        <Folder Include="ViewModels\ModelCreating\" />
-        <Folder Include="ViewModels\PathFinding\" />
     </ItemGroup>
 
 
@@ -39,10 +37,6 @@
       </Compile>
       <Compile Update="Views\Main\MainSettingsView.axaml.cs">
         <DependentUpon>MainConfigView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Main\ElevConfigDialogWindow.axaml.cs">
-        <DependentUpon>ElevConfigDialogWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
       <Compile Update="Views\Main\MainMenuView.axaml.cs">

@@ -2,8 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
-             x:Class="Optepafi.Views.PathFinding.RelevanceFeedbackView">
+             x:Class="Optepafi.Views.PathFinding.RelevanceFeedbackView"
+             x:DataType="pfVm:RelevanceFeedbackViewModel">
     <DockPanel>
         <TextBlock Name="RelevanceFeedbackHeaderTextBlock" Text="Choose the most relevant option:" DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="10"></TextBlock>
         <Button Name="SelectFeedbacButton" Content="Select" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="10"></Button>

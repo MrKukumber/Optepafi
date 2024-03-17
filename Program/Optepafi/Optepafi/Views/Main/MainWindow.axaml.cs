@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Brushes = Avalonia.Media.Brushes;
 using Pen = Avalonia.Media.Pen;
 using Point = Avalonia.Point;

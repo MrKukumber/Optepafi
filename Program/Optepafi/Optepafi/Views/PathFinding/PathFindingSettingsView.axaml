@@ -2,8 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
              mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
-             x:Class="Optepafi.Views.PathFinding.PathFindingSettingsView">
+             x:Class="Optepafi.Views.PathFinding.PathFindingSettingsView"
+             x:DataType="pfVm:PathFindingSettingsViewModel">
     <DockPanel>
         <TextBlock Name="PathFindingSettingsHeaderTextBlock" Text="Path finding session settings" DockPanel.Dock="Top" HorizontalAlignment="Center" ></TextBlock>
         <Grid ColumnDefinitions="* *" DockPanel.Dock="Bottom" Margin="20">

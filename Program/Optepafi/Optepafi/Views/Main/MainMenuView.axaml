@@ -2,17 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:Optepafi.ViewModels"
-             xmlns:main="clr-namespace:Optepafi.ViewModels.Main"
+             xmlns:mVm="clr-namespace:Optepafi.ViewModels.Main"
              mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
              x:Class="Optepafi.Views.Main.MainMenuView"
-             x:DataType="main:MainMenuViewModel">
+             x:DataType="mVm:MainMenuViewModel">
     
     <DockPanel>
         <StackPanel DockPanel.Dock="Top">
             <Label HorizontalAlignment="Center">Optepafi</Label>
         </StackPanel>
-        <Button Name="SettingsButton" Content="Settings" Click="SettingsButton_OnClick" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"></Button>
+        <Button Name="SettingsButton" Content="Settings" Command="{Binding GoToSettingsCommand}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"></Button>
         <!-- <ListBox> -->
             <!-- ... -->
             <!-- <ListBox.ItemsPanel> -->
@@ -21,14 +20,15 @@
                 <!-- </ItemsPanelTemplate> -->
             <!-- </ListBox.ItemsPanel> -->
         <!-- </ListBox> -->
-        <ItemsControl>
-            <Button Content="Pathfinding session" Margin="10 10 0 0" Height="80" VerticalContentAlignment="Center"></Button>
-            <Button Content="Model creating session" Margin="10 10 0 0" Height="80" VerticalContentAlignment="Center"></Button>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel></WrapPanel>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+        <Grid ColumnDefinitions="* *">
+            <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Name="PathFindingSesstionTextBlock" Text="Path finding"></TextBlock>
+                <Button Name="CreatePathFindingSessionButton" Content="Create" Command="{Binding CreatePathFindingSessionCommand}"></Button>
+            </StackPanel>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Name="ModelCreatingSessionTextBlock" Text="Model creating"></TextBlock>
+                <Button Name="CreateModelCreatingSessionButton" Content="Create" Command="{Binding CreateModelCreatingSessionCommand}"></Button>
+            </StackPanel>
+        </Grid>
     </DockPanel>
 </UserControl>
