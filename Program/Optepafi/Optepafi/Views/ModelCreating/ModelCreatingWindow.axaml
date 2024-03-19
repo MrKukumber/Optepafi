@@ -8,5 +8,6 @@
         x:DataType="mcVm:ModelCreatingWindowViewModel"
         Title="ModelCreatingWindow" Width="1000" Height="700" 
         Content="{Binding CurrentViewModel}"
-        Closing="OnClosing">
+        Closing="Window_OnClosing"
+        Closed="Window_OnClosed">
 </Window>

@@ -1,3 +1,4 @@
+using System.Reactive;
 using Optepafi.ViewModels.Main;
 using ReactiveUI;
 
@@ -19,5 +20,15 @@ public class ModelCreatingWindowViewModel : SessionViewModel
         MainMenu = mainMenu;
         ModelCreating = new ModelCreatingViewModel(this);
         CurrentViewModel = ModelCreating;
+        OnClosingCommand = ReactiveCommand.Create(() =>
+        {
+            return ClosingRecommendation.CanClose;
+            //TODO: return correct recommendation for closing the window
+        });
+        OnClosedCommand = ReactiveCommand.Create(() => { });
     }
+    
+    public enum ClosingRecommendation { CanClose }
+    public ReactiveCommand<Unit, ClosingRecommendation> OnClosingCommand { get; }
+    public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
 }

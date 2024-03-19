@@ -8,5 +8,7 @@
         x:Class="Optepafi.Views.PathFinding.PathFindingWindow"
         x:DataType="pfVm:PathFindingWindowViewModel"
         Title="PathFindingWindow" Width="1000" Height="700"
-        Content="{Binding CurrentViewModel}">
+        Content="{Binding CurrentViewModel}"
+        Closing="Window_OnClosing"
+        Closed="Window_OnClosed">
 </Window>

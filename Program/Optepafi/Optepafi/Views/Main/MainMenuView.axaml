@@ -29,6 +29,7 @@
                 <TextBlock Name="ModelCreatingSessionTextBlock" Text="Model creating"></TextBlock>
                 <Button Name="CreateModelCreatingSessionButton" Content="Create" Command="{Binding CreateModelCreatingSessionCommand}"></Button>
             </StackPanel>
+            <ItemsControl ></ItemsControl>
         </Grid>
     </DockPanel>
 </UserControl>

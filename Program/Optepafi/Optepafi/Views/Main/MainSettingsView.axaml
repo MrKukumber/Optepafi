@@ -15,7 +15,7 @@
                 <TextBlock Name="LocalizationTextBlock" Text="Vyber si jazyk"></TextBlock>
                 <ComboBox Name="LocalizationComboBox"></ComboBox>
             </StackPanel>
-            <Button Name="ElevConfigEntryButton" Content="Elevation config" Command="{Binding GoToEleveConfigCommand}"
+            <Button Name="ElevConfigEntryButton" Content="Elevation config" Command="{Binding GoToElevConfigCommand}"
                     Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"></Button>
             <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Name="SearchingAlgorithmTextBlock" Text="Vyber vyhladavaci algoritmus"></TextBlock>

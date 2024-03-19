@@ -1,3 +1,5 @@
+using System;
+using System.Reactive;
 using Optepafi.ViewModels.Main;
 using Optepafi.Views.Main;
 using ReactiveUI;
@@ -24,6 +26,21 @@ public class PathFindingWindowViewModel : SessionViewModel
         PathFindingSettings = new PathFindingSettingsViewModel(this);
         RelevanceFeedback = new RelevanceFeedbackViewModel(this);
         CurrentViewModel = PathFindingSettings;
+
+        OnClosingCommand = ReactiveCommand.Create(() =>
+        {
+            return ClosingRecommendation.CanClose;
+            //TODO: return correct recommendation for closing the window
+        });
+        OnClosedCommand = ReactiveCommand.Create(() =>
+        {
+            Console.Write("ahoj");
+        });
     }
+    
+    public enum ClosingRecommendation { CanClose }
+    
+    public ReactiveCommand<Unit, ClosingRecommendation> OnClosingCommand { get; }
+    public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
     
 }

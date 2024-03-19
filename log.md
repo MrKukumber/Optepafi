@@ -149,3 +149,10 @@ hladal som vyskove data pokryvajuce celu zem
 - doriesil som, ako bude fungovat elevation configuration
   - kazdy region ma svoj button a po jeho stlaceni sa zobrazi dany region pod "mapou" a moze sa stiahnut/vymazat
 - teraz reisim ako spravim main menu view
+
+## 17.3.2024
+
+- pokracovanie v praci na aplikacii
+  - vytvarama prepojenia a bindings view-u a viewmodel-u
+  - pre kazdy view vytvoreny viewModel a pridany do gitu
+
