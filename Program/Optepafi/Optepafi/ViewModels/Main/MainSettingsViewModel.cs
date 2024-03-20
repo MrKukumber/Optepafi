@@ -1,3 +1,4 @@
+using System.Reactive;
 using System.Windows.Input;
 using Avalonia.Controls;
 using ReactiveUI;
@@ -6,15 +7,11 @@ namespace Optepafi.ViewModels.Main;
 
 public class MainSettingsViewModel : ViewModelBase
 {
-    public ICommand GoToMainMenuCommand { get; }
-    public ICommand GoToElevConfigCommand { get; }
-    private MainWindowViewModel ParentMainWindow { get; }
-    public MainSettingsViewModel(MainWindowViewModel parentMainWindow)
+    public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
+    public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
+    public MainSettingsViewModel()
     {
-        ParentMainWindow = parentMainWindow;
-        GoToMainMenuCommand = ReactiveCommand.Create(() =>
-            ParentMainWindow.CurrentViewModel = ParentMainWindow.MainMenu);
-        GoToElevConfigCommand = ReactiveCommand.Create(() =>
-            ParentMainWindow.CurrentViewModel = ParentMainWindow.ElevConfig);
+        GoToMainMenuCommand = ReactiveCommand.Create(() => { });
+        OpenElevConfigCommand = ReactiveCommand.Create(() => { });
     }
 }

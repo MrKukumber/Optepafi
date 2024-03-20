@@ -11,7 +11,7 @@
         <StackPanel DockPanel.Dock="Top">
             <Label HorizontalAlignment="Center">Optepafi</Label>
         </StackPanel>
-        <Button Name="SettingsButton" Content="Settings" Command="{Binding GoToSettingsCommand}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"></Button>
+        <Button Name="SettingsButton" Content="{DynamicResource Assets.Local.SettingsButton}" Command="{Binding GoToSettingsCommand}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"></Button>
         <!-- <ListBox> -->
             <!-- ... -->
             <!-- <ListBox.ItemsPanel> -->
@@ -29,7 +29,6 @@
                 <TextBlock Name="ModelCreatingSessionTextBlock" Text="Model creating"></TextBlock>
                 <Button Name="CreateModelCreatingSessionButton" Content="Create" Command="{Binding CreateModelCreatingSessionCommand}"></Button>
             </StackPanel>
-            <ItemsControl ></ItemsControl>
         </Grid>
     </DockPanel>
 </UserControl>

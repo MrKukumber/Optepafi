@@ -156,3 +156,11 @@ hladal som vyskove data pokryvajuce celu zem
   - vytvarama prepojenia a bindings view-u a viewmodel-u
   - pre kazdy view vytvoreny viewModel a pridany do gitu
 
+## 20.3.2024
+
+- znovu rozmyslanie architektury
+  - ci vyhladavaci algoritmus nechat specificky pre kazdu session alebo ho nasavovat globalne pre celu aplikaciu
+  - spravit ViewModel tak, aby jednotlive ViewModely prisluchajuce jednotlivym View-s neboli na sebe zavisle...teda aby si medzi sebou nemuseli predavat data
+    - predavanie dat by malo prebiehat nasledne iba v session controleroch, ktore potom dane data sprostredkuvaju ViewModel-om
+    - teda nemalo by sa stat, ze si viewModely predavaju napriklad mapu ako je to teraz
+  - to vsak nastoluje otazku, kolko prace vlastne viewModely budu robit...ci budu napriklad sami pozadovat graficke spracovania map a ciest

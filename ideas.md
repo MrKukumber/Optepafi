@@ -43,6 +43,13 @@
   - pre kazdy region jeden button, po ktoreho zmacknuti sa dany region zobrazi pod "mapou" s moznostou stiahnutia/vymazania
 - napad pre znazorneneie mapy...vyuzit nejake geo json data k nakresleniu mapy
 
+## searching algorithm configuration
+
+- otazka, ci mat nastaveny jeden jediny vyhladavaci algoritmus pre celu aplikaciu
+  - nastavovany z hlavnych nastaveni
+  - a ked sa prenastavy pocas beziacich sessions, tak ci sa maju preorientovat na novy vyhladavaci algoritmus alebo maju pokracovat s povodnym
+
+
 ## specifikacia
 
 ### co nezabudnut
@@ -115,7 +122,7 @@
 - uzivatelske modely
 - mapove formaty s pridanymi najdenymi cestami
 - ukladame pre opatovne spustenie aplikacie
-  - posledne pouzity algoritmus, tameplate, model
+  - posledne pouzity algoritmus, tameplate, model, posledny zdroj vyskovych dat, mapa - parametry
   - posledne pouzity zdroj vyskovych dat, stiahnute regiony
 
 ## TODO:
@@ -150,7 +157,6 @@ nevyhody:
 ---
 
 ## Stare myslienky
-
 
 - spravit nejaky research toho, aky je rozdiel medzi behanim v roznych porastoch
 - nemetricke MDS
