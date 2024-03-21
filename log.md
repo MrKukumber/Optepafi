@@ -164,3 +164,19 @@ hladal som vyskove data pokryvajuce celu zem
     - predavanie dat by malo prebiehat nasledne iba v session controleroch, ktore potom dane data sprostredkuvaju ViewModel-om
     - teda nemalo by sa stat, ze si viewModely predavaju napriklad mapu ako je to teraz
   - to vsak nastoluje otazku, kolko prace vlastne viewModely budu robit...ci budu napriklad sami pozadovat graficke spracovania map a ciest
+
+## 21.3.2024
+
+- pokracovanie v rozmyslani architektury
+  - vyhladavaci algoritmus specificky pre kazdy druh sessionu ako ostatne parametry
+  - upravenie MVVM modelu aby sedel viac na terajsiu architekturu aplikacie
+    - v diagrame je zachovany aj povodny navrh, aj novy, viacej prisposobeny MVVM architekture
+  - okrem ViewModelu budem mat aj tzv ModelView - ten bude odpovedat povodnym session controlerom s tym ze bude mat stale povodnu funkciu spracovania dat pre jednotlive session-y, ale nebude "kontrolovat" priebeh jednotlyvych session-ov
+  - ViewModel:
+    - stara sa hlavne o view, vie co sa ma kedy zobrazovat, ako ma fungovat ovladanie aplikacie, obsahuje vedomu logiku aplikacie
+    - jednotlive viewModel-y by mali byt co najnezavislejsie, data prijimat vyhradne od ModelView-u, kory je shcopny ich vsetky dorucit
+  -ModelView:
+    - stara sa hlavne o model, spracovava data, obsahuje postupy, ktore su potrebne na vygenerovanie pozadovanych dat ViewModel-om,
+    - jednotlive ModelView-vy si medzi sebou data predavaju, aby nedochadzalo ku neziaducim opakovaniam vypoctov, a nasledne ich ponukaju ViewModel-om
+    - zaroven poznaju logiku spracovania dat, vedia co je potrebne spravit v akom poradi, aby boli schopne zadovazit pozadovany vystup
+  - v posledne uvedenej vlastnosti sa budu ModelView a ViewModel trocha byt...je potrebne vzdy urcit, kto bude zodpovedat za danu logicku cinnost aplikacie

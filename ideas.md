@@ -49,6 +49,15 @@
   - nastavovany z hlavnych nastaveni
   - a ked sa prenastavy pocas beziacich sessions, tak ci sa maju preorientovat na novy vyhladavaci algoritmus alebo maju pokracovat s povodnym
 
+## sessions settings
+
+- bud defaultne parametre natvrdo zadane alebo vzdy upravene na posledne pouzite
+  - dalo by sa spravit tak, ze budem mat property pre indikaciu, ktora z tychto dvoch moznosti sa pouziva
+  - nasledne bude property pre natvrdo nastavenie parametrov...ked sa zavola setter tejto property, automaticky sa indikator nastavi na tvrde zadavanie parametrov
+  - automaticke upravovanie defaultnych parametrov na posledne použité sa bude vykonavat bez toho, aby sa menila property uvedena vyssie a tym padom sa ani nezmeni dany indikator...dalo by sa zaistit vnutornym privatnym upravovanim ulozenych parametrov
+  - pre znovu nastartovanie automatickeho upravovania sa len upravy dana indikatorova property
+  - pokial sa indikatorova property nastavy na tvrde zadavanie parametrov, zachova sa posledna pouzita konfiguracia parametrov a bude sa pouzivat uz stale ako defaultna
+
 
 ## specifikacia
 
