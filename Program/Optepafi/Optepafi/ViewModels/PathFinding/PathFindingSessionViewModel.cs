@@ -1,30 +1,30 @@
 using System;
 using System.Reactive;
+using Optepafi.ModelViews.Main;
+using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ViewModels.Main;
 using Optepafi.Views.Main;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
 
-public class PathFindingWindowViewModel : SessionViewModel
+public class PathFindingSessionViewModel : SessionViewModel
 {
     private ViewModelBase _currentViewModel;
     public PathFindingViewModel PathFinding { get; }
     public PathFindingSettingsViewModel PathFindingSettings { get; }
     public RelevanceFeedbackViewModel RelevanceFeedback { get; }
-    private MainMenuViewModel MainMenu { get; }
 
     public ViewModelBase CurrentViewModel
     {
         get => _currentViewModel;
         set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
-    public PathFindingWindowViewModel(MainMenuViewModel mainMenu)
+    public PathFindingSessionViewModel(MainParamsManagingModelView mainParamsManagingMv, PathFindingSessionModelView pathFindingSessionMv)
     {
-        MainMenu = mainMenu;
-        PathFinding = new PathFindingViewModel(this);
-        PathFindingSettings = new PathFindingSettingsViewModel(this);
-        RelevanceFeedback = new RelevanceFeedbackViewModel(this);
+        PathFinding = new PathFindingViewModel(pathFindingSessionMv.PathFinding);
+        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings, mainParamsManagingMv);
+        RelevanceFeedback = new RelevanceFeedbackViewModel(pathFindingSessionMv.RelevanceFeedback);
         CurrentViewModel = PathFindingSettings;
 
         OnClosingCommand = ReactiveCommand.Create(() =>
@@ -32,10 +32,7 @@ public class PathFindingWindowViewModel : SessionViewModel
             return ClosingRecommendation.CanClose;
             //TODO: return correct recommendation for closing the window
         });
-        OnClosedCommand = ReactiveCommand.Create(() =>
-        {
-            Console.Write("ahoj");
-        });
+        OnClosedCommand = ReactiveCommand.Create(() => { });
     }
     
     public enum ClosingRecommendation { CanClose }

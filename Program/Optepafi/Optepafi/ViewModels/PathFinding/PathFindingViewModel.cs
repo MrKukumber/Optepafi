@@ -1,10 +1,12 @@
+using Optepafi.ModelViews.ModelCreating;
+
 namespace Optepafi.ViewModels.PathFinding;
 
 public class PathFindingViewModel : ViewModelBase
 {
-    private PathFindingWindowViewModel ParentPahtFindingWindow { get; }
-    public PathFindingViewModel(PathFindingWindowViewModel parentPathFindingWindow)
+    public PFPathFindingModelView PathFindingMv { get; }
+    public PathFindingViewModel(PFPathFindingModelView pathFindingMv)
     {
-        ParentPahtFindingWindow = parentPathFindingWindow;
+        PathFindingMv = pathFindingMv;
     }
 }

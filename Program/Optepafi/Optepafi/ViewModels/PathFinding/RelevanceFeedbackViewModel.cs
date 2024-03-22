@@ -1,11 +1,12 @@
+using Optepafi.ModelViews.ModelCreating;
+
 namespace Optepafi.ViewModels.PathFinding;
 
 public class RelevanceFeedbackViewModel : ViewModelBase
 {
-    
-    private PathFindingWindowViewModel ParentPahtFindingWindow { get; }
-    public RelevanceFeedbackViewModel(PathFindingWindowViewModel parentPathFindingWindow)
+    public PFRelevanceFeedbackModelView RelevanceFeedbackMV { get; }
+    public RelevanceFeedbackViewModel(PFRelevanceFeedbackModelView relevanceFeedbackMv)
     {
-        ParentPahtFindingWindow = parentPathFindingWindow;
+        RelevanceFeedbackMV = relevanceFeedbackMv;
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mcVm="using:Optepafi.ViewModels.ModelCreating"
         mc:Ignorable="d"
         x:Class="Optepafi.Views.ModelCreating.ModelCreatingWindow"
-        x:DataType="mcVm:ModelCreatingWindowViewModel"
+        x:DataType="mcVm:ModelCreatingSessionViewModel"
         Title="ModelCreatingWindow" Width="1000" Height="700" 
         Content="{Binding CurrentViewModel}"
         Closing="Window_OnClosing"

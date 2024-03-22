@@ -1,25 +1,28 @@
 using System.Reactive;
+using Optepafi.ModelViews.Main;
+using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ViewModels.Main;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.ModelCreating;
 
-public class ModelCreatingWindowViewModel : SessionViewModel
+public class ModelCreatingSessionViewModel : SessionViewModel
 {
     private ViewModelBase _currentViewModel;
     public ModelCreatingViewModel ModelCreating { get; }
-    private MainMenuViewModel MainMenu{ get; }
+    public ModelCreatingSettingsViewModel ModelCreatingSettings { get; }
     public ViewModelBase CurrentViewModel
     {
         get => _currentViewModel;
         set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
 
-    public ModelCreatingWindowViewModel(MainMenuViewModel mainMenu)
+    public ModelCreatingSessionViewModel(MainParamsManagingModelView mainParamsManaging, ModelCreatingSessionModelView modelCreatingSession)
     {
-        MainMenu = mainMenu;
-        ModelCreating = new ModelCreatingViewModel(this);
-        CurrentViewModel = ModelCreating;
+        ModelCreating = new ModelCreatingViewModel(modelCreatingSession.ModelCreating);
+        ModelCreatingSettings = new ModelCreatingSettingsViewModel(modelCreatingSession.Settings, mainParamsManaging);
+        CurrentViewModel = ModelCreatingSettings;
+        
         OnClosingCommand = ReactiveCommand.Create(() =>
         {
             return ClosingRecommendation.CanClose;

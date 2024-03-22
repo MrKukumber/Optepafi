@@ -6,7 +6,7 @@ using Optepafi.ViewModels.PathFinding;
 
 namespace Optepafi.Views.PathFinding;
 
-public partial class PathFindingWindow : ReactiveWindow<PathFindingWindowViewModel>
+public partial class PathFindingWindow : ReactiveWindow<PathFindingSessionViewModel>
 {
     public PathFindingWindow()
     {
@@ -19,7 +19,7 @@ public partial class PathFindingWindow : ReactiveWindow<PathFindingWindowViewMod
         {
             switch (closingRecommendation)
             {
-                case PathFindingWindowViewModel.ClosingRecommendation.CanClose:
+                case PathFindingSessionViewModel.ClosingRecommendation.CanClose:
                     e.Cancel = false;
                     break;
                 //TODO:when added new values to ClosingRecommendation, handle them with new cases

@@ -8,7 +8,7 @@ using Optepafi.ViewModels.ModelCreating;
 
 namespace Optepafi.Views.ModelCreating;
 
-public partial class ModelCreatingWindow : ReactiveWindow<ModelCreatingWindowViewModel>
+public partial class ModelCreatingWindow : ReactiveWindow<ModelCreatingSessionViewModel>
 {
     public ModelCreatingWindow()
     {
@@ -21,7 +21,7 @@ public partial class ModelCreatingWindow : ReactiveWindow<ModelCreatingWindowVie
         {
             switch (closingRecommendation)
             {
-                case ModelCreatingWindowViewModel.ClosingRecommendation.CanClose:
+                case ModelCreatingSessionViewModel.ClosingRecommendation.CanClose:
                     e.Cancel = false;
                     break;
                 //TODO:when added new values to ClosingRecommendation, handle them with new cases

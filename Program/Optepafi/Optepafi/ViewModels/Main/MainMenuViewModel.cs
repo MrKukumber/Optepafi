@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Windows.Input;
 using ExCSS;
+using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ViewModels.ModelCreating;
 using Optepafi.ViewModels.PathFinding;
 using Optepafi.Views.ModelCreating;
@@ -23,7 +24,7 @@ public class MainMenuViewModel : ViewModelBase
         GoToSettingsCommand = ReactiveCommand.Create(() => { });
         CreatePathFindingSessionCommand = ReactiveCommand.Create(() =>
             {
-                var pathFindingSession = new PathFindingWindowViewModel(this);
+                var pathFindingSession = new PathFindingSessionViewModel(/*TODO: elegantnym sposobom predat hlavneho spravcu parametrov*/, new PathFindingSessionModelView());
                 Sessions.Add(pathFindingSession);
                 pathFindingSession.WhenAnyObservable(x => x.OnClosedCommand)
                     .Subscribe(_ => Sessions.Remove(pathFindingSession));
@@ -32,7 +33,7 @@ public class MainMenuViewModel : ViewModelBase
             isSessionsCountLessThanEight);
         CreateModelCreatingSessionCommand = ReactiveCommand.Create(() =>
             {
-                var modelCreatingSession = new ModelCreatingWindowViewModel(this);
+                var modelCreatingSession = new ModelCreatingSessionViewModel(/*TODO: elegantnym sposobom predat hlavneho spravcu parametrov*/, new ModelCreatingSessionModelView());
                 Sessions.Add(modelCreatingSession);
                 modelCreatingSession.WhenAnyObservable(x => x.OnClosedCommand)
                     .Subscribe(_ => Sessions.Remove(modelCreatingSession));
@@ -42,6 +43,6 @@ public class MainMenuViewModel : ViewModelBase
     }
     
     public ReactiveCommand<Unit,Unit> GoToSettingsCommand { get; }
-    public ReactiveCommand<Unit, PathFindingWindowViewModel> CreatePathFindingSessionCommand { get; }
-    public ReactiveCommand<Unit, ModelCreatingWindowViewModel> CreateModelCreatingSessionCommand{ get; }
+    public ReactiveCommand<Unit, PathFindingSessionViewModel> CreatePathFindingSessionCommand { get; }
+    public ReactiveCommand<Unit, ModelCreatingSessionViewModel> CreateModelCreatingSessionCommand{ get; }
 }

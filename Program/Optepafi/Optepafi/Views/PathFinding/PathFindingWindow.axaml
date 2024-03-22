@@ -6,7 +6,7 @@
         xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
         mc:Ignorable="d" 
         x:Class="Optepafi.Views.PathFinding.PathFindingWindow"
-        x:DataType="pfVm:PathFindingWindowViewModel"
+        x:DataType="pfVm:PathFindingSessionViewModel"
         Title="PathFindingWindow" Width="1000" Height="700"
         Content="{Binding CurrentViewModel}"
         Closing="Window_OnClosing"

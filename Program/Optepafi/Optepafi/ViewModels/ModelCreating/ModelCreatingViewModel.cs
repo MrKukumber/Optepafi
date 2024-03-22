@@ -1,10 +1,12 @@
+using Optepafi.ModelViews.ModelCreating;
+
 namespace Optepafi.ViewModels.ModelCreating;
 
 public class ModelCreatingViewModel : ViewModelBase
 {
-    private ModelCreatingWindowViewModel ParentModelCreatingWindow { get; }
-    public ModelCreatingViewModel(ModelCreatingWindowViewModel parentModelCreatingWindow)
+    public MCModelCreatingModelView ModelCreatingMv {get;}
+    public ModelCreatingViewModel(MCModelCreatingModelView modelCreatingMv)
     {
-        ParentModelCreatingWindow = parentModelCreatingWindow;
+        ModelCreatingMv = modelCreatingMv;
     }
 }
