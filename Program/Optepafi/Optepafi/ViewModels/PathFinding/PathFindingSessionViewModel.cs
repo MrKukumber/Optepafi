@@ -20,10 +20,10 @@ public class PathFindingSessionViewModel : SessionViewModel
         get => _currentViewModel;
         set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
-    public PathFindingSessionViewModel(MainParamsManagingModelView mainParamsManagingMv, PathFindingSessionModelView pathFindingSessionMv)
+    public PathFindingSessionViewModel(PathFindingSessionModelView pathFindingSessionMv)
     {
         PathFinding = new PathFindingViewModel(pathFindingSessionMv.PathFinding);
-        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings, mainParamsManagingMv);
+        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings);
         RelevanceFeedback = new RelevanceFeedbackViewModel(pathFindingSessionMv.RelevanceFeedback);
         CurrentViewModel = PathFindingSettings;
 

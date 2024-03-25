@@ -174,9 +174,17 @@ hladal som vyskove data pokryvajuce celu zem
   - okrem ViewModelu budem mat aj tzv ModelView - ten bude odpovedat povodnym session controlerom s tym ze bude mat stale povodnu funkciu spracovania dat pre jednotlive session-y, ale nebude "kontrolovat" priebeh jednotlyvych session-ov
   - ViewModel:
     - stara sa hlavne o view, vie co sa ma kedy zobrazovat, ako ma fungovat ovladanie aplikacie, obsahuje vedomu logiku aplikacie
-    - jednotlive viewModel-y by mali byt co najnezavislejsie, data prijimat vyhradne od ModelView-u, kory je shcopny ich vsetky dorucit
+    - jednotlive viewModel-y by mali byt co najnezavislejsie, data prijimat vyhradne od ModelView-u, kory je shcopny im vsetky dorucit
   -ModelView:
     - stara sa hlavne o model, spracovava data, obsahuje postupy, ktore su potrebne na vygenerovanie pozadovanych dat ViewModel-om,
     - jednotlive ModelView-vy si medzi sebou data predavaju, aby nedochadzalo ku neziaducim opakovaniam vypoctov, a nasledne ich ponukaju ViewModel-om
     - zaroven poznaju logiku spracovania dat, vedia co je potrebne spravit v akom poradi, aby boli schopne zadovazit pozadovany vystup
   - v posledne uvedenej vlastnosti sa budu ModelView a ViewModel trocha byt...je potrebne vzdy urcit, kto bude zodpovedat za danu logicku cinnost aplikacie
+
+## 22.3.2024
+
+- dokoncena architektura pre MVVM+MV model
+
+## 23.3.2024
+
+- doporucena kniznica Rastom, na spracovanie geospatila dat - *doplnit* - mozno mi to nejakym sposobom pomoze na seba nalepit mapu s vyskovymi datami...

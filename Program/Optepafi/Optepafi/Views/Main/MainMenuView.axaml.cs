@@ -19,8 +19,7 @@ public partial class MainMenuView : ReactiveUserControl<MainMenuViewModel>
         
         this.WhenActivated(disposables =>
         {
-            ViewModel!.WhenAnyObservable(x => x.CreateModelCreatingSessionCommand)
-                .Subscribe(modelCreatingSession =>
+            ViewModel!.CreateModelCreatingSessionCommand.Subscribe(modelCreatingSession =>
                 {
                     var newWindow = new ModelCreatingWindow
                     {
@@ -30,8 +29,7 @@ public partial class MainMenuView : ReactiveUserControl<MainMenuViewModel>
                 })
                 .DisposeWith(disposables);
 
-            ViewModel!.WhenAnyObservable(x => x.CreatePathFindingSessionCommand)
-                .Subscribe(pathFindingSession =>
+            ViewModel!.CreatePathFindingSessionCommand.Subscribe(pathFindingSession =>
                 {
                     var newWindow = new PathFindingWindow
                     {

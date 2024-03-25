@@ -17,10 +17,10 @@ public class ModelCreatingSessionViewModel : SessionViewModel
         set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
 
-    public ModelCreatingSessionViewModel(MainParamsManagingModelView mainParamsManaging, ModelCreatingSessionModelView modelCreatingSession)
+    public ModelCreatingSessionViewModel(ModelCreatingSessionModelView modelCreatingSessionMv)
     {
-        ModelCreating = new ModelCreatingViewModel(modelCreatingSession.ModelCreating);
-        ModelCreatingSettings = new ModelCreatingSettingsViewModel(modelCreatingSession.Settings, mainParamsManaging);
+        ModelCreating = new ModelCreatingViewModel(modelCreatingSessionMv.ModelCreating);
+        ModelCreatingSettings = new ModelCreatingSettingsViewModel(modelCreatingSessionMv.Settings);
         CurrentViewModel = ModelCreatingSettings;
         
         OnClosingCommand = ReactiveCommand.Create(() =>

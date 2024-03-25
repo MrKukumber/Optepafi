@@ -8,10 +8,9 @@ public class ModelCreatingSettingsViewModel : ViewModelBase
     public MCSettingsModelView SettingsMv { get; }
     public MainParamsManagingModelView MainParamsManaging { get; }
 
-    public ModelCreatingSettingsViewModel(MCSettingsModelView settingsMv,
-        MainParamsManagingModelView mainParamsManaging)
+    public ModelCreatingSettingsViewModel(MCSettingsModelView settingsMv)
     {
         SettingsMv = settingsMv;
-        MainParamsManaging = mainParamsManaging;
+        MainParamsManaging = MainParamsManagingModelView.Instance;
     }
 }

@@ -8,10 +8,10 @@ public class PathFindingSettingsViewModel : ViewModelBase
 {
     public PFSettingsModelView SettingsMv { get;}
     public MainParamsManagingModelView MainParamsManagingMv { get; }
-    public PathFindingSettingsViewModel(PFSettingsModelView settingsesMv, MainParamsManagingModelView mainParamsManagingMv)
+    public PathFindingSettingsViewModel(PFSettingsModelView settingsesMv)
     {
         SettingsMv = settingsesMv;
-        MainParamsManagingMv = mainParamsManagingMv;
+        MainParamsManagingMv = MainParamsManagingModelView.Instance;
     }
     
 }

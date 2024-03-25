@@ -18,6 +18,14 @@
         },
         "runtime": {
           "Optepafi.dll": {}
+        },
+        "resources": {
+          "en-GB/Optepafi.resources.dll": {
+            "locale": "en-GB"
+          },
+          "sk-SK/Optepafi.resources.dll": {
+            "locale": "sk-SK"
+          }
         }
       },
       "Avalonia/11.0.6": {

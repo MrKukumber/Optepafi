@@ -15,16 +15,17 @@ namespace Optepafi.ViewModels.Main;
 
 public class MainMenuViewModel : ViewModelBase
 {
+    private const int SessionsMaxCount = 8;
     public ObservableCollection<SessionViewModel> Sessions { get; } = new();
     public MainMenuViewModel()
     {
         IObservable<bool> isSessionsCountLessThanEight = Sessions.WhenAnyValue(
             s => s.Count,
-             count => count <= 8);
+             count => count <= SessionsMaxCount);
         GoToSettingsCommand = ReactiveCommand.Create(() => { });
         CreatePathFindingSessionCommand = ReactiveCommand.Create(() =>
             {
-                var pathFindingSession = new PathFindingSessionViewModel(/*TODO: elegantnym sposobom predat hlavneho spravcu parametrov*/, new PathFindingSessionModelView());
+                var pathFindingSession = new PathFindingSessionViewModel(new PathFindingSessionModelView());
                 Sessions.Add(pathFindingSession);
                 pathFindingSession.WhenAnyObservable(x => x.OnClosedCommand)
                     .Subscribe(_ => Sessions.Remove(pathFindingSession));
@@ -33,7 +34,7 @@ public class MainMenuViewModel : ViewModelBase
             isSessionsCountLessThanEight);
         CreateModelCreatingSessionCommand = ReactiveCommand.Create(() =>
             {
-                var modelCreatingSession = new ModelCreatingSessionViewModel(/*TODO: elegantnym sposobom predat hlavneho spravcu parametrov*/, new ModelCreatingSessionModelView());
+                var modelCreatingSession = new ModelCreatingSessionViewModel(new ModelCreatingSessionModelView());
                 Sessions.Add(modelCreatingSession);
                 modelCreatingSession.WhenAnyObservable(x => x.OnClosedCommand)
                     .Subscribe(_ => Sessions.Remove(modelCreatingSession));

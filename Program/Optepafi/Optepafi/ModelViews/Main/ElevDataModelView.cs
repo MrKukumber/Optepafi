@@ -1,6 +1,12 @@
 namespace Optepafi.ModelViews.Main;
 
-public class ElevDataModelView : ModelViewBase
+public sealed class ElevDataModelView : ModelViewBase
 {
     
+    private static ElevDataModelView _instance = new();
+    private ElevDataModelView(){}
+    public static ElevDataModelView Instance
+    {
+        get => _instance;
+    }
 }
