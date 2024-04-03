@@ -188,3 +188,18 @@ hladal som vyskove data pokryvajuce celu zem
 ## 23.3.2024
 
 - doporucena kniznica Rastom, na spracovanie geospatila dat - *doplnit* - mozno mi to nejakym sposobom pomoze na seba nalepit mapu s vyskovymi datami...
+
+## 26.3.2024
+
+- napady z vcerajsej konzultacie
+  - dynamicky nechavat vyhodnocovat vahy hran pocas vyhladavania cesty a casche-ovat tieto hodnoty
+  - spracovavat v mape aj tratove symboly a potom vyhladavat na tejto trati vs interaktivne vyhladavanie medzi dvomi bodmi
+  - zahustovanie grafu pocas hladania cesty (zlozite, mozno nie vhodne pri tom interaktivnom vyhladavani)
+    - teda nechat spracovanie grafu zavisle na algoritmu...algoritmus si urci, ako chce mat predspracovany graf kym sa na nom spusti
+    - problem zavislosti algoritmu na template-u a mapovom formatu
+
+## 3.4.2024
+
+- pri nacitani mapy naparsujem mapu do objektovej reprezentacie a nasledne tato reprezentacia sa bude vyuzivat ako mapa z ktorej sa budu vytvarat dalsie konstrukty
+  - tympto sposobom zamadzim prilis dlhemu uzamknutiu mapoveho suboru / problemy so zmenou/odstranenim mapoveho suboru pocas tvorenia dalsich konstruktov
+  - tym ze vytvorim reprezentaciu, usetrim aj mnoho miesta, ktore by bolo potrebne pri nacitani xml mapy

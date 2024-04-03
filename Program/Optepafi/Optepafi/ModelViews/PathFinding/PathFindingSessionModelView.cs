@@ -2,7 +2,7 @@ using System.IO;
 
 namespace Optepafi.ModelViews.ModelCreating;
 
-public class PathFindingSessionModelView : SessionModelView
+public partial class PathFindingSessionModelView : SessionModelView
 {
     public PFSettingsModelView Settings { get; }
     public PFGraphCreatingModelView GraphCreating { get; }
@@ -24,40 +24,6 @@ public class PathFindingSessionModelView : SessionModelView
 
     }
 
-    private class PFSettingsIntraModelView : PFSettingsModelView
-    {
-        
-    }
     
-    private class PFGraphCreatingIntraModelView : PFGraphCreatingModelView
-    {
-        private PFSettingsIntraModelView Settings { get; }
-
-        public PFGraphCreatingIntraModelView(PFSettingsIntraModelView settings)
-        {
-            Settings = settings;
-        }
-    }
     
-    private class PFRelevanceFeedbackIntraModelView : PFRelevanceFeedbackModelView
-    {
-        private PFSettingsIntraModelView Settings { get; }
-        private PFGraphCreatingIntraModelView GraphCreating { get; }
-
-        public PFRelevanceFeedbackIntraModelView(PFSettingsIntraModelView settings, PFGraphCreatingIntraModelView graphCreating)
-        {
-            Settings = settings;
-            GraphCreating = graphCreating;
-        }
-    }
-    
-    private class PFPathFindingIntraModelView : PFPathFindingModelView
-    {
-        private PFRelevanceFeedbackIntraModelView RelevanceFeedback { get; }
-
-        public PFPathFindingIntraModelView(PFRelevanceFeedbackIntraModelView relevanceFeedback)
-        {
-            RelevanceFeedback = relevanceFeedback;
-        }
-    }
 }

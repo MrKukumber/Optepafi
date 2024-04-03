@@ -4,21 +4,23 @@ using System.Reactive.Linq;
 using System.Windows.Input;
 using Avalonia.Controls;
 using Optepafi.Models;
+using Optepafi.Models.AlgorithmMan;
+using Optepafi.Models.ElevationDataMan;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Main;
 
 public class MainSettingsViewModel : ViewModelBase
 {
-    private SearchingAlgorithm _selectedAlgorithm;
-    private ElevSource _defaultElevSource;
+    private ISearchAlgorithm _selectedAlgorithm;
+    private IElevSource _defaultElevSource;
     public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
     public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
-    public Interaction<ElevConfigViewModel, ElevSource> ElevConfigInteraction { get; }
+    public Interaction<ElevConfigViewModel, IElevSource> ElevConfigInteraction { get; }
     private ElevConfigViewModel ElevConfig { get; }
     public MainSettingsViewModel()
     {
-        ElevConfigInteraction = new Interaction<ElevConfigViewModel, ElevSource>();
+        ElevConfigInteraction = new Interaction<ElevConfigViewModel, IElevSource>();
         ElevConfig = new ElevConfigViewModel();
         
         GoToMainMenuCommand = ReactiveCommand.Create(() => { });
@@ -28,13 +30,13 @@ public class MainSettingsViewModel : ViewModelBase
         });
     }
     
-    public ObservableCollection<SearchingAlgorithm> Algorithms { get; }
-    public SearchingAlgorithm? DefaultAlgorithm
+    public ObservableCollection<ISearchAlgorithm> Algorithms { get; }
+    public ISearchAlgorithm? DefaultAlgorithm
     {
         get => _selectedAlgorithm;
         set => this.RaiseAndSetIfChanged(ref _selectedAlgorithm, value);
     }
-    public ElevSource? DefaultElevSource
+    public IElevSource? DefaultElevSource
     {
         get => _defaultElevSource;
         set => this.RaiseAndSetIfChanged(ref _defaultElevSource, value);

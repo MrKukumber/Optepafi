@@ -77,4 +77,11 @@
         <LastGenOutput>Local.en-US.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
+
+
+    <ItemGroup>
+      <Folder Include="Models\ElevationDataMan\ElevSources\" />
+      <Folder Include="Models\MapMan\MapFormats\" />
+      <Folder Include="Models\MapMan\MapGraphics\" />
+    </ItemGroup>
 </Project>

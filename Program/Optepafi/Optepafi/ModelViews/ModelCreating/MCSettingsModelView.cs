@@ -6,3 +6,11 @@ public class MCSettingsModelView :ModelViewBase
     {
     }
 }
+
+public partial class ModelCreatingSessionModelView : SessionModelView
+{
+    private class MCSettingsIntraModelView : MCSettingsModelView
+    {
+            
+    }
+}

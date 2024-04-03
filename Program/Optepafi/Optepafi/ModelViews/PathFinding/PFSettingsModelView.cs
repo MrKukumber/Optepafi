@@ -4,3 +4,11 @@ public class PFSettingsModelView : ModelViewBase
 {
     protected PFSettingsModelView(){}
 }
+
+public partial class PathFindingSessionModelView : SessionModelView
+{
+    private class PFSettingsIntraModelView : PFSettingsModelView
+    {
+        
+    }
+}

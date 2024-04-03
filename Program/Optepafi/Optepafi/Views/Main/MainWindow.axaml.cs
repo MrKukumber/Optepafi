@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Optepafi.Models;
+using Optepafi.Models.ElevationDataMan;
 using Optepafi.ViewModels;
 using Optepafi.ViewModels.Main;
 using ReactiveUI;
@@ -24,7 +25,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             action(ViewModel.MainSettings.ElevConfigInteraction.RegisterHandler(ShowElevConfig)));
     }
 
-    private void ShowElevConfig(InteractionContext<ElevConfigViewModel, ElevSource> interaction)
+    private void ShowElevConfig(InteractionContext<ElevConfigViewModel, IElevSource> interaction)
     {
         Content = new ElevConfigView
         {
