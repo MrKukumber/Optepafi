@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Optepafi.Models.MapRepre;
 
 namespace Optepafi.Models.MapMan;
@@ -8,11 +9,10 @@ namespace Optepafi.Models.MapMan;
 /// </summary>
 public static class MapManager
 {
-    public static List<IMapFormat> AllMapFormats { get; } = new List<IMapFormat>();
+    public static IMapFormat[] MapFormats { get; } = { /*TODO: doplnit existujuce mapove formaty */ };
 
-    public static List<IMapFormat> GetCorrespondingFormatsTo(List<> mapRepres)
+    public static IMap GetMapOfFrom(IMapFormat mapFormat, StreamReader file)
     {
-        //TODO
-        return null;
+        return mapFormat.CreateMap(file);
     }
 }

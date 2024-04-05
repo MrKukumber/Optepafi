@@ -1,6 +1,6 @@
 namespace Optepafi.Models.MapRepre.MapRepres;
 
-public class CompleteGraphRepre
+public abstract class CompleteGraphRepre
 {
     //TODO: implement IMapRepre interface
 }
