@@ -1,6 +1,6 @@
 namespace Optepafi.Models.ElevationDataMan;
 
-public interface IElevSource
+public interface IElevSourceRep
 {
     
 }

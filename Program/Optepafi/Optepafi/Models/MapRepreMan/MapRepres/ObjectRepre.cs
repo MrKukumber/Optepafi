@@ -1,4 +1,4 @@
-namespace Optepafi.Models.MapRepre.MapRepres;
+namespace Optepafi.Models.MapRepreMan.MapRepres;
 
 public abstract class ObjectRepre 
 {

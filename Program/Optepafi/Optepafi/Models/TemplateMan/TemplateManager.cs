@@ -4,5 +4,5 @@ namespace Optepafi.Models.TemplateMan;
 
 public static class TemplateManager
 {
-    public static ITemplateAgent[] TemplateAgents { get; } = {/*TODO: doplnit templateAgents */ };
+    public static ITemplateRep<Template>[] TemplateAgents { get; } = {/*TODO: doplnit templateAgents */ };
 }

@@ -203,3 +203,10 @@ hladal som vyskove data pokryvajuce celu zem
 - pri nacitani mapy naparsujem mapu do objektovej reprezentacie a nasledne tato reprezentacia sa bude vyuzivat ako mapa z ktorej sa budu vytvarat dalsie konstrukty
   - tympto sposobom zamadzim prilis dlhemu uzamknutiu mapoveho suboru / problemy so zmenou/odstranenim mapoveho suboru pocas tvorenia dalsich konstruktov
   - tym ze vytvorim reprezentaciu, usetrim aj mnoho miesta, ktore by bolo potrebne pri nacitani xml mapy
+
+## 5.4.2024
+
+- zacal som vytvarat triedy pre konstrukciu modelu
+  - vzdy existuje nejaka staticka trieda s ktorou sa da komunikovat a ziskavat od nej potrebne informacie
+  - nasledne existuju interface-y pre tzv agentov jednotlivych datovych struktur, ktori identifikuju jednotlive datove struktury a zaroven vytvaraju dane datove struktury, ktore su taktiez potomkovia jednotlivych interface-ov...
+    - je potrebne este pouvzovat o nazvoch "agentskych" tried a interfacov, ci to agent dava zmysel a zaroven sa zamysliet nad nejakym zapuzdrenim napriklad este...ze napriklad jednotlive struktury dokazeme vytvarat iba pomocou agentov

@@ -13,14 +13,14 @@ namespace Optepafi.ViewModels.Main;
 public class MainSettingsViewModel : ViewModelBase
 {
     private ISearchAlgorithm _selectedAlgorithm;
-    private IElevSource _defaultElevSource;
+    private IElevSourceRep _defaultElevSourceRep;
     public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
     public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
-    public Interaction<ElevConfigViewModel, IElevSource> ElevConfigInteraction { get; }
+    public Interaction<ElevConfigViewModel, IElevSourceRep> ElevConfigInteraction { get; }
     private ElevConfigViewModel ElevConfig { get; }
     public MainSettingsViewModel()
     {
-        ElevConfigInteraction = new Interaction<ElevConfigViewModel, IElevSource>();
+        ElevConfigInteraction = new Interaction<ElevConfigViewModel, IElevSourceRep>();
         ElevConfig = new ElevConfigViewModel();
         
         GoToMainMenuCommand = ReactiveCommand.Create(() => { });
@@ -36,9 +36,9 @@ public class MainSettingsViewModel : ViewModelBase
         get => _selectedAlgorithm;
         set => this.RaiseAndSetIfChanged(ref _selectedAlgorithm, value);
     }
-    public IElevSource? DefaultElevSource
+    public IElevSourceRep? DefaultElevSource
     {
-        get => _defaultElevSource;
-        set => this.RaiseAndSetIfChanged(ref _defaultElevSource, value);
+        get => _defaultElevSourceRep;
+        set => this.RaiseAndSetIfChanged(ref _defaultElevSourceRep, value);
     }
 }
