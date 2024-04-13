@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Optepafi.Models.MapMan;
 
-public interface IMapFormat<TMap> where TMap : Map
+public interface IMapFormat<out TMap> where TMap : Map
 {
     string Extension { get; }
     string MapFormatName { get; }

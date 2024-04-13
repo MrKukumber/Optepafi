@@ -1,6 +1,6 @@
 namespace Optepafi.Models.TemplateMan;
 
-public interface ITemplateRep<TTemplate> where TTemplate : Template
+public interface ITemplateRep<out TTemplate> where TTemplate : Template
 {
     string TemplateName { get; }
 

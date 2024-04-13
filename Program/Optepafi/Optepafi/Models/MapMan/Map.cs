@@ -7,5 +7,5 @@ public abstract class Map
     protected Map(IMapFormat<Map> mapFormat)
     {
         MapFormat = mapFormat;
-    } 
+    }
 }
