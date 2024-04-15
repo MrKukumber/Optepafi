@@ -13,4 +13,5 @@ public interface IMapFormat<out TMap> where TMap : Map
         return null;
     }
     TMap CreateMap(StreamReader inputFile);
+    
 }

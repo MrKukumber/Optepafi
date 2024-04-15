@@ -5,8 +5,5 @@ namespace Optepafi.Models.MapMan.Maps;
 
 public sealed class OMAP : Map
 {
-    public OMAP(OMAPFormat mapFormat) : base(mapFormat)
-    {
-        
-    }
+    public IMapFormat<OMAP> MapFormat { get; } = OMAPFormat.Instance;
 }
