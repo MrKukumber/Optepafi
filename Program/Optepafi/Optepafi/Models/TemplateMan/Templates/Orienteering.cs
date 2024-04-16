@@ -1,11 +1,10 @@
-using Avalonia.Controls;
+using System.Dynamic;
 
 namespace Optepafi.Models.TemplateMan.Templates;
 
-public class Orienteering : Template
+public class Orienteering : ITemplate
 {
-    //TODO: Implement ITemplate interface
-    public Orienteering(ITemplateRep<Template> templateRep) : base(templateRep)
-    {
-    }
+    public static Orienteering Instance { get; } = new();
+    private Orienteering() {}
+    public string TemplateName { get; }
 }

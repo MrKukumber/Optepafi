@@ -1,48 +1,40 @@
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml.Templates;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapRepreMan.MapRepres.ObjectRepres;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.Templates;
-using Template = Optepafi.Models.TemplateMan.Template;
 
 namespace Optepafi.Models.MapRepreMan;
 
-public interface IMapRepreRep<out TMapRepre> where TMapRepre : MapRepre
+public interface IMapRepreRep<out TMapRepre> where TMapRepre : IMapRepre
 {
     string MapRepreName { get; }
 
-    IElevDataDependentConstr<Template, Map, MapRepre>[] MapRepreElevDataDependentConstrs { get; }
+    IMapRepreConstr<ITemplate, IMap, TMapRepre>[] MapRepreConstrs { get; }
 
-    IElevDataIndependentConstr<Template, Map, MapRepre>[] MapRepreElevDataIndependentConstrs { get; }
-
-    TMapRepre? CastMapRepre(MapRepre mapRepre)
+    TMapRepre? CreateMapRepre<TTemplate, TMap>(TTemplate templateType, TMap map) where TTemplate : ITemplate where TMap : IMap
     {
-        if (mapRepre is TMapRepre cMapRepre) return cMapRepre;
-        return null;
-    }
-
-    TMapRepre? CreateMapRepre<TTemplate, TMap>(TTemplate template, TMap map) where TTemplate : Template where TMap : Map
-    {
-        foreach (var constructor in MapRepreElevDataIndependentConstrs)
+        foreach (var constructor in MapRepreConstrs)
         {
             if(constructor is IElevDataIndependentConstr<TTemplate,TMap,TMapRepre> c)
             {
-                return c.ConstructMapRepre(template, map);
+                return c.ConstructMapRepre(templateType, map);
             }
         }
-        return null;
+        return default;
     }
 
-    TMapRepre? CreateMapRepre<TTemplate, TMap>(TTemplate template, TMap map, ElevData elevData) where TTemplate : Template where TMap : Map
+    TMapRepre? CreateMapRepre<TTemplateType, TMap>(TTemplateType templateType, TMap map, ElevData elevData) where TTemplateType : ITemplate where TMap : IMap
     {
-        foreach (var constructor in MapRepreElevDataDependentConstrs)
+        foreach (var constructor in MapRepreConstrs)
         {
-            if (constructor is IElevDataDependentConstr<TTemplate, TMap, TMapRepre> c)
+            if (constructor is IElevDataDependentConstr<TTemplateType, TMap, TMapRepre> c)
             {
-                return c.ConstructMapRepre(template, map, elevData);
+                return c.ConstructMapRepre(templateType, map, elevData);
             }
         }
-        return null;
+        return default;
     }
 }
 /*

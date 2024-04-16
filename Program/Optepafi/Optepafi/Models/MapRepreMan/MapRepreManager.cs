@@ -10,19 +10,19 @@ namespace Optepafi.Models.MapRepreMan;
 public static class MapRepreManager
 {
     public static bool PreferUsingElevData;
-    public static IMapRepreRep<MapRepre>[] GraphRepres { get; } = { /*TODO: doplnit mapRepresAgents*/ };
+    public static IMapRepreRep<IMapRepre>[] GraphRepres { get; } = { /*TODO: doplnit mapRepresAgents*/ };
 
     public enum NeedsElevDataIndic { Yes, NotNecessary, No };
     //returns null, if there is no constructor for given templateRep, mapFormat and mapRepreRep
-    public static NeedsElevDataIndic? DoesNeedElevData(ITemplateRep<Template> templateRep, IMapFormat<Map> mapFormat, IMapRepreRep<MapRepre> mapRepreRep)
+    public static NeedsElevDataIndic? DoesNeedElevData(ITemplate template, IMapFormat<IMap> mapFormat, IMapRepreRep<IMapRepre> mapRepreRep)
     {
         
     }
 
-    public static HashSet<(ITemplateRep<Template>, IMapFormat<Map>)> UsableTemplateRepsAndMapFormatsCombinationsFor(
-        HashSet<IMapRepreRep<MapRepre>> mapRepreReps)
+    public static HashSet<(ITemplate, IMapFormat<IMap>)> UsableTemplatesAndMapFormatsCombinationsFor(
+        HashSet<IMapRepreRep<IMapRepre>> mapRepreReps)
     {
-        foreach (IMapRepreRep<MapRepre> mapRepreRep in mapRepreReps)
+        foreach (IMapRepreRep<IMapRepre> mapRepreRep in mapRepreReps)
         {
             
         }
@@ -30,15 +30,15 @@ public static class MapRepreManager
 
     // Creates map representation without using elevation data.
     // Returns null, if there is no constructor not using elevation data for creating map repre from template and map
-    public static MapRepre? CreateMapRepre(Template template, Map map, IMapRepreRep<MapRepre> mapRepreRep)
+    public static IMapRepre? CreateMapRepre(ITemplate template, IMap map, IMapRepreRep<IMapRepre> mapRepreRep)
     {
-        return mapRepreRep.CreateMapRepre(template.TemplateRep.CastTemplate(template)!, map.MapFormat.CastMap(map)!);
+        template.VisitByMapRepreRepAndTakeItToVisitMapForCreatingMapRepre(mapRepreRep, map);
     }
 
     // Creates map representation by using elevation data.
     // Returns null, if there is no constructor using elevation data for creating map repre from template and map
-    public static MapRepre? CreateMapRepre(Template template, Map map, IMapRepreRep<MapRepre> mapRepreRep, ElevData elevData)
+    public static IMapRepre? CreateMapRepre(ITemplate template, IMap map, IMapRepreRep<IMapRepre> mapRepreRep, ElevData elevData)
     {
-        return mapRepreRep.CreateMapRepre(template.TemplateRep.CastTemplate(template)!, map.MapFormat.CastMap(map)!, elevData);
+        template.VisitByMapRepreRepAndTakeItToVisitMapForCreatingMapRepre(mapRepreRep, map, elevData);
     }
 }

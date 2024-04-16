@@ -1,29 +1,11 @@
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapRepreMan.MapRepres.ObjectRepres;
+using Optepafi.Models.MapRepreMan.MapRepres.ObjectRepreConstrs;
 using Optepafi.Models.TemplateMan;
 
 namespace Optepafi.Models.MapRepreMan.MapRepres;
 
-public abstract class ObjectRepre : MapRepre
+public abstract class ObjectRepre : IMapRepre
 {
-    //TODO: implement IMapRepre interface
-    public IElevDataDependentConstr<Template, Map, MapRepre>[] mapRepreElevDataDependentConstr { get; } = { ObjectRepreOrienteeringOmapConstr.Instance };
-    
+    public IMapRepreRep<IMapRepre> MapRepreRep { get; } = ObjectRepreRep.Instance;
+    public IMapRepreConstr<ITemplate, IMap, IMapRepre>[] MapRepreElevDataDependentConstr { get; } = { ObjectRepreOrienteeringOmapConstr.Instance };
 }
-
-// TMapRepreConstr? GetMapRepreElevDataDependentConstr<TTemplate, TMap, TMapRepreConstr>()
-//    where TTemplate : Template
-//     where TMap : Map
-//     where TMapRepreConstr : IElevDataDependentConstr<TTemplate, TMap, MapRepre>
-// {
-//     if (ObjectRepreOrienteeringOmapConstr.Instance is TMapRepreConstr mapRepreConstructor)
-//         return mapRepreConstructor;
-//     return default;
-// }
-// TMapRepreConstr? GetMapRepreElevDataIndependentConstr<TTemplate, TMap, TMapRepreConstr>()
-//     where TTemplate : Template
-//     where TMap : Map
-//     where TMapRepreConstr : IElevDataIndependentConstr<TTemplate, TMap, MapRepre>
-// {
-//     return default;
-// }

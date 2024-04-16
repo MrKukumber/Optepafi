@@ -5,17 +5,17 @@ using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.Templates;
 
-namespace Optepafi.Models.MapRepreMan.MapRepres.ObjectRepres;
+namespace Optepafi.Models.MapRepreMan.MapRepres.ObjectRepreConstrs;
 
 public class ObjectRepreOrienteeringOmapConstr : IElevDataDependentConstr<Orienteering, OMAP, ObjectRepre>
 {
     public static ObjectRepreOrienteeringOmapConstr Instance { get; } = new ObjectRepreOrienteeringOmapConstr();
     private ObjectRepreOrienteeringOmapConstr(){}
 
-    public ObjectRepre? ConstructMapRepre(Template template, Map map, ElevData elevData)
+    public ObjectRepre? ConstructMapRepre(Orienteering templateType, OMAP map, ElevData elevData)
     {
-        
+        return null;
     }
-    public ITemplateRep<Orienteering> UsedTemplateRep { get => OrienteeringRep.Instance; }
+    public Orienteering UsedTemplateType { get => Orienteering.Instance; }
     public IMapFormat<OMAP> UsedMapFormat { get => OMAPFormat.Instance; }
 }

@@ -3,15 +3,9 @@ using System.IO;
 
 namespace Optepafi.Models.MapMan;
 
-public interface IMapFormat<out TMap> where TMap : Map
+public interface IMapFormat<out TMap> where TMap : IMap
 {
     string Extension { get; }
     string MapFormatName { get; }
-    TMap? CastMap(Map map)
-    {
-        if (map is TMap cMap) return cMap;
-        return null;
-    }
-    TMap CreateMap(StreamReader inputFile);
-    
+    TMap CreateMapFrom(StreamReader inputMapFile);
 }

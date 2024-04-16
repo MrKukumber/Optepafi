@@ -1,10 +1,13 @@
+using Avalonia.Controls;
+using Optepafi.Models.MapMan;
+using Optepafi.Models.MapRepreMan.MapRepres.ObjectRepreConstrs;
+using Optepafi.Models.TemplateMan;
+
 namespace Optepafi.Models.MapRepreMan.MapRepres;
 
-public class ObjectRepreRep
+public class ObjectRepreRep : IMapRepreRep<ObjectRepre>
 {
-    
-    private static ObjectRepreRep _instance = new ObjectRepreRep();
+    public static ObjectRepreRep Instance { get; } = new ();
     private ObjectRepreRep(){}
-    public static ObjectRepreRep Instance { get => _instance; }
-    
+    public IMapRepreConstr<ITemplate, IMap, ObjectRepre>[] MapRepreConstrs { get; } = { ObjectRepreOrienteeringOmapConstr.Instance };
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.CodeAnalysis.CSharp;
 using Optepafi.Models.MapRepreMan;
 
 namespace Optepafi.Models.MapMan;
@@ -9,10 +10,10 @@ namespace Optepafi.Models.MapMan;
 /// </summary>
 public static class MapManager
 {
-    public static IMapFormat<Map>[] MapFormats { get; } = { /*TODO: doplnit existujuce mapove formaty */ };
+    public static HashSet<IMapFormat<IMap>> MapFormats { get; } = new HashSet<IMapFormat<IMap>>();
 
-    public static Map GetMapOfFrom(IMapFormat<Map> mapFormat, StreamReader file)
+    public static IMap GetMapOfFrom(IMapFormat<IMap> mapFormat, StreamReader file)
     {
-        return mapFormat.CreateMap(file);
+        return mapFormat.CreateMapFrom(file);
     }
 }
