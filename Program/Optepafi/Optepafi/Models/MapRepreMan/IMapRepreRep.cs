@@ -37,32 +37,3 @@ public interface IMapRepreRep<out TMapRepre> where TMapRepre : IMapRepre
         return default;
     }
 }
-/*
-    TMapRepre? CreateMapRepre<TTemplate, TMap>(TTemplate template, TMap map) where TTemplate : Template where TMap : Map
-    {
-        IElevDataIndependentConstr<TTemplate, TMap, TMapRepre>? constructor =
-            GetMapRepreElevDataIndependentConstr<TTemplate, TMap, IElevDataIndependentConstr<TTemplate, TMap, TMapRepre>>();
-        if (constructor is not null) 
-            return constructor.ConstructMapRepre(template, map);
-        return null;
-    }
-
-    TMapRepre? CreateMapRepre<TTemplate, TMap>(TTemplate template, TMap map, ElevData elevData) where TTemplate : Template where TMap : Map
-    {
-        IElevDataDependentConstr<TTemplate, TMap, TMapRepre>? constructor =
-            GetMapRepreElevDataDependentConstr<TTemplate, TMap, IElevDataDependentConstr<TTemplate, TMap, TMapRepre>>();
-        if (constructor is not null) 
-            return constructor.ConstructMapRepre(template, map, elevData);
-        return null;
-    }
-
-    TMapRepreConstr? GetMapRepreElevDataDependentConstr<TTemplate, TMap, TMapRepreConstr>()
-        where TTemplate : Template
-        where TMap : Map
-        where TMapRepreConstr : IElevDataDependentConstr<TTemplate, TMap, MapRepre>;
-
-    TMapRepreConstr? GetMapRepreElevDataIndependentConstr<TTemplate, TMap, TMapRepreConstr>()
-        where TTemplate : Template
-        where TMap : Map
-        where TMapRepreConstr : IElevDataIndependentConstr<TTemplate, TMap, MapRepre>;
-*/
