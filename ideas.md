@@ -183,3 +183,19 @@ Předpokládá se možnost parametrizace vyhledávácích algoritmů např. úda
 - ak dostaneme neprekonatelny polygon, mozeme vnutorne vrcholy odstranit z grafu
 - vrchol bude bud zafixovany alebo nie, ak nebude zafixovany, bude v najmenej energeticky narocnej polohe...
 - graf bude mat na zaciatku styri zafixovane vrcholy a to v rohoch siete...popriade po stranach tiez
+
+
+
+
+
+- vyberie sa bud template TE alebo algoritmus AL alebo mapa MA
+- podla toho sa vytvori ponuka pre zvysne dve veci
+- po vybrani druhej sa vytvori ponuka tej poslednej
+- ak sa zrusi vyber nejakeho z tychto roch atributov, znova sa prepocitaju ponuky
+- ked je vybrany template TE, je umoznene vybrat model MO, ak sa vyber zrusi vyber M sa zrusi tiez a znova sa caka, kym sa vyberie tempalte
+
+- po vybere vsetkych TE AL MA sa skontroluje korektnost vyskovych dat...ci pre vybrany algoritmus, konkretne pre jemu prisluchajuce vytvaranie grafu, je potrebne vyuzitie vyskovych dat a ak ano, tak ci pre danu polohu mapy su vyskove data stiahnute, ak nebudu upozorni uzivatela a ponukne navrat do nastaveni
+- algoritmus dostane template TE, mapu MA a necha si vygenerovat reprezentaciu mapy RE, tak aby sa mapa MA uz nasledne nemusela vyuzivat
+
+- nasledne algoritmus dostane trat TR a model MO a zacne hladat cestu CE trate TR na reprezentacii RE, ktora vracia uz finalny graf GR, ktoreho ceny hran si algoritmus AL necha vypocitat od template-u TE z modelu MO
+- reprezentacia RE si ak potrebuje postupne dovytvara zo seba graf, ktory vracia algoritmu, ktory na nom nasledne hlada danu cestu
