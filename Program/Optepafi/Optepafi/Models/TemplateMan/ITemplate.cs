@@ -11,9 +11,10 @@ namespace Optepafi.Models.TemplateMan;
 public interface ITemplate
 {
     string TemplateName { get; }
+    string TemplateFileExtension { get; }
+    
+    
 
-    public IMapRepresentation<ITemplate>? VisitByMapRepreRepAndTakeItToVisitMapForCreatingMapRepre(IMapRepreRepresentativ<IMapRepresentation<ITemplate>> mapRepreRep, 
-        IMap map, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
-    public IMapRepresentation<ITemplate>? VisitByMapRepreRepAndTakeItToVisitMapForCreatingMapRepre(IMapRepreRepresentativ<IMapRepresentation<ITemplate>> mapRepreRep, 
-        IMap map, ElevData elevData, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
+    public TOut AcceptGeneric<TOut, TOtherParams>(ITemplateGenericVisitor<TOut, TOtherParams> genericVisitor,
+        TOtherParams otherParams);
 }

@@ -11,13 +11,11 @@ namespace Optepafi.Models.MapMan;
 
 public interface IMap
 {
+    string Name { get; }
     IMapFormat<IMap> MapFormat { get; init; }
-    void FillUp(StreamReader inputMapFile);
+    MapManager.MapCreationResult FillUp(StreamReader inputMapFile);
     
-    IMapRepresentation<ITemplate>? VisitByMapRepreRepWhoBroughtTemplateForCreatingMapRepre<TTemplate>(IMapRepreRepresentativ<IMapRepresentation<ITemplate>> mapRepreRep,
-        TTemplate template, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken) where TTemplate : ITemplate;
-    IMapRepresentation<ITemplate>? VisitByMapRepreRepWhoBroughtTemplateForCreatingMapRepre<TTemplate>(IMapRepreRepresentativ<IMapRepresentation<ITemplate>> mapRepreRep, 
-        TTemplate template, ElevData elevData, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken) where TTemplate : ITemplate;
-    
-    
+    public TOut AcceptGenericWithSomeone<TOut, TSomeone, TSomeonesConstraint, TOtherParams>(
+        IMapGenericVisitorWithSomeone<TOut,TSomeonesConstraint,TOtherParams> genericVisitorWithSomeone,
+        TSomeone someone, TOtherParams otherParams) where TSomeone : TSomeonesConstraint;
 }

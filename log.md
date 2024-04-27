@@ -210,3 +210,84 @@ hladal som vyskove data pokryvajuce celu zem
   - vzdy existuje nejaka staticka trieda s ktorou sa da komunikovat a ziskavat od nej potrebne informacie
   - nasledne existuju interface-y pre tzv agentov jednotlivych datovych struktur, ktori identifikuju jednotlive datove struktury a zaroven vytvaraju dane datove struktury, ktore su taktiez potomkovia jednotlivych interface-ov...
     - je potrebne este pouvzovat o nazvoch "agentskych" tried a interfacov, ci to agent dava zmysel a zaroven sa zamysliet nad nejakym zapuzdrenim napriklad este...ze napriklad jednotlive struktury dokazeme vytvarat iba pomocou agentov
+
+## 24.4.2024
+
+opozdely log z programovania projetku
+
+### co sa tyka modelu:
+
+- jednotlive datove komponenty v procese maju svojich reprezentantov, tj. mapovy format, template, zastupca reprezentacie mapy a algoritmus
+- tito reprezentanti su singletony a su ponukane uzivatelovi, aby si z nich vybral vhodnu kombinaciu
+- reprezentant ma vacsinou potom schopnost vytvorit zastupovanu mapu, mapovu reprezentaciu ci algoritmovy executor, s ktorym sa nadalej pracuje
+- zastupca povacsinou obsahuje genericky parameter, ktory reprezentuje datovy typ, ktory zastupuje
+- template je specialy reprezentant, reprezentuje iba sam seba a v podstate sluzi hlavne ako typ pre genericke parametre jednotlivych objektov, ktore ked napriklad chcu spolupracovat, tak musia suhlasit prave templatovym generickym parametrom
+- taktiez este kazda datova komponenta ma aj svojho manager-a, co byva povacsinou staticka trieda, ktora usnadnuje pracu s danym typom dat
+
+---
+
+- konkretne ku jednotlivym datovym objektom:
+
+#### IMapFormat je zastupcom nejakej IMapy
+
+- IMap je objektova reprezentacia nejakeho mapoveho suboru, mala by byt vytvoritelna v linearnom case, bez zloziteho spracovania...varianta je napriklad iba ulozit text suboru (not ideal)
+
+#### ITemplate je zastupcom sameho seba
+
+- vyjadruje to, ake atributy by mal graf v jeho mene obsahovat
+- taktiez sa pre konkretny template vytvaraju uzivatelske modely, ktore z jeho atributov dokazu spocitat vahu jednotlivych hran grafu
+
+#### IMapRepreRepresentativ zastupuje nejaku IMapRepresentation
+
+- komplikovanejsi koncept ako predosle dva
+- kazdy reprezentativ obsahuje kolekciu konstruktorov, ktore reprezentuju schopnost pre dany template a mapu skonstruovat mapovu reprezentaciu
+- mapova reprezentacia, ktoru reprezentuje nejaky reprezentativ je potom iba interface, ktory je implementovany pre jednotlive konkretne kombinacie map a template-ov, navonok vsak uz vystupuje iba ako ona sama reprezentacia
+- konstrukcia je v podstate pred okolnym svetom schovana, cez MapRepresentationManager-a ani niesu vidiet jednotlive konstruktory, ci implementacie interfacov mapovych reprezentacii. Jedine co je vidiet su pouzitelne kombinacie map a templatov pre vytvorenie danej reprezentacie
+
+#### ISearchAlgorithm bude podobne ako ITemplate zastupovat sameho seba
+
+- este neodmyslene na 100%
+- bude dorucovat svoj vlastny executor, v ktorom sa nasledne bude moct dany algoritmus spustat a ziskavat za jeho pomoci najrychlejsie cesty
+- 
+
+---
+
+- Naskytla sa otazka, ci nespravit aj ModelView genericky, tym usetrit mnoho trapenia s visitor patternom a castovanim vsobecne. Rozhodol som sa vsak neist touto strastiplnou cestou, nakolko sice by to ulahcilo pracu s Modelom, horror by vsak nastal v prepojeni negenerickeho ViewModel-u s generickym ModelView-om.
+- Cize cely ModelView zostane negenericky, teda pri presune jednotlivych dat bude treba v kazdom modely znova castovat/view-pattern-ovat a type-check-ovat vsetky data
+
+## 26.4.2024
+
+### co sa tyka modelu
+
+- upraveny genericky visitor pattern, vytvoreny, tak aby bol co najgeneralickejsi
+- koli tomu bolo treba prerobit manager-ov zo statickych tried na singletony, aby mohli implementovat IVisitor interface-y
+
+#### UserModel, IVertex, IOrientedEdge, Attributes, Coords
+
+- IVertex\<TTemplate\> a IOrientedEdge\<TTemplate\> budu dva obecne koncepty pre reprezentaciu vyhladavacieho grafu
+- kazdy Vertex bude sprostredkovavat mnozinu orientovanych hran z neho veducich, nasledne metodu/vlastnost pre ziskanie a nastavenie vahy pre jednotlive hrany
+  - sprostredkovanie tymto metodovym sposobom zabezpeci, ze si kazda mapova reprezentacia bude moct vrcholy implementovat podla vlastneho uvazenia
+  - teoreticky, nakolko by dane metody nemali trvat dlho mozne nahradit vlastnostami, ktore si kazda mapova reprezentacia bude moct implementovat sama
+- OrientedEdge bude obsahovat zasa dva vrcholy, pociatocny a koncovy
+- kazdy vrchol a hrana su genericke podla nejakeho template-u a nasledne v sebe nesu atributy daneho template-u
+- samozrejme mapove reprezentacie mozu implementovat dodatocne interface-y, ktore zabezpecuju dodatocne vlastnosti vrcholov/hran, implementaciu tychto interface-ov mozu nasledne jednotlive algoritmy vyzadovat
+
+- UserModel\<TTemplate\> bude obsahovat metodu, ktora dostane hranu a vrati jej vahu, nic viac, nic menej
+- bude musiet byt schopny vypocitat vahu pre akukolvek moznu kombinaciu atributov, ktore template umoznuje
+
+- Coords bude jednotny system koordinantov v aplikacii
+- jednotlive templaty si mozu pozicie zachovavat v akymkolvek sposobom, avsak musia byt preveditelne z a na typ Coords
+- v tychto jednotkach bude komunikavat ViewModel s ModelViewom a potazmo Modelom
+- taktiez vysledna cesta, vracana algoritmom bude obsahovat koordinanty jednotlivych vrcholov cesty v Coords systeme
+
+#### SearchAlgorithm
+
+- kazde spustenie algoritmu si bude uzamikat danu mapovu reprezentaciu, aby s nou niekto iny nezacal nahodou pracovat
+- lagoritmy budu mat dva typy spustenia, bud klasicky cez metodu `Path[][] Execute((Coord,Coord)[] Model[])`, ktora spusti trat zlozenu z viacerych postupov na vsetkych vlozenych modeloch
+  - alebo pomocou vyziadaneho executoru, ktoremu sa poda konkretny model a nasledne na nom nezavysle mozno pytat trate 
+  - executor si taktiez zamyka mapovo reprezentaciu pre seba, dokym nieje dispose-nuty, vtedy uvolnuje mapovu reprezentaciu
+  - tymto sposobom sa zaruci, ze executor nemusi znova a znova prepocitavat uz raz prejdene oblasti
+  - preto je potrebne s nim narabat aj opatrne, nakolko pri dinamicky generovanych mapovych reprezentaciach moze byt problem s velkostou vygenerovaneho grafu
+  
+- ci uz po skonceni metody Execute alebo po dispose-nuti executoru, mapova reprezentacia by mala byt navratena do konzistenteneho stavu pred uzamknutim
+- algoritmus si toto zkonzistentnenie vyziada a mapova reprezentacia sa donho musi vediet sama dostat

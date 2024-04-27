@@ -7,5 +7,5 @@ public interface IMapFormat<out TMap> where TMap : IMap
 {
     string Extension { get; }
     string MapFormatName { get; }
-    TMap CreateMapFrom(StreamReader inputMapFile);
+    MapManager.MapCreationResult CreateMapFrom(StreamReader inputMapFile, out IMap? map);
 }

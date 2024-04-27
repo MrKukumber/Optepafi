@@ -1,6 +1,7 @@
 namespace Optepafi.Models.AlgorithmMan;
 
-public static class SearchAlgorithmManager
+public class SearchAlgorithmManager
 {
-    
+    public static SearchAlgorithmManager Instance { get; } = new();
+    private SearchAlgorithmManager(){}
 }
