@@ -1,8 +1,8 @@
 using Optepafi.Models.TemplateMan;
 
-namespace Optepafi.Models.UserModelMan;
+namespace Optepafi.Models.UserModelMan.UserModels;
 
 public interface IComputingUserModel<TTemplate> : IUserModel<TTemplate> where TTemplate : ITemplate
 {
-    int ComputeWeight(OrientedEdge<TTemplate> edge);
+    int ComputeWeight(IOrientedEdge<TTemplate> edge);
 }

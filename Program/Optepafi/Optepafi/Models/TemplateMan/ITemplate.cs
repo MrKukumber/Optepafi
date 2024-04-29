@@ -11,10 +11,11 @@ namespace Optepafi.Models.TemplateMan;
 public interface ITemplate
 {
     string TemplateName { get; }
-    string TemplateFileExtension { get; }
-    
-    
 
+    public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(ITemplateGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,
+        TGenericParam genericParam, TOtherParams otherParams) where TGenericParam : TConstraint;
     public TOut AcceptGeneric<TOut, TOtherParams>(ITemplateGenericVisitor<TOut, TOtherParams> genericVisitor,
         TOtherParams otherParams);
+    public TOut AcceptGeneric<TOut>(ITemplateGenericVisitor<TOut> genericVisitor);
+    public void AcceptGeneric(ITemplateGenericVisitor genericVisitor);
 }

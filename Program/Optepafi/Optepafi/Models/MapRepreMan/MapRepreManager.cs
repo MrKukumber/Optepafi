@@ -13,8 +13,8 @@ namespace Optepafi.Models.MapRepreMan;
 
 public class MapRepreManager : ITemplateGenericVisitor<IMapRepresentation<ITemplate>?, (IMap, IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
     ITemplateGenericVisitor<IMapRepresentation<ITemplate>?, (IMap, IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
-    IMapGenericVisitorWithSomeone<IMapRepresentation<ITemplate>?, ITemplate,(IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
-    IMapGenericVisitorWithSomeone<IMapRepresentation<ITemplate>?, ITemplate, (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
+    IMapGenericVisitor<IMapRepresentation<ITemplate>?, ITemplate,(IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
+    IMapGenericVisitor<IMapRepresentation<ITemplate>?, ITemplate, (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
 {
     public static MapRepreManager Instance { get; } = new();
     private MapRepreManager() { }
@@ -81,10 +81,10 @@ public class MapRepreManager : ITemplateGenericVisitor<IMapRepresentation<ITempl
         (IMap, IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams) 
     {
         var (map, mapRepreRepresentativ, progress, cancellationToken) = otherParams;
-        return map.AcceptGenericWithSomeone<IMapRepresentation<ITemplate>?, TTemplate, ITemplate, (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>(this, template, (mapRepreRepresentativ, progress, cancellationToken));
+        return map.AcceptGeneric<IMapRepresentation<ITemplate>?, TTemplate, ITemplate, (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>(this, template, (mapRepreRepresentativ, progress, cancellationToken));
     }
 
-    IMapRepresentation<ITemplate>? IMapGenericVisitorWithSomeone<IMapRepresentation<ITemplate>?, ITemplate,(IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
+    IMapRepresentation<ITemplate>? IMapGenericVisitor<IMapRepresentation<ITemplate>?, ITemplate, (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
         .GenericVisit<TMap, TSomeone>(TMap map, TSomeone someone,
         (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams)
     {
@@ -107,9 +107,9 @@ public class MapRepreManager : ITemplateGenericVisitor<IMapRepresentation<ITempl
         (IMap, IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams) 
     {
         var (map, mapRepreRepresentativ, elevData, progress, cancellationToken) = otherParams;
-        return map.AcceptGenericWithSomeone<IMapRepresentation<ITemplate>?, TTemplate, ITemplate, (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>(this, template, (mapRepreRepresentativ, elevData, progress, cancellationToken));
+        return map.AcceptGeneric<IMapRepresentation<ITemplate>?, TTemplate, ITemplate, (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>(this, template, (mapRepreRepresentativ, elevData, progress, cancellationToken));
     }
-    IMapRepresentation<ITemplate>? IMapGenericVisitorWithSomeone<IMapRepresentation<ITemplate>?, ITemplate,(IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
+    IMapRepresentation<ITemplate>? IMapGenericVisitor<IMapRepresentation<ITemplate>?, ITemplate,(IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
         .GenericVisit<TMap, TSomeone>(TMap map, TSomeone someone,
         (IMapRepreRepresentativ<IMapRepresentation<ITemplate>>, ElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams)
     {
