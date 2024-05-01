@@ -5,8 +5,17 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan;
 using Optepafi.Models.MapRepreMan.MapRepreRepres;
 using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.TemplateMan;
+
+
+public interface ITemplate<out TVertexAttributes,out TEdgeAttributes> : ITemplate
+    where TVertexAttributes : IVertexAttributes
+    where TEdgeAttributes : IEdgeAttributes
+{
+    
+}
 
 public interface ITemplate
 {
@@ -18,4 +27,6 @@ public interface ITemplate
         TOtherParams otherParams);
     public TOut AcceptGeneric<TOut>(ITemplateGenericVisitor<TOut> genericVisitor);
     public void AcceptGeneric(ITemplateGenericVisitor genericVisitor);
+
+    
 }

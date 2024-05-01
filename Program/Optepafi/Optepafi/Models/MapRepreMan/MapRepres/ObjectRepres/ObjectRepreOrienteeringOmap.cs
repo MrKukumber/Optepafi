@@ -6,13 +6,11 @@ using Optepafi.Models.TemplateMan.Templates;
 
 namespace Optepafi.Models.MapRepreMan.MapRepres.ObjectRepres;
 
-public class ObjectRepreOrienteeringOmap : IObjectRepre<Orienteering_ISOM_2017_2>, IConstrElevDataDepMapRepre<Orienteering_ISOM_2017_2, OMAP>
+public class ObjectRepreOrienteeringOmap : IObjectRepre<Orienteering_ISOM_2017_2, Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>, IConstrElevDataDepMapRepre<Orienteering_ISOM_2017_2, OMAP>
 {
-    public IMapRepreRepresentativ<IMapRepresentation<ITemplate>> MapRepreRep { get; init; }
-    public Orienteering_ISOM_2017_2 UsedTemplate { get; }
+    public IMapRepreRepresentativ<IMapRepresentation> MapRepreRep { get; init; }
 
     public ObjectRepreOrienteeringOmap()
     {
-        UsedTemplate = Orienteering_ISOM_2017_2.Instance;
     }
 }

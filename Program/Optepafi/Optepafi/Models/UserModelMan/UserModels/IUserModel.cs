@@ -2,7 +2,7 @@ using Optepafi.Models.TemplateMan;
 
 namespace Optepafi.Models.UserModelMan.UserModels;
 
-public interface IUserModel<TTemplate> where TTemplate : ITemplate
+public interface IUserModel<out TTemplate> where TTemplate : ITemplate
 {
     public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(
         IUserModelGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,

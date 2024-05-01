@@ -9,7 +9,7 @@ using Optepafi.Models.TemplateMan;
 
 namespace Optepafi.Models.MapRepreMan.MapRepreConstrs;
 
-public class ElevDataDependentConstr<TTemplate, TMap, TMapRepre> : IElevDataDependentConstr<TTemplate, TMap, TMapRepre> 
+public sealed class ElevDataDependentConstr<TTemplate, TMap, TMapRepre> : IElevDataDependentConstr<TTemplate, TMap, TMapRepre> 
     where TTemplate : ITemplate where TMap : IMap where TMapRepre : IConstrElevDataDepMapRepre<TTemplate, TMap>, new()
 {
     public TTemplate UsedTemplate { get; }
@@ -20,7 +20,7 @@ public class ElevDataDependentConstr<TTemplate, TMap, TMapRepre> : IElevDataDepe
         UsedTemplate = usedTemplate;
         UsedMapFormat = usedMapFormat;
     }
-    public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, ElevData elevData, IMapRepreRepresentativ<IMapRepresentation<ITemplate>> mapRepreRep,
+    public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, ElevData elevData, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
     {
         TMapRepre mapRepre = new TMapRepre()

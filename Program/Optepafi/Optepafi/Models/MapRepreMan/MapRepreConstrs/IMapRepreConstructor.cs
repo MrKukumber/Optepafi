@@ -5,7 +5,7 @@ using Optepafi.Models.TemplateMan;
 namespace Optepafi.Models.MapRepreMan.MapRepreConstrs;
 
 public interface IMapRepreConstructor< out TTemplate, out TMap, out TMapRepre> 
-    where TTemplate : ITemplate where TMap : IMap  where TMapRepre : IMapRepresentation<TTemplate>
+    where TTemplate : ITemplate where TMap : IMap  where TMapRepre : IMapRepresentation
 {
     TTemplate UsedTemplate { get; }
     IMapFormat<TMap> UsedMapFormat { get; }
