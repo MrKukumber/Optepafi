@@ -18,14 +18,12 @@ public interface IMapRepresentation
     public void AcceptGeneric(ITemplateGenericVisitor genericVisitor);
 }
 
-public interface IMapRepresentation<out TTemplate, out TVertex, out TEdge, out TVertexAttributes, out TEdgeAttributes> :
-    IMapRepresentation
+public interface IMapRepreWithDefinedFunctionality<out TTemplate, TVertexAttributes, TEdgeAttributes> : IMapRepresentation
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
-    where TVertex : IVertex
-    where TEdge : IEdge
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
     
 }
+
     

@@ -9,7 +9,7 @@ public interface IMapRepresentationGenericVisitor<out TOut,in TConstraint,in TOt
 {
     public TOut GenericVisit<TMapRepre, TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes, TGenericParam>(TMapRepre mapRepre, TGenericParam genericParam,
         TOtherParams otherParams)
-        where TMapRepre : IMapRepresentation<TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
+        where TMapRepre : IMapRepreWithDefinedFunctionality<TTemplate, TVertexAttributes, TEdgeAttributes>
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertex : IVertex
         where TEdge : IEdge
@@ -21,7 +21,7 @@ public interface IMapRepresentationGenericVisitor<out TOut, in TOtherParams>
 {
     public TOut GenericVisit<TMapRepre, TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(
         TMapRepre mapRepre, TOtherParams otherParams)
-        where TMapRepre : IMapRepresentation<TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
+        where TMapRepre : IMapRepreWithDefinedFunctionality<TTemplate, TVertexAttributes, TEdgeAttributes>
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertex : IVertex
         where TEdge : IEdge
@@ -32,7 +32,7 @@ public interface IMapRepresentationGenericVisitor<out TOut>
 {
     public TOut GenericVisit<TMapRepre, TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(
         TMapRepre mapRepre)
-        where TMapRepre : IMapRepresentation<TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
+        where TMapRepre : IMapRepreFunctionality<TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertex : IVertex
         where TEdge : IEdge
@@ -41,9 +41,9 @@ public interface IMapRepresentationGenericVisitor<out TOut>
 }
 public interface IMapRepresentationGenericVisitor
 {
-    public void GenericVisit<TMapRepre, TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes,  >(
+    public void GenericVisit<TMapRepre, TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(
         TMapRepre mapRepre)
-        where TMapRepre : IMapRepresentation<TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
+        where TMapRepre : IMapRepreFunctionality<TTemplate, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertex : IVertex
         where TEdge : IEdge

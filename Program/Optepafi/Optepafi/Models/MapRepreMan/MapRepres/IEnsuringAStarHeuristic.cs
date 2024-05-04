@@ -4,8 +4,7 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.MapRepres;
 
-public interface IAStarHeuristicEnsuringMapRepre<TVertex, TVertexAttributes> : 
-    IMapRepresentation
+public interface IAStarHeuristicEnsuring<in TVertex, TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
     where TVertex : IAttributeBearingVertex<TVertexAttributes>
 {

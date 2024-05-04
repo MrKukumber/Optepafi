@@ -3,8 +3,8 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.Verteces;
 
-public class BasicVertex<TVertexAttributes, TEdgeAttributes> :
-    IBasicVertex<BasicEdge<TEdgeAttributes, TVertexAttributes>, TVertexAttributes>
+public interface IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes> :
+    IBasicVertex<IBasicEdge<IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>, TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
@@ -23,7 +23,6 @@ public interface IBasicVertex<TEdge, out TVertexAttributes> :
 public interface IEdgesContainingVertex<TEdge> : IVertex
     where TEdge : IEdge
 {
-    
     TEdge[] GetEdges();
     void SetWeight(int weight, TEdge edge);
     int? GetWeight(TEdge edge);

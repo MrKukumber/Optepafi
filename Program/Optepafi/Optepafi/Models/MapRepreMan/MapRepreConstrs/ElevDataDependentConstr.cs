@@ -1,16 +1,21 @@
 using System;
 using System.Threading;
-using Avalonia.Controls.Templates;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.MapRepreRepres;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
+using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.MapRepreConstrs;
 
-public sealed class ElevDataDependentConstr<TTemplate, TMap, TMapRepre> : IElevDataDependentConstr<TTemplate, TMap, TMapRepre> 
-    where TTemplate : ITemplate where TMap : IMap where TMapRepre : IConstrElevDataDepMapRepre<TTemplate, TMap>, new()
+public sealed class ElevDataDependentConstr<TTemplate, TMap, TMapRepre, TVertexAttributes, TEdgeAttributes> : 
+    IElevDataDependentConstr<TTemplate, TMap, TMapRepre> 
+    where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
+    where TMap : IMap 
+    where TMapRepre : IMapRepreWithDefinedFunctionality<TTemplate, TVertexAttributes, TEdgeAttributes>, IConstrElevDataDepMapRepre<TTemplate, TMap>, new()
+    where TVertexAttributes : IVertexAttributes
+    where TEdgeAttributes : IEdgeAttributes
 {
     public TTemplate UsedTemplate { get; }
     public IMapFormat<TMap> UsedMapFormat { get; }

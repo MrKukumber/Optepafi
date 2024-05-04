@@ -3,18 +3,11 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.Verteces;
 
-public class BasicEdge<TEdgeAttributes, TVertexAttributes> :
-    IBasicEdge<BasicVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>
-    where TEdgeAttributes : IEdgeAttributes
-    where TVertexAttributes : IVertexAttributes
-{
-    
-}
-public interface IBasicEdge<out TBasicVertex, out TEdgeAttributes> : 
-    IDestVertexContainingEdge<TBasicVertex>, 
+public interface IBasicEdge<out TVertex, out TEdgeAttributes> : 
+    IDestVertexContainingEdge<TVertex>, 
     IAttributesBearingEdge<TEdgeAttributes>
     where TEdgeAttributes : IEdgeAttributes
-    where TBasicVertex : IVertex
+    where TVertex : IVertex
 {
     
 }

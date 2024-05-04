@@ -14,5 +14,4 @@ public interface IElevDataDependentConstr<TTemplate, TMap, TMapRepre> : IMapRepr
     public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, ElevData elevData, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
 
-    
 }

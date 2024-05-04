@@ -3,9 +3,8 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.Verteces;
 
-public class PredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes> :
-    BasicVertex<TVertexAttributes, TEdgeAttributes>,
-    IPredecessorRememberingVertex<BasicEdge<TEdgeAttributes, TVertexAttributes>, TVertexAttributes>
+public interface IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes> :
+    IPredecessorRememberingVertex<IBasicEdge<IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>, TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {

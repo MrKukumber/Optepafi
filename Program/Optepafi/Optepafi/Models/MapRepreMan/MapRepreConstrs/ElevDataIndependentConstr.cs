@@ -5,11 +5,17 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.MapRepreRepres;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
+using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.MapRepreConstrs;
 
-public sealed class ElevDataIndependentConstr<TTemplate, TMap, TMapRepre> : IElevDataIndependentConstr<TTemplate, TMap, TMapRepre> 
-    where TTemplate : ITemplate where TMap : IMap where TMapRepre : IConstrElevDataIndepMapRepre<TTemplate, TMap>, new()
+public sealed class ElevDataIndependentConstr<TTemplate, TMap, TMapRepre, TVertexAttributes, TEdgeAttributes> : 
+    IElevDataIndependentConstr<TTemplate, TMap, TMapRepre> 
+    where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
+    where TMap : IMap 
+    where TMapRepre : IMapRepreWithDefinedFunctionality<TTemplate, TVertexAttributes, TEdgeAttributes>, IConstrElevDataIndepMapRepre<TTemplate, TMap>, new()
+    where TVertexAttributes : IVertexAttributes
+    where TEdgeAttributes : IEdgeAttributes
 {
     public TTemplate UsedTemplate { get; }
     public IMapFormat<TMap> UsedMapFormat { get; }
