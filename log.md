@@ -291,3 +291,27 @@ opozdely log z programovania projetku
   
 - ci uz po skonceni metody Execute alebo po dispose-nuti executoru, mapova reprezentacia by mala byt navratena do konzistenteneho stavu pred uzamknutim
 - algoritmus si toto zkonzistentnenie vyziada a mapova reprezentacia sa donho musi vediet sama dostat
+
+## 4.5.2024
+
+### co sa tyka modelu
+
+#### dokoncene koncepty pre reprezentaciu reprezentacii map
+
+- rozhodol som sa mapove reprezentacie spravit genericke iba cez vertex a edge atributy, nie cez samotne verteces a edges
+  - nebolo mozne poriadne ich implementovat genericke aj cez vrcholy a hrany, nakolko:
+    1. uz teraz je to riadna motanica
+    2. interface-y funkcionalit beru zodpovednost za definovanie constrainov na hrany a vrcholy, ktore musia dane mapove reprezentacie splnat
+    3. hold celkovo nemusia byt mapove reprezentacie ani algoritmy genericke cez vrch.+hran., nakolko ci uz bude vrchol reprezentovany hodnotovym ci referencnym typom, budu si to algoritmy vyzadovat prave cez interface-y funkcionalit a mapove reprezentacie si zasa mozu v pripade referencnych typov vytvarat ich potomky alebo v pripade hodnotovych typov si k danym strukturam ukaldat este aj dodatocne informacie naviac pomimo tychto struktur, (popripade sa vytvori struktura pre vrchol a hranu, ktore budu obsahovat naviac referenciu na typ "ine", kam si bude moct reprezentacia ulozit co len bude chciet)
+- reprezentanti mapovych reprezentacii su nadalej dvaja, jeden co reprezentuje mapovu reprezentaciu ako koncept a druhy, ktory ju reprezentuje ako pouzitelnu reprezentaciu na prehladavanie
+  - po dlhom snazeni sa mi podarilo dat vsetko dokopy tak, aby to fungovalo, bohuzial este niesom stale prilis spokojeny s runtime-ovym checkom vo "funkciovom reprezentatovi" na spravnost mapoveje reprezentacie, tento check by bolo najlepsie aby sa robil za prekladu, avsak v tom pripade by musel constructor mat o parameter naviac a to prave danu "funkcionalnu mapovu reprezentaciu", aby vedel overit ze vytvarana realna mapova reprezentacia je vazne typu danej funkcionalnej
+- zmenil som aj to, ze mapove reprezentacie uz niesu genericke cez template, nakolko su genericke cez vrch.+hran. atributy, preto nieje potrebne, aby boli genericke aj cez template
+  - to aby atributy vychadzali z jednoho template-u zabezpecuje vytvaranie mapovych reprezentacii a typova parametrizacia ich konstruktorov
+- "funkcioveho reprezentanta" je mozne ziskat generickou metodou z klasickeho reprezentanta, toto posluzi napriklad na kontrolu, ci reprezentant reprezentuje pouzitelnu mapovu reprezentaciu v danom algoritme
+
+#### par myslienok ku algoritmu
+
+- neprisiel som na sposobom, ako algoritmus donutit, aby sa zhodovala kontrola reprezentantov mapovych reprezentacii na pouzitelnost danych reprezentacii s kontrolou uz dodanej mapovej reprezentacie na pouzitie pre vyhladavanie 
+  - preto bude musiet implementacia tieto kontroly implmentovat sama a snad spravne
+  - este nad tym popremyslam
+- algoritmy budu moct mat viacero svojich implementacii, teda bude existovat moznost pre vacsie pokrytie mapovych reprezentacii

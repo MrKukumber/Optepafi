@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using Avalonia.Controls;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
@@ -8,7 +7,7 @@ using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreRepres;
+namespace Optepafi.Models.MapRepreMan.MapRepreReps;
 
 public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepresentation : IMapRepresentation
 {
@@ -17,9 +16,8 @@ public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepres
     //represents all map repre constructors, that returns TMapRepresentation
     IMapRepreConstructor<ITemplate, IMap, TMapRepresentation>[] MapRepreConstrs { get; }
 
-    IDefinedFunctionalityMapRepreRepresentativ<IMapRepreWithDefinedFunctionality<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate, TVertexAttributes, TEdgeAttributes>
-        GetDefinedFunctionalityMapRepreRepresentative<TTemplate, TVertexAttributes, TEdgeAttributes>()
-        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
+    IDefinedFunctionalityMapRepreRepresentativ<IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
+        GetDefinedFunctionalityMapRepreRepresentative<TVertexAttributes, TEdgeAttributes>()
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
@@ -30,7 +28,7 @@ public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepres
         where TVertexAttributes : IVertexAttributes 
         where TEdgeAttributes : IEdgeAttributes
     {
-        return GetDefinedFunctionalityMapRepreRepresentative<TTemplate, TVertexAttributes, TEdgeAttributes>()
+        return GetDefinedFunctionalityMapRepreRepresentative<TVertexAttributes, TEdgeAttributes>()
             .CreateMapRepre(template, map, (IMapRepreRepresentativ<IMapRepresentation>)this, progress, cancellationToken, MapRepreConstrs);
     }
 
@@ -41,7 +39,7 @@ public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepres
         where TVertexAttributes : IVertexAttributes 
         where TEdgeAttributes : IEdgeAttributes
     {
-        return GetDefinedFunctionalityMapRepreRepresentative<TTemplate, TVertexAttributes, TEdgeAttributes>()
+        return GetDefinedFunctionalityMapRepreRepresentative<TVertexAttributes, TEdgeAttributes>()
             .CreateMapRepre(template, map, elevData, (IMapRepreRepresentativ<IMapRepresentation>)this, progress, cancellationToken, MapRepreConstrs);
     }
 }

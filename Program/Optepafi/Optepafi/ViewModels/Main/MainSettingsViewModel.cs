@@ -12,7 +12,7 @@ namespace Optepafi.ViewModels.Main;
 
 public class MainSettingsViewModel : ViewModelBase
 {
-    private ISearchAlgorithm _selectedAlgorithm;
+    private ISearchingAlgorithm _selectedAlgorithm;
     private IElevSourceRep _defaultElevSourceRep;
     public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
     public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
@@ -30,8 +30,8 @@ public class MainSettingsViewModel : ViewModelBase
         });
     }
     
-    public ObservableCollection<ISearchAlgorithm> Algorithms { get; }
-    public ISearchAlgorithm? DefaultAlgorithm
+    public ObservableCollection<ISearchingAlgorithm> Algorithms { get; }
+    public ISearchingAlgorithm? DefaultAlgorithm
     {
         get => _selectedAlgorithm;
         set => this.RaiseAndSetIfChanged(ref _selectedAlgorithm, value);

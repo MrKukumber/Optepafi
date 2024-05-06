@@ -1,6 +1,5 @@
 using System.Runtime.InteropServices.Marshalling;
-using Optepafi.Models.MapRepreMan.MapRepreRepres;
-using Optepafi.Models.MapRepreMan.Verteces;
+using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
@@ -17,13 +16,3 @@ public interface IMapRepresentation
     public TOut AcceptGeneric<TOut>(IMapRepresentationGenericVisitor<TOut> genericVisitor);
     public void AcceptGeneric(ITemplateGenericVisitor genericVisitor);
 }
-
-public interface IMapRepreWithDefinedFunctionality<out TTemplate, TVertexAttributes, TEdgeAttributes> : IMapRepresentation
-    where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
-{
-    
-}
-
-    

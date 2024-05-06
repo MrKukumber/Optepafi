@@ -1,4 +1,4 @@
-namespace Optepafi.Models.AlgorithmMan.SearchAlgorithms;
+namespace Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 
 public class AStar
 {

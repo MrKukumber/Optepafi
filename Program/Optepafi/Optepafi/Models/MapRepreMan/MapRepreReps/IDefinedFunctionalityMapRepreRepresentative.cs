@@ -7,18 +7,18 @@ using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreRepres;
+namespace Optepafi.Models.MapRepreMan.MapRepreReps;
 
-public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunctionalityMapRepresentation, TTemplate, TVertexAttributes, TEdgeAttributes>
-    where TDefinedFunctionalityMapRepresentation : IMapRepreWithDefinedFunctionality<TTemplate, TVertexAttributes, TEdgeAttributes>
-    where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
+public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunctionalityMapRepresentation, TVertexAttributes, TEdgeAttributes>
+    where TDefinedFunctionalityMapRepresentation : IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
     
-    sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TMap, TMapRepre>(TTemplate template, TMap map, ElevData elevData,
+    sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map, ElevData elevData,
         IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreConstructor<ITemplate, IMap, TMapRepre>[] constructors)
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepresentation
     {
@@ -31,9 +31,10 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
         }
         return default;
     }
-    sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TMap, TMapRepre>(TTemplate template, TMap map,
+    sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map,
         IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreConstructor<ITemplate, IMap, TMapRepre>[] constructors)
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepresentation
     {

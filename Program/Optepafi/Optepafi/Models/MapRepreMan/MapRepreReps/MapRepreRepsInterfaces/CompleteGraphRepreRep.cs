@@ -1,4 +1,4 @@
-namespace Optepafi.Models.MapRepreMan.MapRepreRepres;
+namespace Optepafi.Models.MapRepreMan.MapRepreReps.MapRepreRepsInterfaces;
 
 public class CompleteGraphRepreRep
 {

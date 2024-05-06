@@ -2,8 +2,9 @@ using System;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapRepreMan.MapRepreRepres;
+using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.MapRepreMan.MapRepres.ConstructableInterfaces;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
@@ -13,7 +14,7 @@ public sealed class ElevDataDependentConstr<TTemplate, TMap, TMapRepre, TVertexA
     IElevDataDependentConstr<TTemplate, TMap, TMapRepre> 
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
     where TMap : IMap 
-    where TMapRepre : IMapRepreWithDefinedFunctionality<TTemplate, TVertexAttributes, TEdgeAttributes>, IConstrElevDataDepMapRepre<TTemplate, TMap>, new()
+    where TMapRepre : IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes>, IConstrElevDataDepMapRepre<TTemplate, TMap>, new()
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {

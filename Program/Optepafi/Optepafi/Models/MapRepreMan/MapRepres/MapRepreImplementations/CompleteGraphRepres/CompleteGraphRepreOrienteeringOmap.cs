@@ -1,9 +1,9 @@
 using Optepafi.Models.MapMan.Maps;
-using Optepafi.Models.MapRepreMan.MapRepreRepres;
+using Optepafi.Models.MapRepreMan.MapRepreReps;
+using Optepafi.Models.MapRepreMan.MapRepres.ConstructableInterfaces;
 using Optepafi.Models.TemplateMan;
-using Optepafi.Models.TemplateMan.Templates;
 
-namespace Optepafi.Models.MapRepreMan.MapRepres.CompleteGraphRepres;
+namespace Optepafi.Models.MapRepreMan.MapRepres.MapRepreImplementations.CompleteGraphRepres;
 
 public class CompleteGraphRepreOrienteeringOmap : ICompleteGraphRepre<>, IConstrElevDataDepMapRepre<OrienteeringISOM, OMAP>
 {

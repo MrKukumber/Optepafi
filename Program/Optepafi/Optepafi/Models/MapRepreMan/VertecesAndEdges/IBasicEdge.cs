@@ -1,7 +1,6 @@
-using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.Verteces;
+namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
 
 public interface IBasicEdge<out TVertex, out TEdgeAttributes> : 
     IDestVertexContainingEdge<TVertex>, 
