@@ -3,14 +3,21 @@ using Optepafi.Models.MapMan.MapFormats;
 
 namespace Optepafi.Models.MapMan.Maps;
 
-public sealed class OMAP : IMap
+public class OMAP : IGeoReferencedMap
 {
-    public IMapFormat<IMap> MapFormat { get; init; }
+    public TOut AcceptGeneric<TOut, TSomeone, TConstraint, TOtherParams, TGeoReferenceMap>(
+        IMapGenericVisitor<TOut, TConstraint, TOtherParams, TGeoReferenceMap> genericVisitor,
+        TSomeone genericParam, TOtherParams otherParams)
+        where TSomeone : TConstraint
+        where TGeoReferenceMap : OMAP
 
-    public TOut AcceptGeneric<TOut, TSomeone, TSomeonesConstraint, TOtherParams>(
-        IMapGenericVisitor<TOut, TSomeonesConstraint, TOtherParams> genericVisitor,
-        TSomeone genericParam, TOtherParams otherParams) where TSomeone : TSomeonesConstraint
     {
         return genericVisitor.GenericVisit(this, genericParam, otherParams);
     }
+    // public TOut AcceptGeneric<TOut, TSomeone, TSomeonesConstraint, TOtherParams>(
+    // IGeoReferencedMapGenericVisitor<TOut, TSomeonesConstraint, TOtherParams> genericVisitor,
+    // TSomeone genericParam, TOtherParams otherParams) where TSomeone : TSomeonesConstraint
+    // {
+    // return genericVisitor.GenericVisit(this, genericParam, otherParams);
+    // }
 }

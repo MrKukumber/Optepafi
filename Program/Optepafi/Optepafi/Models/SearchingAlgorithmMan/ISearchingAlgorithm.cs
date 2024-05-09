@@ -1,3 +1,6 @@
+using System;
+using System.Threading;
+using Avalonia.Controls;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
@@ -23,8 +26,9 @@ public interface ISearchingAlgorithm
     }
     
     sealed Path[][]? ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>[] userModels,
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre)
+        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>[] userModels,
+        IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
@@ -34,7 +38,7 @@ public interface ISearchingAlgorithm
             {
                 if (implementation.IsUsableMapRepre(mapRepre))
                 {
-                    return implementation.SearchForPaths(track, userModels, mapRepre);
+                    return implementation.SearchForPaths(track, mapRepre,  userModels,progress, cancellationToken);
                 }
             }
             return default;
@@ -42,8 +46,8 @@ public interface ISearchingAlgorithm
     }
 
     sealed ISearchingExecutor? GetExecutor<TVertexAttributes, TEdgeAttributes>(
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre)
+        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
@@ -51,7 +55,7 @@ public interface ISearchingAlgorithm
         {
             if (implementation.IsUsableMapRepre(mapRepre))
             {
-                return implementation.GetExecutor(userModel, mapRepre);
+                return implementation.GetExecutor(mapRepre,userModel);
             }
         }
         return default;

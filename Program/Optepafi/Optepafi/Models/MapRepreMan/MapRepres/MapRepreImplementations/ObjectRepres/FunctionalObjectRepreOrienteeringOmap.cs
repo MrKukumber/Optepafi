@@ -2,6 +2,7 @@ using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres.ConstructableInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.Templates;
 
 namespace Optepafi.Models.MapRepreMan.MapRepres.MapRepreImplementations.ObjectRepres;

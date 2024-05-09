@@ -26,7 +26,7 @@ public sealed class ElevDataDependentConstr<TTemplate, TMap, TMapRepre, TVertexA
         UsedTemplate = usedTemplate;
         UsedMapFormat = usedMapFormat;
     }
-    public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, ElevData elevData, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
+    public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, IElevData elevData, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
     {
         TMapRepre mapRepre = new TMapRepre()

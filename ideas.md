@@ -199,3 +199,11 @@ Předpokládá se možnost parametrizace vyhledávácích algoritmů např. úda
 
 - nasledne algoritmus dostane trat TR a model MO a zacne hladat cestu CE trate TR na reprezentacii RE, ktora vracia uz finalny graf GR, ktoreho ceny hran si algoritmus AL necha vypocitat od template-u TE z modelu MO
 - reprezentacia RE si ak potrebuje postupne dovytvara zo seba graf, ktory vracia algoritmu, ktory na nom nasledne hlada danu cestu
+
+
+
+- algoritmus moze mat implementacie
+- template reprezentuje vrcholove a hranove atributy
+- atributy mozu byt aj hodnotove, preto treba zaisitit aby sa predislo boxingu (genericke typy)
+- model je zavisli na template-u, vypocitava hodnotu na zaklade predlozenych vrcholovych a hranovych atributov
+- 

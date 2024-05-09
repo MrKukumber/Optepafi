@@ -8,7 +8,6 @@ public interface IUserModelType<out TTemplate, out TUserModel> where TUserModel 
 {
     string UserModelTypeName { get; }
     string UserModelFileExtension { get; }
-
     TUserModel GetNewUserModel();
-    TUserModel? LoadUserModelFrom(StreamReader serialization);
+    TUserModel? DeserializeUserModel(StreamReader serialization);
 }

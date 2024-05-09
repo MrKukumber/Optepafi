@@ -11,8 +11,8 @@ public class MapManager
 {
     public static MapManager Instance { get; } = new();
     private MapManager(){}
-    
-    public IReadOnlySet<IMapFormat<IMap>> MapFormats { get; } = ImmutableHashSet.Create<IMapFormat<IMap>>(/*TODO: doplnit*/);
+
+    private ISet<IMapFormat<IMap>> MapFormats { get; } = new HashSet<IMapFormat<IMap>>(); // TODO: premysliet, jak to reprezentaovat
 
     public enum MapCreationResult{Ok, Incomplete, UnableToOpen, UnableToParse }
     public MapCreationResult GetMapOfFrom(IMapFormat<IMap> mapFormat, StreamReader file, out IMap? map)

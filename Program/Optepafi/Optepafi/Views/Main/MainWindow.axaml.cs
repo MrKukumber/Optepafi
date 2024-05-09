@@ -25,7 +25,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             action(ViewModel.MainSettings.ElevConfigInteraction.RegisterHandler(ShowElevConfig)));
     }
 
-    private void ShowElevConfig(InteractionContext<ElevConfigViewModel, IElevSourceRep> interaction)
+    private void ShowElevConfig(InteractionContext<ElevConfigViewModel, IElevDataSource> interaction)
     {
         Content = new ElevConfigView
         {

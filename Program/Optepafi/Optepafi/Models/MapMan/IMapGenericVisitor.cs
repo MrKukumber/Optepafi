@@ -21,5 +21,5 @@ public interface IMapGenericVisitor<TOut>
 
 public interface IMapGenericVisitor
 {
-    public void GenericVisit<TMap>(TMap map) where TMap : IMap;
+    public void GenericVisit<TMap>(TMap map);
 }

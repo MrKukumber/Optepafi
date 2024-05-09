@@ -315,3 +315,20 @@ opozdely log z programovania projetku
   - preto bude musiet implementacia tieto kontroly implmentovat sama a snad spravne
   - este nad tym popremyslam
 - algoritmy budu moct mat viacero svojich implementacii, teda bude existovat moznost pre vacsie pokrytie mapovych reprezentacii
+
+## 6.5.2024
+
+- interface pre vyhladavaci algoritmus a pracu s nim funguje presne tak ako bolo popisane 26.4.
+- zacinam s tvorbou ParamsSerializeru
+
+### ParamsSerializer
+
+- musi sa rozmyslat spolocne s MainParamsModelViewom
+- moja myslienka je taka, ze jednoducho si ktokolveke bude moct definovat svoju strukturu s parametrami, ktora bude dedit od nejakeho IParam interface-u, aby sa tam nestrkali bohvieake objekty
+- nasledne MainParamsModelView bude obsahovat genericke metody, ktore ako genericky parameter budu obsahovat typ danej parametrovej struktury a budu nastavovat/vracat parametry v/z slovniku
+- potom pri ukoncovani aplikacie sa da pokym MainParamsModelView-vu, aby zavolal serializer, ktory vsetky tieto parametry ulozi tak, aby bolo z nazvu jasne, aky typ je v danom subore ulozeny
+- MainParamsModelView bude ziskavat ulozene parametry z predoslieho behu aplikacie lenivo - teda pokial sa v jeho slovniku dane parametre nenachadzaju, poziada serializer, aby sa pozrel ci pre dany typ nema serializovane data
+  - ak ma, vrati ich MaiParamsModelView-u, ten si ich ulozi do slovnika a vrati ich
+  - ak nema, MainParamsModelView vrati null a poznaci si do slovnika, ze take parametry nema ulozene(napriklad null-om), aby sa vyhol opakovanemu dotazovania Serailizeru
+
+- teda ParamsSerializer by mal byt schopny serializovat slovnik parametrov(paralelne napriklad aj), popripade jednotlive parametre a sprostredkovavat postupne jednotlive deserializovane objekty pomocou nejakej generickej metody

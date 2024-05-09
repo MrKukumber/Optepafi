@@ -10,4 +10,5 @@ public interface IMapRepreConstructor< out TTemplate, out TMap, out TMapRepre>
     TTemplate UsedTemplate { get; }
     IMapFormat<TMap> UsedMapFormat { get; }
     bool RequiresElevData { get; }
+    
 }

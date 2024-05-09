@@ -1,9 +1,13 @@
+using System.IO;
 using Optepafi.Models.TemplateMan;
+using Optepafi.Models.UserModelMan.UserModelTypes;
 
 namespace Optepafi.Models.UserModelMan.UserModels;
 
 public interface IUserModel<out TTemplate> where TTemplate : ITemplate
 {
+    public string Serialize();
+    public void SerializeTo(Stream stream);
     public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(
         IUserModelGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,
         TGenericParam genericParam, TOtherParams otherParams) where TGenericParam : TConstraint;

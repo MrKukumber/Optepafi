@@ -8,7 +8,7 @@ namespace Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
 
 
 public interface IFunctionalObjectRepre<TVertexAttributes, TEdgeAttributes> :
-    IObjectRepre,
+    IObjectRepre<ITemplate<TVertexAttributes, TEdgeAttributes>>,
     IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes>,
     IPredecessorRemembering<
         IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>, 

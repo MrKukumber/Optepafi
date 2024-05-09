@@ -32,7 +32,7 @@ public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepres
             .CreateMapRepre(template, map, (IMapRepreRepresentativ<IMapRepresentation>)this, progress, cancellationToken, MapRepreConstrs);
     }
 
-    sealed IMapRepresentation? CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, ElevData elevData,
+    sealed IMapRepresentation? CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
         where TMap : IMap 

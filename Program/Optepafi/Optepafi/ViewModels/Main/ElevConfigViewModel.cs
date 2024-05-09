@@ -10,11 +10,11 @@ namespace Optepafi.ViewModels.Main;
 
 public class ElevConfigViewModel : ViewModelBase
 {
-    private IElevSourceRep _currentElevSourceRep = null;//TODO:tuna bude nieco ine
-    public ReactiveCommand<Unit, IElevSourceRep> ReturnCommand { get; }
+    private IElevDataSource _currentElevDataSource = null;//TODO:tuna bude nieco ine
+    public ReactiveCommand<Unit, IElevDataSource> ReturnCommand { get; }
     public ElevConfigViewModel()
     {
-        ReturnCommand = ReactiveCommand.Create(() => _currentElevSourceRep);
+        ReturnCommand = ReactiveCommand.Create(() => _currentElevDataSource);
     }
     
 }

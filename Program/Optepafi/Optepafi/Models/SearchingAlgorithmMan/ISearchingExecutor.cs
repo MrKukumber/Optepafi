@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
@@ -11,7 +12,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan;
 
 public interface ISearchingExecutor : IDisposable
 {
-    Path[] Search(Leg[] track);
+    Path[] Search(Leg[] track, IProgress<ISearchingReport> progress, CancellationToken cancellationToken);
 }
 
 public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
@@ -23,28 +24,28 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     private bool _disposed = false;
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
-    private readonly IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
+    private readonly IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
     private readonly IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> _mapRepre;
     
     public delegate Path[] AlgorithmSearchingDelegate(
         Leg[] track,
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre
-    );
+        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
 
     public SearchingExecutor(
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         AlgorithmSearchingDelegate algorithmSearchingDelegate
         )
     {
-        _userModel = userModel;
         _mapRepre = mapRepre;
+        _userModel = userModel;
         _algorithmSearchingDelegate = algorithmSearchingDelegate;
         Task.Run(ExecuteSearchingLoopAsync);
     }
     
-    public Path[] Search(Leg[] track)
+    public Path[] Search(Leg[] track, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
         if (_disposed) throw new ObjectDisposedException("SearchingExecutor");
         

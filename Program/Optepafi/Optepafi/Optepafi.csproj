@@ -22,6 +22,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
+        <PackageReference Include="SRTM" Version="0.0.7" />
     </ItemGroup>
 
 
@@ -81,5 +82,6 @@
 
     <ItemGroup>
       <Folder Include="Models\ElevationDataMan\ElevSources\" />
+      <Folder Include="Models\RelevanceFeedbackMan\" />
     </ItemGroup>
 </Project>
