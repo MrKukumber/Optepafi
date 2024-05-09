@@ -32,7 +32,7 @@ public class MapRepreManager :
     {
         bool dependentFound = false;
         bool independentFound = false;
-        foreach (var constructor in mapRepreRep.MapRepreConstrs)
+        foreach (var constructor in mapRepreRep.MapRepreCombinations)
         {
             if (!dependentFound && constructor.UsedTemplate == template && constructor.UsedMapFormat == mapFormat &&
                 constructor.RequiresElevData)
@@ -57,7 +57,7 @@ public class MapRepreManager :
         HashSet<(ITemplate, IMapFormat<IMap>)> usableTemplatesMapFormatCombinations = new();
         foreach (IMapRepreRepresentativ<IMapRepresentation> mapRepreRep in mapRepreReps)
         {
-            foreach (var constructor in mapRepreRep.MapRepreConstrs)
+            foreach (var constructor in mapRepreRep.MapRepreCombinations)
             {
                 usableTemplatesMapFormatCombinations.Add((constructor.UsedTemplate, constructor.UsedMapFormat));
             }

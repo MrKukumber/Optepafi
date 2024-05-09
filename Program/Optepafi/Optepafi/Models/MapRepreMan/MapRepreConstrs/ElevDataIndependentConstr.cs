@@ -27,14 +27,11 @@ public sealed class ElevDataIndependentConstr<TTemplate, TMap, TMapRepre, TVerte
         UsedTemplate = usedTemplate;
         UsedMapFormat = usedMapFormat;
     }
-    public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep, 
+    public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, 
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
     {
 
-        TMapRepre mapRepre = new TMapRepre()
-        {
-            MapRepreRep = mapRepreRep,
-        };
+        TMapRepre mapRepre = new TMapRepre();
         mapRepre.FillUp(template, map, progress, cancellationToken);
         return mapRepre;
     }

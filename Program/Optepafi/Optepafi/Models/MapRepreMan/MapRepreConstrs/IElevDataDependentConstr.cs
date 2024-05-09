@@ -8,10 +8,10 @@ using Optepafi.Models.TemplateMan;
 
 namespace Optepafi.Models.MapRepreMan.MapRepreConstrs;
 
-public interface IElevDataDependentConstr<TTemplate, TMap, TMapRepre> : IMapRepreConstructor<TTemplate, TMap, TMapRepre> 
+public interface IElevDataDependentConstr<in TTemplate, in TMap, out  TMapRepre> : IMapRepreConstructor<TTemplate, TMap, TMapRepre> 
     where TTemplate : ITemplate where TMap : IMap where TMapRepre : IMapRepresentation
 {
-    public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, IElevData elevData, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
+    public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, IElevData elevData, 
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
 
 }

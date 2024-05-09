@@ -17,7 +17,7 @@ public class ObjectRepreRep : IMapRepreRepresentativ<IObjectRepre<ITemplate>>
     private ObjectRepreRep(){}
     
     public string MapRepreName { get; } = ""; //TODO: vymysliet pekne meno
-    public IMapRepreConstructor<ITemplate, IMap, IObjectRepre<ITemplate>>[] MapRepreConstrs { get; } =
+    public IMapRepreSourceIndic<ITemplate, IMap, IObjectRepre<ITemplate>>[] MapRepreCombinations { get; } =
     {
         new ElevDataDependentConstr<Orienteering_ISOM_2017_2, OMAP, FunctionalObjectRepreOrienteeringOmap,Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>(Orienteering_ISOM_2017_2.Instance, OMAPFormat.Instance)
     };

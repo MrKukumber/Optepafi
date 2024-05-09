@@ -5,12 +5,10 @@ namespace Optepafi.Models.MapMan.Maps;
 
 public class OMAP : IGeoReferencedMap
 {
-    public TOut AcceptGeneric<TOut, TSomeone, TConstraint, TOtherParams, TGeoReferenceMap>(
-        IMapGenericVisitor<TOut, TConstraint, TOtherParams, TGeoReferenceMap> genericVisitor,
+    public TOut AcceptGeneric<TOut, TSomeone, TConstraint, TOtherParams>(
+        IMapGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,
         TSomeone genericParam, TOtherParams otherParams)
         where TSomeone : TConstraint
-        where TGeoReferenceMap : OMAP
-
     {
         return genericVisitor.GenericVisit(this, genericParam, otherParams);
     }

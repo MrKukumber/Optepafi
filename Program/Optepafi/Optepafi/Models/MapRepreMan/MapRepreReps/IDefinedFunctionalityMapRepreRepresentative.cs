@@ -16,8 +16,7 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
 {
     
     sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map,
-        IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreConstructor<ITemplate, IMap, TMapRepre>[] constructors)
+        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreSourceIndic<ITemplate, IMap, TMapRepre>[] constructors)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepresentation
@@ -26,15 +25,14 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
         {
             if (constructor is IElevDataIndependentConstr<TTemplate, TMap, TDefinedFunctionalityMapRepresentation> c)
             {
-                return c.ConstructMapRepre(template, map, mapRepreRep, progress, cancellationToken);
+                return c.ConstructMapRepre(template, map, progress, cancellationToken);
             }
         }
         return default;
     }
     
     sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map, IElevData elevData,
-        IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreConstructor<ITemplate, IMap, TMapRepre>[] constructors)
+        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreSourceIndic<ITemplate, IMap, TMapRepre>[] constructors)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepresentation
@@ -43,7 +41,7 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
         {
             if (constructor is IElevDataDependentConstr<TTemplate, TMap, TDefinedFunctionalityMapRepresentation> c)
             {
-                return c.ConstructMapRepre(template, map, elevData, mapRepreRep, progress, cancellationToken);
+                return c.ConstructMapRepre(template, map, elevData, progress, cancellationToken);
             }
         }
         return default;
