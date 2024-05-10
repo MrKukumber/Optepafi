@@ -332,3 +332,41 @@ opozdely log z programovania projetku
   - ak nema, MainParamsModelView vrati null a poznaci si do slovnika, ze take parametry nema ulozene(napriklad null-om), aby sa vyhol opakovanemu dotazovania Serailizeru
 
 - teda ParamsSerializer by mal byt schopny serializovat slovnik parametrov(paralelne napriklad aj), popripade jednotlive parametre a sprostredkovavat postupne jednotlive deserializovane objekty pomocou nejakej generickej metody
+
+## 10.5.2024
+
+### refaktorizacia interfacov pre mapove reprezentacie
+
+- uvedomil som si nespravnu logiku za svojou implementaciou implementacii/konstruktorov mapovych reprezentacii
+- konstruktor mapovej reprezentacie konstruuje za pomoci vstupneho template-u a mapy, teda je proti logike, aby typove parametre pre tieto vstupy boli kovariantne, naopak by mali byt kontravariantne
+- to sa ukazalo aj ako problem, ze keby sme chceli napriklad vytvorit mapovu reprezentaciu z potomka typoveho parametru konkretneho konstruktoru, tak by to neslo, lebo by sa v metodu create map v IDefinedFunctionalityMapRepreRep nenamatchoval dany konstruktor na typ daneho potomka
+- preto som sa rozhodol toto zmenit a prerobil som architekturu tychto konstruktorov
+- vytvoril som naviac tri dva nove interface-y IMapRepreImplementationInfo, IMapRepr(ElevDataDep)Implementation
+  - IMapRepreImplementationInfo teraz reprezentuje zdroj templatu a mapy a tieto zdroje vracia a teda je uplen v poriadku, aby typove parametre tychto zdrojov boli covariantne....cize toto bude typ, ktory si reprezentant mapovej reprezentacie bude drzat ako mozne implementacie danej mapovej reprezentacie
+  - IElevDataDependen/IndependentConstr nateraz ziskali ulohu vazne iba konstruovania mapovej reprezentacie, uz teraz nindikuju von, z coho mapovu reprezentaciu vytvaraju, preto mozu mat ako som spomenul vyssie kontravariantne genericke typy
+  - IMapRepr(ElevDataDep)ImplementationRep je interface, ktory reprezentuje jak konstruktor, tak zdrojovy indikator, tento interface nasledne maju implementovat jednotlivi reprezentanti konkretnych implementacii
+    - tito reprezentanti sa budu uchovavat ako zdrojove indikatory a nasledne sa budu matchovat pri vyrobe mapovych reprezentacii na konkretne mapove konstruktory
+    - schvalne su vytvorene dva typove parametre pre mapu
+      - jeden reprezentuje hlavnu mapu, ktorej format sa bude prezentovat v ramci IMapRepreImplementationInfo (kovariantne)
+      - druhy reprezentuje pozadovaneho potomka mapy, ktory splnuje pozadovany interface konstruktoru (kontravariantne)
+
+### pridanie interfaceov pre mapy
+
+- pridany interface-y, ktore pridavaju funkcionalitu mapam
+- konkretne pridavaju funkcionalitu ohladom ziskavania im korespondujucich vyskovych dat
+
+### vytvoreny interface pre pracu s vyskovymi datmi
+
+- vela toho nebolo, co spravit
+- interface IElevDataSource reprezentuje zdroj vyskovych dat
+- je potrebne aby dokazal stahovat a mazat stiahnute regiony
+- region je definovy interface-om IRegion a kazdy datovy zdroj by mal regionu prisudit take datove celky, aby ho cely pokryl
+- zaroven je potrebne 
+  - aby datovy zdroj dokazal povedat, ci su vsetky data pre danu dotazovatelnu vstupnu mapu stiahnute
+  - vedel vytvorit IElevData instanciu pre konkretnu dotazovatelnu vstupnu mapu
+- IElevData instancie je mozne sa dotazovat na vyskove data, kazda instancia by mala obshaovat len tolko dat, kolko je pre korespondujucu mapu potrebne
+
+- treba premysliet, ci nebude vhodne este skusit zabezpecit, aby sa nestiahnute potrebne vyskove data stiahli automaticky, ked to bude potrebne bez toho aby sa ulozili v pocitaci (potobny princip ako mapy cz)
+
+
+

@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
+using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
@@ -14,7 +15,7 @@ public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepres
     string MapRepreName { get; }
 
     //represents all map repre constructors, that returns TMapRepresentation
-    IMapRepreSourceIndic<ITemplate, IMap, TMapRepresentation>[] MapRepreCombinations { get; }
+    IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepresentation>[] MapRepreCombinations { get; }
 
     IDefinedFunctionalityMapRepreRepresentativ<IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
         GetDefinedFunctionalityMapRepreRepresentative<TVertexAttributes, TEdgeAttributes>()

@@ -12,4 +12,5 @@ public class ElevationDataManager
         ImmutableHashSet.Create<IElevDataSource>( /*TODO: add elevation data sources*/); //TODO: este premysliet ako reprezentovat, mozno skor nejakym listom koli poradiu
     
     
+    
 }

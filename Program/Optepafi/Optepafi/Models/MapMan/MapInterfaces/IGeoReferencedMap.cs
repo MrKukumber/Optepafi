@@ -1,10 +1,10 @@
 using Optepafi.Models.ElevationDataMan;
 
-namespace Optepafi.Models.MapMan;
+namespace Optepafi.Models.MapMan.MapInterfaces;
 
-public interface IGeoReferencedMap : IMap
+public interface IGeoReferencedMap : IGeoLocatedMap
 {
-    public GeoCoordinate GeoReference { get; }
+    public GeoCoordinate GeoReference { get => RepresentativeLocation; }
 
     // public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams, TMapConstraint>(
         // IMapGenericVisitor<TOut, TConstraint, TOtherParams, TMapConstraint> genericVisitor,

@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
+using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
@@ -16,7 +17,7 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
 {
     
     sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreSourceIndic<ITemplate, IMap, TMapRepre>[] constructors)
+        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepre>[] constructors)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepresentation
@@ -32,7 +33,7 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
     }
     
     sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map, IElevData elevData,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreSourceIndic<ITemplate, IMap, TMapRepre>[] constructors)
+        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepre>[] constructors)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepresentation

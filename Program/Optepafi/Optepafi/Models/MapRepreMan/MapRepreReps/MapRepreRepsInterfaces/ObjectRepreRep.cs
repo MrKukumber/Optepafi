@@ -1,5 +1,6 @@
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapFormats;
+using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepreImplementationReps;
@@ -18,9 +19,9 @@ public class ObjectRepreRep : IMapRepreRepresentativ<IObjectRepre<ITemplate>>
     private ObjectRepreRep(){}
     
     public string MapRepreName { get; } = ""; //TODO: vymysliet pekne meno
-    public IMapRepreSourceIndic<ITemplate, IMap, IObjectRepre<ITemplate>>[] MapRepreCombinations { get; } =
+    public IMapRepreImlpementationInfo<ITemplate, IMap, IObjectRepre<ITemplate>>[] MapRepreCombinations { get; } =
     {
-        ObjectRepreElevDepImplementationRep.Instance
+        ObjectRepreElevDepOrienteeringOmapImplementationRep.Instance
     };
 
     public IDefinedFunctionalityMapRepreRepresentativ<IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>

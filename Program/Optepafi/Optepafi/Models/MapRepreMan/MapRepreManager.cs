@@ -5,6 +5,7 @@ using System.Threading;
 using Avalonia.Controls;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
+using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
@@ -117,7 +118,7 @@ public class MapRepreManager :
 
     // Creates map representation by using elevation data.
     // Returns null, if there is no constructor using elevation data for creating map repre from template and map
-    public IMapRepresentation? CreateMapRepre(ITemplate template, IGeoReferencedMap map, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep, IElevData elevData, IProgress<MapRepreConstructionReport>? constructionProgress, CancellationToken? cancellationToken)
+    public IMapRepresentation? CreateMapRepre(ITemplate template, IGeoLocatedMap map, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep, IElevData elevData, IProgress<MapRepreConstructionReport>? constructionProgress, CancellationToken? cancellationToken)
     {
         return map.AcceptGeneric<IMapRepresentation?, 
                 (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
