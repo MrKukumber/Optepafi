@@ -7,7 +7,7 @@ using Optepafi.Models.TemplateMan;
 
 namespace Optepafi.Models.MapRepreMan.MapRepreConstrs;
 
-public interface IElevDataIndependentConstr<in TTemplate, in TMap, out TMapRepre> : IMapRepreConstructor<TTemplate, TMap, TMapRepre> 
+public interface IElevDataIndependentConstr<in TTemplate, in TMap, out TMapRepre> //: IMapRepreConstructor<TTemplate, TMap, TMapRepre> 
     where TTemplate : ITemplate  where TMap : IMap where TMapRepre : IMapRepresentation
 {
     public TMapRepre? ConstructMapRepre(TTemplate template, TMap map, 

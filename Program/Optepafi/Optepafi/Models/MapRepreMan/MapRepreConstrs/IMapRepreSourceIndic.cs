@@ -2,7 +2,7 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 
-namespace Optepafi.Models.MapRepreMan;
+namespace Optepafi.Models.MapRepreMan.MapRepreConstrs;
 
 public interface IMapRepreSourceIndic<out TTemplate, out TMap, out TMapRepre>
     where TTemplate : ITemplate

@@ -2,6 +2,7 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
+using Optepafi.Models.MapRepreMan.MapRepreImplementationReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreImplementations.ObjectRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
@@ -19,7 +20,7 @@ public class ObjectRepreRep : IMapRepreRepresentativ<IObjectRepre<ITemplate>>
     public string MapRepreName { get; } = ""; //TODO: vymysliet pekne meno
     public IMapRepreSourceIndic<ITemplate, IMap, IObjectRepre<ITemplate>>[] MapRepreCombinations { get; } =
     {
-        new ElevDataDependentConstr<Orienteering_ISOM_2017_2, OMAP, FunctionalObjectRepreOrienteeringOmap,Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>(Orienteering_ISOM_2017_2.Instance, OMAPFormat.Instance)
+        ObjectRepreElevDepImplementationRep.Instance
     };
 
     public IDefinedFunctionalityMapRepreRepresentativ<IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>

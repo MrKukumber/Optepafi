@@ -17,7 +17,8 @@ public class MapManager
     public enum MapCreationResult{Ok, Incomplete, UnableToOpen, UnableToParse }
     public MapCreationResult GetMapOfFrom(IMapFormat<IMap> mapFormat, StreamReader file, out IMap? map)
     {
-        return mapFormat.CreateMapFrom(file, out map);
+        map = mapFormat.CreateMapFrom(file, out MapCreationResult creationResult);
+        return creationResult;
     }
     public MapCreationResult GetMapOfFrom(IMapFormat<IMap> mapFormat, string fileName, out IMap? map)
     {
@@ -25,7 +26,8 @@ public class MapManager
         {
             using (StreamReader file = new StreamReader(fileName))
             {
-                return mapFormat.CreateMapFrom(file, out map);
+                map = mapFormat.CreateMapFrom(file, out MapCreationResult creationResult);
+                return creationResult;
             }
         }
         catch (System.IO.IOException ex)

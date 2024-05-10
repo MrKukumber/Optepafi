@@ -5,10 +5,10 @@ using Optepafi.Models.TemplateMan;
 
 namespace Optepafi.Models.MapRepreMan.MapRepres.MapRepreImplementations.CompleteGraphRepres;
 
-public class CompleteGraphRepreOrienteeringOmap : ICompleteGraphRepre<>, IConstrElevDataDepMapRepre<OrienteeringISOM, OMAP>
+public class CompleteGraphRepreOrienteeringOmapImplementation : ICompleteGraphRepre<>, IConstrElevDataDepMapRepre<OrienteeringISOM, OMAP>
 {
     
     public override IMapRepreRepresentativ<IMapRepresentation> MapRepreRep { get; init; }
     public override ITemplate UsedTemplate { get; init; }
-    public CompleteGraphRepreOrienteeringOmap() { }
+    public CompleteGraphRepreOrienteeringOmapImplementation() { }
 }
