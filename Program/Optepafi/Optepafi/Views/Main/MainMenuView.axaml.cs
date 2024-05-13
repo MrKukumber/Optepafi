@@ -16,7 +16,6 @@ public partial class MainMenuView : ReactiveUserControl<MainMenuViewModel>
     public MainMenuView()
     {
         InitializeComponent();
-        
         this.WhenActivated(disposables =>
         {
             ViewModel!.CreateModelCreatingSessionCommand.Subscribe(modelCreatingSession =>

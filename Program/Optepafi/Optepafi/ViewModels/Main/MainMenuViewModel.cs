@@ -19,9 +19,9 @@ public class MainMenuViewModel : ViewModelBase
     public ObservableCollection<SessionViewModel> Sessions { get; } = new();
     public MainMenuViewModel()
     {
-        IObservable<bool> isSessionsCountLessThanEight = Sessions.WhenAnyValue(
+        IObservable<bool> isSessionsCountNotMaximal = Sessions.WhenAnyValue(
             s => s.Count,
-             count => count <= SessionsMaxCount);
+             count => count < SessionsMaxCount);
         GoToSettingsCommand = ReactiveCommand.Create(() => { });
         CreatePathFindingSessionCommand = ReactiveCommand.Create(() =>
             {
@@ -31,7 +31,7 @@ public class MainMenuViewModel : ViewModelBase
                     .Subscribe(_ => Sessions.Remove(pathFindingSession));
                 return pathFindingSession;
             },
-            isSessionsCountLessThanEight);
+            isSessionsCountNotMaximal);
         CreateModelCreatingSessionCommand = ReactiveCommand.Create(() =>
             {
                 var modelCreatingSession = new ModelCreatingSessionViewModel(new ModelCreatingSessionModelView());
@@ -40,7 +40,7 @@ public class MainMenuViewModel : ViewModelBase
                     .Subscribe(_ => Sessions.Remove(modelCreatingSession));
                 return modelCreatingSession;
             },
-            isSessionsCountLessThanEight);
+            isSessionsCountNotMaximal);
     }
     
     public ReactiveCommand<Unit,Unit> GoToSettingsCommand { get; }

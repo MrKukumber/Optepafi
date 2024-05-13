@@ -8,7 +8,7 @@ public interface IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttribute
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    
+    public void RestoreConsistency();
 }
 
     

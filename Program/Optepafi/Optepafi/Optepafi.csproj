@@ -11,6 +11,7 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <AvaloniaResource Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
+        <AvaloniaResource Remove="Localization\**" />
     </ItemGroup>
 
 
@@ -56,33 +57,45 @@
         <DependentUpon>PathFindingWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Assets\Local\Local.sk-SK.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Local.sk-SK.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Assets\Local\Local.en-GB.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Local.en-GB.resx</DependentUpon>
-      </Compile>
       <Compile Remove="Models\MapRepreMan\MapRepreConstrs\ElevDataDependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\MapRepreConstrs\ElevDataIndependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <Compile Remove="Models\MapRepreMan\MapRepreConstrs\IMapRepreConstructor.cs" />
+      <Compile Remove="Localization\LocalizedBindingExtension.cs" />
+      <Compile Update="Assets\Localization\Local.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Local.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Assets\Localization\Local.en-GB.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Local.en-GB.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Assets\Localization\Local.sk-SK.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Local.sk-SK.resx</DependentUpon>
+      </Compile>
+      <Compile Remove="Localization\**" />
     </ItemGroup>
 
 
     <ItemGroup>
-      <EmbeddedResource Update="Assets\Local\Local.sk-SK.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
+      <EmbeddedResource Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
+      <EmbeddedResource Update="Assets\Localization\Local.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Local.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Assets\Localization\Local.en-GB.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Local.en-GB.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Assets\Localization\Local.sk-SK.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Local.sk-SK.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Assets\Local\Local.en-GB.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Local.en-US.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
+      <EmbeddedResource Remove="Localization\**" />
     </ItemGroup>
 
 
@@ -94,15 +107,18 @@
 
     <ItemGroup>
       <AvaloniaXaml Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
+      <AvaloniaXaml Remove="Localization\**" />
     </ItemGroup>
 
 
     <ItemGroup>
       <AdditionalFiles Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
+      <AdditionalFiles Remove="Localization\**" />
     </ItemGroup>
 
 
     <ItemGroup>
       <None Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
+      <None Remove="Localization\**" />
     </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan;
 
 public interface ISearchingExecutor : IDisposable
 {
-    Path[] Search(Leg[] track, IProgress<ISearchingReport> progress, CancellationToken cancellationToken);
+    Path[] Search(Leg[] track, IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
 }
 
 public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
@@ -20,18 +20,26 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    private Mutex searchMutex = new();
+    public delegate Path[] AlgorithmSearchingDelegate(
+        Leg[] track,
+        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
+    
+    private readonly Mutex _searchMutex = new();
+    private readonly AutoResetEvent _searchLoopResetEvent = new(false);
+    private readonly AutoResetEvent _searchMethodResetEvent = new(false);
+    private readonly AutoResetEvent _constructionResetEvent = new(false);
+    private Leg[] _inputTrack;
+    private IProgress<ISearchingReport>? _inputProgress;
+    private CancellationToken? _inputCancellationToken;
+    private Path[] _outputPath;
     private bool _disposed = false;
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
     private readonly IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
     private readonly IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> _mapRepre;
     
-    public delegate Path[] AlgorithmSearchingDelegate(
-        Leg[] track,
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
-        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
-        IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
 
     public SearchingExecutor(
         IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
@@ -43,40 +51,59 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
         _userModel = userModel;
         _algorithmSearchingDelegate = algorithmSearchingDelegate;
         Task.Run(ExecuteSearchingLoopAsync);
+        _constructionResetEvent.WaitOne();
     }
     
     public Path[] Search(Leg[] track, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
         if (_disposed) throw new ObjectDisposedException("SearchingExecutor");
-        
-        searchMutex.WaitOne();
+
         try
         {
-
-            //TODO: odovzdat trat loopu, ktory necha najst cestu a vrati ju v takom stave, aby ju tato metoda mohla vyzdvyhnut a vratit
-            //      hladanie prebieha synchronizovane
+            _searchMutex.WaitOne();
         }
-        finally
+        catch (ObjectDisposedException)
         {
-            searchMutex.ReleaseMutex();
+            throw new ObjectDisposedException("SearchingExecutor");
         }
-    }
 
-    private void ExecuteSearchingLoopAsync()
-    {
-        lock (_mapRepre)
-        {
-        //TODO: loop ktory bude zachytavat jednotlive zavolania Search metody a bude volat delegata algoritmu pre najdenie cesty
-        //      treba vymysliet, ako sa bude tento loop zastavovat po disposenuti executoru
-        //      tento loop bude drzat zamok na mapovej reprezentacii az po disposenutie executoru
-        //      po zastaveni loopu nechat mapovu reprezentaciu vycistit a vratit do povodneho stavu
-        }
+        _inputTrack = track;
+        _inputProgress = progress;
+        _inputCancellationToken = cancellationToken;
+        
+        if(!_searchLoopResetEvent.Set())  throw new ObjectDisposedException("SearchingExecutor");
+        _searchMethodResetEvent.WaitOne();
+        
+        _searchMutex.ReleaseMutex();
+        return _outputPath;
     }
 
     public void Dispose()
     {
-        //TODO: ukoncit loop a tym releasnut lock na mapovej reprezentacii
-        searchMutex.Dispose();
+        _searchMutex.WaitOne();
         _disposed = true;
+        _searchLoopResetEvent.Set();
+        
+        _searchMutex.Dispose();
+        _constructionResetEvent.Dispose();
+        _searchLoopResetEvent.Dispose();
+        _searchMethodResetEvent.Dispose();
+    }
+    private void ExecuteSearchingLoopAsync()
+    {
+        lock (_mapRepre)
+        {
+            while(!_constructionResetEvent.Set()) Thread.Sleep(10);
+            
+            _searchLoopResetEvent.WaitOne();
+            
+            while (!_disposed)
+            {
+                _outputPath = _algorithmSearchingDelegate(_inputTrack, _mapRepre, _userModel, _inputProgress, _inputCancellationToken);
+                _searchMethodResetEvent.Set();
+                _searchLoopResetEvent.WaitOne();
+            }
+            _mapRepre.RestoreConsistency();
+        }
     }
 }

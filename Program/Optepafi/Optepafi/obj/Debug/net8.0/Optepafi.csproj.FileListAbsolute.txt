@@ -131,7 +131,6 @@ C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurug
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\refint\Optepafi.dll
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.dll
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.pdb
-C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.csproj.CopyComplete
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.genruntimeconfig.cache
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\ref\Optepafi.dll
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\bin\Debug\net8.0\Avalonia.Svg.Skia.dll
@@ -141,12 +140,15 @@ C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurug
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\bin\Debug\net8.0\Svg.Custom.dll
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\bin\Debug\net8.0\Svg.Model.dll
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\bin\Debug\net8.0\Svg.Skia.dll
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\bin\Debug\net8.0\SRTM.dll
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.csproj.Up2Date
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\bin\Debug\net8.0\en-GB\Optepafi.resources.dll
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\bin\Debug\net8.0\sk-SK\Optepafi.resources.dll
-C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.Assets.Locale.Locale.en-GB.resources
-C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.Assets.Locale.Locale.sk-SK.resources
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.csproj.GenerateResource.cache
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\en-GB\Optepafi.resources.cs
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\en-GB\Optepafi.resources.dll
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\sk-SK\Optepafi.resources.cs
 C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\sk-SK\Optepafi.resources.dll
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.Assets.Localization.Local.resources
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.Assets.Localization.Local.en-GB.resources
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\kukurugya\Program\Optepafi\Optepafi\obj\Debug\net8.0\Optepafi.Assets.Localization.Local.sk-SK.resources

@@ -1,9 +1,18 @@
+using System.IO;
 using Optepafi.Models.MapMan.Maps;
 
 namespace Optepafi.Models.MapMan.MapFormats;
 
 public sealed class OMAPFormat : IMapFormat<OMAP>
 {
-    static public OMAPFormat Instance { get; } = new OMAPFormat();
     private OMAPFormat(){}
+    static public OMAPFormat Instance { get; } = new OMAPFormat();
+    
+    //TODO: implement
+    public string Extension { get; }
+    public string MapFormatName { get; }
+    public OMAP? CreateMapFrom(StreamReader inputMapFile, out MapManager.MapCreationResult creationResult)
+    {
+        throw new System.NotImplementedException();
+    }
 }

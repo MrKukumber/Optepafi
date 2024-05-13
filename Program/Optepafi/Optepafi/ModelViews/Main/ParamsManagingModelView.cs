@@ -8,17 +8,17 @@ using Optepafi.Models.ParamsMan;
 
 namespace Optepafi.ModelViews.Main;
 
-public sealed class MainParamsManagingModelView : ModelViewBase
+public sealed class ParamsManagingModelView : ModelViewBase
 {
-    private MainParamsManagingModelView(){}
-    public static MainParamsManagingModelView Instance { get; } = new();
+    private ParamsManagingModelView(){}
+    public static ParamsManagingModelView Instance { get; } = new();
 
     private Dictionary<Type, IParams?> paramsStorage = new();
     
     public void SetParams(IParams parameters)
     {
         Type paramsType = parameters.GetType();
-        paramsStorage.Add(paramsType, parameters);
+        paramsStorage[paramsType] = parameters;
     }
 
     public TParams? GetParams<TParams>()

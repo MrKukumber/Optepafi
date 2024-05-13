@@ -4,6 +4,7 @@ using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepreImplementationReps;
+using Optepafi.Models.MapRepreMan.MapRepreImplementationReps.SpecificImplementationReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreImplementations.ObjectRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;

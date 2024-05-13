@@ -6,11 +6,11 @@ namespace Optepafi.ViewModels.ModelCreating;
 public class ModelCreatingSettingsViewModel : ViewModelBase
 {
     public MCSettingsModelView SettingsMv { get; }
-    public MainParamsManagingModelView MainParamsManaging { get; }
+    public ParamsManagingModelView ParamsManaging { get; }
 
     public ModelCreatingSettingsViewModel(MCSettingsModelView settingsMv)
     {
         SettingsMv = settingsMv;
-        MainParamsManaging = MainParamsManagingModelView.Instance;
+        ParamsManaging = ParamsManagingModelView.Instance;
     }
 }

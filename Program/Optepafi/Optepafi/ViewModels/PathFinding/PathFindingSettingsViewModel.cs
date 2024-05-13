@@ -7,11 +7,11 @@ namespace Optepafi.ViewModels.PathFinding;
 public class PathFindingSettingsViewModel : ViewModelBase
 {
     public PFSettingsModelView SettingsMv { get;}
-    public MainParamsManagingModelView MainParamsManagingMv { get; }
+    public ParamsManagingModelView ParamsManagingMv { get; }
     public PathFindingSettingsViewModel(PFSettingsModelView settingsesMv)
     {
         SettingsMv = settingsesMv;
-        MainParamsManagingMv = MainParamsManagingModelView.Instance;
+        ParamsManagingMv = ParamsManagingModelView.Instance;
     }
     
 }
