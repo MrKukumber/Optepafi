@@ -7,7 +7,7 @@ namespace Optepafi.Models.ElevationDataMan;
 
 public interface IElevDataSource
 {
-    public ISet<IRegion> AllRegions();
+    public IReadOnlySet<IRegion> AllRegions { get; }
     //return true, if download or removal were successful
     //throw ArgumentException, if given region is not region from AllRegions
     public bool Download(IRegion region);

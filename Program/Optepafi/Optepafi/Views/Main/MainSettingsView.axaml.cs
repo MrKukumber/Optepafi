@@ -16,7 +16,7 @@ public partial class MainSettingsView : ReactiveUserControl<MainSettingsViewMode
     {
         InitializeComponent();
         this.WhenActivated(disposables => ViewModel.WhenAnyValue(x => x.CurrentCulture)
-            .Subscribe(info =>
+            .Subscribe(_ =>
             {
                 MainSettingsHeaderTextBlock.Text = Assets.Localization.Local.MainSettingsHeader;
             }).DisposeWith(disposables));

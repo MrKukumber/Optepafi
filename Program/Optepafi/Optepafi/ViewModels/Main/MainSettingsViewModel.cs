@@ -21,53 +21,45 @@ public class MainSettingsViewModel : ViewModelBase
     private IElevDataSource? _currentElevDataSource;
     private CultureInfo _currentCulture;
     
-    private ParamsManagingModelView _paramsManager = ParamsManagingModelView.Instance;
+    private readonly ParamsManagingModelView _paramsManager = ParamsManagingModelView.Instance;
     private MainSettingsParams _mainSettingsParams;
     public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
     public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
-    public Interaction<ElevConfigViewModel, IElevDataSource> ElevConfigInteraction { get; }
+    public Interaction<ElevConfigViewModel, IElevDataSource?> ElevConfigInteraction { get; }
     private ElevConfigViewModel ElevConfig { get; }
     public MainSettingsViewModel()
     {
 
-        MainSettingsParams? mainSettingsParams;
-        if ((mainSettingsParams = _paramsManager.GetParams<MainSettingsParams>()) is null)
+        if ((_mainSettingsParams = _paramsManager.GetParams<MainSettingsParams>()!) is null)
         {
             _currentElevDataSource = null;
-            _currentCulture = CultureInfo.CurrentCulture;
+            CurrentCulture = CultureInfo.CurrentCulture;
             
-            _mainSettingsParams = new MainSettingsParams { ElevDataSourceName = null, Culture = _currentCulture.Name};
+            _mainSettingsParams = new MainSettingsParams { ElevDataSourceName = null, Culture = CurrentCulture.Name};
             _paramsManager.SetParams(_mainSettingsParams);
         }
         else
         {
-            _mainSettingsParams = mainSettingsParams;
-            
             foreach (var elevDataSource in ElevDataModelView.Instance.ElevDataSources)
             {
-                if (elevDataSource.GetType().Name == mainSettingsParams.ElevDataSourceName)
+                if (elevDataSource.GetType().Name == _mainSettingsParams.ElevDataSourceName)
                 {
                     _currentElevDataSource = elevDataSource;
                 }
             }
-            _currentCulture = CultureInfo.GetCultureInfo(mainSettingsParams.Culture);
-            Assets.Localization.Local.Culture = _currentCulture;
+            CurrentCulture = CultureInfo.GetCultureInfo(_mainSettingsParams.Culture);
         }
 
 
         this.WhenAnyValue(x => x.CurrentCulture)
-            .Subscribe(currentCulture =>
-            {
-                Assets.Localization.Local.Culture = currentCulture;
-                _mainSettingsParams.Culture = currentCulture.Name;
-            });
+            .Subscribe(currentCulture => _mainSettingsParams.Culture = currentCulture.Name);
         this.WhenAnyValue(x => x.CurrentElevDataSource)
             .Subscribe(currentElevDataSource => _mainSettingsParams.ElevDataSourceName = currentElevDataSource?.GetType().Name);
 
         
         
-        ElevConfigInteraction = new Interaction<ElevConfigViewModel, IElevDataSource>();
-        ElevConfig = new ElevConfigViewModel();
+        ElevConfigInteraction = new Interaction<ElevConfigViewModel, IElevDataSource?>();
+        ElevConfig = new ElevConfigViewModel(CurrentElevDataSource);
         OpenElevConfigCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             CurrentElevDataSource = await ElevConfigInteraction.Handle(ElevConfig);
@@ -92,7 +84,11 @@ public class MainSettingsViewModel : ViewModelBase
     public CultureInfo CurrentCulture
     {
         get => _currentCulture;
-        set => this.RaiseAndSetIfChanged(ref _currentCulture, value);
+        set
+        {
+            Assets.Localization.Local.Culture = value;
+            this.RaiseAndSetIfChanged(ref _currentCulture, value);
+        }
+        
     }
-
 }
