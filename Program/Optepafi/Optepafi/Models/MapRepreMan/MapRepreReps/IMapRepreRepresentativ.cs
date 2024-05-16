@@ -15,7 +15,7 @@ public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepres
     string MapRepreName { get; }
 
     //represents all map repre constructors, that returns TMapRepresentation
-    IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepresentation>[] MapRepreCombinations { get; }
+    IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepresentation>[] MapRepreImplementationInfos { get; }
 
     IDefinedFunctionalityMapRepreRepresentativ<IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
         GetDefinedFunctionalityMapRepreRepresentative<TVertexAttributes, TEdgeAttributes>()
@@ -30,7 +30,7 @@ public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepres
         where TEdgeAttributes : IEdgeAttributes
     {
         return GetDefinedFunctionalityMapRepreRepresentative<TVertexAttributes, TEdgeAttributes>()
-            .CreateMapRepre(template, map, progress, cancellationToken, MapRepreCombinations);
+            .CreateMapRepre(template, map, progress, cancellationToken, MapRepreImplementationInfos);
     }
 
     sealed IMapRepresentation? CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData,
@@ -41,6 +41,6 @@ public interface IMapRepreRepresentativ<out TMapRepresentation> where TMapRepres
         where TEdgeAttributes : IEdgeAttributes
     {
         return GetDefinedFunctionalityMapRepreRepresentative<TVertexAttributes, TEdgeAttributes>()
-            .CreateMapRepre(template, map, elevData, progress, cancellationToken, MapRepreCombinations);
+            .CreateMapRepre(template, map, elevData, progress, cancellationToken, MapRepreImplementationInfos);
     }
 }

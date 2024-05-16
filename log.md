@@ -368,5 +368,7 @@ opozdely log z programovania projetku
 
 - treba premysliet, ci nebude vhodne este skusit zabezpecit, aby sa nestiahnute potrebne vyskove data stiahli automaticky, ked to bude potrebne bez toho aby sa ulozili v pocitaci (potobny princip ako mapy cz)
 
+## 16.5.2024
 
+- idea - pri stahovani vyskovych dat je potrebne davat pozor na to, ze sa moze stahovat naraz viac regionov, ktore ked sa datovymi bunkami prekryvaju ich musi stahovat synchronizovane, teda aby sa niektore bunky nestiahli viac krat...to by sa dalo pri srtm datach vyriesit tak, ze pre kazdu datovu bunku budem mat instanciu, ktora mi bude hovorit, ci je dana bunka uz stiahnuta alebo nie a synchronizovane budem upravovat jej stav podla toho ci je stihanuta, nieje stiahnuta alebo je akurat stahovana
 

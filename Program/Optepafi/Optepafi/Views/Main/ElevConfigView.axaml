@@ -17,8 +17,8 @@
                 <StackPanel Grid.Row="0" Margin="10 0 0 10">
                     <TextBlock Name="ElevSourceTextBlock" Text="Source of elevation"></TextBlock>
                     <ComboBox Name="ElevSourceComboBox" HorizontalAlignment="Left"
-                              ItemsSource="{Binding ElevDataSources}"
-                              SelectedItem="{Binding CurrentElevDataSource}"></ComboBox>
+                              ItemsSource="{Binding ElevDataTypes}"
+                              SelectedItem="{Binding CurrentElevDataType}"></ComboBox>
                 </StackPanel>
                 <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="False" Height="1"></ProgressBar>
                 <ListBox Grid.Row="2" ItemsSource="{Binding CurrentAvailableRegions}"
@@ -31,11 +31,11 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" 
-                                       Foreground="{Binding IsDownloaded, Converter={x:Static mVm:ElevConfigViewModel.DownloadedToColorConverter}}"></TextBlock>
+                                       Background="{Binding Presence, Converter={x:Static mVm:ElevConfigViewModel.PresenceToColorConverter}}"></TextBlock>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <!-- variante s canvasom a vytvorenim mapy z regionov -->
+                <!-- varianta s canvasom a vytvorenim mapy z regionov -->
                 <!-- <ListBox> -->
                     <!-- <ListBox.ItemsPanel> -->
                         <!-- <ItemsPanelTemplate> -->
@@ -60,6 +60,9 @@
                     <TextBlock Text="Country name:" Margin="20"></TextBlock>
                     <Button Name="DownloadButton" Content="Download" Margin="0 0 20 0" Command="{Binding DownloadRegionCommand}"></Button>
                     <Button Name="DeleteButton" Content="Delete" Command="{Binding DeleteRegionCommand}"></Button>
+                    <Button Name="CancelButton" Content="Cancel" Command="{Binding CancelDownloadingCommand}"></Button>
+                    <TextBox Name="UserNameTextBlock" Watermark="Insert user name" Text="{Binding UserName, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}"></TextBox>
+                    <TextBox Name="PasswordTextBlock" Watermark="Insert password" Text="{Binding Password, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}" PasswordChar="*"></TextBox>
                 </StackPanel>
             </Grid>
         </DockPanel>

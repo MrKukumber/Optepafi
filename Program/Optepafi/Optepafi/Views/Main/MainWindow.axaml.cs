@@ -9,6 +9,7 @@ using Optepafi.Models;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.ViewModels;
 using Optepafi.ViewModels.Main;
+using Optepafi.ViewModels.Main.DataViewModels;
 using ReactiveUI;
 using Brushes = Avalonia.Media.Brushes;
 using Pen = Avalonia.Media.Pen;
@@ -26,7 +27,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             action(ViewModel.MainSettings.ElevConfigInteraction.RegisterHandler(ShowElevConfig)));
     }
 
-    private void ShowElevConfig(InteractionContext<ElevConfigViewModel, IElevDataSource?> interaction)
+    private void ShowElevConfig(InteractionContext<ElevConfigViewModel, ElevDataTypeViewModel?> interaction)
     {
         Content = new ElevConfigView
         {

@@ -102,6 +102,7 @@
     <ItemGroup>
       <Folder Include="Models\ElevationDataMan\ElevSources\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />
+      <Folder Include="Models\Utils\" />
     </ItemGroup>
 
 

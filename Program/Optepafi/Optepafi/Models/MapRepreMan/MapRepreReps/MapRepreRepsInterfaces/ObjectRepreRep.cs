@@ -20,7 +20,7 @@ public class ObjectRepreRep : IMapRepreRepresentativ<IObjectRepre<ITemplate>>
     private ObjectRepreRep(){}
     
     public string MapRepreName { get; } = ""; //TODO: vymysliet pekne meno
-    public IMapRepreImlpementationInfo<ITemplate, IMap, IObjectRepre<ITemplate>>[] MapRepreCombinations { get; } =
+    public IMapRepreImlpementationInfo<ITemplate, IMap, IObjectRepre<ITemplate>>[] MapRepreImplementationInfos { get; } =
     {
         ObjectRepreElevDepOrienteeringOmapImplementationRep.Instance
     };
