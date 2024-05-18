@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
 using Optepafi.Models.MapMan.MapInterfaces;
 
 namespace Optepafi.Models.MapMan;
@@ -15,26 +17,36 @@ public class MapManager
 
     private ISet<IMapFormat<IMap>> MapFormats { get; } = new HashSet<IMapFormat<IMap>>(); // TODO: premysliet, jak to reprezentaovat
 
-    public enum MapCreationResult{Ok, Incomplete, UnableToOpen, UnableToParse }
-    public MapCreationResult GetMapOfFrom(IMapFormat<IMap> mapFormat, StreamReader file, out IMap? map)
+    public IMapFormat<IMap>? GetCorrespondingMapFormatTo(string mapFileName)
     {
-        map = mapFormat.CreateMapFrom(file, out MapCreationResult creationResult);
+        foreach (var mapFormat in MapFormats)
+        {
+            if (Regex.IsMatch(mapFileName, ".*" + mapFormat.Extension + "$") ) return mapFormat;
+        }
+        return null;
+    }
+    public enum MapCreationResult{Ok, Incomplete, FileNotFound, UnableToParse, Cancelled}
+    public MapCreationResult GetMapFromOf(Stream mapStream, IMapFormat<IMap> mapFormat, CancellationToken? cancellationToken, out IMap? map)
+    {
+        map = mapFormat.CreateMapFrom(mapStream, cancellationToken, out MapCreationResult creationResult);
+        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested)
+            return MapCreationResult.Cancelled;
         return creationResult;
     }
-    public MapCreationResult GetMapOfFrom(IMapFormat<IMap> mapFormat, string fileName, out IMap? map)
-    {
-        try
-        {
-            using (StreamReader file = new StreamReader(fileName))
-            {
-                map = mapFormat.CreateMapFrom(file, out MapCreationResult creationResult);
-                return creationResult;
-            }
-        }
-        catch (System.IO.IOException ex)
-        {
-            map = null;
-            return MapCreationResult.UnableToOpen;
-        }
-    }
+    // public MapCreationResult GetMapFromOf(string fileName, IMapFormat<IMap> mapFormat, CancellationToken? cancellationToken, out IMap? map)
+    // {
+        // try
+        // {
+            // using (FileStream mapStream = new FileStream(fileName, FileMode.Open))
+            // {
+                // map = mapFormat.CreateMapFrom(mapStream, cancellationToken, out MapCreationResult creationResult);
+                // return creationResult;
+            // }
+        // }
+        // catch (System.IO.FileNotFoundException ex)
+        // {
+            // map = null;
+            // return MapCreationResult.FileNotFound;
+        // }
+    // }
 }

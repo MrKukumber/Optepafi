@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModelTypes;
@@ -33,11 +35,11 @@ public class UserModelManager :
         return correspondingUserModelTypes;
     }
 
-    public IUserModelType<ITemplate, IUserModel<ITemplate>>? GetCorrespondingUserModelTypeTo(string extension)
+    public IUserModelType<ITemplate, IUserModel<ITemplate>>? GetCorrespondingUserModelTypeTo(string userModelFileName)
     {
         foreach (var userModelType in UserModelTypes)
         {
-            if (userModelType.UserModelFileExtension == extension) return userModelType;
+            if (Regex.IsMatch(userModelFileName, ".*" +userModelType.UserModelFileNameSuffix + userModelType.UserModelFileExtension + "$") ) return userModelType;
         }
         return null;
     }
@@ -56,37 +58,38 @@ public class UserModelManager :
         return userModelType.GetNewUserModel();
     }
 
-    public enum UserModelLoadResult{Ok, UnableToOpen, UnableToDeserialize, UnknownFileFormat}
-    public UserModelLoadResult DeserializeUserModelFromOf(StreamReader serialization, IUserModelType<ITemplate, IUserModel<ITemplate>> userModelType, out IUserModel<ITemplate>? userModel)
+    public enum UserModelLoadResult{Ok, UnableToReadFromFile, UnableToDeserialize, Canceled}
+    public UserModelLoadResult DeserializeUserModelFromOf(Stream userModelSerialization, IUserModelType<ITemplate, IUserModel<ITemplate>> userModelType, CancellationToken? cancellationToken, out IUserModel<ITemplate>? userModel)
     {
-        userModel = userModelType.DeserializeUserModel(serialization);
-        if (userModel is null) return UserModelLoadResult.UnableToDeserialize;
-        return UserModelLoadResult.Ok;
+        userModel = userModelType.DeserializeUserModel(userModelSerialization, cancellationToken, out UserModelLoadResult result);
+        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested)
+            return UserModelLoadResult.Canceled;
+        return result;
     }
 
-    public UserModelLoadResult LoadUserModelFrom(string pathToSerialization, out IUserModel<ITemplate>? userModel)
-    {
-        foreach (var userModelType in UserModelTypes)
-        {
-            if (Path.GetExtension(pathToSerialization) == userModelType.UserModelFileExtension)
-            {
-                try
-                {
-                    using (StreamReader serialization = new StreamReader(pathToSerialization))
-                    {
-                        userModel = userModelType.DeserializeUserModel(serialization);
-                        if (userModel is null) return UserModelLoadResult.UnableToDeserialize;
-                        return UserModelLoadResult.Ok;
-                    }
-                }
-                catch (System.IO.IOException ex)
-                {
-                    userModel = null;
-                    return UserModelLoadResult.UnableToOpen;
-                }
-            }
-        }
-        userModel = null;
-        return UserModelLoadResult.UnknownFileFormat;
-    }
+    // public UserModelLoadResult LoadUserModelFrom(string pathToSerialization, out IUserModel<ITemplate>? userModel)
+    // {
+        // foreach (var userModelType in UserModelTypes)
+        // {
+            // if (Path.GetExtension(pathToSerialization) == userModelType.UserModelFileExtension) // tuna mozna chyba, lebo to berie iba extensions za jendou botkou, pricom extensions modelov su .UserModel.FileType
+            // {
+                // try
+                // {
+                    // using (StreamReader serialization = new StreamReader(pathToSerialization))
+                    // {
+                        // userModel = userModelType.DeserializeUserModel(serialization);
+                        // if (userModel is null) return UserModelLoadResult.UnableToDeserialize;
+                        // return UserModelLoadResult.Ok;
+                    // }
+                // }
+                // catch (System.IO.IOException ex)
+                // {
+                    // userModel = null;
+                    // return UserModelLoadResult.UnableToOpen;
+                // }
+            // }
+        // }
+        // userModel = null;
+        // return UserModelLoadResult.UnknownFileFormat;
+    // }
 }

@@ -372,3 +372,63 @@ opozdely log z programovania projetku
 
 - idea - pri stahovani vyskovych dat je potrebne davat pozor na to, ze sa moze stahovat naraz viac regionov, ktore ked sa datovymi bunkami prekryvaju ich musi stahovat synchronizovane, teda aby sa niektore bunky nestiahli viac krat...to by sa dalo pri srtm datach vyriesit tak, ze pre kazdu datovu bunku budem mat instanciu, ktora mi bude hovorit, ci je dana bunka uz stiahnuta alebo nie a synchronizovane budem upravovat jej stav podla toho ci je stihanuta, nieje stiahnuta alebo je akurat stahovana
 
+- pri vytvarani prvych ViewModelov a ModelViewov som sa rozhodol zacat pouzivat ViewModelove wraper typy pre datove typy, ktore su hodne toho aby uzreli svetlo sveta cez View
+  - teda triedy ako IElevDataSource, IElevDataType, IRegion v pripade ElevConfigViewModelu, ale aj nasledne napriklad aj triedy IMapFormat\<ITemplate\>, ITemplate, ISearchingAlgorithm atd. dostanu svoje wrapper typy, ktore budu ponukat vlastnosti vnutornych datovych typov potrebne ku behu viewModelu a potazmo View-u 
+  - zaroven tieto wrapper typy ako ostatne viewModely budu dedit od ViewModelBase co znamena, ze budu moct vyuzivat ficury Reactive UI
+  - taktiez je tento princip povazovany za odporucany pri programovani MVVM aplikacie
+  
+### vytvoreny ElevConfigViewModel, ElevDataModelView a MainSettingsViewModel
+
+#### MainSettingsViewModel
+
+- v tomto momente su hlavne nastavenia velmi jednoduche, obsahuju len dve nastavitelne polozky
+- v ramci tohto projektu ich asi uz nebudem viac rozsirovat ale viem si predstavit, ze by sa v nich dali nastavovat este podrobnejsie jednotlive modelove objekty ako napriklad nejake preferencie na vybery implementacii algoritmov, pouzite mapoveReprezentacie a ich implementacie, atd.
+  - toto by vsak potrebovalo dodatocnu prerabku modelov, nakolko tie v tomto momente nedisponuju moznostou takychto nastaveni
+- nateraz hlavne nastavenia teda obsahuju iba moznost zmeny lokalizacie aplikacie a moznost vyberu typu a potazmo zdroja vyskovych dat
+- vyber zdroja vyskovych dat je prevedeny dialogovym sposobom, kedy po stlaceni tlacidla nastavujuceho vyskove data sa vytvori dialogove okno(v tomto pripade sa nevytvori okno ale len sa nastavenie vyskovych dat otvori ako view v hlavnom okne) v ktorom bude mozne zmenit typ(zdroj) vyskovych dat a stahovat jednotlive vyskove data alebo ich vymazavat a po odchodu z tohto okna sa nastaveny zdroj vyskovych dat vrati ako odpoved interakcie a uchova sa v hlavnych nastaveniach
+- nesikovne sa v MainSettingsViewModelu odkazujeme na instanciu typu vnutry wrraper typu - to by sa nemalo diat, viewModel by mal vydiet vyhardne viewModelove wrrapery
+  - MainSettingsViewModel vsak nema vlastny ModelView - preto sa hram s myslienkou, ze by sa mu mal jeden vytvorit a ParamsManagingModelView by sa mal posunut do Modelu ako ParamsManager
+  - to by tiez pomohlo v tom, ze potom by sa ViewModely session-ov nemuseli handrkovat s ulozenymi MainSettingsParameters, ktore casto maju kripticku stringovu formu, ale mohli by sa opytat priamo MainSettingsModelView-u, ktory by zadovazil potrebne aktualne nastavenia
+
+##### MainSettingsParameters
+
+- bola vytvorena aj nova trieda pre uchovavanie parametrov z halvnych nastaveni
+- uchovava posledne pouzitu Culture a meno typu posledne pouziteho typu vyskovych dat
+- to ze sa uchovava meno typu posledne pouziteho typu vyskovych dat je mozne preto, lebo jednotlive vyskove zdroje a potazmo typy su singletony, ktore su prezentovane ElevDataManagerom a teda z mena typu by malo byt jasne, o ktoru instanciu zdroja potazmo typu vyskovcyh dat sa jedna
+  - tato myslienka nalsedne bude platit pre vsetky typy s podobnou singletonovou myslienkou (ITemplate, IMapFormat<>, ISearchingAlgorithm, IUserModelType<>,...)
+- tym ze sa vzdy jedna o jednu instanciu tychto parametrov v triede MainSettingsViewModel, ktorej sa iba nastavuju vlastnosti, nieje potrebne neustale volat metodu Set() ParamsManagingModelView-u s novymi parametrami, nakolko cez referenciu sa tam tie parametre budu konzistentne menit tiez
+
+#### ElevConfigViewModel a ElevDataModelView
+
+- nateraz sa ignoruje akakolvek hierarchia ci uz regionov alebo zdrojov/typov
+  - vsetky regiony sa ukazuju vo wraper panelu, ci uz su to TopRegion-y, alebo SubRegion-y
+  - ukazuju sa len datove typy, nie datove zdroje
+- z predoslej odrazky je poznat, ze som jemne zmenil zdroje vyskovych dat - ponovom moze jeden zdroj drzat viacero typov vyskovych dat (napriklad USGS zdroj ma 3 alebo 1 secondArc-ove data)
+- taktiez som s typmi vyskovych dat pridal aj nove interfacey, ktore informuju o tom, ci dany typ vyskovych dat potrebuje credentials na to, aby bolo mozne ho ziskat/stiahnut
+  - pre tuto funkciu som pridal aj TextBoxy pre zadavanie mena a hesla
+- stahovanie dat prebieha asynchronne a je mozne prerusit ho
+- odstranovanie dat prebieha asynchronne taktiez ale je neprerusitelne
+
+- TODO - je potrebne este vymysliet, ako sa bude uchovavat medzi behmi aplikacie informacia o tom, ktore regiony su stiahnute a ktore nie a kto to bude robit(najskor asi samotne zdroje, potazmo typy)
+  - no jasne, lebo to je vlastne v ich rezii, aby sa stiahnutost regionove ukazovala spravne
+
+## 18.5.2024
+
+- TODO - je potrebne poriadne premysliet exitovanie apliacie a zatvaranie okien session-ov, neviem, ci to nenechat az na koniec, ked uz budem mat zvysnu funkcionalitu hotovu a teda budem vediet urcit, kedy uzivatelovi klast otazky, ci vazne chce opustit session/aplikaciu
+
+### praca na PathFindingSettingsViewModel a PFSettingsModelView
+
+- vytvoreny vyber templatu a vyhladavacieho algoritmu
+- vytvoreny vyber suborov s mapou a s uzivatelsko-modelovou serializaciou
+- vytvorena logika za otvaranim takychto suborov a ich nacitanim
+- vytvorena logika za tym, ktory template, vyhladavaci algoritmus, mapovy format a typ uzivatelskeho modelu je kedy pouzitelny
+  - pouzitelne template-y a vyhladavacie algoritmy upravovane v ListBoxe
+  - pouzitelne mapove formaty a typy uzivatelskych modelov dosadene ako argumenty FilePicker-u, ktory zaisti, ze sa budu moct vybrat iba vhodne formty suborov
+- vytvorena logika za tym, ze algoritmus sa moze vybrat iba vtedy, ked je vybrana mapa aj template a uzivatelsky model len vtedy, ked je vybrany template
+- upravene vytvaranie map a uzivatelskych modelov - pridany cancellation token do tychto procesov - pokial uzivatel nepocka na vytvorenie mapy/uzivatelskeho modelu a vyberie nejaky iny subor, predosly vyber sa zahodi/cancell-ne a necha sa zpracovat novy vyber
+- v konstruktore sa skontroluje, ci existuju nejake PathFindigParametre, ak ano, pokusi sa z nich nastavit template, mapu, vyhladavaci algoritmus a aj uzivatelsky model
+  - po kazdom uspesnom pokracovani z nastaveni sa prepisu PathFindingParametre a dalsia session bude teda mat defaultne nastavene parametre prave na tieto aktualne
+    - TODO - je este potrebne doriesti toto ukladanie parametrov
+  
+
+  

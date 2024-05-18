@@ -7,6 +7,7 @@ namespace Optepafi.Models.MapRepreMan.MapRepres;
 
 public interface IMapRepresentation
 {
+    public string Nmae { get; }
     public IMapRepreRepresentativ<IMapRepresentation> MapRepreRep { get; init; } //TODO: premysliet ci je to potrebne
     // public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(
         // IMapRepresentationGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,

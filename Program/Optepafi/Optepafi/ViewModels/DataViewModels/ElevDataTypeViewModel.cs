@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Optepafi.Models.ElevationDataMan;
 
-namespace Optepafi.ViewModels.Main.DataViewModels;
+namespace Optepafi.ViewModels.DataViewModels;
 
 public class ElevDataTypeViewModel : ViewModelBase
 {

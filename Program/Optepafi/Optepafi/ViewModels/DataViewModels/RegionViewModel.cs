@@ -5,7 +5,7 @@ using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
 using ReactiveUI;
 
-namespace Optepafi.ViewModels.Main.DataViewModels;
+namespace Optepafi.ViewModels.DataViewModels;
 
 public class RegionViewModel : ViewModelBase
 {

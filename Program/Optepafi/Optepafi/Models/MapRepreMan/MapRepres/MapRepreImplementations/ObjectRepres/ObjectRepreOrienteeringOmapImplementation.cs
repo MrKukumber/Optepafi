@@ -16,6 +16,8 @@ public class ObjectRepreOrienteeringOmapImplementation :
         throw new System.NotImplementedException();
     }
 
+    public string Nmae { get; } = "Object representation";
+
     public IMapRepreRepresentativ<IMapRepresentation> MapRepreRep { get; init; }
 
     public ObjectRepreOrienteeringOmapImplementation()

@@ -9,7 +9,7 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.TemplateMan;
 
 
-public interface ITemplate<out TVertexAttributes,out TEdgeAttributes> : ITemplate
+public interface ITemplate<TVertexAttributes,TEdgeAttributes> : ITemplate
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {

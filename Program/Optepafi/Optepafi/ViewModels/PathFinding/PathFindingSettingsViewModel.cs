@@ -1,17 +1,369 @@
-using System.Dynamic;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reactive;
+using System.Security;
+using System.Threading;
+using Avalonia.Data.Converters;
+using Avalonia.Platform.Storage;
+using Optepafi.Models.MapMan;
+using Optepafi.Models.ParamsMan.Params;
+using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.ModelCreating;
+using Optepafi.ViewModels.DataViewModels;
+using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
 
 public class PathFindingSettingsViewModel : ViewModelBase
 {
-    public PFSettingsModelView SettingsMv { get;}
-    public ParamsManagingModelView ParamsManagingMv { get; }
-    public PathFindingSettingsViewModel(PFSettingsModelView settingsesMv)
+    
+    public PFSettingsModelView SettingsModelView { get;}
+    public ParamsManagingModelView ParamsManagingModelView { get; }
+    public IDisposable? LoadMapCommandSubscription { get; }
+    public IDisposable? LoadUserModelCommandSubscription { get; }
+    public PathFindingSettingsViewModel(PFSettingsModelView settingsModelView)
     {
-        SettingsMv = settingsesMv;
-        ParamsManagingMv = ParamsManagingModelView.Instance;
+        SettingsModelView = settingsModelView;
+        ParamsManagingModelView = ParamsManagingModelView.Instance;
+
+        CurrentlySelectedElevDataType = null;
+        
+        SelectedTemplate = null;
+        SelectedSearchingAlgorithm = null;
+        
+        CurrentlyUsedMapFormat = null;
+        SelectedMapFileName = null;
+        SelectedMapFilePath = null;
+        
+        CurrentlyUsedUserModelType = null;
+        SelectedMapFileName = null;
+        SelectedUserModelFileName = null;
+        
+        UsableTemplates = SettingsModelView.GetUsableTemplates(CurrentlyUsedMapFormat);
+        UsableMapFormats = SettingsModelView.GetUsableMapFormats(SelectedTemplate);
+        UsableSearchingAlgorithms = SettingsModelView.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
+        UsableUserModelTypes = SettingsModelView.GetUsableUserModelTypes(SelectedTemplate);
+
+        this.WhenAnyValue(x => x.CurrentlySelectedElevDataType)
+            .Subscribe(currentlySelectedElevDataType =>
+            {
+                SettingsModelView.SetElevDataType(currentlySelectedElevDataType);
+            });
+        
+        this.WhenAnyValue(x => x.SelectedTemplate, 
+                x => x.CurrentlyUsedMapFormat)
+            .Subscribe(tuple =>
+            {
+                var (template, mapFormat) = tuple;
+                //if selectedTemplate null or currenlyUsedMap null, vrat null
+                UsableSearchingAlgorithms = SettingsModelView.GetUsableAlgorithms(template, mapFormat);
+            });
+
+        this.WhenAnyValue(x => x.SelectedTemplate)
+            .Subscribe(selectedTemplate =>
+            {
+                SettingsModelView.SetTemplate(selectedTemplate);
+                //if selectedTemplate null, vrat vsetky mapove formaty
+                UsableMapFormats = SettingsModelView.GetUsableMapFormats(selectedTemplate);
+                //if selectedTEmplate null, vrat null
+                UsableUserModelTypes = SettingsModelView.GetUsableUserModelTypes(selectedTemplate);
+            });
+
+        this.WhenAnyValue(x => x.CurrentlyUsedMapFormat)
+            .Subscribe(currentlyUsedMapFormat =>
+            {
+                //if currentlyUsedMapFormat, vrat vsetky templaty
+                UsableTemplates = SettingsModelView.GetUsableTemplates(currentlyUsedMapFormat);
+            });
+
+        this.WhenAnyValue(x => x.SelectedSearchingAlgorithm)
+            .Subscribe(selectedSearchingAlgorithm =>
+            {
+                SettingsModelView.SetSearchingAlgorithm(selectedSearchingAlgorithm);
+            });
+        
+        
+        this.WhenAnyValue(x => x.UsableMapFormats)
+            .Subscribe(usableMapFormats =>
+            {
+                if (usableMapFormats is null || !usableMapFormats.Contains(CurrentlyUsedMapFormat))
+                {
+                    CurrentlyUsedMapFormat = null;
+                    SelectedMapFileName = null;
+                    SelectedMapFilePath = null;
+                }
+            });
+        this.WhenAnyValue(x => x.UsableUserModelTypes)
+            .Subscribe(usableUserModelTypes =>
+            {
+                if (usableUserModelTypes is null || !usableUserModelTypes.Contains(CurrentlyUsedUserModelType))
+                {
+                    CurrentlyUsedUserModelType = null;
+                    SelectedUserModelFileName = null;
+                    SelectedUserModelFilePath = null;
+                }
+            });
+
+        LoadMapCommand = ReactiveCommand.CreateFromTask(async ((Stream, string) mapFileStreamAndPath, CancellationToken cancellationToken) =>
+        {
+            var (mapFileStream, mapFilePath) = mapFileStreamAndPath;
+            string mapFileName = Path.GetFileName(mapFilePath);
+            MapFormatViewModel? mapFormat = SettingsModelView.GetCorrespondingMapFormat(mapFileName);
+            if (mapFormat is null) throw new NullReferenceException("Map format should be returned, because chosen file was filtered to be correct.");
+            var loadResult = await SettingsModelView.LoadAndSetMapAsync(mapFileStream, mapFormat, cancellationToken);
+            if (!cancellationToken.IsCancellationRequested) ; //TODO: nechat asynchronne (Task.Run()) zavolat vytvorenie grafickeho znazornenia mapy a mozno vykreslit ju na obrazovke....mzono to skor spravit cez dalsi command, nakolko to nema nic moc spolocne s nahravanim mapy
+            return (loadResult, mapFormat, mapFilePath);
+        });
+        
+        
+        LoadUserModelCommand = ReactiveCommand.CreateFromTask(async ((Stream, string) userModelFileStreamAndPath, CancellationToken cancellationToken) =>
+        {
+            var (userModelFileStream, userModelFilePath) = userModelFileStreamAndPath;
+            string userModelFileName = Path.GetFileName(userModelFilePath);
+            UserModelTypeViewModel? userModelType = SettingsModelView.GetCorrespondingUserModelType(userModelFileName);
+            if (userModelType is null) throw new NullReferenceException(" User model type should be returned, because chosen file was filtered to be correct.");
+            var loadResult = await SettingsModelView.LoadAndSetUserModelAsync(userModelFileStream, userModelType, cancellationToken);
+            return (loadResult, userModelType, userModelFilePath); });
+
+        LoadMapCommand.Subscribe(commandOutput =>
+        {
+            var (mapLoadingResult, mapFormat, mapFilePath) = commandOutput;
+            switch (mapLoadingResult)
+            {
+                case MapManager.MapCreationResult.Incomplete:
+                    //TODO vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
+                case MapManager.MapCreationResult.Ok:
+                    CurrentlyUsedMapFormat = mapFormat;
+                    SelectedMapFileName = Path.GetFileName(mapFilePath);
+                    SelectedMapFilePath = mapFilePath;
+                    break; 
+                case MapManager.MapCreationResult.Cancelled:
+                    break;
+                case MapManager.MapCreationResult.FileNotFound:
+                case MapManager.MapCreationResult.UnableToParse:
+                    //TODO: vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo
+                    break;
+            }
+        });
+        LoadUserModelCommand.Subscribe(commandOutput =>
+        {
+            var (userModelLoadingResult, userModelType, userModelFilePath) = commandOutput;
+            switch (userModelLoadingResult)
+            {
+                case UserModelManager.UserModelLoadResult.Ok:
+                    CurrentlyUsedUserModelType = userModelType;
+                    SelectedUserModelFileName = Path.GetFileName(userModelFilePath);
+                    SelectedUserModelFilePath = userModelFilePath;
+                    break;
+                case UserModelManager.UserModelLoadResult.Canceled:
+                    break;
+                case UserModelManager.UserModelLoadResult.UnableToDeserialize:
+                case UserModelManager.UserModelLoadResult.UnableToReadFromFile:
+                    //TODO vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo 
+                    break;
+            }
+        });
+
+        MainSettingsParams? mainSettingsParams;
+        if ((mainSettingsParams = ParamsManagingModelView.GetParams<MainSettingsParams>()) is not null)
+        {
+            CurrentlySelectedElevDataType = mainSettingsParams.ElevDataTypeViewModelTypeName is null
+                ? null
+                : ElevDataModelView.Instance.GetElevDataType(mainSettingsParams.ElevDataTypeViewModelTypeName);
+        }
+        
+        PathFindingParams? pathFindingParams;
+        if ((pathFindingParams = ParamsManagingModelView.GetParams<PathFindingParams>()) is not null)
+        {
+            SelectedTemplate = SettingsModelView.GetTemplateByTypeName(pathFindingParams.TemplateTypeName);
+
+            using (Stream? mapFileStream = TryFindAndOpenFile(pathFindingParams.MapFilePath))
+            {
+                if (mapFileStream is not null)
+                    LoadMapCommandSubscription = LoadMapCommand
+                        .Execute((mapFileStream, pathFindingParams.MapFilePath))
+                        .Subscribe();
+            }
+
+            UserModelTypeViewModel? userModelType =
+                SettingsModelView.GetCorrespondingUserModelType(Path.GetFileName(pathFindingParams.UserModelPath));
+            if (userModelType is not null && UsableUserModelTypes is not null && UsableUserModelTypes.Contains(userModelType))
+            {
+                using (Stream? userModelFileStream = TryFindAndOpenFile(pathFindingParams.UserModelPath))
+                {
+                    if (userModelFileStream is not null)
+                        LoadUserModelCommandSubscription = LoadUserModelCommand
+                            .Execute((userModelFileStream, pathFindingParams.UserModelPath))
+                            .Subscribe();
+                }
+            }
+
+            SearchingAlgorithmViewModel? searchingAlgorithm =
+                SettingsModelView.GetSearchingAlgorithmByTypeName(pathFindingParams.SearchingAlgorithmTypeName);
+            if (searchingAlgorithm is not null && UsableSearchingAlgorithms is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
+                SelectedSearchingAlgorithm = searchingAlgorithm;
+
+        }
+    }
+
+    private Stream? TryFindAndOpenFile(string path)
+    {
+        if (Path.Exists(path))
+        {
+            try
+            {
+                FileStream stream = new FileStream(path, FileMode.Open);
+                return stream;
+            }
+            catch (IOException) { /*TODO: log IOException....mozno*/ }
+            catch (SecurityException) { /*TODO: log IOException....mozno*/ }
+            catch (ArgumentException) { /*TODO: log IOException....mozno*/ }
+        }
+        return null;
     }
     
+
+
+    private ElevDataTypeViewModel? _currentlySelectedElevDataType;
+    public ElevDataTypeViewModel? CurrentlySelectedElevDataType 
+    { 
+        get => _currentlySelectedElevDataType ; 
+        set => this.RaiseAndSetIfChanged(ref _currentlySelectedElevDataType, value); 
+    }
+
+
+    private TemplateViewModel? _selectedTemplate;
+    public TemplateViewModel? SelectedTemplate
+    {
+        get => _selectedTemplate;
+        set => this.RaiseAndSetIfChanged(ref _selectedTemplate, value);
+    }
+    private IEnumerable<TemplateViewModel> _usableTemplates;
+    public IEnumerable<TemplateViewModel> UsableTemplates
+    {
+        get => _usableTemplates;
+        set => this.RaiseAndSetIfChanged(ref _usableTemplates, value);
+    }
+    
+    
+
+    private SearchingAlgorithmViewModel? _selectedSearchingAlgorithm;
+    public SearchingAlgorithmViewModel? SelectedSearchingAlgorithm
+    {
+        get => _selectedSearchingAlgorithm;
+        set => this.RaiseAndSetIfChanged(ref _selectedSearchingAlgorithm, value);
+    }
+    private IReadOnlyCollection<SearchingAlgorithmViewModel>? _usableSearchingAlgorithms;
+    public IReadOnlyCollection<SearchingAlgorithmViewModel>? UsableSearchingAlgorithms
+    {
+        get => _usableSearchingAlgorithms;
+        set => this.RaiseAndSetIfChanged(ref _usableSearchingAlgorithms, value);
+    }
+    
+    
+
+    private MapFormatViewModel? _currentlyUsedMapFormat;
+    public MapFormatViewModel? CurrentlyUsedMapFormat
+    {
+        get => _currentlyUsedMapFormat;
+        set => this.RaiseAndSetIfChanged(ref _currentlyUsedMapFormat, value);
+    }
+    private string? _selectedMapFileName;
+    public string? SelectedMapFileName
+    {
+        get => _selectedMapFileName;
+        set => this.RaiseAndSetIfChanged(ref _selectedMapFileName, value);
+    }
+    private string? SelectedMapFilePath { get; set; }
+    private IReadOnlyCollection<MapFormatViewModel>? _usableMapFormats;
+    public IReadOnlyCollection<MapFormatViewModel>? UsableMapFormats
+    {
+        get => _usableMapFormats;
+        set => this.RaiseAndSetIfChanged(ref _usableMapFormats, value);
+    }
+    
+    
+
+    private UserModelTypeViewModel? _currentlyUsedUserModelType;
+    public UserModelTypeViewModel? CurrentlyUsedUserModelType
+    {
+        get => _currentlyUsedUserModelType;
+        set => this.RaiseAndSetIfChanged(ref _currentlyUsedUserModelType, value);
+    }
+    private string? _selectedUserModelFileName;
+    public string? SelectedUserModelFileName
+    {
+        get => _selectedUserModelFileName;
+        set => this.RaiseAndSetIfChanged(ref _selectedUserModelFileName, value);
+    }
+    private string? SelectedUserModelFilePath { get; set; }
+    private IReadOnlyCollection<UserModelTypeViewModel>? _usableUserModelTypes;
+    public IReadOnlyCollection<UserModelTypeViewModel>? UsableUserModelTypes
+    {
+        get => _usableUserModelTypes;
+        set => this.RaiseAndSetIfChanged(ref _usableUserModelTypes, value);
+    }
+    
+    
+    
+    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string)> LoadMapCommand { get; }
+    public ReactiveCommand<(Stream, string), (UserModelManager.UserModelLoadResult, UserModelTypeViewModel, string)> LoadUserModelCommand { get; }
+    
+    //TODO: command pre prechod do vytvaranaia mapovej reprezentacie, nech necha ukladanie parametrov na modelView-u a ten tam uklada datove triedy, nie ich ViewModelove wrappre
+    
+    public static FuncValueConverter<IEnumerable, bool> IsNotEmptyNorNull { get; } =
+        new (enumerable => enumerable?.GetEnumerator().MoveNext() ?? false);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // _usableMapFormats = SettingsModelView.GetUsableMapFormats(_selectedTemplate);
+            // (MapManager.MapCreationResult, MapFormatViewModel)? mapLoadingResultsTuple = SettingsModelView.TryFindLoadAndSetMap(pathFindingParams.MapFilePath);
+            // if (mapLoadingResultsTuple is not null)
+            // {
+                // var (mapCreationResult, mapFormat) = mapLoadingResultsTuple.Value;
+                // switch (mapCreationResult)
+                // {
+                    
+                    // case MapManager.MapCreationResult.Incomplete:
+                        // TODO vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
+                    // case MapManager.MapCreationResult.Ok:
+                        // _currentlyUsedMapFormat = mapFormat;
+                        // _selectedMapFileName = Path.GetFileName(pathFindingParams.MapFilePath);
+                        // SelectedMapFilePath = pathFindingParams.MapFilePath;
+                        // break; 
+                    // case MapManager.MapCreationResult.FileNotFound:
+                    // case MapManager.MapCreationResult.UnableToParse:
+                        // TODO: vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo
+                        // _currentlyUsedMapFormat = null;
+                        // _selectedMapFileName = null;
+                        // SelectedMapFilePath = null;
+                        // break;
+                        
+                // }
+            // }
+            // else
+            // {
+                // _currentlyUsedMapFormat = null;
+                // _selectedMapFileName = null;
+                // SelectedMapFilePath = null;
+            // }

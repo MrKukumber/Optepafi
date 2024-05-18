@@ -11,7 +11,7 @@ using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.ModelViews.Main;
-using Optepafi.ViewModels.Main.DataViewModels;
+using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Main;
@@ -37,13 +37,13 @@ public class MainSettingsViewModel : ViewModelBase
             _currentCulture = CultureInfo.CurrentCulture;
             Assets.Localization.Local.Culture = _currentCulture;
             
-            _mainSettingsParams = new MainSettingsParams { ElevDataTypeTypeName = null, Culture = _currentCulture.Name};
+            _mainSettingsParams = new MainSettingsParams { ElevDataTypeViewModelTypeName = null, Culture = _currentCulture.Name};
             _paramsManager.SetParams(_mainSettingsParams);
         }
         else
         {
             
-            _currentElevDataType = _mainSettingsParams.ElevDataTypeTypeName is null ? null : ElevDataModelView.Instance.GetElevDataType(_mainSettingsParams.ElevDataTypeTypeName);
+            _currentElevDataType = _mainSettingsParams.ElevDataTypeViewModelTypeName is null ? null : ElevDataModelView.Instance.GetElevDataType(_mainSettingsParams.ElevDataTypeViewModelTypeName);
             _currentCulture = CultureInfo.GetCultureInfo(_mainSettingsParams.Culture);
             Assets.Localization.Local.Culture = _currentCulture;
         }
@@ -51,8 +51,9 @@ public class MainSettingsViewModel : ViewModelBase
 
         this.WhenAnyValue(x => x.CurrentCulture)
             .Subscribe(currentCulture => _mainSettingsParams.Culture = currentCulture.Name);
+        //This viewModel should not be aware of ElevDataType property of currentElevDataType, not use it, but SettingsViewModel does not have its ModelView yet, so for now this is acceptable. In future, if main settings will grow huge, the creation of modelView will be necessary
         this.WhenAnyValue(x => x.CurrentElevDataType)
-            .Subscribe(currentElevDataSource => _mainSettingsParams.ElevDataTypeTypeName = currentElevDataSource?.GetType().Name);
+            .Subscribe(currentElevDataType => _mainSettingsParams.ElevDataTypeViewModelTypeName = currentElevDataType?.ElevDataType.GetType().Name); 
 
         
         

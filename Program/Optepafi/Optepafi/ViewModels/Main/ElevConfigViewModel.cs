@@ -15,7 +15,7 @@ using Optepafi.Models;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.ModelViews;
 using Optepafi.ModelViews.Main;
-using Optepafi.ViewModels.Main.DataViewModels;
+using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Main;
@@ -47,7 +47,7 @@ public class ElevConfigViewModel : ViewModelBase
             (userName, password) => !string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password));
         IObservable<bool> areCredentialsRequired = this.WhenAnyValue(
             x => x.CurrentElevDataType,
-            elevDataType => elevDataType is CredentialsRequiringElevDataTypeViewModel);
+            (ElevDataTypeViewModel? elevDataType) => elevDataType is CredentialsRequiringElevDataTypeViewModel);
         
         _credentialsAreRequired = areCredentialsRequired
             .ToProperty(this, nameof(CredentialsAreRequired));
@@ -88,6 +88,7 @@ public class ElevConfigViewModel : ViewModelBase
             await ElevDataModelView.Instance.RemoveAsync(CurrentElevDataType!, SelectedRegion);
             SelectedRegion.Presence = RegionViewModel.PresenceState.NotDownloaded;
         }, isRegionSelectedDownloaded);
+        
         CancelDownloadingCommand = ReactiveCommand.Create(() =>
         {
             SelectedRegion!.DownloadingCancellationTokenSource.Cancel();   
@@ -121,7 +122,7 @@ public class ElevConfigViewModel : ViewModelBase
         get => _currentElevDataType;
         set => this.RaiseAndSetIfChanged(ref _currentElevDataType, value);
     }
-    public IEnumerable<ElevDataTypeViewModel> ElevDataTypes { get; } = ElevDataModelView.Instance.ElevDataSources
+    public IEnumerable<ElevDataTypeViewModel> ElevDataTypes { get; } = ElevDataModelView.Instance.ElevDataSoruceViewModels
         .SelectMany(elevDataSource => elevDataSource.ElevDataTypes);
 
     private string? _userName;

@@ -33,14 +33,14 @@ public class MapRepreManager :
     {
         bool dependentFound = false;
         bool independentFound = false;
-        foreach (var constructor in mapRepreRep.MapRepreImplementationInfos)
+        foreach (var implementationInfo in mapRepreRep.MapRepreImplementationInfos)
         {
-            if (!dependentFound && constructor.UsedTemplate == template && constructor.UsedMapFormat == mapFormat &&
-                constructor.RequiresElevData)
+            if (!dependentFound && implementationInfo.UsedTemplate == template && implementationInfo.UsedMapFormat == mapFormat &&
+                implementationInfo.RequiresElevData)
                 dependentFound = true;
-            else if (!independentFound && constructor.UsedTemplate == template &&
-                     constructor.UsedMapFormat == mapFormat &&
-                     !constructor.RequiresElevData)
+            else if (!independentFound && implementationInfo.UsedTemplate == template &&
+                     implementationInfo.UsedMapFormat == mapFormat &&
+                     !implementationInfo.RequiresElevData)
                 independentFound = true;
         }
         if (dependentFound)
@@ -81,6 +81,24 @@ public class MapRepreManager :
         }
 
         return usableMapRepreReps;
+    }
+
+    public HashSet<IMapRepreRepresentativ<IMapRepresentation>> GetUsableMapRepreRepsFor(ITemplate template,
+        IMapFormat<IMap> mapFormat)
+    {
+        var resultingSet = new HashSet<IMapRepreRepresentativ<IMapRepresentation>>();
+        foreach (IMapRepreRepresentativ<IMapRepresentation> mapRepreRep in MapRepreReps)
+        {
+            foreach (var implementationInfo in mapRepreRep.MapRepreImplementationInfos)
+            {
+                if (template == implementationInfo.UsedTemplate && mapFormat == implementationInfo.UsedMapFormat)
+                {
+                    resultingSet.Add(mapRepreRep);
+                    break;
+                }
+            }
+        }
+        return resultingSet;
     }
     
     

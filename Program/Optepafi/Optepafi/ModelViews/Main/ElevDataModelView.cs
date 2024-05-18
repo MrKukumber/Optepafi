@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Optepafi.Models.ElevationDataMan;
-using Optepafi.ViewModels.Main.DataViewModels;
+using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.Main;
 
@@ -12,17 +12,17 @@ public sealed class ElevDataModelView : ModelViewBase
     private ElevDataModelView(){}
     public static ElevDataModelView Instance { get; } = new();
 
-    public IEnumerable<ElevDataSourceViewModel> ElevDataSources { get; } = ElevDataManager.Instance.ElevDataSources.Select(elevDataSource => new ElevDataSourceViewModel(elevDataSource));
+    public IEnumerable<ElevDataSourceViewModel> ElevDataSoruceViewModels { get; } = ElevDataManager.Instance.ElevDataSources.Select(elevDataSource => new ElevDataSourceViewModel(elevDataSource));
 
     public ElevDataTypeViewModel? GetElevDataType(string typeName)
     {
-        foreach (var elevDataSource in ElevDataSources)
+        foreach (var elevDataSourceViewModel in ElevDataSoruceViewModels)
         {
-            foreach (var elevDataType in elevDataSource.ElevDataTypes)
+            foreach (var elevDataTypeViewModel in elevDataSourceViewModel.ElevDataTypes)
             {
-                if (elevDataType.GetType().Name == typeName)
+                if (elevDataTypeViewModel.ElevDataType.GetType().Name == typeName)
                 {
-                    return elevDataType;
+                    return elevDataTypeViewModel;
                 }
             }
         }
