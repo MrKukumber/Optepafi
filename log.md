@@ -429,6 +429,18 @@ opozdely log z programovania projetku
 - v konstruktore sa skontroluje, ci existuju nejake PathFindigParametre, ak ano, pokusi sa z nich nastavit template, mapu, vyhladavaci algoritmus a aj uzivatelsky model
   - po kazdom uspesnom pokracovani z nastaveni sa prepisu PathFindingParametre a dalsia session bude teda mat defaultne nastavene parametre prave na tieto aktualne
     - TODO - je este potrebne doriesti toto ukladanie parametrov
-  
 
-  
+## 19.5.2024
+
+- podla poslednych riadkov logu z 16.5.2024 v sekcii MainSettingsViewModel som sa rozhodol trocha prerobit viewModel a ModelView prave hlavnych nastaveni
+  - vytvoril som MainSettingsModelView, ktory prebral zodpovednost na praci s ulozenymi parametrami
+  - odstranil som zavislost na ElevDataModelView-vu, nakolko si z mena typu typu vyskovych dat uz sam bude dolovat samotny typ vyskovych dat
+    - tato zmena plati aj pre ostatne ModelView-vy - musia si defaultny typ vyskovych dat vydolovat z parametrov sami
+  - Z ParamsManagingModelView som vytvoril ParamsManager a presunul som ho medzi modely
+- naviac bol vytvoreny MainWindowModelView, ktory nateraz nema prilis vela vyuzitie v sebe, ale posluzi dobre pri zatvarani aplikacie, kedy bude volat ParamsManager aby serializoval ulozene parametry
+  - podobne ako pri SessionModelView-ovch bude drzat v sebe instancie na jednotlive ModeView-y korespondujuce MainViewModel-om
+
+- mainSettingsModelView bude k dispozicii cez MainMenuViewModel, ktory bude tento modelView distribuovat do vsetkych hlavnych nastaveni potrebnych sessionov
+  - teda napriklad session-y nebudu uz musiet ziskavat z MainSettingsParameters-ov aktualne pouzivany typ vyskovych dat
+
+- pre konstrukciu mapy som sa rozhodol vytvorit dialogove okno, ktore bude davat informacie postupu tvorby mapy, popripade bude hlasat problemy pri vytvarani
