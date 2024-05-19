@@ -14,9 +14,7 @@ public class MapManager
 {
     public static MapManager Instance { get; } = new();
     private MapManager(){}
-
-    private ISet<IMapFormat<IMap>> MapFormats { get; } = new HashSet<IMapFormat<IMap>>(); // TODO: premysliet, jak to reprezentaovat
-
+    public ISet<IMapFormat<IMap>> MapFormats { get; } = new HashSet<IMapFormat<IMap>>(); // TODO: premysliet, jak to reprezentaovat
     public IMapFormat<IMap>? GetCorrespondingMapFormatTo(string mapFileName)
     {
         foreach (var mapFormat in MapFormats)

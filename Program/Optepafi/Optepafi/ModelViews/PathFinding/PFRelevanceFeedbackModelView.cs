@@ -1,4 +1,4 @@
-namespace Optepafi.ModelViews.ModelCreating;
+namespace Optepafi.ModelViews.PathFinding;
 
 public class PFRelevanceFeedbackModelView : ModelViewBase
 {

@@ -12,12 +12,12 @@ using Optepafi.Models.UserModelMan.UserModels;
 
 namespace Optepafi.Models.SearchingAlgorithmMan;
 
-public class SearchAlgorithmManager : 
-    ITemplateGenericVisitor<(SearchAlgorithmManager.Result[], Path[]?[]),(Leg[], ISearchingAlgorithm, IMapRepresentation, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>,
-    ITemplateGenericVisitor<(SearchAlgorithmManager.Result, ISearchingExecutor?), (ISearchingAlgorithm, IMapRepresentation, IUserModel<ITemplate>)>
+public class SearchingAlgorithmManager : 
+    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result[], Path[]?[]),(Leg[], ISearchingAlgorithm, IMapRepresentation, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result, ISearchingExecutor?), (ISearchingAlgorithm, IMapRepresentation, IUserModel<ITemplate>)>
 {
-    public static SearchAlgorithmManager Instance { get; } = new();
-    private SearchAlgorithmManager(){}
+    public static SearchingAlgorithmManager Instance { get; } = new();
+    private SearchingAlgorithmManager(){}
 
     public IReadOnlySet<ISearchingAlgorithm> SearchingAlgorithms { get; } =
         ImmutableHashSet.Create<ISearchingAlgorithm>(/*TODO: doplnit algoritmy*/);

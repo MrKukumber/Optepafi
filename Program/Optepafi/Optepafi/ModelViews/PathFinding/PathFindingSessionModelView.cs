@@ -1,6 +1,4 @@
-using System.IO;
-
-namespace Optepafi.ModelViews.ModelCreating;
+namespace Optepafi.ModelViews.PathFinding;
 
 public partial class PathFindingSessionModelView : SessionModelView
 {
@@ -11,7 +9,7 @@ public partial class PathFindingSessionModelView : SessionModelView
     
     public PathFindingSessionModelView()
     {
-        /*Model budu staticke triedy, ktore proste na vyziadanie budu dorucovat sluzby*/
+        /*Model budu singletony, ktore proste na vyziadanie budu dorucovat sluzby*/
         var settingsIntra = new PFSettingsIntraModelView();
         var graphCreatingIntra = new PFGraphCreatingIntraModelView(settingsIntra);
         var relevanceFeedbackIntra = new PFRelevanceFeedbackIntraModelView(settingsIntra, graphCreatingIntra);

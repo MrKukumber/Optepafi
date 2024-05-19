@@ -1,65 +1,133 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Markup.Xaml.Templates;
+using Avalonia.Metadata;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan;
+using Optepafi.Models.MapRepreMan.MapRepreReps;
+using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.ParamsMan;
+using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.ModelViews.Main;
 using Optepafi.ViewModels.DataViewModels;
 
-namespace Optepafi.ModelViews.ModelCreating;
+namespace Optepafi.ModelViews.PathFinding;
 
 public abstract class PFSettingsModelView : ModelViewBase
 {
-    protected PFSettingsModelView() { }
+    protected PFSettingsModelView()
+    {
+        PathFindingParams? pathFindingParams;
+        if ((pathFindingParams = ParamsManager.Instance.GetParams<PathFindingParams>()) is not null)
+        {
+            _defaultTemplate = GetTemplateByTypeName(pathFindingParams.TemplateTypeName);
+            _defaultSearchingAlgorithm = GetSearchingAlgorithmByTypeName(pathFindingParams.SearchingAlgorithmTypeName);
+            DefaultMapFilePath = pathFindingParams.MapFilePath;
+            DefaultUserModelFilePath = pathFindingParams.UserModelPath;
+        }
+    }
+
+    private ITemplate? GetTemplateByTypeName(string templateTypeName)
+    {
+        foreach (var template in TemplateManager.Instance.Templates)
+        {
+            if (template.GetType().Name == templateTypeName)
+                return template;
+        }
+        return null;
+    }
+
+    private ISearchingAlgorithm? GetSearchingAlgorithmByTypeName(string searchingAlgorithmTypeName)
+    {
+        foreach (var serachingAlgorithm in SearchingAlgorithmManager.Instance.SearchingAlgorithms)
+        {
+            if (serachingAlgorithm.GetType().Name == searchingAlgorithmTypeName)
+                return serachingAlgorithm;
+        }
+        return null;
+    }
+
+    private ITemplate? _defaultTemplate;
+    public TemplateViewModel? DefaultTemplate => _defaultTemplate is null ? null : new TemplateViewModel(_defaultTemplate);
+    private ISearchingAlgorithm? _defaultSearchingAlgorithm;
+    public SearchingAlgorithmViewModel? DefaultSearchingAlgorithm => 
+        _defaultSearchingAlgorithm is null ? null : new SearchingAlgorithmViewModel(_defaultSearchingAlgorithm);
+    public string? DefaultMapFilePath { get; }
+    public string? DefaultUserModelFilePath { get; }
 
     public IReadOnlyCollection<SearchingAlgorithmViewModel>? GetUsableAlgorithms(
         TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel)
     {
-        
+        if (templateViewModel is not null && mapFormatViewModel is not null)
+        {
+            ISet<IMapRepreRepresentativ<IMapRepresentation>> usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
+            HashSet<SearchingAlgorithmViewModel> usableSearchingAlgorithms = new HashSet<SearchingAlgorithmViewModel>();
+            foreach (var usableMapRepre in usableMapRepreReps)
+            {
+                usableSearchingAlgorithms.UnionWith(
+                    SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepre)
+                        .Select(usableSearchingAlgorithm => new SearchingAlgorithmViewModel(usableSearchingAlgorithm)));
+            }
+            return usableSearchingAlgorithms;
+        }
+        return null;
     }
 
     public IReadOnlyCollection<MapFormatViewModel> GetUsableMapFormats(TemplateViewModel? templateViewModel)
     {
-        
-    }
-
-    public IReadOnlyCollection<UserModelTypeViewModel> GetUsableUserModelTypes(
-        TemplateViewModel? templateViewModel)
-    {
-        
+        if (templateViewModel is not null)
+        {
+            var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
+            return usableTemplateMapFormatCombs
+                .Where(comb => comb.Item1 == templateViewModel.Template)
+                .Select(comb => new MapFormatViewModel(comb.Item2))
+                .ToHashSet();
+        }
+        return MapManager.Instance.MapFormats.Select(mapFormat => new MapFormatViewModel(mapFormat)).ToHashSet();
     }
 
     public IEnumerable<TemplateViewModel> GetUsableTemplates(MapFormatViewModel? mapFormatViewModel)
     {
-        
+        if (mapFormatViewModel is not null)
+        {
+            var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
+            return usableTemplateMapFormatCombs
+                .Where(comb => comb.Item2 == mapFormatViewModel.MapFormat)
+                .Select(comb => new TemplateViewModel(comb.Item1))
+                .ToHashSet();
+        }
+        return TemplateManager.Instance.Templates.Select(mapFormat => new TemplateViewModel(mapFormat)).ToHashSet();
     }
+    
+    public IReadOnlyCollection<UserModelTypeViewModel> GetUsableUserModelTypes(
+        TemplateViewModel? templateViewModel)
+    {
+        return UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
+            .Select(usableUserModelType => new UserModelTypeViewModel(usableUserModelType))
+            .ToHashSet();
+    }
+
 
     public MapFormatViewModel? GetCorrespondingMapFormat(string mapFileName)
     {
-        
+        var correspondingMapFormat = MapManager.Instance.GetCorrespondingMapFormatTo(mapFileName);
+        return correspondingMapFormat is null ? null : new MapFormatViewModel(correspondingMapFormat);
     }
 
     public UserModelTypeViewModel? GetCorrespondingUserModelType(string userModelFileName)
     {
-        
+        var correspondingUserModelType = UserModelManager.Instance.GetCorrespondingUserModelTypeTo(userModelFileName);
+        return correspondingUserModelType is null ? null : new UserModelTypeViewModel(correspondingUserModelType);
     }
 
-    public TemplateViewModel? GetTemplateByTypeName(string templateTypeName)
-    {
-        
-    }
-
-    public SearchingAlgorithmViewModel? GetSearchingAlgorithmByTypeName(string searchingAlgorithmTypeName)
-    {
-        
-    }
 
     public abstract void SetElevDataType(ElevDataTypeViewModel? elevDataTypeViewModel);
     public abstract void SetTemplate(TemplateViewModel? templateViewModel);
@@ -105,8 +173,13 @@ public partial class PathFindingSessionModelView : SessionModelView
                 var result = MapManager.Instance.GetMapFromOf(stream, mapFormatViewModel.MapFormat, cancellationToken, out IMap? map);
                 return (result, map);
             });
-            if(!cancellationToken.IsCancellationRequested)
-                Map = map;
+            switch (mapCreationResult)
+            {
+                case MapManager.MapCreationResult.Ok:
+                case MapManager.MapCreationResult.Incomplete:
+                    Map = map;
+                    break;
+            }
             return mapCreationResult;
         }
 
@@ -118,8 +191,12 @@ public partial class PathFindingSessionModelView : SessionModelView
                 var result = UserModelManager.Instance.DeserializeUserModelFromOf(stream, userModelTypeViewModel.UserModelType, cancellationToken, out IUserModel<ITemplate>? userModel);
                 return (result, userModel);
             });
-            if(!cancellationToken.IsCancellationRequested)
-                UserModel = userModel;
+            switch (userModelCreationResult)
+            {
+                case UserModelManager.UserModelLoadResult.Ok:
+                    UserModel = userModel;
+                    break;
+            }
             return userModelCreationResult;
         }
     }

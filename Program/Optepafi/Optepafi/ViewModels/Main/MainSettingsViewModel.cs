@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Avalonia.Controls;
 using Optepafi.Models;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.ParamsMan;
 using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.ModelViews.Main;
@@ -22,39 +23,16 @@ public class MainSettingsViewModel : ViewModelBase
     private ElevDataTypeViewModel? _currentElevDataType;
     private CultureInfo _currentCulture;
     
-    private readonly ParamsManagingModelView _paramsManager = ParamsManagingModelView.Instance;
-    private MainSettingsParams _mainSettingsParams;
-    public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
-    public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
-    public Interaction<ElevConfigViewModel, ElevDataTypeViewModel?> ElevConfigInteraction { get; }
-    private ElevConfigViewModel ElevConfig { get; }
-    public MainSettingsViewModel()
+    private readonly ParamsManager _paramsManager = ParamsManager.Instance;
+    private readonly MainSettingsModelView _mainSettingsMv;
+    public MainSettingsViewModel(MainSettingsModelView mainSettingsMv)
     {
-
-        if ((_mainSettingsParams = _paramsManager.GetParams<MainSettingsParams>()!) is null)
-        {
-            _currentElevDataType = null;
-            _currentCulture = CultureInfo.CurrentCulture;
-            Assets.Localization.Local.Culture = _currentCulture;
-            
-            _mainSettingsParams = new MainSettingsParams { ElevDataTypeViewModelTypeName = null, Culture = _currentCulture.Name};
-            _paramsManager.SetParams(_mainSettingsParams);
-        }
-        else
-        {
-            
-            _currentElevDataType = _mainSettingsParams.ElevDataTypeViewModelTypeName is null ? null : ElevDataModelView.Instance.GetElevDataType(_mainSettingsParams.ElevDataTypeViewModelTypeName);
-            _currentCulture = CultureInfo.GetCultureInfo(_mainSettingsParams.Culture);
-            Assets.Localization.Local.Culture = _currentCulture;
-        }
-
+        _mainSettingsMv = mainSettingsMv;
 
         this.WhenAnyValue(x => x.CurrentCulture)
-            .Subscribe(currentCulture => _mainSettingsParams.Culture = currentCulture.Name);
-        //This viewModel should not be aware of ElevDataType property of currentElevDataType, not use it, but SettingsViewModel does not have its ModelView yet, so for now this is acceptable. In future, if main settings will grow huge, the creation of modelView will be necessary
+            .Subscribe(currentCulture => _mainSettingsMv.CurrentCulture = currentCulture);
         this.WhenAnyValue(x => x.CurrentElevDataType)
-            .Subscribe(currentElevDataType => _mainSettingsParams.ElevDataTypeViewModelTypeName = currentElevDataType?.ElevDataType.GetType().Name); 
-
+            .Subscribe(currentElevDataType => _mainSettingsMv.CurrentElevDataType = currentElevDataType); 
         
         
         ElevConfigInteraction = new Interaction<ElevConfigViewModel, ElevDataTypeViewModel?>();
@@ -64,6 +42,11 @@ public class MainSettingsViewModel : ViewModelBase
             CurrentElevDataType = await ElevConfigInteraction.Handle(ElevConfig);
         });
         GoToMainMenuCommand = ReactiveCommand.Create(() => { });
+        
+        
+        _currentElevDataType = mainSettingsMv.CurrentElevDataType;
+        _currentCulture = mainSettingsMv.CurrentCulture;
+        Assets.Localization.Local.Culture = _currentCulture;
     }
     
     // public ObservableCollection<ISearchingAlgorithm> Algorithms { get; }
@@ -90,4 +73,9 @@ public class MainSettingsViewModel : ViewModelBase
         }
         
     }
+    
+    public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
+    public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
+    public Interaction<ElevConfigViewModel, ElevDataTypeViewModel?> ElevConfigInteraction { get; }
+    private ElevConfigViewModel ElevConfig { get; }
 }

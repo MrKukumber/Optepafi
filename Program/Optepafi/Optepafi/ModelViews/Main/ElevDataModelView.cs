@@ -14,21 +14,6 @@ public sealed class ElevDataModelView : ModelViewBase
 
     public IEnumerable<ElevDataSourceViewModel> ElevDataSoruceViewModels { get; } = ElevDataManager.Instance.ElevDataSources.Select(elevDataSource => new ElevDataSourceViewModel(elevDataSource));
 
-    public ElevDataTypeViewModel? GetElevDataType(string typeName)
-    {
-        foreach (var elevDataSourceViewModel in ElevDataSoruceViewModels)
-        {
-            foreach (var elevDataTypeViewModel in elevDataSourceViewModel.ElevDataTypes)
-            {
-                if (elevDataTypeViewModel.ElevDataType.GetType().Name == typeName)
-                {
-                    return elevDataTypeViewModel;
-                }
-            }
-        }
-        return null;
-    }
-
     public async Task<ElevDataManager.DownloadingResult> DownloadAsync(CredentialsNotRequiringElevDataTypeViewModel elevDataTypeViewModel,
         RegionViewModel regionViewModel)
     {

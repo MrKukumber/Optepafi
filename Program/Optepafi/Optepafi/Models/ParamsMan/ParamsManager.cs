@@ -1,17 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
-using HarfBuzzSharp;
-using Optepafi.Models.ParamsMan;
+using Optepafi.ModelViews;
 
-namespace Optepafi.ModelViews.Main;
+namespace Optepafi.Models.ParamsMan;
 
-public sealed class ParamsManagingModelView : ModelViewBase
+public sealed class ParamsManager : ModelViewBase
 {
-    private ParamsManagingModelView(){}
-    public static ParamsManagingModelView Instance { get; } = new();
+    private ParamsManager(){}
+    public static ParamsManager Instance { get; } = new();
 
     private Dictionary<Type, IParams?> paramsStorage = new();
     

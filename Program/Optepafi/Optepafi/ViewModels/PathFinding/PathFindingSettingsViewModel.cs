@@ -13,6 +13,7 @@ using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.ModelCreating;
+using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
@@ -20,38 +21,22 @@ namespace Optepafi.ViewModels.PathFinding;
 
 public class PathFindingSettingsViewModel : ViewModelBase
 {
-    
-    public PFSettingsModelView SettingsModelView { get;}
-    public ParamsManagingModelView ParamsManagingModelView { get; }
+    private PFSettingsModelView _settingsModelView;
     public IDisposable? LoadMapCommandSubscription { get; }
     public IDisposable? LoadUserModelCommandSubscription { get; }
-    public PathFindingSettingsViewModel(PFSettingsModelView settingsModelView)
+    public PathFindingSettingsViewModel(PFSettingsModelView settingsModelView, MainSettingsModelView mainSettingsModelView)
     {
-        SettingsModelView = settingsModelView;
-        ParamsManagingModelView = ParamsManagingModelView.Instance;
+        _settingsModelView = settingsModelView;
 
-        CurrentlySelectedElevDataType = null;
-        
-        SelectedTemplate = null;
-        SelectedSearchingAlgorithm = null;
-        
-        CurrentlyUsedMapFormat = null;
-        SelectedMapFileName = null;
-        SelectedMapFilePath = null;
-        
-        CurrentlyUsedUserModelType = null;
-        SelectedMapFileName = null;
-        SelectedUserModelFileName = null;
-        
-        UsableTemplates = SettingsModelView.GetUsableTemplates(CurrentlyUsedMapFormat);
-        UsableMapFormats = SettingsModelView.GetUsableMapFormats(SelectedTemplate);
-        UsableSearchingAlgorithms = SettingsModelView.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
-        UsableUserModelTypes = SettingsModelView.GetUsableUserModelTypes(SelectedTemplate);
+        UsableTemplates = _settingsModelView.GetUsableTemplates(CurrentlyUsedMapFormat);
+        UsableMapFormats = _settingsModelView.GetUsableMapFormats(SelectedTemplate);
+        UsableSearchingAlgorithms = _settingsModelView.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
+        UsableUserModelTypes = _settingsModelView.GetUsableUserModelTypes(SelectedTemplate);
 
         this.WhenAnyValue(x => x.CurrentlySelectedElevDataType)
             .Subscribe(currentlySelectedElevDataType =>
             {
-                SettingsModelView.SetElevDataType(currentlySelectedElevDataType);
+                _settingsModelView.SetElevDataType(currentlySelectedElevDataType);
             });
         
         this.WhenAnyValue(x => x.SelectedTemplate, 
@@ -60,30 +45,30 @@ public class PathFindingSettingsViewModel : ViewModelBase
             {
                 var (template, mapFormat) = tuple;
                 //if selectedTemplate null or currenlyUsedMap null, vrat null
-                UsableSearchingAlgorithms = SettingsModelView.GetUsableAlgorithms(template, mapFormat);
+                UsableSearchingAlgorithms = _settingsModelView.GetUsableAlgorithms(template, mapFormat);
             });
 
         this.WhenAnyValue(x => x.SelectedTemplate)
             .Subscribe(selectedTemplate =>
             {
-                SettingsModelView.SetTemplate(selectedTemplate);
+                _settingsModelView.SetTemplate(selectedTemplate);
                 //if selectedTemplate null, vrat vsetky mapove formaty
-                UsableMapFormats = SettingsModelView.GetUsableMapFormats(selectedTemplate);
+                UsableMapFormats = _settingsModelView.GetUsableMapFormats(selectedTemplate);
                 //if selectedTEmplate null, vrat null
-                UsableUserModelTypes = SettingsModelView.GetUsableUserModelTypes(selectedTemplate);
+                UsableUserModelTypes = _settingsModelView.GetUsableUserModelTypes(selectedTemplate);
             });
 
         this.WhenAnyValue(x => x.CurrentlyUsedMapFormat)
             .Subscribe(currentlyUsedMapFormat =>
             {
                 //if currentlyUsedMapFormat, vrat vsetky templaty
-                UsableTemplates = SettingsModelView.GetUsableTemplates(currentlyUsedMapFormat);
+                UsableTemplates = _settingsModelView.GetUsableTemplates(currentlyUsedMapFormat);
             });
 
         this.WhenAnyValue(x => x.SelectedSearchingAlgorithm)
             .Subscribe(selectedSearchingAlgorithm =>
             {
-                SettingsModelView.SetSearchingAlgorithm(selectedSearchingAlgorithm);
+                _settingsModelView.SetSearchingAlgorithm(selectedSearchingAlgorithm);
             });
         
         
@@ -112,10 +97,10 @@ public class PathFindingSettingsViewModel : ViewModelBase
         {
             var (mapFileStream, mapFilePath) = mapFileStreamAndPath;
             string mapFileName = Path.GetFileName(mapFilePath);
-            MapFormatViewModel? mapFormat = SettingsModelView.GetCorrespondingMapFormat(mapFileName);
+            MapFormatViewModel? mapFormat = _settingsModelView.GetCorrespondingMapFormat(mapFileName);
             if (mapFormat is null) throw new NullReferenceException("Map format should be returned, because chosen file was filtered to be correct.");
-            var loadResult = await SettingsModelView.LoadAndSetMapAsync(mapFileStream, mapFormat, cancellationToken);
-            if (!cancellationToken.IsCancellationRequested) ; //TODO: nechat asynchronne (Task.Run()) zavolat vytvorenie grafickeho znazornenia mapy a mozno vykreslit ju na obrazovke....mzono to skor spravit cez dalsi command, nakolko to nema nic moc spolocne s nahravanim mapy
+            var loadResult = await _settingsModelView.LoadAndSetMapAsync(mapFileStream, mapFormat, cancellationToken);
+            if (!cancellationToken.IsCancellationRequested) ; //TODO: nechat asynchronne (Task.Run()) zavolat vytvorenie grafickeho znazornenia mapy a mozno vykreslit ju na obrazovke....mzono to skor spravit cez dalsi command, nakolko to nema nic moc spolocne s nahravanim mapy....treba dat ale pozor na cancellation token a ukoncenie ziskavania grafickej reprezentaci, cize predsa len to mozno spravit v tomto mieste asynchronne, aby som mohol predat cancellation token
             return (loadResult, mapFormat, mapFilePath);
         });
         
@@ -124,9 +109,9 @@ public class PathFindingSettingsViewModel : ViewModelBase
         {
             var (userModelFileStream, userModelFilePath) = userModelFileStreamAndPath;
             string userModelFileName = Path.GetFileName(userModelFilePath);
-            UserModelTypeViewModel? userModelType = SettingsModelView.GetCorrespondingUserModelType(userModelFileName);
+            UserModelTypeViewModel? userModelType = _settingsModelView.GetCorrespondingUserModelType(userModelFileName);
             if (userModelType is null) throw new NullReferenceException(" User model type should be returned, because chosen file was filtered to be correct.");
-            var loadResult = await SettingsModelView.LoadAndSetUserModelAsync(userModelFileStream, userModelType, cancellationToken);
+            var loadResult = await _settingsModelView.LoadAndSetUserModelAsync(userModelFileStream, userModelType, cancellationToken);
             return (loadResult, userModelType, userModelFilePath); });
 
         LoadMapCommand.Subscribe(commandOutput =>
@@ -136,6 +121,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
             {
                 case MapManager.MapCreationResult.Incomplete:
                     //TODO vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
+                    // v modelView-u uz nastavena tato mapa, takze urcite nenechavat aby sa uzivatel mohol navratit ku predchadzajucej
                 case MapManager.MapCreationResult.Ok:
                     CurrentlyUsedMapFormat = mapFormat;
                     SelectedMapFileName = Path.GetFileName(mapFilePath);
@@ -144,6 +130,8 @@ public class PathFindingSettingsViewModel : ViewModelBase
                 case MapManager.MapCreationResult.Cancelled:
                     break;
                 case MapManager.MapCreationResult.FileNotFound:
+                    //TODO: vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo
+                    break;
                 case MapManager.MapCreationResult.UnableToParse:
                     //TODO: vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo
                     break;
@@ -162,52 +150,50 @@ public class PathFindingSettingsViewModel : ViewModelBase
                 case UserModelManager.UserModelLoadResult.Canceled:
                     break;
                 case UserModelManager.UserModelLoadResult.UnableToDeserialize:
+                    //TODO vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo 
+                    break;
                 case UserModelManager.UserModelLoadResult.UnableToReadFromFile:
                     //TODO vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo 
                     break;
             }
         });
 
-        MainSettingsParams? mainSettingsParams;
-        if ((mainSettingsParams = ParamsManagingModelView.GetParams<MainSettingsParams>()) is not null)
-        {
-            CurrentlySelectedElevDataType = mainSettingsParams.ElevDataTypeViewModelTypeName is null
-                ? null
-                : ElevDataModelView.Instance.GetElevDataType(mainSettingsParams.ElevDataTypeViewModelTypeName);
-        }
-        
-        PathFindingParams? pathFindingParams;
-        if ((pathFindingParams = ParamsManagingModelView.GetParams<PathFindingParams>()) is not null)
-        {
-            SelectedTemplate = SettingsModelView.GetTemplateByTypeName(pathFindingParams.TemplateTypeName);
+        CurrentlySelectedElevDataType = mainSettingsModelView.CurrentElevDataType;
 
-            using (Stream? mapFileStream = TryFindAndOpenFile(pathFindingParams.MapFilePath))
+        SelectedTemplate = settingsModelView.DefaultTemplate;
+
+        if (settingsModelView.DefaultMapFilePath is not null)
+        {
+            using (Stream? mapFileStream = TryFindAndOpenFile(settingsModelView.DefaultMapFilePath))
             {
                 if (mapFileStream is not null)
                     LoadMapCommandSubscription = LoadMapCommand
-                        .Execute((mapFileStream, pathFindingParams.MapFilePath))
+                        .Execute((mapFileStream, settingsModelView.DefaultMapFilePath))
                         .Subscribe();
             }
-
+        }
+        
+        if (settingsModelView.DefaultUserModelFilePath is not null)
+        {
             UserModelTypeViewModel? userModelType =
-                SettingsModelView.GetCorrespondingUserModelType(Path.GetFileName(pathFindingParams.UserModelPath));
-            if (userModelType is not null && UsableUserModelTypes is not null && UsableUserModelTypes.Contains(userModelType))
+                _settingsModelView.GetCorrespondingUserModelType(Path.GetFileName(settingsModelView.DefaultUserModelFilePath));
+            if (userModelType is not null && UsableUserModelTypes is not null &&
+                UsableUserModelTypes.Contains(userModelType))
             {
-                using (Stream? userModelFileStream = TryFindAndOpenFile(pathFindingParams.UserModelPath))
+                using (Stream? userModelFileStream = TryFindAndOpenFile(settingsModelView.DefaultUserModelFilePath))
                 {
                     if (userModelFileStream is not null)
                         LoadUserModelCommandSubscription = LoadUserModelCommand
-                            .Execute((userModelFileStream, pathFindingParams.UserModelPath))
+                            .Execute((userModelFileStream, settingsModelView.DefaultUserModelFilePath))
                             .Subscribe();
                 }
             }
-
-            SearchingAlgorithmViewModel? searchingAlgorithm =
-                SettingsModelView.GetSearchingAlgorithmByTypeName(pathFindingParams.SearchingAlgorithmTypeName);
-            if (searchingAlgorithm is not null && UsableSearchingAlgorithms is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
-                SelectedSearchingAlgorithm = searchingAlgorithm;
-
         }
+        
+        SearchingAlgorithmViewModel? searchingAlgorithm = settingsModelView.DefaultSearchingAlgorithm;
+        if (searchingAlgorithm is not null && UsableSearchingAlgorithms is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
+            SelectedSearchingAlgorithm = searchingAlgorithm;
+
     }
 
     private Stream? TryFindAndOpenFile(string path)
@@ -318,52 +304,3 @@ public class PathFindingSettingsViewModel : ViewModelBase
     public static FuncValueConverter<IEnumerable, bool> IsNotEmptyNorNull { get; } =
         new (enumerable => enumerable?.GetEnumerator().MoveNext() ?? false);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // _usableMapFormats = SettingsModelView.GetUsableMapFormats(_selectedTemplate);
-            // (MapManager.MapCreationResult, MapFormatViewModel)? mapLoadingResultsTuple = SettingsModelView.TryFindLoadAndSetMap(pathFindingParams.MapFilePath);
-            // if (mapLoadingResultsTuple is not null)
-            // {
-                // var (mapCreationResult, mapFormat) = mapLoadingResultsTuple.Value;
-                // switch (mapCreationResult)
-                // {
-                    
-                    // case MapManager.MapCreationResult.Incomplete:
-                        // TODO vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
-                    // case MapManager.MapCreationResult.Ok:
-                        // _currentlyUsedMapFormat = mapFormat;
-                        // _selectedMapFileName = Path.GetFileName(pathFindingParams.MapFilePath);
-                        // SelectedMapFilePath = pathFindingParams.MapFilePath;
-                        // break; 
-                    // case MapManager.MapCreationResult.FileNotFound:
-                    // case MapManager.MapCreationResult.UnableToParse:
-                        // TODO: vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo
-                        // _currentlyUsedMapFormat = null;
-                        // _selectedMapFileName = null;
-                        // SelectedMapFilePath = null;
-                        // break;
-                        
-                // }
-            // }
-            // else
-            // {
-                // _currentlyUsedMapFormat = null;
-                // _selectedMapFileName = null;
-                // SelectedMapFilePath = null;
-            // }

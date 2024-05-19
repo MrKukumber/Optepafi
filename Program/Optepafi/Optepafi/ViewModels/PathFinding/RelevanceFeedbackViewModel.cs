@@ -1,4 +1,5 @@
 using Optepafi.ModelViews.ModelCreating;
+using Optepafi.ModelViews.PathFinding;
 
 namespace Optepafi.ViewModels.PathFinding;
 

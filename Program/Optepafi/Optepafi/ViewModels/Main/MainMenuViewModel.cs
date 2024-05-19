@@ -4,28 +4,33 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Windows.Input;
 using ExCSS;
+using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ViewModels.ModelCreating;
 using Optepafi.ViewModels.PathFinding;
 using Optepafi.Views.ModelCreating;
 using Optepafi.Views.PathFinding;
 using ReactiveUI;
+using PathFindingSessionModelView = Optepafi.ModelViews.PathFinding.PathFindingSessionModelView;
 
 namespace Optepafi.ViewModels.Main;
 
 public class MainMenuViewModel : ViewModelBase
 {
+    private MainSettingsModelView _mainSettingsModelView;
+    
     private const int SessionsMaxCount = 8;
     public ObservableCollection<SessionViewModel> Sessions { get; } = new();
-    public MainMenuViewModel()
+    public MainMenuViewModel(MainSettingsModelView mainSettingsMv)
     {
+        _mainSettingsModelView = mainSettingsMv;
         IObservable<bool> isSessionsCountNotMaximal = Sessions.WhenAnyValue(
             s => s.Count,
              count => count < SessionsMaxCount);
         GoToSettingsCommand = ReactiveCommand.Create(() => { });
         CreatePathFindingSessionCommand = ReactiveCommand.Create(() =>
             {
-                var pathFindingSession = new PathFindingSessionViewModel(new PathFindingSessionModelView());
+                var pathFindingSession = new PathFindingSessionViewModel(new PathFindingSessionModelView(), _mainSettingsModelView);
                 Sessions.Add(pathFindingSession);
                 pathFindingSession.WhenAnyObservable(x => x.OnClosedCommand)
                     .Subscribe(_ => Sessions.Remove(pathFindingSession));

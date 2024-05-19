@@ -5,6 +5,7 @@ using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ViewModels.Main;
 using Optepafi.Views.Main;
 using ReactiveUI;
+using PathFindingSessionModelView = Optepafi.ModelViews.PathFinding.PathFindingSessionModelView;
 
 namespace Optepafi.ViewModels.PathFinding;
 
@@ -20,11 +21,11 @@ public class PathFindingSessionViewModel : SessionViewModel
         get => _currentViewModel;
         set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
-    public PathFindingSessionViewModel(PathFindingSessionModelView pathFindingSessionMv)
+    public PathFindingSessionViewModel(PathFindingSessionModelView pathFindingSessionMv, MainSettingsModelView mainSettingsMv)
     {
-        PathFinding = new PathFindingViewModel(pathFindingSessionMv.PathFinding);
-        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings);
+        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings, mainSettingsMv);
         RelevanceFeedback = new RelevanceFeedbackViewModel(pathFindingSessionMv.RelevanceFeedback);
+        PathFinding = new PathFindingViewModel(pathFindingSessionMv.PathFinding);
         CurrentViewModel = PathFindingSettings;
 
         OnClosingCommand = ReactiveCommand.Create(() =>
