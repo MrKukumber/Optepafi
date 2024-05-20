@@ -29,6 +29,10 @@ public class MainSettingsViewModel : ViewModelBase
     {
         _mainSettingsMv = mainSettingsMv;
 
+        _currentElevDataType = mainSettingsMv.CurrentElevDataType;
+        _currentCulture = mainSettingsMv.CurrentCulture;
+        Assets.Localization.Local.Culture = _currentCulture;
+        
         this.WhenAnyValue(x => x.CurrentCulture)
             .Subscribe(currentCulture => _mainSettingsMv.CurrentCulture = currentCulture);
         this.WhenAnyValue(x => x.CurrentElevDataType)
@@ -44,9 +48,6 @@ public class MainSettingsViewModel : ViewModelBase
         GoToMainMenuCommand = ReactiveCommand.Create(() => { });
         
         
-        _currentElevDataType = mainSettingsMv.CurrentElevDataType;
-        _currentCulture = mainSettingsMv.CurrentCulture;
-        Assets.Localization.Local.Culture = _currentCulture;
     }
     
     // public ObservableCollection<ISearchingAlgorithm> Algorithms { get; }

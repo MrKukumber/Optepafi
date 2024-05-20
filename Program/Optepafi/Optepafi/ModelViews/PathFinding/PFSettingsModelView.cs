@@ -107,10 +107,10 @@ public abstract class PFSettingsModelView : ModelViewBase
         return TemplateManager.Instance.Templates.Select(mapFormat => new TemplateViewModel(mapFormat)).ToHashSet();
     }
     
-    public IReadOnlyCollection<UserModelTypeViewModel> GetUsableUserModelTypes(
+    public IReadOnlyCollection<UserModelTypeViewModel>? GetUsableUserModelTypes(
         TemplateViewModel? templateViewModel)
     {
-        return UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
+        return templateViewModel is null ? null : UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
             .Select(usableUserModelType => new UserModelTypeViewModel(usableUserModelType))
             .ToHashSet();
     }

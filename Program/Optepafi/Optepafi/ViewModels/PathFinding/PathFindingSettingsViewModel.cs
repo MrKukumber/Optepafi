@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Security;
 using System.Threading;
 using Avalonia.Data.Converters;
@@ -22,11 +23,13 @@ namespace Optepafi.ViewModels.PathFinding;
 public class PathFindingSettingsViewModel : ViewModelBase
 {
     private PFSettingsModelView _settingsModelView;
+    private PFMapRepreCreatingModelView _mapRepreCreatingModelView;
     public IDisposable? LoadMapCommandSubscription { get; }
     public IDisposable? LoadUserModelCommandSubscription { get; }
-    public PathFindingSettingsViewModel(PFSettingsModelView settingsModelView, MainSettingsModelView mainSettingsModelView)
+    public PathFindingSettingsViewModel(PFSettingsModelView settingsModelView, MainSettingsModelView mainSettingsModelView, PFMapRepreCreatingModelView mapRepreCreatingModelView)
     {
         _settingsModelView = settingsModelView;
+        _mapRepreCreatingModelView = mapRepreCreatingModelView;
 
         UsableTemplates = _settingsModelView.GetUsableTemplates(CurrentlyUsedMapFormat);
         UsableMapFormats = _settingsModelView.GetUsableMapFormats(SelectedTemplate);
@@ -112,7 +115,8 @@ public class PathFindingSettingsViewModel : ViewModelBase
             UserModelTypeViewModel? userModelType = _settingsModelView.GetCorrespondingUserModelType(userModelFileName);
             if (userModelType is null) throw new NullReferenceException(" User model type should be returned, because chosen file was filtered to be correct.");
             var loadResult = await _settingsModelView.LoadAndSetUserModelAsync(userModelFileStream, userModelType, cancellationToken);
-            return (loadResult, userModelType, userModelFilePath); });
+            return (loadResult, userModelType, userModelFilePath);
+        });
 
         LoadMapCommand.Subscribe(commandOutput =>
         {
@@ -157,6 +161,25 @@ public class PathFindingSettingsViewModel : ViewModelBase
                     break;
             }
         });
+
+        IObservable<bool> isEverythingSet = this.WhenAnyValue(x => x.SelectedTemplate,
+            x => x.CurrentlyUsedMapFormat,
+            x => x.SelectedSearchingAlgorithm,
+            x => x.CurrentlyUsedUserModelType,
+            (template, mapFormat, searchingAlgorithm, userModel) => template is not null && mapFormat is not null && searchingAlgorithm is not null && userModel is not null);
+            // template => template is not null);
+
+        MapRepreCreationInteraction = new Interaction<PFMapRepreCreatingModelView, bool>();
+        ProceedTroughMapRepreCreationCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            bool successfulCreation = await MapRepreCreationInteraction.Handle(mapRepreCreatingModelView);
+            //TODO: ak bude reprezentacia vytvorena, vratit kam sa ma pokracovat, ak nie, zostat v nastaveniach
+            if (successfulCreation)
+            {
+                return WhereToProceed.PathFinding;
+            }
+            return WhereToProceed.Settings;
+        }, isEverythingSet);
 
         CurrentlySelectedElevDataType = mainSettingsModelView.CurrentElevDataType;
 
@@ -300,7 +323,11 @@ public class PathFindingSettingsViewModel : ViewModelBase
     public ReactiveCommand<(Stream, string), (UserModelManager.UserModelLoadResult, UserModelTypeViewModel, string)> LoadUserModelCommand { get; }
     
     //TODO: command pre prechod do vytvaranaia mapovej reprezentacie, nech necha ukladanie parametrov na modelView-u a ten tam uklada datove triedy, nie ich ViewModelove wrappre
+    public enum WhereToProceed{Settings, PathFinding}
+    public ReactiveCommand<Unit, WhereToProceed> ProceedTroughMapRepreCreationCommand { get; }
     
+    // public enum MapRepreCreationResult {Successful, Unsuccessful}
+    public Interaction<PFMapRepreCreatingModelView, bool> MapRepreCreationInteraction { get; }
     public static FuncValueConverter<IEnumerable, bool> IsNotEmptyNorNull { get; } =
         new (enumerable => enumerable?.GetEnumerator().MoveNext() ?? false);
 }

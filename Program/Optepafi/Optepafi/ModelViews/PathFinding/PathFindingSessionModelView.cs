@@ -3,7 +3,7 @@ namespace Optepafi.ModelViews.PathFinding;
 public partial class PathFindingSessionModelView : SessionModelView
 {
     public PFSettingsModelView Settings { get; }
-    public PFGraphCreatingModelView GraphCreating { get; }
+    public PFMapRepreCreatingModelView MapRepreCreating { get; }
     public PFRelevanceFeedbackModelView RelevanceFeedback { get; }
     public PFPathFindingModelView PathFinding { get; }
     
@@ -11,12 +11,12 @@ public partial class PathFindingSessionModelView : SessionModelView
     {
         /*Model budu singletony, ktore proste na vyziadanie budu dorucovat sluzby*/
         var settingsIntra = new PFSettingsIntraModelView();
-        var graphCreatingIntra = new PFGraphCreatingIntraModelView(settingsIntra);
+        var graphCreatingIntra = new PFMapRepreCreatingIntraModelView(settingsIntra);
         var relevanceFeedbackIntra = new PFRelevanceFeedbackIntraModelView(settingsIntra, graphCreatingIntra);
         var pathFindingIntra = new PFPathFindingIntraModelView(relevanceFeedbackIntra);
 
         Settings = settingsIntra;
-        GraphCreating = graphCreatingIntra;
+        MapRepreCreating = graphCreatingIntra;
         RelevanceFeedback = relevanceFeedbackIntra;
         PathFinding = pathFindingIntra;
 

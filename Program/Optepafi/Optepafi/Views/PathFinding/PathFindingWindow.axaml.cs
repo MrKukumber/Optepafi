@@ -1,8 +1,13 @@
 using System;
 using System.Reactive;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
+using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.PathFinding;
+using Optepafi.ViewModels.PathFinding.MapRepreCreatingDialog;
+using Optepafi.Views.PathFinding.MapRepreCreatingDialog;
+using ReactiveUI;
 
 namespace Optepafi.Views.PathFinding;
 
@@ -11,6 +16,8 @@ public partial class PathFindingWindow : ReactiveWindow<PathFindingSessionViewMo
     public PathFindingWindow()
     {
         InitializeComponent();
+        this.WhenActivated(action =>
+            action(ViewModel!.PathFindingSettings.MapRepreCreationInteraction.RegisterHandler(DoShowMapRepreCreatingDialogAsync)));
     }
 
     private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
@@ -30,5 +37,17 @@ public partial class PathFindingWindow : ReactiveWindow<PathFindingSessionViewMo
     private void Window_OnClosed(object? sender, EventArgs e)
     {
         ViewModel.OnClosedCommand.Execute(Unit.Default).Subscribe();
+    }
+
+    private async Task DoShowMapRepreCreatingDialogAsync(
+        InteractionContext<PFMapRepreCreatingModelView, bool>
+            interaction)
+    {
+        var dialog = new MapRepreCreatingWindow()
+        {
+            DataContext = interaction.Input
+        };
+        var result = await dialog.ShowDialog<bool>(this);
+        interaction.SetOutput(result);
     }
 }

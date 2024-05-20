@@ -22,8 +22,8 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
         InitializeComponent();
         this.WhenAnyValue(x => x.ViewModel).Subscribe(viewModel =>
         {
-            _loadUserModelCommandSubscription ??= viewModel!.LoadUserModelCommandSubscription;
-            _loadMapCommandSubscription ??= viewModel!.LoadMapCommandSubscription;
+            _loadUserModelCommandSubscription ??= viewModel?.LoadUserModelCommandSubscription;
+            _loadMapCommandSubscription ??= viewModel?.LoadMapCommandSubscription;
         });
     }
 
