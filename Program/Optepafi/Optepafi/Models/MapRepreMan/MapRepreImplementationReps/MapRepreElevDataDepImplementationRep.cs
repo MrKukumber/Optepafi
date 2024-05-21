@@ -23,6 +23,6 @@ public abstract class MapRepreElevDataDepImplementationRep<TTemplate, TMap, TCon
     public abstract IMapFormat<TMap> UsedMapFormat { get; }
     public bool RequiresElevData { get; } = true;
 
-    public abstract TMapRepre? ConstructMapRepre(TTemplate template, TConstrUsableSubMap map, IElevData elevData,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
+    public abstract TMapRepre ConstructMapRepre(TTemplate template, TConstrUsableSubMap map, IElevData elevData,
+        IProgress<MapRepreCreationReport>? progress, CancellationToken? cancellationToken);
 }

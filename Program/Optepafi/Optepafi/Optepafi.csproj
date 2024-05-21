@@ -78,6 +78,10 @@
         <DependentUpon>Local.sk-SK.resx</DependentUpon>
       </Compile>
       <Compile Remove="Localization\**" />
+      <Compile Update="Views\PathFinding\MapRepreCreatingWindow.axaml.cs">
+        <DependentUpon>MapRepreCreatingWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
 

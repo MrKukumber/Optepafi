@@ -16,8 +16,8 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
     where TEdgeAttributes : IEdgeAttributes
 {
     
-    sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepre>[] constructors)
+    sealed TDefinedFunctionalityMapRepresentation CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map,
+        IProgress<MapRepreCreationReport>? progress, CancellationToken? cancellationToken, IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepre>[] constructors)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepresentation
@@ -29,11 +29,13 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
                 return c.ConstructMapRepre(template, map, progress, cancellationToken);
             }
         }
-        return default;
+
+        throw new ArgumentException(
+            "There is no constructor for given template and map which does not require elevation data. Existence of constructor should be checked before creation.");
     }
     
-    sealed TDefinedFunctionalityMapRepresentation? CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map, IElevData elevData,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepre>[] constructors)
+    sealed TDefinedFunctionalityMapRepresentation CreateMapRepre<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map, IElevData elevData,
+        IProgress<MapRepreCreationReport>? progress, CancellationToken? cancellationToken, IMapRepreImlpementationInfo<ITemplate, IMap, TMapRepre>[] constructors)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepresentation
@@ -45,6 +47,7 @@ public interface IDefinedFunctionalityMapRepreRepresentativ<out TDefinedFunction
                 return c.ConstructMapRepre(template, map, elevData, progress, cancellationToken);
             }
         }
-        return default;
+        throw new ArgumentException(
+            "There is no constructor for given template and map which requires elevation data.");
     }
 }

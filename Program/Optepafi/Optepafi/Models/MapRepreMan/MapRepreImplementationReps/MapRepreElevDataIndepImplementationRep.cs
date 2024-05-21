@@ -9,7 +9,7 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.MapRepreImplementationReps;
 
-public abstract class MapRepreImplementationRep<TTemplate, TMap, TUsableSubMap,TMapRepre, TVertexAttributes, TEdgeAttributes> : 
+public abstract class MapRepreElevDataIndepImplementationRep<TTemplate, TMap, TUsableSubMap,TMapRepre, TVertexAttributes, TEdgeAttributes> : 
     IMapRepreImlpementationInfo<TTemplate, TMap, TMapRepre>, IElevDataIndependentConstr<TTemplate, TUsableSubMap, TMapRepre>
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
     where TMap : IMap 
@@ -22,6 +22,6 @@ public abstract class MapRepreImplementationRep<TTemplate, TMap, TUsableSubMap,T
     public abstract IMapFormat<TMap> UsedMapFormat { get; }
     public bool RequiresElevData { get; } = false;
 
-    public abstract TMapRepre? ConstructMapRepre(TTemplate template, TUsableSubMap map,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
+    public abstract TMapRepre ConstructMapRepre(TTemplate template, TUsableSubMap map,
+        IProgress<MapRepreCreationReport>? progress, CancellationToken? cancellationToken);
 }

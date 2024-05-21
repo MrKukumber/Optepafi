@@ -5,8 +5,6 @@ using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.PathFinding;
-using Optepafi.ViewModels.PathFinding.MapRepreCreatingDialog;
-using Optepafi.Views.PathFinding.MapRepreCreatingDialog;
 using ReactiveUI;
 
 namespace Optepafi.Views.PathFinding;

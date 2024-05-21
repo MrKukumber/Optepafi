@@ -62,7 +62,7 @@
                     <Button Name="DeleteButton" Content="Delete" Command="{Binding DeleteRegionCommand}"></Button>
                     <Button Name="CancelButton" Content="Cancel" Command="{Binding CancelDownloadingCommand}"></Button>
                     <TextBox Name="UserNameTextBlock" Watermark="Insert user name" Text="{Binding UserName, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}"></TextBox>
-                    <TextBox Name="PasswordTextBlock" Watermark="Insert password" Text="{Binding Password, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}" PasswordChar="*"></TextBox>
+                    <!-- <TextBox Name="PasswordTextBlock" Watermark="Insert password" Text="{Binding Password, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}" PasswordChar="*"></TextBox> -->
                 </StackPanel>
             </Grid>
         </DockPanel>

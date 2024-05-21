@@ -19,6 +19,7 @@
         <entry key="Optepafi/Views/ModelCreating/ModelCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/ModelCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/MapRepreCreatingDialog/MapCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/PathFinding/MapRepreCreatingDialog/MapRepreCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/PatFindingSettingsView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/PathFindingSettingsView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/PathFindingView.axaml" value="Optepafi/Optepafi.csproj" />

@@ -167,7 +167,6 @@ public class PathFindingSettingsViewModel : ViewModelBase
             x => x.SelectedSearchingAlgorithm,
             x => x.CurrentlyUsedUserModelType,
             (template, mapFormat, searchingAlgorithm, userModel) => template is not null && mapFormat is not null && searchingAlgorithm is not null && userModel is not null);
-            // template => template is not null);
 
         MapRepreCreationInteraction = new Interaction<PFMapRepreCreatingModelView, bool>();
         ProceedTroughMapRepreCreationCommand = ReactiveCommand.CreateFromTask(async () =>
