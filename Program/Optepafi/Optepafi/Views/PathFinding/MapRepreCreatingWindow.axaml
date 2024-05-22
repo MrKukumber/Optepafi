@@ -15,26 +15,10 @@
         <Grid Grid.Row="3" Name="MapRepreCreationCancelGrid" IsVisible="{Binding IsMapRepreCreateCommandExecuting}">
             <Button Grid.Row="0" Name="CancelButton" Content="Cancel" Command="{Binding CancelMapRepreCreationCommand}"></Button>
         </Grid>
-        <Grid Grid.Row="3" Name="ElevDataAbsenceResolvingGrid" >
-            <Grid.IsVisible>
-                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                    <Binding Path="!IsMapRepreCreateCommandExecuting"></Binding>
-                    <Binding Path="!IsPrerequisitesCheckExecuting"></Binding>
-                    <Binding Path="PrereqCheckResult" 
-                             Converter="{x:Static pfVm:MapRepreCreatingWindowViewModel.AreElevDataAbsent}"></Binding>
-                </MultiBinding>
-            </Grid.IsVisible>
+        <Grid Grid.Row="3" Name="ElevDataAbsenceResolutionGrid" IsVisible="{Binding IsAwaitingElevDataAbsenceResolution}" >
             <Button Grid.Row="0" Name="ReturnDueElevDataAbsenceButton" Content="Return" Command="{Binding ReturnCommand}"></Button>
         </Grid>
-        <Grid Grid.Row="3" Name="MapNotSupportedByElevDataTypeResolvingGrid">
-            <Grid.IsVisible>
-                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                    <Binding Path="!IsMapRepreCreateCommandExecuting"></Binding>
-                    <Binding Path="!IsPrerequisitesCheckExecuting"></Binding>
-                    <Binding Path="PrereqCheckResult" 
-                             Converter="{x:Static pfVm:MapRepreCreatingWindowViewModel.IsMapNotSupportedByElevDataType}"></Binding>
-                </MultiBinding>
-            </Grid.IsVisible>
+        <Grid Grid.Row="3" Name="MapNotSupportedByElevDataTypeResolutionGrid" IsVisible="{Binding IsAwaitingMapNotSupportedByElevDataTypeResolution}">
             <Button Grid.Row="0" Name="ReturnDueMapNotSupportedByElevDataType" Content="Return" Command="{Binding ReturnCommand}"/>   
         </Grid>
     </Grid>

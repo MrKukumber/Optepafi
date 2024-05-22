@@ -20,49 +20,41 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
     private PFMapRepreCreatingModelView _mapRepreCreatingMv;
     public MapRepreCreatingWindowViewModel(PFMapRepreCreatingModelView mapRepreCreatingMv)
     {
-        Activator = new ViewModelActivator();
         _mapRepreCreatingMv = mapRepreCreatingMv;
+        Activator = new ViewModelActivator();
         
         CheckPrerequisitiesCommand = ReactiveCommand.CreateFromTask(async ct =>
         {
             CurrentProcedureInfoText = "Elevation data requirements checking"; //TODO: localize
             DialogText = null;
-            var result = await Task.Run(() => _mapRepreCreatingMv.CheckMapRequirementForElevData());
-            if (ct.IsCancellationRequested)
-            {
-                PrereqCheckResult = PrerequisitiesCheckResult.Canceled;
-                return;
-            }
+            var result = await Task.Run(() => _mapRepreCreatingMv.CheckMapRequirementsForElevData(ct));
+            if (ct.IsCancellationRequested) return PrerequisitiesCheckResult.Canceled; 
             switch (result)
             {
-                case PFMapRepreCreatingModelView.ElevDataPrerequisityResult.ElevDataForMapNotPresent:
-                    PrereqCheckResult =  PrerequisitiesCheckResult.ElevDataAbsent;
-                    return;
-                case PFMapRepreCreatingModelView.ElevDataPrerequisityResult.MapNotSupportedByElevDataType:
-                    PrereqCheckResult =  PrerequisitiesCheckResult.MapNotSupportedByElevDataType;
-                    return;
+                case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.ElevDataForMapNotPresent:
+                    return PrerequisitiesCheckResult.ElevDataAbsent;
+                case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataType:
+                    return PrerequisitiesCheckResult.MapNotSupportedByElevDataType;
+                case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.Cancelled:
+                    return PrerequisitiesCheckResult.Canceled;
             }
-            PrereqCheckResult = PrerequisitiesCheckResult.Ok;
+            return PrerequisitiesCheckResult.Ok;
         });
 
         
-        ReturnCommand = ReactiveCommand.Create(() =>
-        {
-            // IsPossibleToContinue = false;
-            return false;
-        });
+        ReturnCommand = ReactiveCommand.Create(() => false );
 
         CreateMapRepreCommand = ReactiveCommand.CreateFromObservable(
             () => Observable
                 .StartAsync(async ct =>
                 {
-                    CurrentProcedureInfoText = "Creating map representation."; //TODO: localize
+                    CurrentProcedureInfoText = null; //TODO: localize
                     DialogText = null;
-                    IProgress<MapRepreCreationReport> progress = new Progress<MapRepreCreationReport>(HandleMapCreationProgres);
-                    await _mapRepreCreatingMv.CreateMapRepreAsync(progress, ct);
+                    IProgress<GraphCreationReport> mapCreationProgress = new Progress<GraphCreationReport>(report => PercentageMapRepreCreationProgress = report.PercentualProgress);
+                    IProgress<string> progressInfo = new Progress<string>(info => CurrentProcedureInfoText = info);
+                    await _mapRepreCreatingMv.CreateMapRepreAsync(progressInfo, mapCreationProgress, ct);
                     if (ct.IsCancellationRequested)
                     {
-                        _mapRepreCreatingMv.CleanMapRepre();
                         return false;
                     }
                     return true;
@@ -70,16 +62,13 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                 .TakeUntil(CancelMapRepreCreationCommand));
         
         CancelMapRepreCreationCommand = ReactiveCommand.Create(() => {}, CreateMapRepreCommand.IsExecuting);
-
-        
-        // ReturnValueSet = this.WhenAnyValue(x => x.IsPossibleToContinue);
         
         this.WhenActivated(disposalbes =>
         {
             CheckPrerequisitiesCommand.Execute().Subscribe().DisposeWith(disposalbes);
         });
         
-        this.WhenAnyValue(x => x.PrereqCheckResult).Subscribe(prereqCheckResult =>
+        CheckPrerequisitiesCommand.Subscribe(prereqCheckResult =>
         {
             switch (prereqCheckResult)
             {
@@ -94,43 +83,33 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                     break;
                 case PrerequisitiesCheckResult.MapNotSupportedByElevDataType:
                     CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
-                    DialogText = "Elevation data can not be retrieved for given map.\n " +
+                    DialogText = "Elevation data can not be retrieved for given map.\n" +
                                  "Please, choose different map or elevation data source and try again."; //TODO: localize
+                    break;
+                case PrerequisitiesCheckResult.Canceled:
+                    CurrentProcedureInfoText = "Creation canceled"; //TODO: localize
+                    DialogText = null;
                     break;
             }
         });
 
         _isMapRepreCreateCommandExecuting = CreateMapRepreCommand.IsExecuting
             .ToProperty(this, nameof(IsMapRepreCreateCommandExecuting));
-        _isPrerequisitiesCheckExecuting = CheckPrerequisitiesCommand.IsExecuting
-            .ToProperty(this, nameof(IsPrerequisitesCheckExecuting));
-        
-        // CreateMapRepreCommand.Subscribe(cancellationToken =>
-        // {
-            // DialogText = null;
-            // if (cancellationToken.IsCancellationRequested)
-            // {
-                // _mapRepreCreatingMv.CleanCreatedMapRepre();
-                // IsPossibleToContinue = false;
-            // }
-            // else
-            // {
-                // IsPossibleToContinue = true;
-            // }
-        // });
-
+        _isAwaitingElevDataAbsenceResolution = this.WhenAnyObservable(x => x.CreateMapRepreCommand.IsExecuting,
+                x => x.CheckPrerequisitiesCommand.IsExecuting,
+                x => x.CheckPrerequisitiesCommand,
+                (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => 
+                    !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.ElevDataAbsent)
+            .ToProperty(this, nameof(IsAwaitingElevDataAbsenceResolution));
+        _isAwaitingMapNotSupportedByElevDataTypeResolution = this.WhenAnyObservable(
+                x => x.CheckPrerequisitiesCommand.IsExecuting,
+                x => CreateMapRepreCommand.IsExecuting,
+                x => x.CheckPrerequisitiesCommand,
+                (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataType)
+            .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataTypeResolution));
     }
 
-    // public IObservable<bool> ReturnValueSet { get; }
-
-    // private bool _isPossibleToContinue;
-    // public bool IsPossibleToContinue
-    // {
-        // get => _isPossibleToContinue;
-        // set => this.RaiseAndSetIfChanged(ref _isPossibleToContinue, value);
-    // }
-    
-    private void HandleMapCreationProgres(MapRepreCreationReport report)
+    private void HandleMapCreationProgres(GraphCreationReport report)
     {
         PercentageMapRepreCreationProgress = report.PercentualProgress;
     }
@@ -141,11 +120,6 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
         get => _percentageMapRepreCreationProgress;
         set => this.RaiseAndSetIfChanged(ref _percentageMapRepreCreationProgress, value);
     }
-
-    private ObservableAsPropertyHelper<bool> _isMapRepreCreateCommandExecuting;
-    public bool IsMapRepreCreateCommandExecuting { get => _isMapRepreCreateCommandExecuting.Value; }
-    private ObservableAsPropertyHelper<bool> _isPrerequisitiesCheckExecuting;
-    public bool IsPrerequisitesCheckExecuting { get => _isPrerequisitiesCheckExecuting.Value; }
 
     private string? _dialogText = null;
     public string? DialogText
@@ -161,21 +135,16 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
         set => this.RaiseAndSetIfChanged(ref _currentProcedureInfoText, value);
     }
     
-    public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataType, Canceled}
-    private PrerequisitiesCheckResult _prereqCheckResult;
-    public PrerequisitiesCheckResult PrereqCheckResult
-    {
-        get => _prereqCheckResult;
-        set => this.RaiseAndSetIfChanged(ref _prereqCheckResult, value);
-    }
+    private ObservableAsPropertyHelper<bool> _isAwaitingElevDataAbsenceResolution;
+    public bool IsAwaitingElevDataAbsenceResolution => _isAwaitingElevDataAbsenceResolution.Value;
+    private ObservableAsPropertyHelper<bool> _isAwaitingMapNotSupportedByElevDataTypeResolution;
+    public bool IsAwaitingMapNotSupportedByElevDataTypeResolution => _isAwaitingMapNotSupportedByElevDataTypeResolution.Value;
+    private ObservableAsPropertyHelper<bool> _isMapRepreCreateCommandExecuting;
+    public bool IsMapRepreCreateCommandExecuting { get => _isMapRepreCreateCommandExecuting.Value; }
     
-    public ReactiveCommand<Unit, Unit> CheckPrerequisitiesCommand { get; }
+    public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataType, Canceled}
+    public ReactiveCommand<Unit, PrerequisitiesCheckResult> CheckPrerequisitiesCommand { get; }
     public ReactiveCommand<Unit, bool> CreateMapRepreCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelMapRepreCreationCommand { get; }
     public ReactiveCommand<Unit, bool> ReturnCommand { get; }
-
-    public static FuncValueConverter<PrerequisitiesCheckResult, bool> AreElevDataAbsent { get; } =
-        new(result => result is PrerequisitiesCheckResult.ElevDataAbsent);
-    public static FuncValueConverter<PrerequisitiesCheckResult, bool> IsMapNotSupportedByElevDataType { get; } =
-        new(result => result is PrerequisitiesCheckResult.MapNotSupportedByElevDataType);
 }

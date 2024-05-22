@@ -12,7 +12,7 @@ public interface IMap
     public TOut AcceptGeneric<TOut, TOtherParams>(
         IMapGenericVisitor<TOut, TOtherParams> genericVisitor,
         TOtherParams otherParams);
-    // public TOut AcceptGeneric<TOut>(IMapGenericVisitor<TOut> genericVisitor);
+    public TOut AcceptGeneric<TOut>(IMapGenericVisitor<TOut> genericVisitor);
     // public void AcceptGeneric(IMapGenericVisitor genericVisitor);
 
 }

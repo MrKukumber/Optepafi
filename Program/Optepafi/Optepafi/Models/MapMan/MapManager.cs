@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -10,11 +11,26 @@ namespace Optepafi.Models.MapMan;
 /// <summary>
 /// Static class for 
 /// </summary>
-public class MapManager
+public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
 {
     public static MapManager Instance { get; } = new();
     private MapManager(){}
-    public ISet<IMapFormat<IMap>> MapFormats { get; } = new HashSet<IMapFormat<IMap>>(); // TODO: premysliet, jak to reprezentaovat
+    public ISet<IMapFormat<IMap>> MapFormats { get; } = ImmutableHashSet.Create<IMapFormat<IMap>>();
+
+    public IMapFormat<IMap> GetFormat(IMap map)
+    {
+        return map.AcceptGeneric(this);
+    }
+    IMapFormat<IMap> IMapGenericVisitor<IMapFormat<IMap>>.GenericVisit<TMap>(TMap map) 
+    {
+        foreach (var mapFormat in MapFormats)
+        {
+            if (mapFormat is IMapIdentifier<TMap>)
+                return mapFormat;
+        }
+        throw new ArgumentException("Given map was not created by any existing map format.");
+    }
+
     public IMapFormat<IMap>? GetCorrespondingMapFormatTo(string mapFileName)
     {
         foreach (var mapFormat in MapFormats)
@@ -31,20 +47,4 @@ public class MapManager
             return MapCreationResult.Cancelled;
         return creationResult;
     }
-    // public MapCreationResult GetMapFromOf(string fileName, IMapFormat<IMap> mapFormat, CancellationToken? cancellationToken, out IMap? map)
-    // {
-        // try
-        // {
-            // using (FileStream mapStream = new FileStream(fileName, FileMode.Open))
-            // {
-                // map = mapFormat.CreateMapFrom(mapStream, cancellationToken, out MapCreationResult creationResult);
-                // return creationResult;
-            // }
-        // }
-        // catch (System.IO.FileNotFoundException ex)
-        // {
-            // map = null;
-            // return MapCreationResult.FileNotFound;
-        // }
-    // }
 }

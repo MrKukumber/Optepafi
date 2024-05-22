@@ -23,9 +23,8 @@ public partial class MapRepreCreatingWindow : ReactiveWindow<MapRepreCreatingWin
                 .Subscribe(isPossibleToContinue => Close(isPossibleToContinue))
                 .DisposeWith(disposables);
             ViewModel!.ReturnCommand
-                .Subscribe(isPossibleToContinue => Close(isPossibleToContinue));
+                .Subscribe(isPossibleToContinue => Close(isPossibleToContinue))
+                .DisposeWith(disposables);
         });
-
     }
-    
 }

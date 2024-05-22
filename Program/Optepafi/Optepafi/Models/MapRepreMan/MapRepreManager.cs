@@ -15,25 +15,25 @@ using Optepafi.Models.TemplateMan;
 namespace Optepafi.Models.MapRepreMan;
 
 public class MapRepreManager : 
-    IMapGenericVisitor<IMapRepresentation, (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IProgress<MapRepreCreationReport>?, CancellationToken?)>,
-    IMapGenericVisitor<IMapRepresentation, (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IElevData, IProgress<MapRepreCreationReport>?, CancellationToken?)>,
-    ITemplateGenericVisitor<IMapRepresentation, IMap, (IMapRepreRepresentativ<IMapRepresentation>, IProgress<MapRepreCreationReport>?, CancellationToken?)>,
-    ITemplateGenericVisitor<IMapRepresentation, IMap, (IMapRepreRepresentativ<IMapRepresentation>, IElevData, IProgress<MapRepreCreationReport>?, CancellationToken?)>
+    IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IProgress<GraphCreationReport>?, CancellationToken?)>,
+    IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<GraphCreationReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<IMapRepre, IMap, (IMapRepreRepresentative<IMapRepre>, IProgress<GraphCreationReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<IMapRepre, IMap, (IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<GraphCreationReport>?, CancellationToken?)>
 {
     public static MapRepreManager Instance { get; } = new();
     private MapRepreManager() { }
 
-    private ISet<IMapRepreRepresentativ<IMapRepresentation>> MapRepreReps { get; } =
-        new HashSet<IMapRepreRepresentativ<IMapRepresentation>>(); //TODO: premysliet jak to rperezentovat, mozno by bolo lepsie aby to bolo usporiadane v nejakom liste
+    private ISet<IMapRepreRepresentative<IMapRepre>> MapRepreReps { get; } =
+        new HashSet<IMapRepreRepresentative<IMapRepre>>();
             
 
     public enum NeedsElevDataIndic { Yes, NotNecessary, No };
     //returns null, if there is no constructor for given templateRep, mapFormat and mapRepreRep
-    public NeedsElevDataIndic? DoesNeedElevData(ITemplate template, IMapFormat<IMap> mapFormat, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep)
+    public NeedsElevDataIndic? DoesNeedElevData(ITemplate template, IMapFormat<IMap> mapFormat, IMapRepreRepresentative<IMapRepre> mapRepreRep)
     {
         bool dependentFound = false;
         bool independentFound = false;
-        foreach (var implementationInfo in mapRepreRep.MapRepreImplementationInfos)
+        foreach (var implementationInfo in mapRepreRep.ImplementationIdentifiers)
         {
             if (!dependentFound && implementationInfo.UsedTemplate == template && implementationInfo.UsedMapFormat == mapFormat &&
                 implementationInfo.RequiresElevData)
@@ -53,12 +53,12 @@ public class MapRepreManager :
     }
 
     public HashSet<(ITemplate, IMapFormat<IMap>)> GetUsableTemplateMapFormatCombinationsFor(
-        ISet<IMapRepreRepresentativ<IMapRepresentation>> mapRepreReps)
+        ISet<IMapRepreRepresentative<IMapRepre>> mapRepreReps)
     {
         HashSet<(ITemplate, IMapFormat<IMap>)> usableTemplatesMapFormatCombinations = new();
-        foreach (IMapRepreRepresentativ<IMapRepresentation> mapRepreRep in mapRepreReps)
+        foreach (IMapRepreRepresentative<IMapRepre> mapRepreRep in mapRepreReps)
         {
-            foreach (var constructor in mapRepreRep.MapRepreImplementationInfos)
+            foreach (var constructor in mapRepreRep.ImplementationIdentifiers)
             {
                 usableTemplatesMapFormatCombinations.Add((constructor.UsedTemplate, constructor.UsedMapFormat));
             }
@@ -71,10 +71,10 @@ public class MapRepreManager :
         return GetUsableTemplateMapFormatCombinationsFor(MapRepreReps);
     }
 
-    public HashSet<IMapRepreRepresentativ<IMapRepresentation>> GetUsableMapRepreRepsFor(
+    public HashSet<IMapRepreRepresentative<IMapRepre>> GetUsableMapRepreRepsFor(
         ISearchingAlgorithm algorithm)
     {
-        HashSet<IMapRepreRepresentativ<IMapRepresentation>> usableMapRepreReps = new();
+        HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = new();
         foreach (var mapRepreRep in MapRepreReps)
         {
             if (algorithm.DoesRepresentUsableMapRepre(mapRepreRep)) usableMapRepreReps.Add(mapRepreRep);
@@ -83,13 +83,13 @@ public class MapRepreManager :
         return usableMapRepreReps;
     }
 
-    public HashSet<IMapRepreRepresentativ<IMapRepresentation>> GetUsableMapRepreRepsFor(ITemplate template,
+    public HashSet<IMapRepreRepresentative<IMapRepre>> GetUsableMapRepreRepsFor(ITemplate template,
         IMapFormat<IMap> mapFormat)
     {
-        var resultingSet = new HashSet<IMapRepreRepresentativ<IMapRepresentation>>();
-        foreach (IMapRepreRepresentativ<IMapRepresentation> mapRepreRep in MapRepreReps)
+        var resultingSet = new HashSet<IMapRepreRepresentative<IMapRepre>>();
+        foreach (IMapRepreRepresentative<IMapRepre> mapRepreRep in MapRepreReps)
         {
-            foreach (var implementationInfo in mapRepreRep.MapRepreImplementationInfos)
+            foreach (var implementationInfo in mapRepreRep.ImplementationIdentifiers)
             {
                 if (template == implementationInfo.UsedTemplate && mapFormat == implementationInfo.UsedMapFormat)
                 {
@@ -105,27 +105,27 @@ public class MapRepreManager :
 
     // Creates map representation without using elevation data.
     // Throws exception, if there is no constructor not using elevation data for creating map repre from template and map
-    public IMapRepresentation CreateMapRepre(ITemplate template, IGeoReferencedMap map, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep,
-        IProgress<MapRepreCreationReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
+    public IMapRepre CreateMapRepre(ITemplate template, IMap map, IMapRepreRepresentative<IMapRepre> mapRepreRep,
+        IProgress<GraphCreationReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric<IMapRepresentation, 
-                (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IProgress<MapRepreCreationReport>?, CancellationToken?)>
+        return map.AcceptGeneric<IMapRepre, 
+                (ITemplate, IMapRepreRepresentative<IMapRepre>, IProgress<GraphCreationReport>?, CancellationToken?)>
                 (this, (template, mapRepreRep, constructionProgress, cancellationToken));
     }
 
-    IMapRepresentation IMapGenericVisitor<IMapRepresentation, (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IProgress<MapRepreCreationReport>?, CancellationToken?)>
+    IMapRepre IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IProgress<GraphCreationReport>?, CancellationToken?)>
         .GenericVisit<TMap>(TMap map,
-        (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IProgress<MapRepreCreationReport>?, CancellationToken?) otherParams)
+        (ITemplate, IMapRepreRepresentative<IMapRepre>, IProgress<GraphCreationReport>?, CancellationToken?) otherParams)
     {
         var (template, mapRepreRepresentativ, progress, cancellationToken) = otherParams;
         return template
-            .AcceptGeneric<IMapRepresentation, TMap, IMap, (IMapRepreRepresentativ<IMapRepresentation>,
-                IProgress<MapRepreCreationReport>?, CancellationToken?)>(this, map,
+            .AcceptGeneric<IMapRepre, TMap, IMap, (IMapRepreRepresentative<IMapRepre>,
+                IProgress<GraphCreationReport>?, CancellationToken?)>(this, map,
                 (mapRepreRepresentativ, progress, cancellationToken));
     }
-    IMapRepresentation ITemplateGenericVisitor<IMapRepresentation, IMap, (IMapRepreRepresentativ<IMapRepresentation>, IProgress<MapRepreCreationReport>?, CancellationToken?)>
+    IMapRepre ITemplateGenericVisitor<IMapRepre, IMap, (IMapRepreRepresentative<IMapRepre>, IProgress<GraphCreationReport>?, CancellationToken?)>
         .GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes, TMap>(TTemplate template, TMap map, 
-        (IMapRepreRepresentativ<IMapRepresentation>, IProgress<MapRepreCreationReport>?, CancellationToken?) otherParams) 
+        (IMapRepreRepresentative<IMapRepre>, IProgress<GraphCreationReport>?, CancellationToken?) otherParams) 
     {
         var (mapRepreRepresentativ, progress, cancellationToken) = otherParams;
         return mapRepreRepresentativ.CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(template, map, progress, cancellationToken);
@@ -136,27 +136,27 @@ public class MapRepreManager :
 
     // Creates map representation by using elevation data.
     // Throws exception, if there is no constructor using elevation data for creating map repre from template and map
-    public IMapRepresentation CreateMapRepre(ITemplate template, IGeoLocatedMap map, IMapRepreRepresentativ<IMapRepresentation> mapRepreRep, IElevData elevData, IProgress<MapRepreCreationReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
+    public IMapRepre CreateMapRepre(ITemplate template, IGeoLocatedMap map, IMapRepreRepresentative<IMapRepre> mapRepreRep, IElevData elevData, IProgress<GraphCreationReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric<IMapRepresentation, 
-                (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IElevData, IProgress<MapRepreCreationReport>?, CancellationToken?)>
+        return map.AcceptGeneric<IMapRepre, 
+                (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<GraphCreationReport>?, CancellationToken?)>
                 (this, (template, mapRepreRep, elevData, constructionProgress, cancellationToken));
 
     }
 
-    IMapRepresentation IMapGenericVisitor<IMapRepresentation, (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IElevData, IProgress<MapRepreCreationReport>?, CancellationToken?)>
+    IMapRepre IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<GraphCreationReport>?, CancellationToken?)>
         .GenericVisit<TMap>(TMap map,
-        (ITemplate, IMapRepreRepresentativ<IMapRepresentation>, IElevData, IProgress<MapRepreCreationReport>?, CancellationToken?) otherParams)
+        (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<GraphCreationReport>?, CancellationToken?) otherParams)
     {
         var (template, mapRepreRepresentativ, elevData, progress, cancellationToken) = otherParams;
         return template
-            .AcceptGeneric<IMapRepresentation, TMap, IMap, (IMapRepreRepresentativ<IMapRepresentation>, IElevData, 
-                IProgress<MapRepreCreationReport>?, CancellationToken?)>(this, map,
+            .AcceptGeneric<IMapRepre, TMap, IMap, (IMapRepreRepresentative<IMapRepre>, IElevData, 
+                IProgress<GraphCreationReport>?, CancellationToken?)>(this, map,
                 (mapRepreRepresentativ, elevData, progress, cancellationToken));
     }
-    IMapRepresentation ITemplateGenericVisitor<IMapRepresentation, IMap, (IMapRepreRepresentativ<IMapRepresentation>, IElevData, IProgress<MapRepreCreationReport>?, CancellationToken?)>
+    IMapRepre ITemplateGenericVisitor<IMapRepre, IMap, (IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<GraphCreationReport>?, CancellationToken?)>
         .GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes, TMap>(TTemplate template, TMap map, 
-        (IMapRepreRepresentativ<IMapRepresentation>, IElevData, IProgress<MapRepreCreationReport>?, CancellationToken?) otherParams) 
+        (IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<GraphCreationReport>?, CancellationToken?) otherParams) 
     {
         var (mapRepreRepresentativ, elevData, progress, cancellationToken) = otherParams;
         return mapRepreRepresentativ.CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(template, map, elevData, progress, cancellationToken);

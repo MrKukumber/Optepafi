@@ -1,7 +1,11 @@
 using System;
 using System.ComponentModel;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.ReactiveUI;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -23,11 +27,14 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     public MainWindow()
     {
         InitializeComponent();
-        this.WhenActivated(action =>
-            action(ViewModel.MainSettings.ElevConfigInteraction.RegisterHandler(ShowElevConfig)));
+        this.WhenActivated(disposeables =>
+        {
+            ViewModel!.MainSettings.ElevConfigInteraction.RegisterHandler(DoShowElevConfig).DisposeWith(disposeables);
+            ViewModel.YesNoInteraction.RegisterHandler(DoShowYesNoDialog).DisposeWith(disposeables);
+        });
     }
 
-    private void ShowElevConfig(InteractionContext<ElevConfigViewModel, ElevDataTypeViewModel?> interaction)
+    private void DoShowElevConfig(InteractionContext<ElevConfigViewModel, ElevDataTypeViewModel?> interaction)
     {
         Content = new ElevConfigView
         {
@@ -36,10 +43,37 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         interaction.Input.ReturnCommand.Subscribe(result =>
         {
-            Content = ViewModel.MainSettings;
+            Content = ViewModel!.MainSettings;
             interaction.SetOutput(result);
         });
 
+    }
+
+    private async Task DoShowYesNoDialog(InteractionContext<YesNoDialogWindowViewModel, bool> interaction)
+    {
+        var dialog = new YesNoDialogWindow()
+        {
+            DataContext = interaction.Input
+        };
+        var result = await dialog.ShowDialog<bool>(this);
+        interaction.SetOutput(result);
+    }
+
+    private bool _alreadyAsked = false; 
+    private async void MainWindow_OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        if (_alreadyAsked) return;
+        e.Cancel = true;
+        bool close = await ViewModel!.OnClosingCommand.Execute();
+        if (close)
+        {
+            _alreadyAsked = true;
+            Close();
+        }
+    }
+    private void MainWindow_OnClosed(object? sender, EventArgs e)
+    {
+        ViewModel!.OnClosedCommand.Execute().Subscribe();
     }
 
 }

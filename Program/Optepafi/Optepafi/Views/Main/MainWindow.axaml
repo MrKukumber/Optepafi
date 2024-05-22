@@ -9,7 +9,9 @@
         x:DataType="mVm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Optepafi" Width="700" Height="500"
-        Content="{Binding CurrentViewModel, Mode=OneWay}" >
+        Content="{Binding CurrentViewModel, Mode=OneWay}" 
+        Closing="MainWindow_OnClosing"
+        Closed="MainWindow_OnClosed">
     <Design.DataContext>
         <mVm:MainWindowViewModel/>
     </Design.DataContext>

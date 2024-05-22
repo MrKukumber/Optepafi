@@ -36,7 +36,7 @@ public class ElevDataManager
     }
 
 
-    public enum ElevDataObtainability {Obtainable, ElevDataNotPresent, NotSupportedMap}
+    public enum ElevDataObtainability {Obtainable, ElevDataNotPresent, NotSupportedMap, Cancelled}
     public ElevDataObtainability AreElevDataOfTypeObtainableFor(IGeoLocatedMap map, IElevDataType elevDataType, CancellationToken? cancellationToken = null)
     {
         // return map switch

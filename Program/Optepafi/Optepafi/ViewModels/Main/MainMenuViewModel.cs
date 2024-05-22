@@ -17,20 +17,20 @@ namespace Optepafi.ViewModels.Main;
 
 public class MainMenuViewModel : ViewModelBase
 {
-    private MainSettingsModelView _mainSettingsModelView;
+    private MainSettingsModelView.Provider _mainSettingsMvProvider;
     
     private const int SessionsMaxCount = 8;
     public ObservableCollection<SessionViewModel> Sessions { get; } = new();
-    public MainMenuViewModel(MainSettingsModelView mainSettingsMv)
+    public MainMenuViewModel(MainSettingsModelView.Provider mainSettingsMvProvider)
     {
-        _mainSettingsModelView = mainSettingsMv;
+        _mainSettingsMvProvider = mainSettingsMvProvider;
         IObservable<bool> isSessionsCountNotMaximal = Sessions.WhenAnyValue(
             s => s.Count,
              count => count < SessionsMaxCount);
         GoToSettingsCommand = ReactiveCommand.Create(() => { });
         CreatePathFindingSessionCommand = ReactiveCommand.Create(() =>
             {
-                var pathFindingSession = new PathFindingSessionViewModel(new PathFindingSessionModelView(), _mainSettingsModelView);
+                var pathFindingSession = new PathFindingSessionViewModel(new PathFindingSessionModelView(), _mainSettingsMvProvider);
                 Sessions.Add(pathFindingSession);
                 pathFindingSession.WhenAnyObservable(x => x.OnClosedCommand)
                     .Subscribe(_ => Sessions.Remove(pathFindingSession));

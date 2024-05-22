@@ -1,3 +1,5 @@
+using Optepafi.Models.ParamsMan;
+
 namespace Optepafi.ModelViews.Main;
 
 public class MainWindowModelView
@@ -7,5 +9,10 @@ public class MainWindowModelView
     public MainWindowModelView()
     {
         MainSettings = new MainSettingsModelView();
+    }
+
+    public void SaveParams()
+    {
+        ParamsManager.Instance.SaveAllParams();
     }
 }

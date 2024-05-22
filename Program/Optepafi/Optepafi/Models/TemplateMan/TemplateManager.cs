@@ -8,6 +8,5 @@ public class TemplateManager
 {
     public static TemplateManager Instance { get; } = new();
     private TemplateManager(){}
-    
-    public IReadOnlySet<ITemplate> Templates { get; } = ImmutableHashSet.Create<ITemplate>(/*TODO: doplnit templates */);//TODO: este premusliet ako reprezentovat, mozno sko nejakym listom
+    public ISet<ITemplate> Templates { get; } = ImmutableHashSet.Create<ITemplate>(/*TODO: doplnit templates */);
 }

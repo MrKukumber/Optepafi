@@ -25,13 +25,11 @@ public class ModelCreatingSessionViewModel : SessionViewModel
         
         OnClosingCommand = ReactiveCommand.Create(() =>
         {
-            return ClosingRecommendation.CanClose;
-            //TODO: return correct recommendation for closing the window
+            return true;
         });
         OnClosedCommand = ReactiveCommand.Create(() => { });
     }
     
-    public enum ClosingRecommendation { CanClose }
-    public ReactiveCommand<Unit, ClosingRecommendation> OnClosingCommand { get; }
+    public ReactiveCommand<Unit, bool> OnClosingCommand { get; }
     public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
 }

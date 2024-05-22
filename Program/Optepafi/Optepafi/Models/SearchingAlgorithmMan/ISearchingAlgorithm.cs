@@ -14,9 +14,9 @@ public interface ISearchingAlgorithm
     string Name { get; }
     protected ISearchingAlgoritmImplementation[] Implementations { get; }
 
-    sealed bool DoesRepresentUsableMapRepre(IMapRepreRepresentativ<IMapRepresentation> mapRepreRep)
+    sealed bool DoesRepresentUsableMapRepre(IMapRepreRepresentative<IMapRepre> mapRepreRep)
     {
-        var definedFunctionalityMapRepreRep = mapRepreRep.GetDefinedFunctionalityMapRepreRepresentative<IVertexAttributes, IEdgeAttributes>();
+        var definedFunctionalityMapRepreRep = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
         foreach (var implementation in Implementations)
         {
             if (implementation.DoesRepresentUsableMapRepre(definedFunctionalityMapRepreRep))
@@ -26,7 +26,7 @@ public interface ISearchingAlgorithm
     }
     
     sealed Path[][]? ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
         IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>[] userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
@@ -46,7 +46,7 @@ public interface ISearchingAlgorithm
     }
 
     sealed ISearchingExecutor? GetExecutor<TVertexAttributes, TEdgeAttributes>(
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
         IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes

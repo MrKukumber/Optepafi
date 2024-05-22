@@ -17,6 +17,7 @@ public class MainSettingsModelView
         
         _currentCulture = CultureInfo.GetCultureInfo(_mainSettingsParams.CultureName);
         _currentElevDataType = GetElevDataTypeByTypeName(_mainSettingsParams.ElevDataTypeViewModelTypeName);
+        ProviderOfSettings = new Provider(this);
     }
     private IElevDataType? GetElevDataTypeByTypeName(string? typeName)
     {
@@ -33,6 +34,8 @@ public class MainSettingsModelView
         }
         return null;
     }
+    
+    public Provider ProviderOfSettings { get; }
     
     private CultureInfo _currentCulture;
     public CultureInfo CurrentCulture
@@ -54,5 +57,17 @@ public class MainSettingsModelView
             _currentElevDataType = value?.ElevDataType;
             _mainSettingsParams.ElevDataTypeViewModelTypeName = value?.ElevDataType.GetType().Name;
         }
+    }
+
+    public class Provider
+    {
+        private MainSettingsModelView _providedmainSettingsMv;
+        public Provider(MainSettingsModelView providedMainSettingsMv)
+        {
+            _providedmainSettingsMv = providedMainSettingsMv;
+        }
+
+        public CultureInfo CurrentCutlure => _providedmainSettingsMv.CurrentCulture;
+        public ElevDataTypeViewModel? CurrentElevDataType => _providedmainSettingsMv.CurrentElevDataType;
     }
 }

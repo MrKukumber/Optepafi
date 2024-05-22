@@ -16,10 +16,10 @@ public interface IMapGenericVisitor<TOut, TOtherParams>
         where TMap : IMap;
 }
 
-// public interface IMapGenericVisitor<TOut>
-// {
-    // public TOut GenericVisit<TMap>(TMap map) where TMap : IMap;
-// }
+public interface IMapGenericVisitor<TOut>
+{
+    public TOut GenericVisit<TMap>(TMap map) where TMap : IMap;
+}
 
 // public interface IMapGenericVisitor
 // {

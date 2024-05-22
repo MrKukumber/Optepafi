@@ -31,7 +31,7 @@ public abstract class PFSettingsModelView : ModelViewBase
             _defaultTemplate = GetTemplateByTypeName(pathFindingParams.TemplateTypeName);
             _defaultSearchingAlgorithm = GetSearchingAlgorithmByTypeName(pathFindingParams.SearchingAlgorithmTypeName);
             DefaultMapFilePath = pathFindingParams.MapFilePath;
-            DefaultUserModelFilePath = pathFindingParams.UserModelPath;
+            DefaultUserModelFilePath = pathFindingParams.UserModelFilePath;
         }
     }
 
@@ -64,11 +64,11 @@ public abstract class PFSettingsModelView : ModelViewBase
     public string? DefaultUserModelFilePath { get; }
 
     public IReadOnlyCollection<SearchingAlgorithmViewModel>? GetUsableAlgorithms(
-        TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel)
+        TemplateViewModel? templateViewModel, MapRepresentativeViewModel? mapFormatViewModel)
     {
         if (templateViewModel is not null && mapFormatViewModel is not null)
         {
-            ISet<IMapRepreRepresentativ<IMapRepresentation>> usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
+            ISet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
             HashSet<SearchingAlgorithmViewModel> usableSearchingAlgorithms = new HashSet<SearchingAlgorithmViewModel>();
             foreach (var usableMapRepre in usableMapRepreReps)
             {
@@ -81,20 +81,20 @@ public abstract class PFSettingsModelView : ModelViewBase
         return null;
     }
 
-    public IReadOnlyCollection<MapFormatViewModel> GetUsableMapFormats(TemplateViewModel? templateViewModel)
+    public IReadOnlyCollection<MapRepresentativeViewModel> GetUsableMapFormats(TemplateViewModel? templateViewModel)
     {
         if (templateViewModel is not null)
         {
             var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
             return usableTemplateMapFormatCombs
                 .Where(comb => comb.Item1 == templateViewModel.Template)
-                .Select(comb => new MapFormatViewModel(comb.Item2))
+                .Select(comb => new MapRepresentativeViewModel(comb.Item2))
                 .ToHashSet();
         }
-        return MapManager.Instance.MapFormats.Select(mapFormat => new MapFormatViewModel(mapFormat)).ToHashSet();
+        return MapManager.Instance.MapFormats.Select(mapFormat => new MapRepresentativeViewModel(mapFormat)).ToHashSet();
     }
 
-    public IEnumerable<TemplateViewModel> GetUsableTemplates(MapFormatViewModel? mapFormatViewModel)
+    public IEnumerable<TemplateViewModel> GetUsableTemplates(MapRepresentativeViewModel? mapFormatViewModel)
     {
         if (mapFormatViewModel is not null)
         {
@@ -116,10 +116,10 @@ public abstract class PFSettingsModelView : ModelViewBase
     }
 
 
-    public MapFormatViewModel? GetCorrespondingMapFormat(string mapFileName)
+    public MapRepresentativeViewModel? GetCorrespondingMapFormat(string mapFileName)
     {
         var correspondingMapFormat = MapManager.Instance.GetCorrespondingMapFormatTo(mapFileName);
-        return correspondingMapFormat is null ? null : new MapFormatViewModel(correspondingMapFormat);
+        return correspondingMapFormat is null ? null : new MapRepresentativeViewModel(correspondingMapFormat);
     }
 
     public UserModelTypeViewModel? GetCorrespondingUserModelType(string userModelFileName)
@@ -128,12 +128,22 @@ public abstract class PFSettingsModelView : ModelViewBase
         return correspondingUserModelType is null ? null : new UserModelTypeViewModel(correspondingUserModelType);
     }
 
+    public void SaveParameters(TemplateViewModel templateViewModel, SearchingAlgorithmViewModel searchingAlgorithmViewModel, string mapFilePath, string userModelFilePath)
+    {
+        ParamsManager.Instance.SetParams(new PathFindingParams
+        {
+            TemplateTypeName = templateViewModel.Template.GetType().Name,
+            SearchingAlgorithmTypeName = searchingAlgorithmViewModel.SearchingAlgorithm.GetType().Name,
+            MapFilePath = mapFilePath,
+            UserModelFilePath = userModelFilePath
+        });        
+    }
 
     public abstract void SetElevDataType(ElevDataTypeViewModel? elevDataTypeViewModel);
     public abstract void SetTemplate(TemplateViewModel? templateViewModel);
     public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel);
     public abstract Task<MapManager.MapCreationResult> LoadAndSetMapAsync(Stream stream, 
-        MapFormatViewModel mapFormatViewModel, CancellationToken cancellationToken);
+        MapRepresentativeViewModel mapRepresentativeViewModel, CancellationToken cancellationToken);
     public abstract Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync(Stream stream,
         UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken);
     
@@ -150,6 +160,7 @@ public partial class PathFindingSessionModelView : SessionModelView
         public ITemplate? Template { get; private set; }
         public IMap? Map { get; private set; }
         public IUserModel<ITemplate>? UserModel { get; private set; }
+        public IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; private set; }
         public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
         public override void SetElevDataType(ElevDataTypeViewModel? elevDataTypeViewModel)
         {
@@ -163,14 +174,19 @@ public partial class PathFindingSessionModelView : SessionModelView
         public override void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel)
         {
             SearchingAlgorithm = searchingAlgorithmViewModel?.SearchingAlgorithm;
+            MapRepreRepresentative = searchingAlgorithmViewModel is not null
+                ? MapRepreManager.Instance.GetUsableMapRepreRepsFor(searchingAlgorithmViewModel.SearchingAlgorithm)
+                    .First()
+                : null;
+
         }
 
         public override async Task<MapManager.MapCreationResult> LoadAndSetMapAsync(Stream stream, 
-            MapFormatViewModel mapFormatViewModel, CancellationToken cancellationToken)
+            MapRepresentativeViewModel mapRepresentativeViewModel, CancellationToken cancellationToken)
         {
             var (mapCreationResult, map) = await Task.Run(() =>
             {
-                var result = MapManager.Instance.GetMapFromOf(stream, mapFormatViewModel.MapFormat, cancellationToken, out IMap? map);
+                var result = MapManager.Instance.GetMapFromOf(stream, mapRepresentativeViewModel.MapFormat, cancellationToken, out IMap? map);
                 return (result, map);
             });
             switch (mapCreationResult)

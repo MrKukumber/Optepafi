@@ -12,4 +12,9 @@ public class OMAP : IMap
     {
         throw new NotImplementedException();
     }
+
+    public TOut AcceptGeneric<TOut>(IMapGenericVisitor<TOut> genericVisitor)
+    {
+        throw new NotImplementedException();
+    }
 }

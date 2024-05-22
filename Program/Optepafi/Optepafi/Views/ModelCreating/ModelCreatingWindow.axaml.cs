@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Channels;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
@@ -15,22 +16,21 @@ public partial class ModelCreatingWindow : ReactiveWindow<ModelCreatingSessionVi
         InitializeComponent();
     }
 
-    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    private bool _alreadyAsked = false;
+    private async void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        ViewModel.OnClosingCommand.Execute(Unit.Default).Subscribe(closingRecommendation =>
+        if (_alreadyAsked) return;
+        e.Cancel = true;
+        bool close = await ViewModel!.OnClosingCommand.Execute();
+        if (close)
         {
-            switch (closingRecommendation)
-            {
-                case ModelCreatingSessionViewModel.ClosingRecommendation.CanClose:
-                    e.Cancel = false;
-                    break;
-                //TODO:when added new values to ClosingRecommendation, handle them with new cases
-            }
-        });
+            _alreadyAsked = true;
+            Close();
+        }
     }
 
     private void Window_OnClosed(object? sender, EventArgs e)
     {
-        ViewModel.OnClosedCommand.Execute(Unit.Default).Subscribe();
+        ViewModel!.OnClosedCommand.Execute().Subscribe();
     }
 }

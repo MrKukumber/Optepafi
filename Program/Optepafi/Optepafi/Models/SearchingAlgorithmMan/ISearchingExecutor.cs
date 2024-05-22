@@ -22,7 +22,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
 {
     public delegate Path[] AlgorithmSearchingDelegate(
         Leg[] track,
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
         IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
     
@@ -38,11 +38,11 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
     private readonly IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
-    private readonly IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> _mapRepre;
+    private readonly IGraph<TVertexAttributes, TEdgeAttributes> _mapRepre;
     
 
     public SearchingExecutor(
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
         IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         AlgorithmSearchingDelegate algorithmSearchingDelegate
         )

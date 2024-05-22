@@ -10,23 +10,23 @@ namespace Optepafi.Models.SearchingAlgorithmMan;
 
 public interface ISearchingAlgoritmImplementation
 {
-    bool DoesRepresentUsableMapRepre(IDefinedFunctionalityMapRepreRepresentativ<IDefinedFunctionalityMapRepre<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>
-            definedFunctionalityMapRepreRepresentativ);
+    bool DoesRepresentUsableMapRepre(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>
+            graphRepresentative);
 
     bool IsUsableMapRepre<TVertexAttributes, TEdgeAttributes>(
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre)
+        IGraph<TVertexAttributes, TEdgeAttributes> mapRepre)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
     Path[][] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
         IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>[] userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
     sealed ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
         IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
@@ -35,7 +35,7 @@ public interface ISearchingAlgoritmImplementation
     }
 
     protected Path[] ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IDefinedFunctionalityMapRepre<TVertexAttributes, TEdgeAttributes> mapRepre,
+        IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
         IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes

@@ -21,9 +21,9 @@ public class PathFindingSessionViewModel : SessionViewModel
         get => _currentViewModel;
         set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
-    public PathFindingSessionViewModel(PathFindingSessionModelView pathFindingSessionMv, MainSettingsModelView mainSettingsMv)
+    public PathFindingSessionViewModel(PathFindingSessionModelView pathFindingSessionMv, MainSettingsModelView.Provider mainSettingsMvProvider)
     {
-        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings, mainSettingsMv, pathFindingSessionMv.MapRepreCreating);
+        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings, mainSettingsMvProvider, pathFindingSessionMv.MapRepreCreating);
         // RelevanceFeedback = new RelevanceFeedbackViewModel(pathFindingSessionMv.RelevanceFeedback);
         PathFinding = new PathFindingViewModel(pathFindingSessionMv.PathFinding);
         CurrentViewModel = PathFindingSettings;
@@ -43,15 +43,11 @@ public class PathFindingSessionViewModel : SessionViewModel
         
         OnClosingCommand = ReactiveCommand.Create(() =>
         {
-            return ClosingRecommendation.CanClose;
-            //TODO: return correct recommendation for closing the window
+            return true;
         });
         OnClosedCommand = ReactiveCommand.Create(() => { });
     }
-    
-    public enum ClosingRecommendation { CanClose }
-    
-    public ReactiveCommand<Unit, ClosingRecommendation> OnClosingCommand { get; }
+    public ReactiveCommand<Unit, bool> OnClosingCommand { get; }
     public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
     
 }
