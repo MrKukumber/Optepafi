@@ -11,5 +11,5 @@ public interface IUserModelType<out TTemplate, out TUserModel> where TUserModel 
     string UserModelFileNameSuffix { get; }
     string UserModelFileExtension { get; }
     TUserModel GetNewUserModel();
-    TUserModel? DeserializeUserModel(Stream serialization, CancellationToken? cancellationToken, out UserModelManager.UserModelLoadResult result);
+    TUserModel? DeserializeUserModel((Stream,string) serializationWithPath, CancellationToken? cancellationToken, out UserModelManager.UserModelLoadResult result);
 }

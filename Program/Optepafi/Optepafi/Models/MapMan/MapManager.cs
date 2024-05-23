@@ -40,9 +40,9 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
         return null;
     }
     public enum MapCreationResult{Ok, Incomplete, FileNotFound, UnableToParse, Cancelled}
-    public MapCreationResult GetMapFromOf(Stream mapStream, IMapFormat<IMap> mapFormat, CancellationToken? cancellationToken, out IMap? map)
+    public MapCreationResult GetMapFromOf((Stream,string) mapStreamWithPath, IMapFormat<IMap> mapFormat, CancellationToken? cancellationToken, out IMap? map)
     {
-        map = mapFormat.CreateMapFrom(mapStream, cancellationToken, out MapCreationResult creationResult);
+        map = mapFormat.CreateMapFrom(mapStreamWithPath, cancellationToken, out MapCreationResult creationResult);
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested)
             return MapCreationResult.Cancelled;
         return creationResult;

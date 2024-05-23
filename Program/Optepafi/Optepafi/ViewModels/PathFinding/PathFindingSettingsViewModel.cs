@@ -98,7 +98,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
             string mapFileName = Path.GetFileName(mapFilePath);
             MapRepresentativeViewModel? mapFormat = _settingsMv.GetCorrespondingMapFormat(mapFileName);
             if (mapFormat is null) throw new NullReferenceException("Map format should be returned, because chosen file was filtered to be correct.");
-            var loadResult = await _settingsMv.LoadAndSetMapAsync(mapFileStream, mapFormat, cancellationToken);
+            var loadResult = await _settingsMv.LoadAndSetMapAsync(mapFileStreamAndPath, mapFormat, cancellationToken);
             if (!cancellationToken.IsCancellationRequested) ; //TODO: nechat asynchronne (Task.Run()) zavolat vytvorenie grafickeho znazornenia mapy a mozno vykreslit ju na obrazovke....mzono to skor spravit cez dalsi command, nakolko to nema nic moc spolocne s nahravanim mapy....treba dat ale pozor na cancellation token a ukoncenie ziskavania grafickej reprezentaci, cize predsa len to mozno spravit v tomto mieste asynchronne, aby som mohol predat cancellation token
             mapFileStream.Dispose();
             return (loadResult, mapFormat, mapFilePath);
@@ -111,7 +111,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
             string userModelFileName = Path.GetFileName(userModelFilePath);
             UserModelTypeViewModel? userModelType = _settingsMv.GetCorrespondingUserModelType(userModelFileName);
             if (userModelType is null) throw new NullReferenceException(" User model type should be returned, because chosen file was filtered to be correct.");
-            var loadResult = await _settingsMv.LoadAndSetUserModelAsync(userModelFileStream, userModelType, cancellationToken);
+            var loadResult = await _settingsMv.LoadAndSetUserModelAsync(userModelFileStreamAndPath, userModelType, cancellationToken);
             userModelFileStream.Dispose();
             return (loadResult, userModelType, userModelFilePath);
         });
@@ -172,7 +172,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
             bool successfulCreation = await MapRepreCreationInteraction.Handle(_mapRepreCreatingMv);
             if (successfulCreation)
             {
-                settingsMv.SaveParameters(SelectedTemplate!, SelectedSearchingAlgorithm!, SelectedMapFilePath!, SelectedUserModelFilePath!);
+                settingsMv.SaveParameters();
                 return WhereToProceed.PathFinding;
             }
             return WhereToProceed.Settings;

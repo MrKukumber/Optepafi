@@ -6,6 +6,7 @@ namespace Optepafi.Models.UserModelMan.UserModels;
 
 public interface IUserModel<out TTemplate> where TTemplate : ITemplate
 {
+    public string FilePath { get; init; }
     public string Serialize();
     public void SerializeTo(Stream stream);
     public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(

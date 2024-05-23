@@ -444,3 +444,34 @@ opozdely log z programovania projetku
   - teda napriklad session-y nebudu uz musiet ziskavat z MainSettingsParameters-ov aktualne pouzivany typ vyskovych dat
 
 - pre konstrukciu mapy som sa rozhodol vytvorit dialogove okno, ktore bude davat informacie postupu tvorby mapy, popripade bude hlasat problemy pri vytvarani
+
+## 22.5.2024
+
+### implementacia MapRepreCreatingWindow + ViewModel + ModelView
+
+- je rozdelena na tri casti
+    1. Prerequisities checking - v tejto fazi sa skontroluju vsetky prerekvizity pre vytvorenie mapy
+      - ak sa objavi nejaka zavada alebo sa skontroluju vsetky prerekvizity, prejde sa do 2. casti
+    2. Problems Resolving - v tejto casti sa skontroluje, ci sa nasli nejake problemy v 1. casti
+      - ak nie, hned sa spusti 3. cast
+      - ak ano, pouzije sa spravne upozornenie pouzivatela a ponuknu sa mu moznosti, ako moze danu sytuaciu riesit (v tomto momente je to jedine vratenie sa do nastaveni ale v buducnosti by sa mohlo dat riesit aj inymi sposobmi)
+        - nasledne ak uzivatel vyberie moznost pre opatovne skontrolovanie prerekvizit, spusti sa opat cast 1
+    3. Map Repre Creating - v tejto casti sa uz len vytvara mapova reprezentacia
+      - drzi sa predpokladu, ze vsetky prerekvizity pre vytvorenie mapy su uz v poriadku a teda nic nebrani tomu aby sa mapa vytvorila
+      - zaroven v tejto casti sa objavi tlacidlo pre prerusenie vytvarania mapovej reprezentacie a progressBar reportujuci postup prace vytvarania reprezentacie
+      - ak tretiu cast nic neprerusi, vrati true pre to ze uspecne vytvorila mapovu reprezentaciu, inak vrati false pre neuspech
+
+### dialogove upozornenia uzivatelov pred zatvaranim okien
+
+- vytvoril som YesNoDialogWindow + ViewModel pre upozornovanie uzivatelov pomocou jednoducheho dialogoveho okna
+- pouzivanie je vsak trocha zlozitejsie nez by sa na prvy pohlad mohlo zdat... na to ay som nezastavil responzivitu UI a mohol s dialogovym oknom komunikovat je potrebne aby v OnClosing metode nic nebranilo UI aby bolo responzivne....lenze tym si aplikacia nepocka na zmenu Cancel vlastnosti eventoveho argumentu a teda zavrie aplikaciu bez toho aby uzivatel mal moznost to nejak zvratit
+  - preto som vymyslel sposobob, ako tomuto chovaniu zabranit - defaultne sa nastavy vlastnost Cancel na true a zavola sa dialogove okno...az ked dialogove okno vrati svoju hodnotu sa na nu v OnClosing metode pozrieme a ak je nastavena na to aby bolo okno zavrete tak nastavime priznak ze sme sa uz raz pytali uzivatela na jeho nazor na zatvorenie na true a zavolame znova metodu Close ktora uz definitivne okno zavrie, pretoze uplne na zaciatku metody OnClosing sa pytame, ci sme sa uz raz uzivatela pytali na jeho nazor
+  - v skratke zastavime prve zatvaranie aplikacie a az ked dostaneme odpoved od uzivatela tak sa rozhodneme ci znova zavolame zatvaraciu metodu alebo nie
+
+### Uprava modelu
+
+- Upravene interface pre mapove formaty - boli pridane dva dalsie, ktore reprezentuju este invarintu a contravariantnu variantu IMapFormat\<out IMap\>-u - dava to vacsi zmysel a taktiez nam to umoznuje dohladavat mapovy format pre jednotlive mapy
+- Upravene interface-y mapovych reprezentacii - namiesto IFunctionalityDefiningMapRepre som tieto interface-y premenoval na IGraph a teda vsetko co malo nieco spolocne s IGraph interface-om som premenoval tak, aby to bolo prisposobene tomuto novemu pomenovaniu
+  - pride mi to ako trefnejsi nazov, nakolko funkcionalita mapovej reprezentacie je vlastne graf ktorym ona sama je
+  - zaroven to ponechava sematiku mapovych reprezentacii, ktore vanze reprezentuju nejakym sposobom mapu ale zaroven su grafmi, nad ktorymi dokaze algoritmus vyhladavat
+  - interface-y pre implementacie mapovych reprezentacii som premenoval iba na implementacie, lebo v podstate budu implementovat ako mapovu reprezentaciu, tak graf...teda pre jednoduchost su to proste len implementacie

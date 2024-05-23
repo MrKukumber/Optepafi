@@ -128,23 +128,14 @@ public abstract class PFSettingsModelView : ModelViewBase
         return correspondingUserModelType is null ? null : new UserModelTypeViewModel(correspondingUserModelType);
     }
 
-    public void SaveParameters(TemplateViewModel templateViewModel, SearchingAlgorithmViewModel searchingAlgorithmViewModel, string mapFilePath, string userModelFilePath)
-    {
-        ParamsManager.Instance.SetParams(new PathFindingParams
-        {
-            TemplateTypeName = templateViewModel.Template.GetType().Name,
-            SearchingAlgorithmTypeName = searchingAlgorithmViewModel.SearchingAlgorithm.GetType().Name,
-            MapFilePath = mapFilePath,
-            UserModelFilePath = userModelFilePath
-        });        
-    }
+    public abstract void SaveParameters();
 
     public abstract void SetElevDataType(ElevDataTypeViewModel? elevDataTypeViewModel);
     public abstract void SetTemplate(TemplateViewModel? templateViewModel);
     public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel);
-    public abstract Task<MapManager.MapCreationResult> LoadAndSetMapAsync(Stream stream, 
+    public abstract Task<MapManager.MapCreationResult> LoadAndSetMapAsync((Stream,string) streamWithPath, 
         MapRepresentativeViewModel mapRepresentativeViewModel, CancellationToken cancellationToken);
-    public abstract Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync(Stream stream,
+    public abstract Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync((Stream,string) streamWithPath,
         UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken);
     
     
@@ -181,12 +172,12 @@ public partial class PathFindingSessionModelView : SessionModelView
 
         }
 
-        public override async Task<MapManager.MapCreationResult> LoadAndSetMapAsync(Stream stream, 
+        public override async Task<MapManager.MapCreationResult> LoadAndSetMapAsync((Stream,string) streamWithPath, 
             MapRepresentativeViewModel mapRepresentativeViewModel, CancellationToken cancellationToken)
         {
             var (mapCreationResult, map) = await Task.Run(() =>
             {
-                var result = MapManager.Instance.GetMapFromOf(stream, mapRepresentativeViewModel.MapFormat, cancellationToken, out IMap? map);
+                var result = MapManager.Instance.GetMapFromOf(streamWithPath, mapRepresentativeViewModel.MapFormat, cancellationToken, out IMap? map);
                 return (result, map);
             });
             switch (mapCreationResult)
@@ -199,12 +190,12 @@ public partial class PathFindingSessionModelView : SessionModelView
             return mapCreationResult;
         }
 
-        public override async Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync(Stream stream, 
+        public override async Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync((Stream,string) streamWithPath, 
             UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken)
         {
             var (userModelCreationResult, userModel) = await Task.Run(() =>
             {
-                var result = UserModelManager.Instance.DeserializeUserModelFromOf(stream, userModelTypeViewModel.UserModelType, cancellationToken, out IUserModel<ITemplate>? userModel);
+                var result = UserModelManager.Instance.DeserializeUserModelOfTypeFrom(streamWithPath, userModelTypeViewModel.UserModelType, cancellationToken, out IUserModel<ITemplate>? userModel);
                 return (result, userModel);
             });
             switch (userModelCreationResult)
@@ -214,6 +205,17 @@ public partial class PathFindingSessionModelView : SessionModelView
                     break;
             }
             return userModelCreationResult;
+        }
+
+        public override void SaveParameters()
+        {
+            ParamsManager.Instance.SetParams(new PathFindingParams
+            {
+                TemplateTypeName = Template!.GetType().Name,
+                SearchingAlgorithmTypeName = SearchingAlgorithm!.GetType().Name,
+                MapFilePath = Map!.FilePath,
+                UserModelFilePath = UserModel.FilePath 
+            });        
         }
     }
 }

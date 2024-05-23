@@ -12,7 +12,7 @@ public sealed class OMAPRepresentative : IMapRepresentative<OMAP>
     //TODO: implement
     public string Extension { get; }
     public string MapFormatName { get; }
-    public OMAP? CreateMapFrom(Stream inputMapStream, CancellationToken? cancellationToken, out MapManager.MapCreationResult creationResult)
+    public OMAP? CreateMapFrom((Stream,string) inputMapStreamWithPath, CancellationToken? cancellationToken, out MapManager.MapCreationResult creationResult)
     {
         throw new System.NotImplementedException();
     }

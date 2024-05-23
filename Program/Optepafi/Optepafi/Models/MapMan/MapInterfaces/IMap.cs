@@ -2,9 +2,8 @@ namespace Optepafi.Models.MapMan.MapInterfaces;
 
 public interface IMap
 {
-    string Name { get; }
-
-
+    string FileName { get; init; }
+    string FilePath { get; init; }
     // public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(
         // IMapGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,
         // TGenericParam genericParam, TOtherParams otherParams)

@@ -7,13 +7,14 @@ namespace Optepafi.Models.MapMan.Maps;
 public class OMAP : IMap
 {
     //TODO: implement
-    public string Name { get; }
-    public TOut AcceptGeneric<TOut, TOtherParams>(IMapGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams)
+    public string FileName { get; init; }
+    public required string FilePath { get; init; }
+    public virtual TOut AcceptGeneric<TOut, TOtherParams>(IMapGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams)
     {
         throw new NotImplementedException();
     }
 
-    public TOut AcceptGeneric<TOut>(IMapGenericVisitor<TOut> genericVisitor)
+    public virtual TOut AcceptGeneric<TOut>(IMapGenericVisitor<TOut> genericVisitor)
     {
         throw new NotImplementedException();
     }

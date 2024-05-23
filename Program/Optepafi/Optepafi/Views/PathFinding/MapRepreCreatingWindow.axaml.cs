@@ -27,4 +27,5 @@ public partial class MapRepreCreatingWindow : ReactiveWindow<MapRepreCreatingWin
                 .DisposeWith(disposables);
         });
     }
+    private void MapRepreCreatingWindow_OnClosed(object? sender, EventArgs e) { ViewModel!.OnClosedCommand.Execute(); }
 }

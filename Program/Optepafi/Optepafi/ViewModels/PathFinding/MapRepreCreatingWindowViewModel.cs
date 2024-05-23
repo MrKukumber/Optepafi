@@ -107,6 +107,8 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                 x => x.CheckPrerequisitiesCommand,
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataType)
             .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataTypeResolution));
+        
+        OnClosedCommand = ReactiveCommand.Create(() => { });
     }
 
     private void HandleMapCreationProgres(GraphCreationReport report)
@@ -147,4 +149,5 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
     public ReactiveCommand<Unit, bool> CreateMapRepreCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelMapRepreCreationCommand { get; }
     public ReactiveCommand<Unit, bool> ReturnCommand { get; }
+    public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
 }

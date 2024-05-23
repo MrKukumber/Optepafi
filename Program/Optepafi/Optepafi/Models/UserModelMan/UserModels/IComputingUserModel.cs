@@ -3,7 +3,7 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.UserModelMan.UserModels;
 
-public interface IComputingUserModel<out TTemplate, TVertexAttributes, TEdgeAttributes> : 
+public interface IComputingUserModel<TTemplate, in TVertexAttributes, in TEdgeAttributes> : 
     IUserModel<TTemplate> 
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes

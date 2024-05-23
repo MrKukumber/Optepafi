@@ -6,12 +6,13 @@
         mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="100"
         x:Class="Optepafi.Views.Main.YesNoDialogWindow"
         x:DataType="mVm:YesNoDialogWindowViewModel"
-        Title="YesNoDialogWindow" Width="200" Height="100">
+        Title="YesNoDialogWindow" Width="200" Height="100"
+        WindowStartupLocation="CenterOwner">
     <DockPanel>
         <Grid DockPanel.Dock="Bottom" ColumnDefinitions="* *">
-            <Button Grid.Column="0" Name="YesButton" Content="{Binding YesText}" Command="{Binding YesCommand}"></Button>
-            <Button Grid.Column="1" Name="NoButton" Content="{Binding NoText}" Command="{Binding NoCommand}"></Button>
+            <Button Grid.Column="0" Name="YesButton" Content="{Binding YesText}" Command="{Binding YesCommand}" HorizontalAlignment="Center"></Button>
+            <Button Grid.Column="1" Name="NoButton" Content="{Binding NoText}" Command="{Binding NoCommand}" HorizontalAlignment="Center"></Button>
         </Grid>
-        <TextBlock Name="Message" Text="{Binding Message}"/>
+        <TextBlock Name="Message" Text="{Binding Message}" TextAlignment="Center"/>
     </DockPanel>
 </Window>
