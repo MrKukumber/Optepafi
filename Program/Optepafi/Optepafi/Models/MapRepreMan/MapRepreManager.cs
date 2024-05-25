@@ -14,6 +14,11 @@ using Optepafi.Models.TemplateMan;
 
 namespace Optepafi.Models.MapRepreMan;
 
+/// <summary>
+/// Singleton class used for managing creation of map representations from provided template and map. It contains set of all supported map representation representatives. It is main channel between operation on map representations and applications logic (ViewModels/ModelViews).
+/// It implements supporting methods for work with map representations. All map representations should be preferably managed through this singleton.
+/// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.
+/// </summary>
 public class MapRepreManager : 
     IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IProgress<GraphCreationReport>?, CancellationToken?)>,
     IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<GraphCreationReport>?, CancellationToken?)>,
@@ -23,12 +28,29 @@ public class MapRepreManager :
     public static MapRepreManager Instance { get; } = new();
     private MapRepreManager() { }
 
+    /// <summary>
+    /// Set of representatives of all usable map representations. 
+    /// </summary>
     private ISet<IMapRepreRepresentative<IMapRepre>> MapRepreReps { get; } =
         new HashSet<IMapRepreRepresentative<IMapRepre>>();
             
 
     public enum NeedsElevDataIndic { Yes, NotNecessary, No };
-    //returns null, if there is no constructor for given templateRep, mapFormat and mapRepreRep
+    //returns null, if there is no constructor for given template, mapFormat and mapRepreRep
+    /// <summary>
+    /// Method for testing necessity of elevation data for creation of map representation dependent on specific template and map format represented by specific representative.
+    /// This method should be called before each creation of map representation. Method <c>CreateMapRepre</c> could throw exception, if the wrong overload is called.
+    /// </summary>
+    /// <param name="template">Template dependency of map representation.</param>
+    /// <param name="mapFormat">Map format dependency of map representation.</param>
+    /// <param name="mapRepreRep">Representative whose map representation is tested for need for elevation data.</param>
+    /// <returns>
+    /// Returns necessity of elevation data indication:
+    /// - <c>Yes</c>, if there is only elevation dependent constructor
+    /// - <c>No</c>, if there is only elevation independent constructor
+    /// - <c>NotNecessary</c>, if there are both dependent and independent construcotr
+    /// - <c>null</c> if there is no sutable constructor
+    /// </returns>
     public NeedsElevDataIndic? DoesNeedElevData(ITemplate template, IMapFormat<IMap> mapFormat, IMapRepreRepresentative<IMapRepre> mapRepreRep)
     {
         bool dependentFound = false;

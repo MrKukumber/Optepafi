@@ -16,7 +16,6 @@ public partial class MapRepreCreatingWindow : ReactiveWindow<MapRepreCreatingWin
 
         if (Design.IsDesignMode) return;
 
-        // this.WhenActivated(action => action(ViewModel!.ReturnValueSet.Subscribe(proceed => Close(proceed))));
         this.WhenActivated(disposables =>
         {
             ViewModel!.CreateMapRepreCommand

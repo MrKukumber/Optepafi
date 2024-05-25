@@ -20,7 +20,7 @@ namespace Optepafi.ViewModels.Main;
 public class MainSettingsViewModel : ViewModelBase
 {
     // private ISearchingAlgorithm _selectedAlgorithm;
-    private ElevDataTypeViewModel? _currentElevDataType;
+    private ElevDataDistributionViewModel? _currentElevDataDistribution;
     private CultureInfo _currentCulture;
     
     private readonly ParamsManager _paramsManager = ParamsManager.Instance;
@@ -29,21 +29,21 @@ public class MainSettingsViewModel : ViewModelBase
     {
         _mainSettingsMv = mainSettingsMv;
 
-        _currentElevDataType = mainSettingsMv.CurrentElevDataType;
+        _currentElevDataDistribution = mainSettingsMv.CurrentElevDataDistribution;
         _currentCulture = mainSettingsMv.CurrentCulture;
         Assets.Localization.Local.Culture = _currentCulture;
         
         this.WhenAnyValue(x => x.CurrentCulture)
             .Subscribe(currentCulture => _mainSettingsMv.CurrentCulture = currentCulture);
-        this.WhenAnyValue(x => x.CurrentElevDataType)
-            .Subscribe(currentElevDataType => _mainSettingsMv.CurrentElevDataType = currentElevDataType); 
+        this.WhenAnyValue(x => x.CurrentElevDataDistribution)
+            .Subscribe(currentElevDataDistribution => _mainSettingsMv.CurrentElevDataDistribution = currentElevDataDistribution); 
         
         
-        ElevConfigInteraction = new Interaction<ElevConfigViewModel, ElevDataTypeViewModel?>();
-        ElevConfig = new ElevConfigViewModel(_currentElevDataType);
+        ElevConfigInteraction = new Interaction<ElevConfigViewModel, ElevDataDistributionViewModel?>();
+        ElevConfig = new ElevConfigViewModel(_currentElevDataDistribution);
         OpenElevConfigCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            CurrentElevDataType = await ElevConfigInteraction.Handle(ElevConfig);
+            CurrentElevDataDistribution = await ElevConfigInteraction.Handle(ElevConfig);
         });
         GoToMainMenuCommand = ReactiveCommand.Create(() => { });
         
@@ -57,10 +57,10 @@ public class MainSettingsViewModel : ViewModelBase
         // set => this.RaiseAndSetIfChanged(ref _selectedAlgorithm, value);
     // }
 
-    public ElevDataTypeViewModel? CurrentElevDataType
+    public ElevDataDistributionViewModel? CurrentElevDataDistribution
     {
-        get => _currentElevDataType;
-        set => this.RaiseAndSetIfChanged(ref _currentElevDataType, value);
+        get => _currentElevDataDistribution;
+        set => this.RaiseAndSetIfChanged(ref _currentElevDataDistribution, value);
     }
 
     public ObservableCollection<CultureInfo> Cultures { get; } = [CultureInfo.GetCultureInfo("en-GB"), CultureInfo.GetCultureInfo("sk-SK")];
@@ -77,6 +77,6 @@ public class MainSettingsViewModel : ViewModelBase
     
     public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
     public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
-    public Interaction<ElevConfigViewModel, ElevDataTypeViewModel?> ElevConfigInteraction { get; }
+    public Interaction<ElevConfigViewModel, ElevDataDistributionViewModel?> ElevConfigInteraction { get; }
     private ElevConfigViewModel ElevConfig { get; }
 }

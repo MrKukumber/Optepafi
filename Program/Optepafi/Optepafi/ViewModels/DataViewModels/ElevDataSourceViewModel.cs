@@ -14,11 +14,11 @@ public class ElevDataSourceViewModel : ViewModelBase
 
     public string Name => ElevDataSource.Name;
 
-    public IEnumerable<ElevDataTypeViewModel> ElevDataTypes => ElevDataSource.ElevDataTypesInSource
-        .SelectMany<IElevDataType, ElevDataTypeViewModel>(elevDataType => elevDataType switch
+    public IEnumerable<ElevDataDistributionViewModel> ElevDataDistributions => ElevDataSource.ElevDataDistributions
+        .SelectMany<IElevDataDistribution, ElevDataDistributionViewModel>(elevDataType => elevDataType switch
         {
-            ICredentialsNotRequiringElevDataType cnredt => [new CredentialsNotRequiringElevDataTypeViewModel(cnredt)],
-            ICredentialsRequiringElevDataType credt => [new CredentialsRequiringElevDataTypeViewModel(credt)],
+            ICredentialsNotRequiringElevDataDistribution cnredt => [new CredentialsNotRequiringElevDataDistributionViewModel(cnredt)],
+            ICredentialsRequiringElevDataDistribution credt => [new CredentialsRequiringElevDataDistributionViewModel(credt)],
             _ => []
         });
 }

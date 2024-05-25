@@ -20,7 +20,7 @@
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button Name="ElevConfigEntryButton" Content="Elevation config" Command="{Binding OpenElevConfigCommand}"></Button>
-                <TextBlock Text="{Binding CurrentElevDataType}"></TextBlock>
+                <TextBlock Text="{Binding CurrentElevDataDistribution}"></TextBlock>
             </StackPanel>
             <!-- <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"> -->
                 <!-- <TextBlock Name="SearchingAlgorithmTextBlock" Text="Vyber vyhladavaci algoritmus"></TextBlock> -->

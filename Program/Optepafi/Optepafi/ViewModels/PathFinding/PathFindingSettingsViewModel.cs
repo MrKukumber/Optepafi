@@ -36,10 +36,10 @@ public class PathFindingSettingsViewModel : ViewModelBase
         UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
         UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
 
-        this.WhenAnyValue(x => x.CurrentlySelectedElevDataType)
-            .Subscribe(currentlySelectedElevDataType =>
+        this.WhenAnyValue(x => x.CurrentlySelectedElevDataDistribution)
+            .Subscribe(currentlySelectedElevDataDistribution =>
             {
-                _settingsMv.SetElevDataType(currentlySelectedElevDataType);
+                _settingsMv.SetElevDataDistribution(currentlySelectedElevDataDistribution);
             });
         
         this.WhenAnyValue(x => x.SelectedTemplate, 
@@ -131,9 +131,6 @@ public class PathFindingSettingsViewModel : ViewModelBase
                     break; 
                 case MapManager.MapCreationResult.Cancelled:
                     break;
-                case MapManager.MapCreationResult.FileNotFound:
-                    //TODO: vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo
-                    break;
                 case MapManager.MapCreationResult.UnableToParse:
                     //TODO: vypisat nejaku errorovu hlasku, nechat vsetko tak ako bolo
                     break;
@@ -178,7 +175,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
             return WhereToProceed.Settings;
         }, isEverythingSet);
 
-        CurrentlySelectedElevDataType = mainSettingsMvProvider.CurrentElevDataType;
+        CurrentlySelectedElevDataDistribution = mainSettingsMvProvider.CurrentElevDataDistribution;
 
         SelectedTemplate = settingsMv.DefaultTemplate;
 
@@ -234,11 +231,11 @@ public class PathFindingSettingsViewModel : ViewModelBase
     
 
 
-    private ElevDataTypeViewModel? _currentlySelectedElevDataType;
-    public ElevDataTypeViewModel? CurrentlySelectedElevDataType 
+    private ElevDataDistributionViewModel? _currentlySelectedElevDataDistribution;
+    public ElevDataDistributionViewModel? CurrentlySelectedElevDataDistribution 
     { 
-        get => _currentlySelectedElevDataType ; 
-        set => this.RaiseAndSetIfChanged(ref _currentlySelectedElevDataType, value); 
+        get => _currentlySelectedElevDataDistribution ; 
+        set => this.RaiseAndSetIfChanged(ref _currentlySelectedElevDataDistribution, value); 
     }
 
 

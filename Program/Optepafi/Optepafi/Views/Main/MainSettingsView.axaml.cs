@@ -15,6 +15,9 @@ public partial class MainSettingsView : ReactiveUserControl<MainSettingsViewMode
     public MainSettingsView()
     {
         InitializeComponent();
+
+        if (Design.IsDesignMode) return;
+        
         this.WhenActivated(disposables => ViewModel.WhenAnyValue(x => x.CurrentCulture)
             .Subscribe(_ =>
             {

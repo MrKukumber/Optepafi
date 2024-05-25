@@ -20,14 +20,14 @@ public interface ISearchingAlgoritmImplementation
 
     Path[][] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
-        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>[] userModels,
+        IComputingUserModel<TVertexAttributes, TEdgeAttributes>[] userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
     sealed ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
         IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
-        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
+        IComputingUserModel<TVertexAttributes, TEdgeAttributes> userModel)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
@@ -36,7 +36,7 @@ public interface ISearchingAlgoritmImplementation
 
     protected Path[] ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> mapRepre,
-        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IComputingUserModel<TVertexAttributes, TEdgeAttributes> userModel,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;

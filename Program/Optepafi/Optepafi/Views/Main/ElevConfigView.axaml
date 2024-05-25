@@ -17,8 +17,8 @@
                 <StackPanel Grid.Row="0" Margin="10 0 0 10">
                     <TextBlock Name="ElevSourceTextBlock" Text="Source of elevation"></TextBlock>
                     <ComboBox Name="ElevSourceComboBox" HorizontalAlignment="Left"
-                              ItemsSource="{Binding ElevDataTypes}"
-                              SelectedItem="{Binding CurrentElevDataType}"></ComboBox>
+                              ItemsSource="{Binding ElevDataDistributions}"
+                              SelectedItem="{Binding CurrentElevDataDist}"></ComboBox>
                 </StackPanel>
                 <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="False" Height="1"></ProgressBar>
                 <ListBox Grid.Row="2" ItemsSource="{Binding CurrentAvailableRegions}"

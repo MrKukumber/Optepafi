@@ -19,7 +19,7 @@
         <Grid Grid.Row="3" Name="ElevDataAbsenceResolutionGrid" IsVisible="{Binding IsAwaitingElevDataAbsenceResolution}" >
             <Button Grid.Row="0" Name="ReturnDueElevDataAbsenceButton" Content="Return" Command="{Binding ReturnCommand}"></Button>
         </Grid>
-        <Grid Grid.Row="3" Name="MapNotSupportedByElevDataTypeResolutionGrid" IsVisible="{Binding IsAwaitingMapNotSupportedByElevDataTypeResolution}">
+        <Grid Grid.Row="3" Name="MapNotSupportedByElevDataTypeResolutionGrid" IsVisible="{Binding IsAwaitingMapNotSupportedByElevDataDistributionResolution}">
             <Button Grid.Row="0" Name="ReturnDueMapNotSupportedByElevDataType" Content="Return" Command="{Binding ReturnCommand}"/>   
         </Grid>
     </Grid>

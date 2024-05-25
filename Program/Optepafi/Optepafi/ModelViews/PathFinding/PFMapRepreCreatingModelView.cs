@@ -17,7 +17,7 @@ public abstract class PFMapRepreCreatingModelView : ModelViewBase
 {
     protected PFMapRepreCreatingModelView(){}
     
-    public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataType, Cancelled}
+    public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, Cancelled}
     public abstract ElevDataPrerequisiteCheckResult CheckMapRequirementsForElevData(CancellationToken ct);
     public abstract Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<GraphCreationReport> mapCreationProgress, CancellationToken cancellationToken);
     public abstract void CleanMapRepre();
@@ -41,7 +41,7 @@ public partial class PathFindingSessionModelView : SessionModelView
                 case MapRepreManager.NeedsElevDataIndic.Yes:
                     if (ct.IsCancellationRequested) return ElevDataPrerequisiteCheckResult.Cancelled;
                     if (Map is IGeoLocatedMap geoLocatedMap)
-                        switch (ElevDataManager.Instance.AreElevDataOfTypeObtainableFor(geoLocatedMap, ElevDataType, ct))
+                        switch (ElevDataManager.Instance.AreElevDataFromDistObtainableFor(geoLocatedMap, ElevDataDistribution, ct))
                         {
                             case ElevDataManager.ElevDataObtainability.Obtainable:
                                 _useElevData = true;
@@ -49,17 +49,17 @@ public partial class PathFindingSessionModelView : SessionModelView
                             case ElevDataManager.ElevDataObtainability.ElevDataNotPresent:
                                 return ElevDataPrerequisiteCheckResult.ElevDataForMapNotPresent;
                             case ElevDataManager.ElevDataObtainability.NotSupportedMap:
-                                return ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataType;
+                                return ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataDistribution;
                             case ElevDataManager.ElevDataObtainability.Cancelled:
                                 return ElevDataPrerequisiteCheckResult.Cancelled;
                             default:
                                 throw new InvalidEnumArgumentException();
                         }
-                    else return ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataType;
+                    else return ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataDistribution;
                 case MapRepreManager.NeedsElevDataIndic.NotNecessary:
                     if (ct.IsCancellationRequested) return ElevDataPrerequisiteCheckResult.Cancelled;
                     if (Map is IGeoLocatedMap glm)
-                        _useElevData = (ElevDataManager.Instance.AreElevDataOfTypeObtainableFor(glm, ElevDataType, ct)) switch
+                        _useElevData = (ElevDataManager.Instance.AreElevDataFromDistObtainableFor(glm, ElevDataDistribution, ct)) switch
                         {
                             ElevDataManager.ElevDataObtainability.Obtainable => true,
                             _ => false
@@ -81,7 +81,7 @@ public partial class PathFindingSessionModelView : SessionModelView
                 {
                     progressInfo.Report("Acquiring elevation data"); //TODO: localize
                     IElevData elevData = await Task.Run(() =>
-                        ElevDataManager.Instance.GetElevDataOfTypeFor(geoLocatedMap, ElevDataType, cancellationToken));
+                        ElevDataManager.Instance.GetElevDataFromDistFor(geoLocatedMap, ElevDataDistribution, cancellationToken));
                     if (cancellationToken.IsCancellationRequested) return;
                     
                     progressInfo.Report("Creating map representation"); //TODO: localize
@@ -113,7 +113,7 @@ public partial class PathFindingSessionModelView : SessionModelView
         private ITemplate Template => Settings.Template ?? throw new ArgumentNullException( nameof(Settings.Template), "Template should be set before using PFMapRepreCreatingModelView");
         private IMap Map => Settings.Map ?? throw new  ArgumentNullException(nameof(Settings.Map), "Map should be set before using PFMapRepreCreatingModelView");
         private IMapRepreRepresentative<IMapRepre> MapRepreRepresentative => Settings.MapRepreRepresentative ?? throw new ArgumentNullException( nameof(Settings .MapRepreRepresentative), "Map representation representative should be set before using PFMapRepreCreatingModelView");
-        private IElevDataType ElevDataType => Settings.ElevDataType ?? throw new ArgumentNullException( nameof(Settings.ElevDataType), "Elevation data type should be set before using PFMapRepreCreatingModelView");
+        private IElevDataDistribution ElevDataDistribution => Settings.ElevDataDistribution ?? throw new ArgumentNullException( nameof(Settings.ElevDataDistribution), "Elevation data distribution should be set before using PFMapRepreCreatingModelView");
         public IMapRepre? MapRepresentation { get; private set; }
 
     }

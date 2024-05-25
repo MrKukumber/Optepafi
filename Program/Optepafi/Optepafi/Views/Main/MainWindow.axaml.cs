@@ -34,7 +34,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         });
     }
 
-    private void DoShowElevConfig(InteractionContext<ElevConfigViewModel, ElevDataTypeViewModel?> interaction)
+    private void DoShowElevConfig(InteractionContext<ElevConfigViewModel, ElevDataDistributionViewModel?> interaction)
     {
         Content = new ElevConfigView
         {

@@ -33,8 +33,8 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
             {
                 case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.ElevDataForMapNotPresent:
                     return PrerequisitiesCheckResult.ElevDataAbsent;
-                case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataType:
-                    return PrerequisitiesCheckResult.MapNotSupportedByElevDataType;
+                case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataDistribution:
+                    return PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution;
                 case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.Cancelled:
                     return PrerequisitiesCheckResult.Canceled;
             }
@@ -81,7 +81,7 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                                  "Return to elevation data settings and download corresponing data for chosen map \n" +
                                  "or use another elevation data source."; //TODO: localize
                     break;
-                case PrerequisitiesCheckResult.MapNotSupportedByElevDataType:
+                case PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution:
                     CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
                     DialogText = "Elevation data can not be retrieved for given map.\n" +
                                  "Please, choose different map or elevation data source and try again."; //TODO: localize
@@ -101,12 +101,12 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => 
                     !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.ElevDataAbsent)
             .ToProperty(this, nameof(IsAwaitingElevDataAbsenceResolution));
-        _isAwaitingMapNotSupportedByElevDataTypeResolution = this.WhenAnyObservable(
+        _isAwaitingMapNotSupportedByElevDataDistributionResolution = this.WhenAnyObservable(
                 x => x.CheckPrerequisitiesCommand.IsExecuting,
                 x => CreateMapRepreCommand.IsExecuting,
                 x => x.CheckPrerequisitiesCommand,
-                (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataType)
-            .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataTypeResolution));
+                (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution)
+            .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataDistributionResolution));
         
         OnClosedCommand = ReactiveCommand.Create(() => { });
     }
@@ -139,12 +139,12 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
     
     private ObservableAsPropertyHelper<bool> _isAwaitingElevDataAbsenceResolution;
     public bool IsAwaitingElevDataAbsenceResolution => _isAwaitingElevDataAbsenceResolution.Value;
-    private ObservableAsPropertyHelper<bool> _isAwaitingMapNotSupportedByElevDataTypeResolution;
-    public bool IsAwaitingMapNotSupportedByElevDataTypeResolution => _isAwaitingMapNotSupportedByElevDataTypeResolution.Value;
+    private ObservableAsPropertyHelper<bool> _isAwaitingMapNotSupportedByElevDataDistributionResolution;
+    public bool IsAwaitingMapNotSupportedByElevDataDistributionResolution => _isAwaitingMapNotSupportedByElevDataDistributionResolution.Value;
     private ObservableAsPropertyHelper<bool> _isMapRepreCreateCommandExecuting;
     public bool IsMapRepreCreateCommandExecuting { get => _isMapRepreCreateCommandExecuting.Value; }
     
-    public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataType, Canceled}
+    public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataDistribution, Canceled}
     public ReactiveCommand<Unit, PrerequisitiesCheckResult> CheckPrerequisitiesCommand { get; }
     public ReactiveCommand<Unit, bool> CreateMapRepreCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelMapRepreCreationCommand { get; }

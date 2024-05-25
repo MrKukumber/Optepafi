@@ -13,6 +13,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Optepafi.Models;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews;
 using Optepafi.ModelViews.Main;
 using Optepafi.ViewModels.DataViewModels;
@@ -22,13 +23,13 @@ namespace Optepafi.ViewModels.Main;
 
 public class ElevConfigViewModel : ViewModelBase
 {
-    private ElevDataTypeViewModel? _currentElevDataType;
-    public ElevConfigViewModel(ElevDataTypeViewModel? currentElevDataType)
+    private ElevDataDistributionViewModel? _currentElevDataDist;
+    public ElevConfigViewModel(ElevDataDistributionViewModel? currentElevDataDist)
     {
-        _currentElevDataType = currentElevDataType;
-        ReturnCommand = ReactiveCommand.Create(() => _currentElevDataType);
+        _currentElevDataDist = currentElevDataDist;
+        ReturnCommand = ReactiveCommand.Create(() => _currentElevDataDist);
 
-        _currentAvailableRegions = this.WhenAnyValue(x => x.CurrentElevDataType)
+        _currentAvailableRegions = this.WhenAnyValue(x => x.CurrentElevDataDist)
             .Select(ceds => ceds?.AllTopRegions.SelectMany(topRegion => GetAllSubRegions(topRegion)))
             .ToProperty(this, nameof(CurrentAvailableRegions));
         
@@ -46,8 +47,8 @@ public class ElevConfigViewModel : ViewModelBase
             x => x.Password,
             (userName, password) => !string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password));
         IObservable<bool> areCredentialsRequired = this.WhenAnyValue(
-            x => x.CurrentElevDataType,
-            (ElevDataTypeViewModel? elevDataType) => elevDataType is CredentialsRequiringElevDataTypeViewModel);
+            x => x.CurrentElevDataDist,
+            (ElevDataDistributionViewModel? elevDataDist) => elevDataDist is CredentialsRequiringElevDataDistributionViewModel);
         
         _credentialsAreRequired = areCredentialsRequired
             .ToProperty(this, nameof(CredentialsAreRequired));
@@ -56,14 +57,20 @@ public class ElevConfigViewModel : ViewModelBase
         {
             SelectedRegion!.Presence = RegionViewModel.PresenceState.IsDownloading;
             SelectedRegion.DownloadingCancellationTokenSource = new CancellationTokenSource();
-            var result = CurrentElevDataType switch
+            ElevDataManager.DownloadingResult result;
+            switch (CurrentElevDataDist)
             {
-                CredentialsNotRequiringElevDataTypeViewModel cnredtvm => await ElevDataModelView.Instance.DownloadAsync(
-                    cnredtvm, SelectedRegion),
-                CredentialsRequiringElevDataTypeViewModel credtvm => await ElevDataModelView.Instance.DownloadAsync(credtvm,
-                    SelectedRegion, new NetworkCredential(UserName, Password)),
-                _ => throw new ArgumentException("Not supported ElevDataTypeViewModel ancestor type given.")
-            };
+                case CredentialsNotRequiringElevDataDistributionViewModel cnredtvm :
+                   result =  await ElevDataModelView.Instance.DownloadAsync(cnredtvm, SelectedRegion);
+                   break;
+                case CredentialsRequiringElevDataDistributionViewModel credtvm :
+                    var userName = UserName; var password = Password;
+                    UserName = ""; Password = "";
+                    result = await ElevDataModelView.Instance.DownloadAsync(credtvm, SelectedRegion, new NetworkCredential(userName, password));
+                    break;
+                default:
+                    throw new ArgumentException("Not supported " + nameof(ElevDataDistributionViewModel)+" ancestor type given.");
+            }
             switch (result)
             {
                 case ElevDataManager.DownloadingResult.Downloaded:
@@ -71,6 +78,9 @@ public class ElevConfigViewModel : ViewModelBase
                     break;
                 case ElevDataManager.DownloadingResult.Canceled:    
                     SelectedRegion.Presence = RegionViewModel.PresenceState.NotDownloaded;
+                    break;
+                case ElevDataManager.DownloadingResult.WrongCredentials:
+                    //TODO: nejake upozornenie, ze zadane kredencialy neboli platne
                     break;
                 default:
                     SelectedRegion.Presence = RegionViewModel.PresenceState.NotDownloaded;
@@ -85,7 +95,7 @@ public class ElevConfigViewModel : ViewModelBase
         DeleteRegionCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             SelectedRegion!.Presence = RegionViewModel.PresenceState.IsDeleting;
-            await ElevDataModelView.Instance.RemoveAsync(CurrentElevDataType!, SelectedRegion);
+            await ElevDataModelView.Instance.RemoveAsync(CurrentElevDataDist!, SelectedRegion);
             SelectedRegion.Presence = RegionViewModel.PresenceState.NotDownloaded;
         }, isRegionSelectedDownloaded);
         
@@ -117,13 +127,13 @@ public class ElevConfigViewModel : ViewModelBase
         get => _selectedRegion;
         set => this.RaiseAndSetIfChanged(ref _selectedRegion, value);
     }
-    public ElevDataTypeViewModel? CurrentElevDataType
+    public ElevDataDistributionViewModel? CurrentElevDataDist
     {
-        get => _currentElevDataType;
-        set => this.RaiseAndSetIfChanged(ref _currentElevDataType, value);
+        get => _currentElevDataDist;
+        set => this.RaiseAndSetIfChanged(ref _currentElevDataDist, value);
     }
-    public IEnumerable<ElevDataTypeViewModel> ElevDataTypes { get; } = ElevDataModelView.Instance.ElevDataSoruceViewModels
-        .SelectMany(elevDataSource => elevDataSource.ElevDataTypes);
+    public IEnumerable<ElevDataDistributionViewModel> ElevDataDistributions { get; } = ElevDataModelView.Instance.ElevDataSoruceViewModels
+        .SelectMany(elevDataSource => elevDataSource.ElevDataDistributions);
 
     private string? _userName;
     public string? UserName
@@ -144,7 +154,7 @@ public class ElevConfigViewModel : ViewModelBase
     {
         get => _credentialsAreRequired.Value;
     }
-    public ReactiveCommand<Unit, ElevDataTypeViewModel?> ReturnCommand { get; }
+    public ReactiveCommand<Unit, ElevDataDistributionViewModel?> ReturnCommand { get; }
     public ReactiveCommand<Unit, Unit> DownloadRegionCommand { get; }
     public ReactiveCommand<Unit, Unit> DeleteRegionCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelDownloadingCommand { get; }

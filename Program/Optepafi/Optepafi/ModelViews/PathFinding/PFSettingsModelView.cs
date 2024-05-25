@@ -130,7 +130,7 @@ public abstract class PFSettingsModelView : ModelViewBase
 
     public abstract void SaveParameters();
 
-    public abstract void SetElevDataType(ElevDataTypeViewModel? elevDataTypeViewModel);
+    public abstract void SetElevDataDistribution(ElevDataDistributionViewModel? elevDataDistViewModel);
     public abstract void SetTemplate(TemplateViewModel? templateViewModel);
     public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel);
     public abstract Task<MapManager.MapCreationResult> LoadAndSetMapAsync((Stream,string) streamWithPath, 
@@ -147,15 +147,15 @@ public partial class PathFindingSessionModelView : SessionModelView
     {
         public PFSettingsIntraModelView(){}
         
-        public IElevDataType? ElevDataType { get; private set; }
+        public IElevDataDistribution? ElevDataDistribution { get; private set; }
         public ITemplate? Template { get; private set; }
         public IMap? Map { get; private set; }
-        public IUserModel<ITemplate>? UserModel { get; private set; }
+        public IUserModel? UserModel { get; private set; }
         public IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; private set; }
         public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
-        public override void SetElevDataType(ElevDataTypeViewModel? elevDataTypeViewModel)
+        public override void SetElevDataDistribution(ElevDataDistributionViewModel? elevDataDistViewModel)
         {
-            ElevDataType = elevDataTypeViewModel?.ElevDataType;
+            ElevDataDistribution = elevDataDistViewModel?.ElevDataDistribution;
         }
         public override void SetTemplate(TemplateViewModel? templateViewModel)
         {
@@ -177,7 +177,7 @@ public partial class PathFindingSessionModelView : SessionModelView
         {
             var (mapCreationResult, map) = await Task.Run(() =>
             {
-                var result = MapManager.Instance.GetMapFromOf(streamWithPath, mapRepresentativeViewModel.MapFormat, cancellationToken, out IMap? map);
+                var result = MapManager.Instance.TryGetMapFromOf(streamWithPath, mapRepresentativeViewModel.MapFormat, cancellationToken, out IMap? map);
                 return (result, map);
             });
             switch (mapCreationResult)
@@ -195,7 +195,7 @@ public partial class PathFindingSessionModelView : SessionModelView
         {
             var (userModelCreationResult, userModel) = await Task.Run(() =>
             {
-                var result = UserModelManager.Instance.DeserializeUserModelOfTypeFrom(streamWithPath, userModelTypeViewModel.UserModelType, cancellationToken, out IUserModel<ITemplate>? userModel);
+                var result = UserModelManager.Instance.TryDeserializeUserModelOfTypeFrom(streamWithPath, userModelTypeViewModel.UserModelType, cancellationToken, out IUserModel? userModel);
                 return (result, userModel);
             });
             switch (userModelCreationResult)

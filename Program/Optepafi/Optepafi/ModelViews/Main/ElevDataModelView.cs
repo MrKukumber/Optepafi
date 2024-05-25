@@ -14,27 +14,27 @@ public sealed class ElevDataModelView : ModelViewBase
 
     public IEnumerable<ElevDataSourceViewModel> ElevDataSoruceViewModels { get; } = ElevDataManager.Instance.ElevDataSources.Select(elevDataSource => new ElevDataSourceViewModel(elevDataSource));
 
-    public async Task<ElevDataManager.DownloadingResult> DownloadAsync(CredentialsNotRequiringElevDataTypeViewModel elevDataTypeViewModel,
+    public async Task<ElevDataManager.DownloadingResult> DownloadAsync(CredentialsNotRequiringElevDataDistributionViewModel elevDataDistributionViewModel,
         RegionViewModel regionViewModel)
     {
-        var elevDataType = elevDataTypeViewModel.ElevDataType;
+        var elevDataDistribution = elevDataDistributionViewModel.ElevDataDistribution;
         var region = regionViewModel.Region;
-        return await Task.Run(() => ElevDataManager.Instance.DownloadRegion(elevDataType, region,
+        return await Task.Run(() => ElevDataManager.Instance.DownloadRegion(elevDataDistribution, region,
             regionViewModel.DownloadingCancellationTokenSource.Token));
     }
 
-    public async Task<ElevDataManager.DownloadingResult> DownloadAsync(CredentialsRequiringElevDataTypeViewModel elevDataTypeViewModel,
+    public async Task<ElevDataManager.DownloadingResult> DownloadAsync(CredentialsRequiringElevDataDistributionViewModel elevDataDistributionViewModel,
         RegionViewModel regionViewModel, NetworkCredential credential)
     {
-        var elevDataType = elevDataTypeViewModel.ElevDataType;
+        var elevDataDistribution = elevDataDistributionViewModel.ElevDataDistribution;
         var region = regionViewModel.Region;
-        return await Task.Run(() => ElevDataManager.Instance.DownloadRegion(elevDataType, region, credential,
+        return await Task.Run(() => ElevDataManager.Instance.DownloadRegion(elevDataDistribution, region, credential,
             regionViewModel.DownloadingCancellationTokenSource.Token));
     }
-    public async Task RemoveAsync(ElevDataTypeViewModel elevDataTypeViewModel, RegionViewModel regionViewModel)
+    public async Task RemoveAsync(ElevDataDistributionViewModel elevDataDistributionViewModel, RegionViewModel regionViewModel)
     {
-        var elevDataType = elevDataTypeViewModel.ElevDataType;
+        var elevDataDistribution = elevDataDistributionViewModel.ElevDataDistribution;
         var region = regionViewModel.Region;
-        await Task.Run(() => ElevDataManager.Instance.RemoveRegion(elevDataType, region));
+        await Task.Run(() => ElevDataManager.Instance.RemoveRegion(elevDataDistribution, region));
     }
 }

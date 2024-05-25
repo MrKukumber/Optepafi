@@ -19,12 +19,12 @@ public class MainSettingsModelView
         _currentElevDataType = GetElevDataTypeByTypeName(_mainSettingsParams.ElevDataTypeViewModelTypeName);
         ProviderOfSettings = new Provider(this);
     }
-    private IElevDataType? GetElevDataTypeByTypeName(string? typeName)
+    private IElevDataDistribution? GetElevDataTypeByTypeName(string? typeName)
     {
         if (typeName is null) return null;
         foreach (var elevDataSource in ElevDataManager.Instance.ElevDataSources)
         {
-            foreach (var elevDataTypeViewModel in elevDataSource.ElevDataTypesInSource)
+            foreach (var elevDataTypeViewModel in elevDataSource.ElevDataDistributions)
             {
                 if (elevDataTypeViewModel.GetType().Name == typeName)
                 {
@@ -48,14 +48,14 @@ public class MainSettingsModelView
         }
     }
 
-    private IElevDataType? _currentElevDataType;
-    public ElevDataTypeViewModel? CurrentElevDataType
+    private IElevDataDistribution? _currentElevDataType;
+    public ElevDataDistributionViewModel? CurrentElevDataDistribution
     {
-        get => _currentElevDataType is null ? null : new ElevDataTypeViewModel(_currentElevDataType);
+        get => _currentElevDataType is null ? null : new ElevDataDistributionViewModel(_currentElevDataType);
         set
         {
-            _currentElevDataType = value?.ElevDataType;
-            _mainSettingsParams.ElevDataTypeViewModelTypeName = value?.ElevDataType.GetType().Name;
+            _currentElevDataType = value?.ElevDataDistribution;
+            _mainSettingsParams.ElevDataTypeViewModelTypeName = value?.ElevDataDistribution.GetType().Name;
         }
     }
 
@@ -68,6 +68,6 @@ public class MainSettingsModelView
         }
 
         public CultureInfo CurrentCutlure => _providedmainSettingsMv.CurrentCulture;
-        public ElevDataTypeViewModel? CurrentElevDataType => _providedmainSettingsMv.CurrentElevDataType;
+        public ElevDataDistributionViewModel? CurrentElevDataDistribution => _providedmainSettingsMv.CurrentElevDataDistribution;
     }
 }

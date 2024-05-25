@@ -13,8 +13,8 @@ using Optepafi.Models.UserModelMan.UserModels;
 namespace Optepafi.Models.SearchingAlgorithmMan;
 
 public class SearchingAlgorithmManager : 
-    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result[], Path[]?[]),(Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>,
-    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result, ISearchingExecutor?), (ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>)>
+    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result[], Path[]?[]),(Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result, ISearchingExecutor?), (ISearchingAlgorithm, IMapRepre, IUserModel)>
 {
     public static SearchingAlgorithmManager Instance { get; } = new();
     private SearchingAlgorithmManager(){}
@@ -50,32 +50,32 @@ public class SearchingAlgorithmManager :
         return algorithm.DoesRepresentUsableMapRepre(mapRepreRep);
     }
     
-    public enum Result{Ok, NotUsableUserModel, NotUsableMapRepre }
+    public enum Result{Ok, NotComputingUserModel, NotUsableMapRepre }
 
     public Result[] TryExecuteSearch(Leg[] track, ISearchingAlgorithm algorithm, IMapRepre mapRepre, 
-        IUserModel<ITemplate>[] userModels, ITemplate template, out Path[]?[] resultingPaths,
+        IUserModel[] userModels, ITemplate template, out Path[]?[] resultingPaths,
         IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
-        var (searchingExecutionResults, paths) = template.AcceptGeneric<(Result[], Path[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>(this, (track, algorithm, mapRepre, userModels, progress, cancellationToken));
+        var (searchingExecutionResults, paths) = template.AcceptGeneric<(Result[], Path[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>(this, (track, algorithm, mapRepre, userModels, progress, cancellationToken));
         resultingPaths = paths;
         return searchingExecutionResults;
     }
     
-    (Result[], Path[]?[]) ITemplateGenericVisitor<(Result[], Path[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>.
+    (Result[], Path[]?[]) ITemplateGenericVisitor<(Result[], Path[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>.
         GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template,
-        (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?) otherParams)
+        (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?) otherParams)
     {
         var (track, algorithm, mapRepre, userModels, progress, cancellationToken) = otherParams;
         
         Result[] results = new Result[userModels.Length];
-        List<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> usableUserModels = new();
+        List<IComputingUserModel<TVertexAttributes, TEdgeAttributes>> usableUserModels = new();
         for(int i = 0; i < userModels.Length; ++i)
         {
-            if (userModels[i] is IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
+            if (userModels[i] is IComputingUserModel<TVertexAttributes, TEdgeAttributes> computingUserModel)
             {
                 usableUserModels.Add(computingUserModel);
             }
-            else results[i] = Result.NotUsableUserModel;
+            else results[i] = Result.NotComputingUserModel;
         }
         
         Path[][]? foundPaths;
@@ -91,7 +91,7 @@ public class SearchingAlgorithmManager :
         {
             for(int i = 0; i < userModels.Length; ++i)
             {
-                if (results[i] != Result.NotUsableUserModel) results[i] = Result.NotUsableMapRepre;
+                if (results[i] != Result.NotComputingUserModel) results[i] = Result.NotUsableMapRepre;
             }
             Array.Fill(resultingPaths, null);
         }
@@ -100,7 +100,7 @@ public class SearchingAlgorithmManager :
             int j = 0;
             for (int i = 0; i < userModels.Length; ++i)
             {
-                if (results[i] is not (Result.NotUsableMapRepre or Result.NotUsableUserModel))
+                if (results[i] is not (Result.NotUsableMapRepre or Result.NotComputingUserModel))
                 {
                     results[i] = Result.Ok;
                     resultingPaths[i] = foundPaths[j++];
@@ -114,18 +114,18 @@ public class SearchingAlgorithmManager :
         return (results, resultingPaths);
     }
 
-    public Result TryGetExecutorOf(ISearchingAlgorithm algorithm, IMapRepre mapRepre, IUserModel<ITemplate> userModel, ITemplate template, out ISearchingExecutor? executor)
+    public Result TryGetExecutorOf(ISearchingAlgorithm algorithm, IMapRepre mapRepre, IUserModel userModel, ITemplate template, out ISearchingExecutor? executor)
     {
-        var (result, exec) = template.AcceptGeneric<(Result, ISearchingExecutor?), (ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>)>(this, (algorithm, mapRepre,userModel));
+        var (result, exec) = template.AcceptGeneric<(Result, ISearchingExecutor?), (ISearchingAlgorithm, IMapRepre, IUserModel)>(this, (algorithm, mapRepre,userModel));
         executor = exec;
         return result;
     }
 
-    (Result, ISearchingExecutor?) ITemplateGenericVisitor<(Result, ISearchingExecutor?), (ISearchingAlgorithm, IMapRepre,IUserModel<ITemplate>)>.
-        GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>) otherParams)
+    (Result, ISearchingExecutor?) ITemplateGenericVisitor<(Result, ISearchingExecutor?), (ISearchingAlgorithm, IMapRepre,IUserModel)>.
+        GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (ISearchingAlgorithm, IMapRepre, IUserModel) otherParams)
     {
         var (algorithm, mapRepre, userModel) = otherParams;
-        if (userModel is IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
+        if (userModel is IComputingUserModel<TVertexAttributes, TEdgeAttributes> computingUserModel)
         {
             if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes>
                 definedFunctionalityMapRepre)
@@ -135,6 +135,6 @@ public class SearchingAlgorithmManager :
             }
             return (Result.NotUsableMapRepre, null);
         }
-        return (Result.NotUsableUserModel, null);
+        return (Result.NotComputingUserModel, null);
     }
 }
