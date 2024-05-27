@@ -19,7 +19,7 @@ public abstract class PFMapRepreCreatingModelView : ModelViewBase
     
     public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, Cancelled}
     public abstract ElevDataPrerequisiteCheckResult CheckMapRequirementsForElevData(CancellationToken ct);
-    public abstract Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<GraphCreationReport> mapCreationProgress, CancellationToken cancellationToken);
+    public abstract Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReport> mapCreationProgress, CancellationToken cancellationToken);
     public abstract void CleanMapRepre();
 }
 public partial class PathFindingSessionModelView : SessionModelView
@@ -73,7 +73,7 @@ public partial class PathFindingSessionModelView : SessionModelView
             }
         }
 
-        public override async Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<GraphCreationReport> mapCreationProgress, CancellationToken cancellationToken)
+        public override async Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReport> mapCreationProgress, CancellationToken cancellationToken)
         {
             if (_useElevData)
             {

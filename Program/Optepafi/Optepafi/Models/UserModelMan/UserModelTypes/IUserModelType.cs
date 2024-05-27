@@ -1,6 +1,7 @@
 using System.IO;
 using System.Threading;
 using Optepafi.Models.TemplateMan;
+using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModels;
 
 namespace Optepafi.Models.UserModelMan.UserModelTypes;
@@ -14,7 +15,9 @@ namespace Optepafi.Models.UserModelMan.UserModelTypes;
 /// </summary>
 /// <typeparam name="TTemplate">Template type which represented user model is tied to.</typeparam>
 /// <typeparam name="TUserModel">Type of represented user model.</typeparam>
-public interface IUserModelType<out TTemplate, out TUserModel> where TUserModel : IUserModel<TTemplate> where TTemplate : ITemplate
+public interface IUserModelType<out TTemplate, out TUserModel> 
+    where TUserModel : IUserModel 
+    where TTemplate : ITemplate
 {
     string UserModelTypeName { get; }
     
@@ -29,6 +32,7 @@ public interface IUserModelType<out TTemplate, out TUserModel> where TUserModel 
     /// Extension of file format, which is user model serialized to.
     /// </summary>
     string UserModelFileExtension { get; }
+    
     
     /// <summary>
     /// Returns new instance of user model represented by this user model type.

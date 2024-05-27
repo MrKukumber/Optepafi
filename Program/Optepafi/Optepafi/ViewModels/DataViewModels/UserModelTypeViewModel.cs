@@ -6,8 +6,8 @@ namespace Optepafi.ViewModels.DataViewModels;
 
 public class UserModelTypeViewModel : ViewModelBase
 {
-     public IUserModelType<ITemplate, IUserModel<ITemplate>> UserModelType { get; }
-     public UserModelTypeViewModel(IUserModelType<ITemplate, IUserModel<ITemplate>> userModelType)
+     public IUserModelType<ITemplate, IUserModel> UserModelType { get; }
+     public UserModelTypeViewModel(IUserModelType<ITemplate, IUserModel> userModelType)
      {
           UserModelType = userModelType;
      }

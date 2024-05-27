@@ -15,7 +15,7 @@ namespace Optepafi.Models.UserModelMan;
 /// All operations provided by this class are thread safe as long as same arguments are not used concurrently multiple times.
 /// </summary>
 public class UserModelManager : 
-    ITemplateGenericVisitor<HashSet<IUserModelType<ITemplate, IUserModel<ITemplate>>>>
+    ITemplateGenericVisitor<HashSet<IUserModelType<ITemplate, IUserModel>>>
 {
     public static UserModelManager Instance { get; } = new();
     private UserModelManager() { }
@@ -23,7 +23,7 @@ public class UserModelManager :
     /// <summary>
     ///  Set of usable user model types. Every instance in this set should be of type IUserModelRepresentative.
     /// </summary>
-    public IReadOnlySet<IUserModelType<ITemplate, IUserModel<ITemplate>>> UserModelTypes = ImmutableHashSet.Create<IUserModelType<ITemplate, IUserModel<ITemplate>>>(/*TODO: doplnit uzivatelskymi modelmi*/); //TODO: este rozmysliet ako reprezentovat, mozno skor nejakym listom
+    public IReadOnlySet<IUserModelType<ITemplate, IUserModel>> UserModelTypes = ImmutableHashSet.Create<IUserModelType<ITemplate, IUserModel>>(/*TODO: doplnit uzivatelskymi modelmi*/); //TODO: este rozmysliet ako reprezentovat, mozno skor nejakym listom
 
     /// <summary>
     /// Returns corresponding user model types to provided template by using generic visitor pattern on it.
@@ -31,15 +31,15 @@ public class UserModelManager :
     /// </summary>
     /// <param name="template">Template to which corresponding user model types should be returned.</param>
     /// <returns>Corresponding user model types to inserted template.</returns>
-    public HashSet<IUserModelType<ITemplate, IUserModel<ITemplate>>> GetCorrespondingUserModelTypesTo(ITemplate template)
+    public HashSet<IUserModelType<ITemplate, IUserModel>> GetCorrespondingUserModelTypesTo(ITemplate template)
     {
         return template.AcceptGeneric(this);
     }
-    HashSet<IUserModelType<ITemplate, IUserModel<ITemplate>>> ITemplateGenericVisitor<HashSet<IUserModelType<ITemplate, IUserModel<ITemplate>>>>.
+    HashSet<IUserModelType<ITemplate, IUserModel>> ITemplateGenericVisitor<HashSet<IUserModelType<ITemplate, IUserModel>>>.
         GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template)
     {
 
-        HashSet<IUserModelType<ITemplate, IUserModel<ITemplate>>> correspondingUserModelTypes = new();
+        HashSet<IUserModelType<ITemplate, IUserModel>> correspondingUserModelTypes = new();
         foreach (var userModelType in UserModelTypes)
         {
             if (userModelType is IUserModelIdentifier<TTemplate, IUserModel<TTemplate>>)
@@ -53,7 +53,7 @@ public class UserModelManager :
     /// </summary>
     /// <param name="userModelFileName">Name of file for which corresponding user model type should be returned.</param>
     /// <returns>Corresponding user model type to provided file name. If there is no matching user model type, it returns null.</returns>
-    public IUserModelType<ITemplate, IUserModel<ITemplate>>? GetCorrespondingUserModelTypeTo(string userModelFileName)
+    public IUserModelType<ITemplate, IUserModel>? GetCorrespondingUserModelTypeTo(string userModelFileName)
     {
         foreach (var userModelType in UserModelTypes)
         {
@@ -61,6 +61,7 @@ public class UserModelManager :
         }
         return null;
     }
+
 
     /// <summary>
     /// Serializes user model to string.
@@ -87,7 +88,7 @@ public class UserModelManager :
     /// </summary>
     /// <param name="userModelType">User model type of which new user model is requested.</param>
     /// <returns>New instance of user model.</returns>
-    public IUserModel GetNewUserModel(IUserModelType<ITemplate, IUserModel<ITemplate>> userModelType)
+    public IUserModel GetNewUserModel(IUserModelType<ITemplate, IUserModel> userModelType)
     {
         return userModelType.GetNewUserModel();
     }
@@ -103,7 +104,7 @@ public class UserModelManager :
     /// <param name="cancellationToken">Token for cancellation of deserialization.</param>
     /// <param name="userModel">Out parameter for resulting deserialized user model.</param>
     /// <returns>Result of deserialization.</returns>
-    public UserModelLoadResult TryDeserializeUserModelOfTypeFrom((Stream,string) userModelStreamWithPath, IUserModelType<ITemplate, IUserModel<ITemplate>> userModelType, CancellationToken? cancellationToken, out IUserModel? userModel)
+    public UserModelLoadResult TryDeserializeUserModelOfTypeFrom((Stream,string) userModelStreamWithPath, IUserModelType<ITemplate, IUserModel> userModelType, CancellationToken? cancellationToken, out IUserModel? userModel)
     {
         userModel = userModelType.DeserializeUserModel(userModelStreamWithPath, cancellationToken, out UserModelLoadResult result);
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested)

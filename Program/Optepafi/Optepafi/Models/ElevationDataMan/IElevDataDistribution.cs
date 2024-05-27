@@ -15,6 +15,7 @@ namespace Optepafi.Models.ElevationDataMan;
 /// Before each retrieval of the data it should be checked, if they are obtainable. If check was not done, retrieving of data could result in thrown exceptions. On the other hand, if check had positive result, successful retrieval should be ensured.
 /// </para> 
 /// All operations provided by <c>IElevDataDistribution</c> should be made thread safe, so the retrieval of elevation data could be provided asynchronously.
+/// Preferred way to interact with distributions is through <see cref="ElevDataManager"/>.
 /// </summary>
 public interface IElevDataDistribution
 {

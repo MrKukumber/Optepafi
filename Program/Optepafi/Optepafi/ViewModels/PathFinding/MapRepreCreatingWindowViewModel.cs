@@ -50,7 +50,7 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                 {
                     CurrentProcedureInfoText = null; //TODO: localize
                     DialogText = null;
-                    IProgress<GraphCreationReport> mapCreationProgress = new Progress<GraphCreationReport>(report => PercentageMapRepreCreationProgress = report.PercentualProgress);
+                    IProgress<MapRepreConstructionReport> mapCreationProgress = new Progress<MapRepreConstructionReport>(report => PercentageMapRepreCreationProgress = report.PercentProgress);
                     IProgress<string> progressInfo = new Progress<string>(info => CurrentProcedureInfoText = info);
                     await _mapRepreCreatingMv.CreateMapRepreAsync(progressInfo, mapCreationProgress, ct);
                     if (ct.IsCancellationRequested)
@@ -111,9 +111,9 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
         OnClosedCommand = ReactiveCommand.Create(() => { });
     }
 
-    private void HandleMapCreationProgres(GraphCreationReport report)
+    private void HandleMapCreationProgres(MapRepreConstructionReport report)
     {
-        PercentageMapRepreCreationProgress = report.PercentualProgress;
+        PercentageMapRepreCreationProgress = report.PercentProgress;
     }
 
     private float _percentageMapRepreCreationProgress;

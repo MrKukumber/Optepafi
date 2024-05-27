@@ -1,7 +1,7 @@
 namespace Optepafi.Models.MapMan;
 
 /// <summary>
-/// Represents position on map relative to (hopefully geo-referenced) origin.
+/// Represents position on map relative to (hopefully geo-referenced) origin. This coordinate system is the one in which application logic communicates.
 /// Values of coordinates are measured in maps micrometers. Point (1000, 0) is therefore in 1 millimeter distance from the origin on map.
 /// If maps scale is 1:10000, point (1,0) is in the real world positioned in 1 cm distance from the origin of the map. In this manner we should be able wrap whole Globe to the map of this scale or smaller.
 /// This coordinate system is meant for maps that are not implicitly represented in geographic coordinate system.

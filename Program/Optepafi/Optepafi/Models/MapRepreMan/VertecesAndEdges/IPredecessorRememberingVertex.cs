@@ -2,6 +2,12 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
 
+/// <summary>
+/// Predecessor remembering vertex whose type of hold edges is assign to be of type <see cref="IBasicEdge{TVertex,TEdgeAttributes}"/>.
+/// This is just auxiliary, quality of life improving interface.
+/// </summary>
+/// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
+/// <typeparam name="TEdgeAttributes">Type of edge attributes borne by assigned type of hold edges.</typeparam>
 public interface IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes> :
     IPredecessorRememberingVertex<IBasicEdge<IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>, TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
@@ -10,10 +16,15 @@ public interface IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes
     
 }
 
-public interface IPredecessorRememberingVertex<TBasicEdge, TVertexAttributes> : 
-    IBasicVertex<TBasicEdge, TVertexAttributes>
+/// <summary>
+/// Basic vertex that is able to remember reference to one other vertex. This can be used in path finding mechanisms for remembering vertex from which was this vertex discovered.
+/// </summary>
+/// <typeparam name="TEdge">Type of hold edges originating in this vertex.</typeparam>
+/// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
+public interface IPredecessorRememberingVertex<TEdge, TVertexAttributes> : 
+    IBasicVertex<TEdge, TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
-    where TBasicEdge : IEdge
+    where TEdge : IEdge
 {
-    IPredecessorRememberingVertex<TBasicEdge, TVertexAttributes>? Predecessor { get; set; }
+    IPredecessorRememberingVertex<TEdge, TVertexAttributes>? Predecessor { get; set; }
 }

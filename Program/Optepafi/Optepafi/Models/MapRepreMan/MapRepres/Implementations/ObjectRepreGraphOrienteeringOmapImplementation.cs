@@ -1,3 +1,4 @@
+using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
 using Optepafi.Models.MapRepreMan.VertecesAndEdges;
@@ -14,7 +15,7 @@ public class ObjectRepreGraphOrienteeringOmapImplementation :
         throw new System.NotImplementedException();
     }
 
-    public string Nmae { get; } = "Object representation";
+    public string Name { get; } = "Object representation";
 
     public IMapRepreRepresentative<IMapRepre> MapRepreRep { get; init; }
 
@@ -22,7 +23,7 @@ public class ObjectRepreGraphOrienteeringOmapImplementation :
     {
     }
 
-    public IBasicEdgeCoupledPredecessorRememberingVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> GetVertexFor((int, int) coords)
+    public IBasicEdgeCoupledPredecessorRememberingVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> GetVertexFor(MapCoordinate coords)
     {
         throw new System.NotImplementedException();
     }

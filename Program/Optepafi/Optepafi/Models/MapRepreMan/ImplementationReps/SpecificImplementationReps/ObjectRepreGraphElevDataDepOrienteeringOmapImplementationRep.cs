@@ -18,7 +18,7 @@ public class ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep :
     public override IMapFormat<OMAP> UsedMapFormat { get; } = OMAPRepresentative.Instance;
     
     public override ObjectRepreGraphOrienteeringOmapImplementation ConstructMapRepre(Orienteering_ISOM_2017_2 template, GeoReferenceContainingOMAP map, IElevData elevData,
-        IProgress<GraphCreationReport>? progress, CancellationToken? cancellationToken)
+        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
     {
         //TODO: implement
         throw new NotImplementedException();

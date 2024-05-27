@@ -83,6 +83,9 @@
         <SubType>Code</SubType>
       </Compile>
       <Compile Remove="Models\UserModelMan\IUserModelGenericVisitor.cs" />
+      <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataIndependentConstr.cs" />
+      <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataDependentConstr.cs" />
+      <Compile Remove="Models\MapRepreMan\GraphConstrs\IMapRepreConstructor.cs" />
     </ItemGroup>
 
 

@@ -9,7 +9,6 @@ namespace Optepafi.Models.MapMan.MapInterfaces;
 /// Map representations represents relations between map objects whereas map serves only as swiftly made collection of map objects stored for their further processing.
 /// Each implementation of this interface should have its own representative so it could presented as viable type in <see cref="MapManager"/> class.
 /// 
-///
 /// It provides modification of visitor pattern, so-called "generic visitor pattern".
 /// The main goal is not ensuring that caller implements specific method for every IMap implementation, but for ability to retrieve maps real type in form of type parameter.
 /// </summary>

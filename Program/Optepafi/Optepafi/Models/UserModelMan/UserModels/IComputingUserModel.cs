@@ -5,6 +5,7 @@ namespace Optepafi.Models.UserModelMan.UserModels;
 
 /// <summary>
 /// Represents ability to compute weights from provided edge and vertex attributes. User models which implement this interface can be used in path finding algorithms for computing weights of graph edges.
+/// IMPORTANT!! Weights are integer value of type int32. This standard holds for whole application, every implementation.
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes, which is user model able to use for computing weights.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes, which is user model able to use for computing weights.</typeparam>
