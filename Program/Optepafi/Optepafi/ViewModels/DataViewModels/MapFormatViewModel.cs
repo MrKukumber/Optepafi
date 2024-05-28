@@ -3,11 +3,12 @@ using Optepafi.Models.MapMan.MapInterfaces;
 
 namespace Optepafi.ViewModels.DataViewModels;
 
-public class MapRepresentativeViewModel : ViewModelBase
+public class MapFormatViewModel : DataViewModel<IMapFormat<IMap>>
 {
+    protected override IMapFormat<IMap> Data => MapFormat;
     public IMapFormat<IMap> MapFormat { get; }
 
-    public MapRepresentativeViewModel(IMapFormat<IMap> mapFormat)
+    public MapFormatViewModel(IMapFormat<IMap> mapFormat)
     {
         MapFormat = mapFormat;
     }

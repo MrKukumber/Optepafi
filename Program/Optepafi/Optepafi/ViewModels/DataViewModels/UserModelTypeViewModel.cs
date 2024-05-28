@@ -4,10 +4,11 @@ using Optepafi.Models.UserModelMan.UserModelTypes;
 
 namespace Optepafi.ViewModels.DataViewModels;
 
-public class UserModelTypeViewModel : ViewModelBase
+public class UserModelTypeViewModel : DataViewModel<IUserModelType<IUserModel>>
 {
-     public IUserModelType<ITemplate, IUserModel> UserModelType { get; }
-     public UserModelTypeViewModel(IUserModelType<ITemplate, IUserModel> userModelType)
+     protected override IUserModelType<IUserModel> Data => UserModelType;
+     public IUserModelType<IUserModel> UserModelType { get; }
+     public UserModelTypeViewModel(IUserModelType<IUserModel> userModelType)
      {
           UserModelType = userModelType;
      }

@@ -41,27 +41,23 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
             return PrerequisitiesCheckResult.Ok;
         });
 
+        ReturnCommand = ReactiveCommand.Create(() => false);
         
-        ReturnCommand = ReactiveCommand.Create(() => false );
-
         CreateMapRepreCommand = ReactiveCommand.CreateFromObservable(
             () => Observable
                 .StartAsync(async ct =>
                 {
                     CurrentProcedureInfoText = null; //TODO: localize
                     DialogText = null;
-                    IProgress<MapRepreConstructionReport> mapCreationProgress = new Progress<MapRepreConstructionReport>(report => PercentageMapRepreCreationProgress = report.PercentProgress);
+                    IProgress<MapRepreConstructionReport> mapCreationProgress = new Progress<MapRepreConstructionReport>(
+                        report => PercentageMapRepreCreationProgress = report.PercentProgress);
                     IProgress<string> progressInfo = new Progress<string>(info => CurrentProcedureInfoText = info);
                     await _mapRepreCreatingMv.CreateMapRepreAsync(progressInfo, mapCreationProgress, ct);
-                    if (ct.IsCancellationRequested)
-                    {
-                        return false;
-                    }
                     return true;
                 })
                 .TakeUntil(CancelMapRepreCreationCommand));
         
-        CancelMapRepreCreationCommand = ReactiveCommand.Create(() => {}, CreateMapRepreCommand.IsExecuting);
+        CancelMapRepreCreationCommand = ReactiveCommand.Create(() => false, CreateMapRepreCommand.IsExecuting);
         
         this.WhenActivated(disposalbes =>
         {
@@ -73,7 +69,7 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
             switch (prereqCheckResult)
             {
                 case PrerequisitiesCheckResult.Ok:
-                    CreateMapRepreCommand.Execute();
+                    CreateMapRepreCommand.Execute().Subscribe();
                     break;
                 case PrerequisitiesCheckResult.ElevDataAbsent:
                     CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
@@ -95,7 +91,8 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
 
         _isMapRepreCreateCommandExecuting = CreateMapRepreCommand.IsExecuting
             .ToProperty(this, nameof(IsMapRepreCreateCommandExecuting));
-        _isAwaitingElevDataAbsenceResolution = this.WhenAnyObservable(x => x.CreateMapRepreCommand.IsExecuting,
+        _isAwaitingElevDataAbsenceResolution = this.WhenAnyObservable(
+                x => x.CreateMapRepreCommand.IsExecuting,
                 x => x.CheckPrerequisitiesCommand.IsExecuting,
                 x => x.CheckPrerequisitiesCommand,
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => 
@@ -103,19 +100,17 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
             .ToProperty(this, nameof(IsAwaitingElevDataAbsenceResolution));
         _isAwaitingMapNotSupportedByElevDataDistributionResolution = this.WhenAnyObservable(
                 x => x.CheckPrerequisitiesCommand.IsExecuting,
-                x => CreateMapRepreCommand.IsExecuting,
+                x => x.CreateMapRepreCommand.IsExecuting,
                 x => x.CheckPrerequisitiesCommand,
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution)
             .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataDistributionResolution));
         
         OnClosedCommand = ReactiveCommand.Create(() => { });
     }
-
-    private void HandleMapCreationProgres(MapRepreConstructionReport report)
-    {
-        PercentageMapRepreCreationProgress = report.PercentProgress;
-    }
-
+    
+    
+    
+    
     private float _percentageMapRepreCreationProgress;
     public float PercentageMapRepreCreationProgress
     {
@@ -147,7 +142,7 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
     public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataDistribution, Canceled}
     public ReactiveCommand<Unit, PrerequisitiesCheckResult> CheckPrerequisitiesCommand { get; }
     public ReactiveCommand<Unit, bool> CreateMapRepreCommand { get; }
-    public ReactiveCommand<Unit, Unit> CancelMapRepreCreationCommand { get; }
+    public ReactiveCommand<Unit, bool> CancelMapRepreCreationCommand { get; }
     public ReactiveCommand<Unit, bool> ReturnCommand { get; }
     public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
 }

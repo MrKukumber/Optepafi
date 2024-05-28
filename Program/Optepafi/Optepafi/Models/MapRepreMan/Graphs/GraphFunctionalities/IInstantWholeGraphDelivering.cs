@@ -1,6 +1,6 @@
 using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 
-namespace Optepafi.Models.MapRepreMan.MapRepres.FunctionalityInterfaces;
+namespace Optepafi.Models.MapRepreMan.Graphs.GraphFunctionalities;
 
 /// <summary>
 /// Represents graph type that is able to deliver whole graph/all its vertices at once. That means this map representations that corresponds to graphs with this ability must generate their graphs before start of path finding on them. 

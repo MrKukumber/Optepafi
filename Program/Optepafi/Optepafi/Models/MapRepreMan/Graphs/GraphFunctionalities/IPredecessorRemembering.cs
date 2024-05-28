@@ -1,9 +1,8 @@
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.VertecesAndEdges;
-using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepres.FunctionalityInterfaces;
+namespace Optepafi.Models.MapRepreMan.Graphs.GraphFunctionalities;
 
 /// <summary>
 /// Represents searchable graph whose vertices has ability to remember one other vertex. This reference can be used for remembering predecessor vertex during path finding.

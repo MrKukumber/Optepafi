@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;

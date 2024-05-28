@@ -2,8 +2,9 @@ using Optepafi.Models.SearchingAlgorithmMan;
 
 namespace Optepafi.ViewModels.DataViewModels;
 
-public class SearchingAlgorithmViewModel : ViewModelBase
+public class SearchingAlgorithmViewModel : DataViewModel<ISearchingAlgorithm>
 {
+    protected override ISearchingAlgorithm Data => SearchingAlgorithm;
     public ISearchingAlgorithm SearchingAlgorithm { get; }
     public SearchingAlgorithmViewModel(ISearchingAlgorithm searchingAlgorithm)
     {

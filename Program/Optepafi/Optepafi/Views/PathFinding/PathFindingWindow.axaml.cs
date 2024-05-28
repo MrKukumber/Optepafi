@@ -39,7 +39,7 @@ public partial class PathFindingWindow : ReactiveWindow<PathFindingSessionViewMo
         ViewModel!.OnClosedCommand.Execute().Subscribe();
     }
 
-    private async Task DoShowMapRepreCreatingDialogAsync(InteractionContext<PFMapRepreCreatingModelView, bool> interaction)
+    private async Task DoShowMapRepreCreatingDialogAsync(InteractionContext<MapRepreCreatingWindowViewModel, bool> interaction)
     {
         var dialog = new MapRepreCreatingWindow()
         {

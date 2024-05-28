@@ -1,4 +1,6 @@
 using Optepafi.Models.MapMan;
+using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
 using Optepafi.Models.MapRepreMan.VertecesAndEdges;
@@ -16,8 +18,6 @@ public class ObjectRepreGraphOrienteeringOmapImplementation :
     }
 
     public string Name { get; } = "Object representation";
-
-    public IMapRepreRepresentative<IMapRepre> MapRepreRep { get; init; }
 
     public ObjectRepreGraphOrienteeringOmapImplementation()
     {

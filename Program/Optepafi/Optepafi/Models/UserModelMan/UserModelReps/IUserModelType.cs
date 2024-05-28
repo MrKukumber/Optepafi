@@ -7,17 +7,16 @@ using Optepafi.Models.UserModelMan.UserModels;
 namespace Optepafi.Models.UserModelMan.UserModelTypes;
 
 /// <summary>
-/// One of three interfaces whose implementations represent individual user model types that are tied to specific template type.
-/// The other two are <see cref="IUserModelRepresentative{TTemplate,TUserModel}"/> and <see cref="IUserModelIdentifier{TTemplate,TUserModel}"/>.
+/// One of three interfaces whose implementations represent individual user model types that are tied to specific template type. Especially this one represents some user model type. 
+/// The other two are <see cref="IUserModelRepresentative{TTemplate,TUserModel}"/> and <see cref="IUserModelTemplateBond{TTemplate}"/>.
 /// This interface provides methods and properties, that are used for creating and deserializing user models.
 /// It should not be implemented right away. All implementations should implement <c>IUserModelRepresentative{TTemplate, TUserModel}</c> instead.
 /// Thanks to covariance of its type parameters it is useful for transferring of user model representatives in non generic way.
 /// </summary>
 /// <typeparam name="TTemplate">Template type which represented user model is tied to.</typeparam>
 /// <typeparam name="TUserModel">Type of represented user model.</typeparam>
-public interface IUserModelType<out TTemplate, out TUserModel> 
+public interface IUserModelType<out TUserModel> 
     where TUserModel : IUserModel 
-    where TTemplate : ITemplate
 {
     string UserModelTypeName { get; }
     

@@ -96,7 +96,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
         {
             var (mapFileStream, mapFilePath) = mapFileStreamAndPath;
             string mapFileName = Path.GetFileName(mapFilePath);
-            MapRepresentativeViewModel? mapFormat = _settingsMv.GetCorrespondingMapFormat(mapFileName);
+            MapFormatViewModel? mapFormat = _settingsMv.GetCorrespondingMapFormat(mapFileName);
             if (mapFormat is null) throw new NullReferenceException("Map format should be returned, because chosen file was filtered to be correct.");
             var loadResult = await _settingsMv.LoadAndSetMapAsync(mapFileStreamAndPath, mapFormat, cancellationToken);
             if (!cancellationToken.IsCancellationRequested) ; //TODO: nechat asynchronne (Task.Run()) zavolat vytvorenie grafickeho znazornenia mapy a mozno vykreslit ju na obrazovke....mzono to skor spravit cez dalsi command, nakolko to nema nic moc spolocne s nahravanim mapy....treba dat ale pozor na cancellation token a ukoncenie ziskavania grafickej reprezentaci, cize predsa len to mozno spravit v tomto mieste asynchronne, aby som mohol predat cancellation token
@@ -163,10 +163,10 @@ public class PathFindingSettingsViewModel : ViewModelBase
             x => x.CurrentlyUsedUserModelType,
             (template, mapFormat, searchingAlgorithm, userModel) => template is not null && mapFormat is not null && searchingAlgorithm is not null && userModel is not null);
 
-        MapRepreCreationInteraction = new Interaction<PFMapRepreCreatingModelView, bool>();
+        MapRepreCreationInteraction = new Interaction<MapRepreCreatingWindowViewModel, bool>();
         ProceedTroughMapRepreCreationCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            bool successfulCreation = await MapRepreCreationInteraction.Handle(_mapRepreCreatingMv);
+            bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingWindowViewModel(_mapRepreCreatingMv));
             if (successfulCreation)
             {
                 settingsMv.SaveParameters();
@@ -181,15 +181,27 @@ public class PathFindingSettingsViewModel : ViewModelBase
 
         if (settingsMv.DefaultMapFilePath is not null)
         {
-            using (Stream? mapFileStream = TryFindAndOpenFile(settingsMv.DefaultMapFilePath))
-            {
-                if (mapFileStream is not null)
-                    LoadMapCommandSubscription = LoadMapCommand
-                        .Execute((mapFileStream, settingsMv.DefaultMapFilePath))
-                        .Subscribe();
-            }
+            CurrentlyUsedMapFormat = _settingsMv.GetCorrespondingMapFormat(settingsMv.DefaultMapFilePath);
+            UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
+            SearchingAlgorithmViewModel? searchingAlgorithm = settingsMv.DefaultSearchingAlgorithm;
+            if (searchingAlgorithm is not null && UsableSearchingAlgorithms is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
+                SelectedSearchingAlgorithm = searchingAlgorithm;
         }
         
+        if (settingsMv.DefaultMapFilePath is not null)
+        {
+            Stream? mapFileStream = TryFindAndOpenFile(settingsMv.DefaultMapFilePath);
+            if (mapFileStream is not null)
+                LoadMapCommandSubscription = LoadMapCommand
+                    .Execute((mapFileStream, settingsMv.DefaultMapFilePath))
+                    .Subscribe(commandOutput =>
+                    {
+                        var (_, mapFormat,_) = commandOutput;
+                        CurrentlyUsedMapFormat = mapFormat;
+                    });
+        }
+
+
         if (settingsMv.DefaultUserModelFilePath is not null)
         {
             UserModelTypeViewModel? userModelType =
@@ -197,19 +209,14 @@ public class PathFindingSettingsViewModel : ViewModelBase
             if (userModelType is not null && UsableUserModelTypes is not null &&
                 UsableUserModelTypes.Contains(userModelType))
             {
-                using (Stream? userModelFileStream = TryFindAndOpenFile(settingsMv.DefaultUserModelFilePath))
-                {
-                    if (userModelFileStream is not null)
-                        LoadUserModelCommandSubscription = LoadUserModelCommand
-                            .Execute((userModelFileStream, settingsMv.DefaultUserModelFilePath))
-                            .Subscribe();
-                }
+                Stream? userModelFileStream = TryFindAndOpenFile(settingsMv.DefaultUserModelFilePath);
+                if (userModelFileStream is not null)
+                    LoadUserModelCommandSubscription =  LoadUserModelCommand
+                        .Execute((userModelFileStream, settingsMv.DefaultUserModelFilePath))
+                        .Subscribe();
             }
         }
         
-        SearchingAlgorithmViewModel? searchingAlgorithm = settingsMv.DefaultSearchingAlgorithm;
-        if (searchingAlgorithm is not null && UsableSearchingAlgorithms is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
-            SelectedSearchingAlgorithm = searchingAlgorithm;
 
     }
 
@@ -219,7 +226,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
         {
             try
             {
-                FileStream stream = new FileStream(path, FileMode.Open);
+                FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
                 return stream;
             }
             catch (IOException) { /*TODO: log IOException....mozno*/ }
@@ -269,8 +276,8 @@ public class PathFindingSettingsViewModel : ViewModelBase
     
     
 
-    private MapRepresentativeViewModel? _currentlyUsedMapFormat;
-    public MapRepresentativeViewModel? CurrentlyUsedMapFormat
+    private MapFormatViewModel? _currentlyUsedMapFormat;
+    public MapFormatViewModel? CurrentlyUsedMapFormat
     {
         get => _currentlyUsedMapFormat;
         set => this.RaiseAndSetIfChanged(ref _currentlyUsedMapFormat, value);
@@ -282,8 +289,8 @@ public class PathFindingSettingsViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _selectedMapFileName, value);
     }
     private string? SelectedMapFilePath { get; set; }
-    private IReadOnlyCollection<MapRepresentativeViewModel>? _usableMapFormats;
-    public IReadOnlyCollection<MapRepresentativeViewModel>? UsableMapFormats
+    private IReadOnlyCollection<MapFormatViewModel>? _usableMapFormats;
+    public IReadOnlyCollection<MapFormatViewModel>? UsableMapFormats
     {
         get => _usableMapFormats;
         set => this.RaiseAndSetIfChanged(ref _usableMapFormats, value);
@@ -313,13 +320,13 @@ public class PathFindingSettingsViewModel : ViewModelBase
     
     
     
-    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapRepresentativeViewModel, string)> LoadMapCommand { get; }
+    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string)> LoadMapCommand { get; }
     public ReactiveCommand<(Stream, string), (UserModelManager.UserModelLoadResult, UserModelTypeViewModel, string)> LoadUserModelCommand { get; }
     
     //TODO: command pre prechod do vytvaranaia mapovej reprezentacie, nech necha ukladanie parametrov na modelView-u a ten tam uklada datove triedy, nie ich ViewModelove wrappre
     public enum WhereToProceed{Settings, PathFinding}
     public ReactiveCommand<Unit, WhereToProceed> ProceedTroughMapRepreCreationCommand { get; }
-    public Interaction<PFMapRepreCreatingModelView, bool> MapRepreCreationInteraction { get; }
+    public Interaction<MapRepreCreatingWindowViewModel, bool> MapRepreCreationInteraction { get; }
     public static FuncValueConverter<IEnumerable, bool> IsNotEmptyNorNull { get; } =
         new (enumerable => enumerable?.GetEnumerator().MoveNext() ?? false);
 }

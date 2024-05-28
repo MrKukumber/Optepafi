@@ -7,8 +7,9 @@ using ReactiveUI;
 
 namespace Optepafi.ViewModels.DataViewModels;
 
-public class RegionViewModel : ViewModelBase
+public class RegionViewModel : DataViewModel<Region>
 {
+    protected override Region Data => Region;
     public Region Region { get; }
     public RegionViewModel(Region region)
     {

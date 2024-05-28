@@ -1,14 +1,15 @@
-using Optepafi.Models.MapRepreMan.MapRepres.FunctionalityInterfaces;
+using Optepafi.Models.MapRepreMan.Graphs.GraphFunctionalities;
+using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
 using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
+namespace Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
 
 
 
 public interface IObjectRepreGraph<TVertexAttributes, TEdgeAttributes> :
-    IObjectRepre<ITemplate<TVertexAttributes, TEdgeAttributes>>,
+    IObjectRepre,
     IGraph<TVertexAttributes, TEdgeAttributes>,
     IPredecessorRemembering<
         IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>, 

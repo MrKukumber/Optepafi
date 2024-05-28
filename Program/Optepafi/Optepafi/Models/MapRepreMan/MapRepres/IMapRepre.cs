@@ -15,7 +15,6 @@ namespace Optepafi.Models.MapRepreMan.MapRepres;
 public interface IMapRepre
 {
     public string Name { get; }
-    public IMapRepreRepresentative<IMapRepre> MapRepreRep { get; init; } //TODO: premysliet ci je to potrebne
     // public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(
         // IMapRepresentationGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,
         // TGenericParam genericParam, TOtherParams otherParams) where TGenericParam : TConstraint;

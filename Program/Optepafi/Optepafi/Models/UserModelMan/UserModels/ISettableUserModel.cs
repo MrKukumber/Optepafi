@@ -10,7 +10,7 @@ namespace Optepafi.Models.UserModelMan.UserModels;
 /// The adjustable objects are of reference types, so their changes are reflected in their holding user models.
 /// User models by implementing this interface are able to be used in model creating sessions, where users can set provided adjustables to satisfy their preferences. 
 /// </summary>
-public interface ISettableUserModel
+public interface ISettableUserModel : IUserModel
 {
     /// <summary>
     /// Method that provides all user models adjustables.

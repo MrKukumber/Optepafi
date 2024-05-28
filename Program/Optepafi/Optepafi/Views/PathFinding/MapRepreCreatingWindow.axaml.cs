@@ -16,14 +16,11 @@ public partial class MapRepreCreatingWindow : ReactiveWindow<MapRepreCreatingWin
 
         if (Design.IsDesignMode) return;
 
-        this.WhenActivated(disposables =>
+        this.WhenActivated(d =>
         {
-            ViewModel!.CreateMapRepreCommand
-                .Subscribe(isPossibleToContinue => Close(isPossibleToContinue))
-                .DisposeWith(disposables);
-            ViewModel!.ReturnCommand
-                .Subscribe(isPossibleToContinue => Close(isPossibleToContinue))
-                .DisposeWith(disposables);
+            d(ViewModel!.CreateMapRepreCommand.Subscribe(isPossibleToContinue => Close(isPossibleToContinue)));
+            d(ViewModel!.ReturnCommand.Subscribe(isPossibleToContinue => Close(isPossibleToContinue)));
+            d(ViewModel!.CancelMapRepreCreationCommand.Subscribe(isPossibleToContinue => Close(isPossibleToContinue)));
         });
     }
     private void MapRepreCreatingWindow_OnClosed(object? sender, EventArgs e) { ViewModel!.OnClosedCommand.Execute(); }

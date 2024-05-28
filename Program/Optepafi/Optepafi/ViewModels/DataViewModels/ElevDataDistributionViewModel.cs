@@ -4,8 +4,9 @@ using Optepafi.Models.ElevationDataMan;
 
 namespace Optepafi.ViewModels.DataViewModels;
 
-public class ElevDataDistributionViewModel : ViewModelBase
+public class ElevDataDistributionViewModel : DataViewModel<IElevDataDistribution>
 {
+    protected override IElevDataDistribution Data => ElevDataDistribution;
     public IElevDataDistribution ElevDataDistribution { get; }
     public ElevDataDistributionViewModel(IElevDataDistribution elevDataDistribution)
     {
@@ -19,20 +20,23 @@ public class ElevDataDistributionViewModel : ViewModelBase
 
 public class CredentialsNotRequiringElevDataDistributionViewModel : ElevDataDistributionViewModel
 {
+    
+    protected override IElevDataDistribution Data => ElevDataDistribution;
     public new ICredentialsNotRequiringElevDataDistribution ElevDataDistribution { get; }
     public CredentialsNotRequiringElevDataDistributionViewModel(ICredentialsNotRequiringElevDataDistribution elevDataDistribution) : base(elevDataDistribution)
     {
         ElevDataDistribution = elevDataDistribution;
     }
-    
 }
 
 public class CredentialsRequiringElevDataDistributionViewModel : ElevDataDistributionViewModel
 {
-    
+
+    protected override IElevDataDistribution Data => ElevDataDistribution;
     public new ICredentialsRequiringElevDataDistribution ElevDataDistribution { get; }
 
-    public CredentialsRequiringElevDataDistributionViewModel(ICredentialsRequiringElevDataDistribution elevDataDistribution) : base(elevDataDistribution)
+    public CredentialsRequiringElevDataDistributionViewModel(
+        ICredentialsRequiringElevDataDistribution elevDataDistribution) : base(elevDataDistribution)
     {
         ElevDataDistribution = elevDataDistribution;
     }

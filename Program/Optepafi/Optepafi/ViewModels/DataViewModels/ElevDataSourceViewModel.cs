@@ -4,8 +4,9 @@ using Optepafi.Models.ElevationDataMan;
 
 namespace Optepafi.ViewModels.DataViewModels;
 
-public class ElevDataSourceViewModel : ViewModelBase
+public class ElevDataSourceViewModel : DataViewModel<IElevDataSource>
 {
+    protected override IElevDataSource Data => ElevDataSource;
     public IElevDataSource ElevDataSource { get; }
     public ElevDataSourceViewModel(IElevDataSource elevDataSource)
     {

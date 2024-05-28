@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Optepafi")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute(" ")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8c908dd926ca3a2d66008d6781e91a678360f931")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+531252ab13b1e62c65535ba2161ec90f10f9ed8c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Optepafi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Optepafi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

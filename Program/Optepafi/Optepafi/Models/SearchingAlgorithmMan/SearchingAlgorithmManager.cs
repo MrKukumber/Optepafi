@@ -4,8 +4,10 @@ using System.Collections.Immutable;
 using System.Threading;
 using Avalonia.Controls;
 using Optepafi.Models.MapRepreMan;
+using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
@@ -29,7 +31,7 @@ public class SearchingAlgorithmManager :
     /// Set of all usable searching algorithms.
     /// </summary>
     public ISet<ISearchingAlgorithm> SearchingAlgorithms { get; } =
-        ImmutableHashSet.Create<ISearchingAlgorithm>(/*TODO: doplnit algoritmy*/);
+        ImmutableHashSet.Create<ISearchingAlgorithm>(SmileyFaceDrawing.Instance);
 
     /// <summary>
     /// Returns all algorithms that are able to use map representation type represented by provided representative.

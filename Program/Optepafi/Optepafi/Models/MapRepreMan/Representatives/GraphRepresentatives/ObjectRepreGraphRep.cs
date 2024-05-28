@@ -1,8 +1,10 @@
+using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
+using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
-using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreReps.MapRepreRepsInterfaces;
+namespace Optepafi.Models.MapRepreMan.Representatives.GraphRepresentatives;
 
 public class ObjectRepreGraphRep<TVertexAttributes, TEdgeAttributes> :
     IGraphRepresentative<IObjectRepreGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>

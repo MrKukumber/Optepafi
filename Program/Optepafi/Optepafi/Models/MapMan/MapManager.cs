@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.MapInterfaces;
 
 namespace Optepafi.Models.MapMan;
@@ -21,7 +22,7 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
     /// <summary>
     /// Set of all usable map formats in application.
     /// </summary>
-    public ISet<IMapFormat<IMap>> MapFormats { get; } = ImmutableHashSet.Create<IMapFormat<IMap>>();
+    public ISet<IMapFormat<IMap>> MapFormats { get; } = ImmutableHashSet.Create<IMapFormat<IMap>>(TextMapRepresentative.Instance);
 
     /// <summary>
     /// Returns map format for a specified map. It do it so by use of "generic visitor pattern" on map.
@@ -53,7 +54,7 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
     {
         foreach (var mapFormat in MapFormats)
         {
-            if (Regex.IsMatch(mapFileName, ".*" + mapFormat.Extension + "$") ) return mapFormat;
+            if (Regex.IsMatch(mapFileName, ".*\\." + mapFormat.Extension + "$") ) return mapFormat;
         }
         return null;
     }

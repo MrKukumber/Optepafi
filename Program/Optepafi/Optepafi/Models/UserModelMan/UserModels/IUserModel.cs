@@ -18,7 +18,9 @@ namespace Optepafi.Models.UserModelMan.UserModels;
 /// Each user model should correctly implement its own serialization. Deserialization is then provided by user model representative. Deserialization and serialization must be corresponding.
 /// </summary>
 /// <typeparam name="TTemplate"></typeparam>
-public interface IUserModel<TTemplate> : IUserModel where TTemplate : ITemplate { }
+public interface IUserModel<in TTemplate> : IUserModel where TTemplate : ITemplate
+{
+}
 
 /// <summary>
 /// Predecessor of <see cref="IUserModel{TTemplate}"/> type used for more convenient transport of user models.
@@ -30,7 +32,7 @@ public interface IUserModel
     /// <summary>
     /// Path to the serialization source file of this user model.
     /// </summary>
-    public string FilePath { get; init; }
+    public string FilePath { get; }
     public string Serialize();
     public void SerializeTo(Stream stream);
 }

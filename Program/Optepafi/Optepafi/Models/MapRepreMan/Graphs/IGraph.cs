@@ -1,7 +1,7 @@
-using Optepafi.Models.TemplateMan;
+using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepres;
+namespace Optepafi.Models.MapRepreMan.Graphs;
 
 /// <summary>
 /// Represents graph behaviour of some map representation. It do it so by coupling with graph functionality interfaces, which dictates contracts usable in path finding mechanisms.

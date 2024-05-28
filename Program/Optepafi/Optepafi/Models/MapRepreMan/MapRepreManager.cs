@@ -8,6 +8,7 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
+using Optepafi.Models.MapRepreMan.MapRepreReps.MapRepreRepsInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.TemplateMan;
@@ -32,7 +33,7 @@ public class MapRepreManager :
     /// Set of representatives of all usable map representations. 
     /// </summary>
     private ISet<IMapRepreRepresentative<IMapRepre>> MapRepreReps { get; } =
-        new HashSet<IMapRepreRepresentative<IMapRepre>>();
+        new HashSet<IMapRepreRepresentative<IMapRepre>>() {BlankRepreRep.Instance};
             
 
     public enum NeedsElevDataIndic { Yes, NotNecessary, No };
@@ -199,8 +200,7 @@ public class MapRepreManager :
     /// <returns></returns>
     public IMapRepre CreateMapRepre(ITemplate template, IGeoLocatedMap map, IMapRepreRepresentative<IMapRepre> mapRepreRep, IElevData elevData, IProgress<MapRepreConstructionReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric<IMapRepre, 
-                (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
+        return map.AcceptGeneric<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
                 (this, (template, mapRepreRep, elevData, constructionProgress, cancellationToken));
 
     }

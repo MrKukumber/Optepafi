@@ -11,5 +11,5 @@ public class TemplateManager
 {
     public static TemplateManager Instance { get; } = new();
     private TemplateManager(){}
-    public ISet<ITemplate> Templates { get; } = ImmutableHashSet.Create<ITemplate>(/*TODO: doplnit templates */);
+    public ISet<ITemplate> Templates { get; } = ImmutableHashSet.Create<ITemplate>(BlankTemplate.Instance);
 }

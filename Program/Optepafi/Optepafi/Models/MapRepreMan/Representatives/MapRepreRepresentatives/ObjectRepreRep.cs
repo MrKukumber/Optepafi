@@ -2,24 +2,26 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.Maps;
+using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepreImplementationReps;
 using Optepafi.Models.MapRepreMan.MapRepreImplementationReps.SpecificImplementationReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
+using Optepafi.Models.MapRepreMan.Representatives.GraphRepresentatives;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.TemplateMan.Templates;
 
 namespace Optepafi.Models.MapRepreMan.MapRepreReps.MapRepreRepsInterfaces;
 
-public class ObjectRepreRep : IMapRepreRepresentative<IObjectRepre<ITemplate>>
+public class ObjectRepreRep : IMapRepreRepresentative<IObjectRepre>
 {
     public static ObjectRepreRep Instance { get; } = new ();
     private ObjectRepreRep(){}
     
     public string MapRepreName { get; } = ""; //TODO: vymysliet pekne meno
-    public IImplementationIndicator<ITemplate, IMap, IObjectRepre<ITemplate>>[] ImplementationIndicators { get; } =
+    public IImplementationIndicator<ITemplate, IMap, IObjectRepre>[] ImplementationIndicators { get; } =
     {
         ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep.Instance
     };

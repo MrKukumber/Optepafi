@@ -1,7 +1,7 @@
 using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepres.FunctionalityInterfaces;
+namespace Optepafi.Models.MapRepreMan.Graphs.GraphFunctionalities;
 
 /// <summary>
 /// Represents graph type that is able to compute A* heuristics for provided vertex couple. This ability is specific need of A* searching algorithms.
