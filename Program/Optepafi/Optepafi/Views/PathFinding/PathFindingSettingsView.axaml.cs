@@ -2,9 +2,12 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using Avalonia.Data.Converters;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
@@ -17,19 +20,9 @@ namespace Optepafi.Views.PathFinding;
 
 public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSettingsViewModel>
 {
-    //When View instance will become unreachable, garbage collecting should ensure, that commands will be cancelled.
-    private IDisposable? _loadUserModelCommandSubscription;
-    private IDisposable? _loadMapCommandSubscription;
-
     public PathFindingSettingsView()
     {
         InitializeComponent();
-        //ViewModel should be assigned only one time. Lambda expression should be therefore executed twice, first time with viewModel = null.
-        this.WhenAnyValue(x => x.ViewModel).Subscribe(viewModel =>
-        {
-            _loadUserModelCommandSubscription ??= viewModel?.LoadUserModelCommandSubscription;
-            _loadMapCommandSubscription ??= viewModel?.LoadMapCommandSubscription;
-        });
         this.WhenActivated(_ => AlgorithmSelectingComboBox.SelectedItem = ViewModel!.SelectedSearchingAlgorithm);
     }
 
@@ -63,10 +56,8 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
         //Of disposing opened stream on this instance takes care ViewModel.
         try
         {
-            _loadUserModelCommandSubscription?.Dispose();
-            _loadUserModelCommandSubscription = ViewModel.LoadUserModelCommand
-                .Execute((await file.OpenReadAsync(), file.Path.LocalPath))
-                .Subscribe();
+                await ViewModel.LoadUserModelCommand
+                .Execute((await file.OpenReadAsync(), file.Path.LocalPath));
         } catch (UnauthorizedAccessException) {
             ViewModel.SelectedUserModelFileName = "Unable to open file."; //TODO: localize
         }
@@ -101,10 +92,8 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
         //Of disposing opened stream on this instance takes care ViewModel.
         try
         {
-            _loadMapCommandSubscription?.Dispose();
-            _loadMapCommandSubscription = ViewModel.LoadMapCommand
-                .Execute((await file.OpenReadAsync(), file.Path.LocalPath))
-                .Subscribe();
+                await ViewModel.LoadMapCommand
+                .Execute((await file.OpenReadAsync(), file.Path.LocalPath));
         } catch (UnauthorizedAccessException) {
             ViewModel.SelectedMapFileName = "Unable to open file."; //TODO: localize
         } 

@@ -17,7 +17,14 @@ build_property.ProjectDir = C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Roc
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/GraphicObjects/MapObjects/TextMapObjectTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = 
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/App.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/GraphicObjects/PathObjectTemplates.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/Main/ElevConfigView.axaml]

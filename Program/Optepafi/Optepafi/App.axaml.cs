@@ -2,6 +2,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
 using HarfBuzzSharp;
 using Optepafi.ModelViews.Main;
@@ -20,6 +21,18 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+
+        Resources.TryGetResource("TextMapObjectTemplates", this.ActualThemeVariant, out object? value);
+        if (value is DataTemplates mapObjectDataTemplates)
+        {
+            DataTemplates.AddRange(mapObjectDataTemplates);
+        }
+        Resources.TryGetResource("PathObjectTemplates", this.ActualThemeVariant, out value);
+        if(value is DataTemplates pathObjectDataTemplates)
+        {
+            DataTemplates.AddRange(pathObjectDataTemplates);
+        }
+        //Add every dataTemplate collection needed in application
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -31,7 +44,7 @@ public partial class App : Application
                 DataContext = new MainWindowViewModel(new MainWindowModelView()),
             };
         }
-
+        
         base.OnFrameworkInitializationCompleted();
     }
 }

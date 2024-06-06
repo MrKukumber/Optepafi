@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -16,6 +17,7 @@ using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.DataViewModels;
+using Optepafi.ViewModels.Graphics;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
@@ -24,15 +26,14 @@ public class PathFindingSettingsViewModel : ViewModelBase
 {
     private PFSettingsModelView _settingsMv;
     private PFMapRepreCreatingModelView _mapRepreCreatingMv;
-    public IDisposable? LoadMapCommandSubscription { get; }
-    public IDisposable? LoadUserModelCommandSubscription { get; }
+
     public PathFindingSettingsViewModel(PFSettingsModelView settingsMv, MainSettingsModelView.Provider mainSettingsMvProvider, PFMapRepreCreatingModelView mapRepreCreatingMv)
     {
         _settingsMv = settingsMv;
         _mapRepreCreatingMv = mapRepreCreatingMv;
 
-        UsableTemplates = _settingsMv.GetUsableTemplates(CurrentlyUsedMapFormat);
-        UsableMapFormats = _settingsMv.GetUsableMapFormats(SelectedTemplate);
+        UsableTemplates = _settingsMv.GetAllUsableTemplates();
+        UsableMapFormats = _settingsMv.GetAllUsableMapFormats();
         UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
         UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
 
@@ -54,14 +55,27 @@ public class PathFindingSettingsViewModel : ViewModelBase
             .Subscribe(selectedTemplate =>
             {
                 _settingsMv.SetTemplate(selectedTemplate);
-                UsableMapFormats = _settingsMv.GetUsableMapFormats(selectedTemplate);
+                if (selectedTemplate is not null && CurrentlyUsedMapFormat is not null)
+                {
+                    if (!_settingsMv.AreTheyUsableCombination(selectedTemplate, CurrentlyUsedMapFormat))
+                    {
+                        CurrentlyUsedMapFormat = null;
+                        SelectedMapFileName = null;
+                        SelectedMapFilePath = null;
+                    }
+                }
+
                 UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(selectedTemplate);
             });
 
         this.WhenAnyValue(x => x.CurrentlyUsedMapFormat)
             .Subscribe(currentlyUsedMapFormat =>
             {
-                UsableTemplates = _settingsMv.GetUsableTemplates(currentlyUsedMapFormat);
+                if (SelectedTemplate is not null && currentlyUsedMapFormat is not null)
+                {
+                    if (!_settingsMv.AreTheyUsableCombination(SelectedTemplate, currentlyUsedMapFormat))
+                        SelectedTemplate = null;
+                }
             });
 
         this.WhenAnyValue(x => x.SelectedSearchingAlgorithm)
@@ -71,63 +85,66 @@ public class PathFindingSettingsViewModel : ViewModelBase
             });
         
         
-        this.WhenAnyValue(x => x.UsableMapFormats)
-            .Subscribe(usableMapFormats =>
-            {
-                if (usableMapFormats is null || !usableMapFormats.Contains(CurrentlyUsedMapFormat))
-                {
-                    CurrentlyUsedMapFormat = null;
-                    SelectedMapFileName = null;
-                    SelectedMapFilePath = null;
-                }
-            });
-        this.WhenAnyValue(x => x.UsableUserModelTypes)
-            .Subscribe(usableUserModelTypes =>
-            {
-                if (usableUserModelTypes is null || !usableUserModelTypes.Contains(CurrentlyUsedUserModelType))
-                {
-                    CurrentlyUsedUserModelType = null;
-                    SelectedUserModelFileName = null;
-                    SelectedUserModelFilePath = null;
-                }
-            });
+        // this.WhenAnyValue(x => x.UsableMapFormats)
+            // .Subscribe(usableMapFormats =>
+            // {
+                // if (usableMapFormats is null || !usableMapFormats.Contains(CurrentlyUsedMapFormat))
+                // {
+                    // CurrentlyUsedMapFormat = null;
+                    // SelectedMapFileName = null;
+                    // SelectedMapFilePath = null;
+                // }
+            // });
+        // this.WhenAnyValue(x => x.UsableUserModelTypes)
+            // .Subscribe(usableUserModelTypes =>
+            // {
+                // if (usableUserModelTypes is null || !usableUserModelTypes.Contains(CurrentlyUsedUserModelType))
+                // {
+                    // CurrentlyUsedUserModelType = null;
+                    // SelectedUserModelFileName = null;
+                    // SelectedUserModelFilePath = null;
+                // }
+            // });
 
-        LoadMapCommand = ReactiveCommand.CreateFromTask(async ((Stream, string) mapFileStreamAndPath, CancellationToken cancellationToken) =>
-        {
-            var (mapFileStream, mapFilePath) = mapFileStreamAndPath;
-            string mapFileName = Path.GetFileName(mapFilePath);
-            MapFormatViewModel? mapFormat = _settingsMv.GetCorrespondingMapFormat(mapFileName);
-            if (mapFormat is null) throw new NullReferenceException("Map format should be returned, because chosen file was filtered to be correct.");
-            var loadResult = await _settingsMv.LoadAndSetMapAsync(mapFileStreamAndPath, mapFormat, cancellationToken);
-            if (!cancellationToken.IsCancellationRequested) ; //TODO: nechat asynchronne (Task.Run()) zavolat vytvorenie grafickeho znazornenia mapy a mozno vykreslit ju na obrazovke....mzono to skor spravit cez dalsi command, nakolko to nema nic moc spolocne s nahravanim mapy....treba dat ale pozor na cancellation token a ukoncenie ziskavania grafickej reprezentaci, cize predsa len to mozno spravit v tomto mieste asynchronne, aby som mohol predat cancellation token
-            mapFileStream.Dispose();
-            return (loadResult, mapFormat, mapFilePath);
-        });
+        LoadMapCommand = ReactiveCommand.CreateFromObservable(((Stream, string) mapFileStreamAndPath) => Observable
+            .StartAsync(async cancellationToken =>
+            {
+                var (mapFileStream, mapFilePath) = mapFileStreamAndPath;
+                string mapFileName = Path.GetFileName(mapFilePath);
+                MapFormatViewModel? mapFormat = _settingsMv.GetCorrespondingMapFormat(mapFileName);
+                if (mapFormat is null) throw new NullReferenceException("Map format should be returned, because chosen file was filtered to be correct.");
+                var loadResult = await _settingsMv.LoadAndSetMapAsync(mapFileStreamAndPath, mapFormat, cancellationToken);
+                var mapGraphics = _settingsMv.GetLoadedMapGraphics();
+                mapFileStream.Dispose();
+                return (loadResult, mapFormat, mapFilePath, mapGraphics);
+            })
+            .TakeUntil(LoadMapCommand));
         
-        
-        LoadUserModelCommand = ReactiveCommand.CreateFromTask(async ((Stream, string) userModelFileStreamAndPath, CancellationToken cancellationToken) =>
-        {
-            var (userModelFileStream, userModelFilePath) = userModelFileStreamAndPath;
+        LoadUserModelCommand = ReactiveCommand.CreateFromObservable(((Stream, string) userModelFileStreamAndPath) => Observable.StartAsync(async (CancellationToken cancellationToken) => 
+        { 
+            var (userModelFileStream, userModelFilePath) = userModelFileStreamAndPath; 
             string userModelFileName = Path.GetFileName(userModelFilePath);
             UserModelTypeViewModel? userModelType = _settingsMv.GetCorrespondingUserModelType(userModelFileName);
             if (userModelType is null) throw new NullReferenceException(" User model type should be returned, because chosen file was filtered to be correct.");
             var loadResult = await _settingsMv.LoadAndSetUserModelAsync(userModelFileStreamAndPath, userModelType, cancellationToken);
             userModelFileStream.Dispose();
             return (loadResult, userModelType, userModelFilePath);
-        });
-
+        }).TakeUntil(LoadUserModelCommand) );
+        
         LoadMapCommand.Subscribe(commandOutput =>
         {
-            var (mapLoadingResult, mapFormat, mapFilePath) = commandOutput;
+            var (mapLoadingResult, mapFormat, mapFilePath, mapGraphics) = commandOutput;
             switch (mapLoadingResult)
             {
                 case MapManager.MapCreationResult.Incomplete:
-                    //TODO vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
+                    // TODO: vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
                     // v modelView-u uz nastavena tato mapa, takze urcite nenechavat aby sa uzivatel mohol navratit ku predchadzajucej
                 case MapManager.MapCreationResult.Ok:
+                    SelectedMapsPreview?.GraphicObjectsCollection.Clear();
                     CurrentlyUsedMapFormat = mapFormat;
                     SelectedMapFileName = Path.GetFileName(mapFilePath);
                     SelectedMapFilePath = mapFilePath;
+                    SelectedMapsPreview = mapGraphics;
                     break; 
                 case MapManager.MapCreationResult.Cancelled:
                     break;
@@ -192,13 +209,17 @@ public class PathFindingSettingsViewModel : ViewModelBase
         {
             Stream? mapFileStream = TryFindAndOpenFile(settingsMv.DefaultMapFilePath);
             if (mapFileStream is not null)
-                LoadMapCommandSubscription = LoadMapCommand
+                LoadMapCommand
                     .Execute((mapFileStream, settingsMv.DefaultMapFilePath))
                     .Subscribe(commandOutput =>
                     {
-                        var (_, mapFormat,_) = commandOutput;
+                        var (_, mapFormat,_,_) = commandOutput;
                         CurrentlyUsedMapFormat = mapFormat;
                     });
+            else
+            { 
+                CurrentlyUsedMapFormat = null;
+            }
         }
 
 
@@ -211,7 +232,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
             {
                 Stream? userModelFileStream = TryFindAndOpenFile(settingsMv.DefaultUserModelFilePath);
                 if (userModelFileStream is not null)
-                    LoadUserModelCommandSubscription =  LoadUserModelCommand
+                    LoadUserModelCommand
                         .Execute((userModelFileStream, settingsMv.DefaultUserModelFilePath))
                         .Subscribe();
             }
@@ -295,6 +316,13 @@ public class PathFindingSettingsViewModel : ViewModelBase
         get => _usableMapFormats;
         set => this.RaiseAndSetIfChanged(ref _usableMapFormats, value);
     }
+
+    private GraphicsViewModel? _selectedMapsPreview;
+    public GraphicsViewModel? SelectedMapsPreview
+    {
+        get => _selectedMapsPreview;
+        set => this.RaiseAndSetIfChanged(ref _selectedMapsPreview, value);
+    }
     
     
 
@@ -320,7 +348,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
     
     
     
-    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string)> LoadMapCommand { get; }
+    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string, GraphicsViewModel?)> LoadMapCommand { get; }
     public ReactiveCommand<(Stream, string), (UserModelManager.UserModelLoadResult, UserModelTypeViewModel, string)> LoadUserModelCommand { get; }
     
     //TODO: command pre prechod do vytvaranaia mapovej reprezentacie, nech necha ukladanie parametrov na modelView-u a ten tam uklada datove triedy, nie ich ViewModelove wrappre

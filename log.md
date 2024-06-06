@@ -475,3 +475,59 @@ opozdely log z programovania projetku
   - pride mi to ako trefnejsi nazov, nakolko funkcionalita mapovej reprezentacie je vlastne graf ktorym ona sama je
   - zaroven to ponechava sematiku mapovych reprezentacii, ktore vanze reprezentuju nejakym sposobom mapu ale zaroven su grafmi, nad ktorymi dokaze algoritmus vyhladavat
   - interface-y pre implementacie mapovych reprezentacii som premenoval iba na implementacie, lebo v podstate budu implementovat ako mapovu reprezentaciu, tak graf...teda pre jednoduchost su to proste len implementacie
+
+## 29.5.2024
+
+### myslienky ku reprezentacii grafiky mapovych objektov
+
+- vytvorim novu datovu strukturu ktora v sebe bude drzat mapove objekty - konkretne ich view modely v podstate
+- tato datova struktura este bude drzat aj celkovu velkost mapy - aby sme mohli nastavit spravnu velkost canvasu
+- jednotlive mapove objekty musia obsahovat ich poziciu a z-index(priorita vykreslovania), nasledne vsetky ostatne vlastnosti uz mozu byt definovane v potomkoch lubovolne - najlepsie tak aby sa to dobre parsovalo do datovych tamplatov
+- nebudem si celu session musiet udrziavat nejaku dalsiu mapovu reprezentaciu pre vykreslenie v pamati - proces vytvorenia takej reprezentacie by mal byt o dost jednoduchsi ako mapovej reprezentacie pre vyhladavanie - preto nevadi ked sa to bude pocitat dva krat napriklad
+  - alebo si popripade mozem podrzat ukazatel na kolekciu ktora bude obsahovat tie mapove objekty a mozem ju vyuzit viac krat - to uz sa budem moct rozhodnut pocas programovania...mala by to potom byt uz jednoducha uprava
+
+- koordinacny system ktory budu pouzivat tieto mapove objetky este treba rozhodnut - bud *MapCoordinate* podla referencneho bodu mapy alebo *CanvasCoordinat* aby sa uz nemuseli prepocitavat vo view-u 
+  - CanvasCoordinate znamena ze pozicia bude urcena tak aby sa mohla vlozit do Canvas.Left a Canvas.Bottom vlastnosti a tvary jednotlivych objektov budu relativne tejto pozicii aby sa tiez nemuseli prepocitavat
+
+### myslienky ku renderovaniu mpovych objektov v canvase
+
+- staci mat dataTemplates pre jednotlive typy objektov a ono aj ked budu v nejakej kolekcii ich predka IMapObject, budu si spravne nachadzat svoje templaty nakolko templaty funguju na Match a Build metode ktore pattern matchuju prichadzajuce objekty na ich DataType vlastnost.
+- Canvas nastavim velkost podla velkosti ulozenej v datovej strukture
+- Skusim pouzit *ScrollViewer* pre vyuzitie scroll barov na canvase a *ViewBox* pre moznost kvalitneho scale-ovania
+- DataTemplate-y budem uskladnovat v extra ResourceDictionary a budem ich include-ovat do ListBoxu
+- PointerPressedEvent pre zaznamenanie bodu
+
+## 3.6.2024
+
+- vytvaranie mechanizmu pre zobrzaovanie grafiky map
+- co sa tyka modelu, vytvorena nova cast pre spracovavanie akejkolvek grafiky - GraphicsManager
+- ponuka metody pre spracovanie grafik pre mapy a cesty
+- robi to tak ze naplna predostrety kolektor gprafickymi objektmi aby sa mohlo v realnom case pozorovat pribudajuce grapficke objekty
+  - z tohto dovodu musi grapficky manager taktiez zprostredkovat minimalne a maximalne suradnice map, aby sa dopredu mohlo zistit, s akymi rozmermi mapy musime pocitat
+
+- v ramci model viewu vytvorene triedy pre konverziu grafickych mapovych objektov vytvorenych modelom na ich view modely kore sa daju pouzivat vo view-e 
+- dalej kolektory ktore sa davaju grapfickemu mamageru, ktory ich naplnuje mapovymi objektmi
+  - kolektor je objekt kotry mal len metodu Add a teda nechava do seba pridavat novo vytvorene graficke objekty. Tieto ojekty vklada do predlozenej kolekcie ktoru uz nasledne moze observovat modelView alebo dokonca View (ak sa v kolektore zabezpeci konverzia na viewModely)
+  - tento zvlastny princip je vytvoreny koli tomu, aby sme mohli v relanom case pozorovat vytvaranie grafiky....graficke objekty su agregovane z mapy asynchronne....tym ze kolektor pridava do kolekcie spusta eventy oznamujuce prichod dalsich objektov
+
+- vo viewModelu vytovrene viewModely pre jednotlive graficke objekty
+
+- vo View-u pridana dataTemplate-y pre viewModely grafickych objektov
+- vsetky data template-y sa pridavaju do Application a teda su dostupne pre celu aplikaciu
+  - su pridavane v code-behind nakolko je potrebne do DataTemplates vlastonosti Application objektu popridavat datatemplate-y z resource dictionaries
+  - dataTemplate-y su totiz rozdelene pre prehladnost v samostatnych suboroch (resorce-dictionaries) pre jednotlive mapove formaty a teda je potrebne ich nacitat do aplikacie
+  - toto bol asi jediny sposob akym som dokazal separovat dataTemplaty do zvlast suboru
+- pridany konvertor z mikrometrov na Desktop-Independent Pixels...viewModely si totiz drzia pozicie a parametere objektov v mikrometroch na mape....treba preto konvertovat tieto hodnoty na DIP aby mohli byt pouzite vo View-e
+
+## 6.6.2024
+
+- posun v myslienke uskaldnovania grafickych objektov a ich konvertovanie na ich viewModely
+- dovodom je zlozitost vykreslovania objektov v avaloniovom canvase
+- myslienka je ze predsa len si ukaldat graficke objekty, nielen ich priamo konvertovat na viewModely a tym publishovat celu graficku reprezentaciu mapy naraz
+- nasledne na viewModely konvertovat len tie graficke objekty, ktore je potrebne pre zobrazenie v danej chvili
+  - vo viewModeloch si predsa len pamatat aj graficky objekt, z ktoreho bol vytvoreny (teda moze graficky objekt dedit od DataViewModel-u aby mal aj overridenute equals a tak)
+  - graficke objekty totiz oproti uz samotnej avaloniovej grafike nezaberaju takmer ziadne miesto a teda sa nemusim bat si ich drzat pocas celej doby session-u....v podstate ked sa to tak zoberie tak z jednej mapy vytvorim dve reprzentacie, ktore si proste budem drzat po celu dobu behu sessionu - mapovu reprezentaciu a mapovu grafiku
+
+-myslienku s kolektormi by som ale ponechal, nech stale graficky agregatori v modelu ich pouzivaju na skladovanie nimi vytvorenych grafickych objektov....
+
+- teda bude potrebne vitovrit v ModelView-e mechanizmus, ktory bude podporovat logiku zobrazovania grafickych objektov a konverziu na viewModely

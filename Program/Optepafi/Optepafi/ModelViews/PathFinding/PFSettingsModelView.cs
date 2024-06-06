@@ -1,12 +1,17 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Metadata;
+using DynamicData;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.Graphics;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
@@ -16,8 +21,11 @@ using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.ModelViews.Graphics;
+using Optepafi.ModelViews.Graphics.Collectors;
 using Optepafi.ModelViews.Main;
 using Optepafi.ViewModels.DataViewModels;
+using Optepafi.ViewModels.Graphics;
 
 namespace Optepafi.ModelViews.PathFinding;
 
@@ -81,30 +89,26 @@ public abstract class PFSettingsModelView : ModelViewBase
         return null;
     }
 
-    public IReadOnlyCollection<MapFormatViewModel> GetUsableMapFormats(TemplateViewModel? templateViewModel)
+    public IReadOnlyCollection<MapFormatViewModel> GetAllUsableMapFormats()
     {
-        if (templateViewModel is not null)
-        {
-            var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
-            return usableTemplateMapFormatCombs
-                .Where(comb => comb.Item1 == templateViewModel.Template)
-                .Select(comb => new MapFormatViewModel(comb.Item2))
-                .ToHashSet();
-        }
-        return MapManager.Instance.MapFormats.Select(mapFormat => new MapFormatViewModel(mapFormat)).ToHashSet();
+        var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
+        return usableTemplateMapFormatCombs
+            .Select(comb => new MapFormatViewModel(comb.Item2))
+            .ToHashSet(); //Gets rid of duplicate MapFormatViewModels.
     }
 
-    public IEnumerable<TemplateViewModel> GetUsableTemplates(MapFormatViewModel? mapFormatViewModel)
+    public IEnumerable<TemplateViewModel> GetAllUsableTemplates()
     {
-        if (mapFormatViewModel is not null)
-        {
-            var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
-            return usableTemplateMapFormatCombs
-                .Where(comb => comb.Item2 == mapFormatViewModel.MapFormat)
-                .Select(comb => new TemplateViewModel(comb.Item1))
-                .ToHashSet();
-        }
-        return TemplateManager.Instance.Templates.Select(mapFormat => new TemplateViewModel(mapFormat)).ToHashSet();
+        var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
+        return usableTemplateMapFormatCombs
+            .Select(comb => new TemplateViewModel(comb.Item1))
+            .ToHashSet(); //Gets rid of duplicate TemplateViewModels.
+    }
+
+    public bool AreTheyUsableCombination(TemplateViewModel templateViewModel, MapFormatViewModel mapFormatViewModel)
+    {
+        var usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
+        return SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps.ToArray()).Count > 0;
     }
     
     public IReadOnlyCollection<UserModelTypeViewModel>? GetUsableUserModelTypes(
@@ -138,8 +142,8 @@ public abstract class PFSettingsModelView : ModelViewBase
         MapFormatViewModel mapFormatViewModel, CancellationToken cancellationToken);
     public abstract Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync((Stream,string) streamWithPath,
         UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken);
-    
-    
+    public abstract GraphicsViewModel? GetLoadedMapGraphics();
+
 }
 
 public partial class PathFindingSessionModelView : SessionModelView
@@ -217,6 +221,23 @@ public partial class PathFindingSessionModelView : SessionModelView
                 MapFilePath = Map!.FilePath,
                 UserModelFilePath = UserModel!.FilePath 
             });        
+        }
+
+        public override GraphicsViewModel? GetLoadedMapGraphics()
+        {
+            if (Map is null) throw new NullReferenceException("Map property should be instantiated before calling this method.");
+            IMap map = Map;
+            
+            var extremes = GraphicsManager.Instance.GetAxisExtremesOf(map);
+            if (extremes is null) { return null; }
+            var (minXPos, minYPos, maxXPos, maxYPos) = extremes.Value;
+            
+            GraphicsViewModel graphicsViewModel = new (maxXPos - minXPos, maxYPos - minYPos);
+            ICollection<GraphicObjectViewModel> graphicObjectViewModels = graphicsViewModel.GraphicObjectsCollection;
+            GraphicsObjects2VmConvertingCollector collector = new (graphicObjectViewModels,ConvertersCollections.MapObjects2VmConverters, minXPos, minYPos);
+            
+            Task.Run(() => GraphicsManager.Instance.AggregateMapGraphics(map, collector));
+            return graphicsViewModel;
         }
     }
 }

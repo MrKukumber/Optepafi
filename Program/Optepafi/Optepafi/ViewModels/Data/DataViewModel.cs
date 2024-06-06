@@ -1,6 +1,8 @@
+using ReactiveUI;
+
 namespace Optepafi.ViewModels.DataViewModels;
 
-public abstract class DataViewModel<TData> : ViewModelBase
+public abstract class DataViewModel<TData> : ReactiveObject
     where TData : notnull
 {
     protected abstract TData Data { get; }

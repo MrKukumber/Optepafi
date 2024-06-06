@@ -7,63 +7,63 @@
              x:Class="Optepafi.Views.Main.ElevConfigView"
              x:DataType="mVm:ElevConfigViewModel">
     <DockPanel>
-            <TextBlock Name="ElevConfigHeaderTextBlock" Text="Elevation configuration" 
-                       HorizontalAlignment="Center" DockPanel.Dock="Top"></TextBlock>
-            <Grid DockPanel.Dock="Bottom" ColumnDefinitions="* *" Margin="10">
-                <Button Name="ReturnButton" Content="Return" Command="{Binding ReturnCommand}"
-                        Grid.Column="1" HorizontalAlignment="Right"></Button>
-            </Grid>
-            <Grid Margin="0 20 0 0" RowDefinitions="Auto Auto 4* Auto *">
-                <StackPanel Grid.Row="0" Margin="10 0 0 10">
-                    <TextBlock Name="ElevSourceTextBlock" Text="Source of elevation"></TextBlock>
-                    <ComboBox Name="ElevSourceComboBox" HorizontalAlignment="Left"
-                              ItemsSource="{Binding ElevDataDistributions}"
-                              SelectedItem="{Binding CurrentElevDataDist}"></ComboBox>
-                </StackPanel>
-                <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="False" Height="1"></ProgressBar>
-                <ListBox Grid.Row="2" ItemsSource="{Binding CurrentAvailableRegions}"
-                         SelectedItem="{Binding SelectedRegion}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}" 
-                                       Background="{Binding Presence, Converter={x:Static mVm:ElevConfigViewModel.PresenceToColorConverter}}"></TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <!-- varianta s canvasom a vytvorenim mapy z regionov -->
-                <!-- <ListBox> -->
-                    <!-- <ListBox.ItemsPanel> -->
-                        <!-- <ItemsPanelTemplate> -->
-                            <!-- <Canvas/> -->
-                        <!-- </ItemsPanelTemplate> -->
-                    <!-- </ListBox.ItemsPanel> -->
-                    <!-- <ListBox.Styles> -->
-                        <!-- <Style Selector="ListBoxItem"> -->
-                            <!-- <Setter Property="Canvas.Left" -->
-                                    <!-- Value="{Binding}"/> -->
-                            <!-- <Setter Property="Canvas.Top" -->
-                                    <!-- Value="{Binding}"/> -->
-                        <!-- </Style> -->
-                        <!-- kazdy objekt, ktory reprezentuje region, vytvarovat do tvaru krajiny ak stihnem a umiestnit na spravne miesto -->
-                    <!-- </ListBox.Styles> -->
-                <!-- </ListBox> -->
-                <!-- <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal"> -->
-                    <!-- <Button Name="ZoomButton"></Button> -->
-                    <!-- <Button Name="UnZoomButton"></Button> -->
-                <!-- </StackPanel> -->
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="4">
-                    <TextBlock Text="Country name:" Margin="20"></TextBlock>
-                    <Button Name="DownloadButton" Content="Download" Margin="0 0 20 0" Command="{Binding DownloadRegionCommand}"></Button>
-                    <Button Name="DeleteButton" Content="Delete" Command="{Binding DeleteRegionCommand}"></Button>
-                    <Button Name="CancelButton" Content="Cancel" Command="{Binding CancelDownloadingCommand}"></Button>
-                    <TextBox Name="UserNameTextBlock" Watermark="Insert user name" Text="{Binding UserName, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}"></TextBox>
-                    <!-- <TextBox Name="PasswordTextBlock" Watermark="Insert password" Text="{Binding Password, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}" PasswordChar="*"></TextBox> -->
-                </StackPanel>
-            </Grid>
-        </DockPanel>
+        <TextBlock Name="ElevConfigHeaderTextBlock" Text="Elevation configuration" 
+                   HorizontalAlignment="Center" DockPanel.Dock="Top"></TextBlock>
+        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="* *" Margin="10">
+            <Button Name="ReturnButton" Content="Return" Command="{Binding ReturnCommand}"
+                    Grid.Column="1" HorizontalAlignment="Right"></Button>
+        </Grid>
+        <Grid Margin="0 20 0 0" RowDefinitions="Auto Auto 4* Auto *">
+            <StackPanel Grid.Row="0" Margin="10 0 0 10">
+                <TextBlock Name="ElevSourceTextBlock" Text="Source of elevation"></TextBlock>
+                <ComboBox Name="ElevSourceComboBox" HorizontalAlignment="Left"
+                          ItemsSource="{Binding ElevDataDistributions}"
+                          SelectedItem="{Binding CurrentElevDataDist}"></ComboBox>
+            </StackPanel>
+            <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="False" Height="1"></ProgressBar>
+            <ListBox Grid.Row="2" ItemsSource="{Binding CurrentAvailableRegions}"
+                     SelectedItem="{Binding SelectedRegion}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" 
+                                   Background="{Binding Presence, Converter={x:Static mVm:ElevConfigViewModel.PresenceToColorConverter}}"></TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <!-- varianta s canvasom a vytvorenim mapy z regionov -->
+            <!-- <ListBox> -->
+                <!-- <ListBox.ItemsPanel> -->
+                    <!-- <ItemsPanelTemplate> -->
+                        <!-- <Canvas/> -->
+                    <!-- </ItemsPanelTemplate> -->
+                <!-- </ListBox.ItemsPanel> -->
+                <!-- <ListBox.Styles> -->
+                    <!-- <Style Selector="ListBoxItem"> -->
+                        <!-- <Setter Property="Canvas.Left" -->
+                                <!-- Value="{Binding}"/> -->
+                        <!-- <Setter Property="Canvas.Top" -->
+                                <!-- Value="{Binding}"/> -->
+                    <!-- </Style> -->
+                    <!-- kazdy objekt, ktory reprezentuje region, vytvarovat do tvaru krajiny ak stihnem a umiestnit na spravne miesto -->
+                <!-- </ListBox.Styles> -->
+            <!-- </ListBox> -->
+            <!-- <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal"> -->
+                <!-- <Button Name="ZoomButton"></Button> -->
+                <!-- <Button Name="UnZoomButton"></Button> -->
+            <!-- </StackPanel> -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="4">
+                <TextBlock Text="Country name:" Margin="20"></TextBlock>
+                <Button Name="DownloadButton" Content="Download" Margin="0 0 20 0" Command="{Binding DownloadRegionCommand}"></Button>
+                <Button Name="DeleteButton" Content="Delete" Command="{Binding DeleteRegionCommand}"></Button>
+                <Button Name="CancelButton" Content="Cancel" Command="{Binding CancelDownloadingCommand}"></Button>
+                <TextBox Name="UserNameTextBlock" Watermark="Insert user name" Text="{Binding UserName, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}"></TextBox>
+                <!-- <TextBox Name="PasswordTextBlock" Watermark="Insert password" Text="{Binding Password, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}" PasswordChar="*"></TextBox> -->
+            </StackPanel>
+        </Grid>
+    </DockPanel>
 </UserControl>

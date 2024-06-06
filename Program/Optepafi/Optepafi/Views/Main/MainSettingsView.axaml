@@ -7,6 +7,7 @@
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="350"
              x:Class="Optepafi.Views.Main.MainSettingsView"
              x:DataType="mVm:MainSettingsViewModel">
+    <UserControl.DataTemplates></UserControl.DataTemplates>
     <DockPanel>
         <TextBlock Name="MainSettingsHeaderTextBlock" Text="{x:Static local:Local.MainSettingsHeader}"
                    DockPanel.Dock="Top" HorizontalAlignment="Center"></TextBlock>

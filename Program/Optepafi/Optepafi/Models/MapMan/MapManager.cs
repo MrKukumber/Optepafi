@@ -75,4 +75,6 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
             return MapCreationResult.Cancelled;
         return creationResult;
     }
+
+
 }

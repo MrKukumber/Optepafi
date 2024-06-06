@@ -4,7 +4,7 @@ using Optepafi.Models.MapRepreMan.MapRepres;
 namespace Optepafi.Models.MapMan.MapInterfaces;
 
 /// <summary>
-/// Main interface for representing parsed map files. Object implementing this interface can be then used for creation of map representations used in path finding algorithms.
+/// Main interface for representing parsed map files. Object implementing this interface can be then used for creation of map representations used in path finding algorithms and used for displaying maps for users.
 /// Main difference between implementations of this interface and implementations of <see cref="IMapRepre"/> is their computational complexity and their informative value.
 /// Map representations represents relations between map objects whereas map serves only as swiftly made collection of map objects stored for their further processing.
 /// Each implementation of this interface should have its own representative so it could presented as viable type in <see cref="MapManager"/> class.

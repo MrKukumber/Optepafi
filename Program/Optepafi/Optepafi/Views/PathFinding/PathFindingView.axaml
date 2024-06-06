@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
+             xmlns:utils="using:Optepafi.Views.Utils"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="Optepafi.Views.PathFinding.PathFindingView"
              x:DataType="pfVm:PathFindingViewModel">
@@ -20,13 +21,28 @@
             <GridSplitter Grid.Column="2"></GridSplitter>
             <Grid Grid.Column="3"  RowDefinitions="* Auto" Margin="5">
                 <Border Grid.Row="0" BorderBrush="Black" BorderThickness="2">
-                    <ScrollViewer >
-                        <Canvas></Canvas>
+                    <ScrollViewer>
+                        <Viewbox Width="" Height=""><!--TODO: bindnut na aktualnu velkost canvasu, tato hodnota sa bude moct menit v zavislosti na zoom/unzoom a convertorvat hodnoty z metrickej do DIP-->
+                            <ItemsControl Name="PathFindingCanvas" ItemsSource="">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="Canvas.Left" Value="{Binding }"/> <!-- TODO: bindnut a convertorvat hodnoty z metrickej do DIP-->
+                                        <Setter Property="Canvas.Bottom" Value="{Binding }"/> <!-- TODO: bindnut a convertorvat hodnoty z metrickej do DIP-->
+                                        <Setter Property="Canvas.ZIndex" Value="{Binding }"/><!-- TODO: bindnut a convertorvat hodnoty z metrickej do DIP-->
+                                    </Style>
+                                </ItemsControl.Styles>
+                            </ItemsControl>
+                        </Viewbox>
                     </ScrollViewer>
                 </Border>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Name="ZoomButton"></Button>
-                    <Button Name="UnZoomButton"></Button>
+                    <Button Name="ZoomButton">+</Button>
+                    <Button Name="UnZoomButton">-</Button>
                 </StackPanel>
             </Grid>
             <GridSplitter Grid.Column="4" ></GridSplitter>

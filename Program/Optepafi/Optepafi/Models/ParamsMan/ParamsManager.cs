@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DynamicData;
 using Optepafi.ModelViews;
 
 namespace Optepafi.Models.ParamsMan;
@@ -61,13 +62,15 @@ public sealed class ParamsManager : ModelViewBase
     /// </summary>
     public void SaveAllParams()
     {
+        List<Task> tasks = new();
         foreach (var (_, param) in paramsStorage)
         {
             if (param is not null)
             {
-                Task.Run(() => param.AcceptParamsManager(this));
+                tasks.Add(Task.Run(() => param.AcceptParamsManager(this))); 
             }
         }
+        Task.WhenAll(tasks).Wait();
     }
     public void Visit<TParam>(TParam param)
     {

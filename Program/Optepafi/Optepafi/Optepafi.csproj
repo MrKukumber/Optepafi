@@ -109,8 +109,10 @@
 
     <ItemGroup>
       <Folder Include="Models\ElevationDataMan\ElevSources\" />
+      <Folder Include="Models\Graphics\GraphicsAggregators\PathGraphicsAggregator\" />
+      <Folder Include="Models\Graphics\GraphicsObjects\PathObjects\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />
-      <Folder Include="Models\Utils\" />
+      <Folder Include="ViewModels\Graphics\Path\" />
     </ItemGroup>
 
 
@@ -123,6 +125,7 @@
     <ItemGroup>
       <AdditionalFiles Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <AdditionalFiles Remove="Localization\**" />
+      <AdditionalFiles Include="Views\DataTemplates\GraphicObjects\MapObjects\TextMapObjectTemplates.axaml" />
     </ItemGroup>
 
 

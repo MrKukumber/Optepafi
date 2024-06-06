@@ -3,6 +3,7 @@ using System.Threading;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
@@ -51,7 +52,7 @@ public interface ISearchingAlgoritmImplementation
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <returns>Collection of resulting found paths. Path collections (for legs of track) are returned in order of corresponding user models.</returns>
-    Path[][] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track,
+    ClasicColoredPath[][] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
         IComputingUserModel<TVertexAttributes, TEdgeAttributes>[] userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
@@ -89,7 +90,7 @@ public interface ISearchingAlgoritmImplementation
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user model.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They are used for retrieving weights of edges from user model.</typeparam>
     /// <returns>Collection of resulting found paths for legs of track.</returns>
-    protected Path[] ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
+    protected ClasicColoredPath[] ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
         IComputingUserModel<TVertexAttributes, TEdgeAttributes> userModel,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)

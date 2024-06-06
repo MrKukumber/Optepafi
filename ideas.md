@@ -58,12 +58,22 @@
   - pre znovu nastartovanie automatickeho upravovania sa len upravy dana indikatorova property
   - pokial sa indikatorova property nastavy na tvrde zadavanie parametrov, zachova sa posledna pouzita konfiguracia parametrov a bude sa pouzivat uz stale ako defaultna
 
-
 ## specifikacia
 
 ### co nezabudnut
 
 - zmienit, ze sa budeme drzat ISOM 2017
+- preco som nevyuzil curriously recurring template pattern v pripade map a mapovych reprezentacii pre moznost vratenia ich reprezentantov - preco to neslo, v com su nevyhody tohto patternu
+- preco mam taku architekturu MVVMMV aku mam, co ktore casti robia a spravuju, ako su navzajom oddelene, co vidia a co zase nie 
+- pre modelView skryva niektore vlastnosti pred ViewModelom pomocou inner typov definovanych v Session ModelView-e
+- Preco vyuzivam viewmodely pre vsetky data ktore je potrebne nejakym sposobom ukazat vo view-e, preco nepouzivam priamo tie data
+- preco maju jednotlive modely architekturu aku maju, 
+  - preco su tam nejaki reprezentanti,
+  - preco algoritmus ponuka aj jeho executor,
+  - aky vyznam maju mapove reprezentacie vs aky vyznam maju grafy,
+  - ...
+- preco som sa rozhodol pre drzanie kolekcie mapovych objektov aj napriec modelViewvmi, preco nevytvaram tuto kolekciu vzdy od zaciatku, pro a proti, preco nevytvaram tuto kolekci vzdy znova relativne k pozadovanemu vystrihu mapy (narocne, alebo ked uz mam raz vytovrenu celu kolekciu tak sa mi ju neoplati zahadzovat a vytvarat nejaku mensiu ked ju takci tak budem potrebovat celu pri path findingu???)
+- co je potrebne spravit na pridanie specifickeho modelu (mapoveho formatu, templatu, algoritmu, ...)
 
 ## Co tam chcem mat
 
@@ -134,10 +144,11 @@
   - posledne pouzity algoritmus, tameplate, model, posledny zdroj vyskovych dat, mapa - parametry
   - posledne pouzity zdroj vyskovych dat, stiahnute regiony
 
-## TODO:
+## TODO do buducna:
 
-naucit sa elasticke grafy
-poriadne premysliet ako pritahovat tie vrcholy k tym objektom, hlavne v pripadoch, kedy mi jeden objekt krizuje hranu viac krat
+- nech kazda mapa moze po svojom znazornovat trat zadanu uzivatelom...nejako tak ze sa grapfickemu managerovi predaju pozicie trate a mapa pre ktoru ma byt grafika vytvorena a on to za pomocou aggregatoru vytvori...v podstate vsetky graficke objekty budu dost podobne...az potom datatemplate vo view-u podla typu objektu urci jak sa to nakresli
+- nechat nech view vykresluje iba objekty ktore sa v danej chvili su vidiet na obrazovke...neviemsice uplne teraz preco ale proste mohlo by to pomoct nejakym sposobom mozno ku zlepseniu vykonu
+-
 
 ## toto si tu odlozim
 
@@ -184,9 +195,7 @@ Předpokládá se možnost parametrizace vyhledávácích algoritmů např. úda
 - vrchol bude bud zafixovany alebo nie, ak nebude zafixovany, bude v najmenej energeticky narocnej polohe...
 - graf bude mat na zaciatku styri zafixovane vrcholy a to v rohoch siete...popriade po stranach tiez
 
-
-
-
+## navrh logiky path finding session
 
 - vyberie sa bud template TE alebo algoritmus AL alebo mapa MA
 - podla toho sa vytvori ponuka pre zvysne dve veci
