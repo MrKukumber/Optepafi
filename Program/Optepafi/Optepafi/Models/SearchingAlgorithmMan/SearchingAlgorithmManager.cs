@@ -8,6 +8,7 @@ using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
+using Optepafi.Models.SearchingAlgorithmMan.Paths.Implementations;
 using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
@@ -21,8 +22,8 @@ namespace Optepafi.Models.SearchingAlgorithmMan;
 /// All operations provided by this class are thread safe as long as same method arguments are not use concurrently multiple times.
 /// </summary>
 public class SearchingAlgorithmManager : 
-    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result[], ClasicColoredPath[]?[]),(Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>,
-    ITemplateGenericVisitor<ClasicColoredPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel, IProgress<ISearchingReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result[], ClassicColoredPath[]?[]),(Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<ClassicColoredPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel, IProgress<ISearchingReport>?, CancellationToken?)>,
     ITemplateGenericVisitor<ISearchingExecutor, (ISearchingAlgorithm, IMapRepre, IUserModel)>
 {
     public static SearchingAlgorithmManager Instance { get; } = new();
@@ -99,15 +100,15 @@ public class SearchingAlgorithmManager :
     /// <param name="cancellationToken">Token for search cancellation.</param>
     /// <returns>Collection of resulting found paths for legs of track.</returns>
     /// <exception cref="ArgumentException">Thrown if eiter map representation is not graph or user model is not computing one or if either of them is not tied to provided template.</exception>
-    public ClasicColoredPath[] ExecuteSearch(Leg[] track, ISearchingAlgorithm algorithm, IMapRepre mapRepre, IUserModel userModel,
+    public ClassicColoredPath[] ExecuteSearch(Leg[] track, ISearchingAlgorithm algorithm, IMapRepre mapRepre, IUserModel userModel,
         ITemplate template, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
         return template
-            .AcceptGeneric<ClasicColoredPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel, IProgress<ISearchingReport>?, CancellationToken?)>
+            .AcceptGeneric<ClassicColoredPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel, IProgress<ISearchingReport>?, CancellationToken?)>
                 (this, (track, algorithm, mapRepre, userModel, progress, cancellationToken));
     }
 
-    ClasicColoredPath[]  ITemplateGenericVisitor<ClasicColoredPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel, IProgress<ISearchingReport>?, CancellationToken?)>
+    ClassicColoredPath[]  ITemplateGenericVisitor<ClassicColoredPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel, IProgress<ISearchingReport>?, CancellationToken?)>
         .GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>
         (TTemplate template, (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel, IProgress<ISearchingReport>?, CancellationToken?) otherParams) 
     {
@@ -145,15 +146,15 @@ public class SearchingAlgorithmManager :
     /// <returns>Collection of algorithm execution results.</returns>
     /// <exception cref="ArgumentException">Thrown if map representation is not graph or it is not tied to provided template.</exception>
     public Result[] TryExecuteSearch(Leg[] track, ISearchingAlgorithm algorithm, IMapRepre mapRepre, 
-        IUserModel[] userModels, ITemplate template, out ClasicColoredPath[]?[] resultingPaths,
+        IUserModel[] userModels, ITemplate template, out ClassicColoredPath[]?[] resultingPaths,
         IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
-        var (searchingExecutionResults, paths) = template.AcceptGeneric<(Result[], ClasicColoredPath[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>(this, (track, algorithm, mapRepre, userModels, progress, cancellationToken));
+        var (searchingExecutionResults, paths) = template.AcceptGeneric<(Result[], ClassicColoredPath[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>(this, (track, algorithm, mapRepre, userModels, progress, cancellationToken));
         resultingPaths = paths;
         return searchingExecutionResults;
     }
     
-    (Result[], ClasicColoredPath[]?[]) ITemplateGenericVisitor<(Result[], ClasicColoredPath[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>.
+    (Result[], ClassicColoredPath[]?[]) ITemplateGenericVisitor<(Result[], ClassicColoredPath[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?)>.
         GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template,
         (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel[], IProgress<ISearchingReport>?, CancellationToken?) otherParams)
     {
@@ -170,7 +171,7 @@ public class SearchingAlgorithmManager :
             else results[i] = Result.NotComputingUserModelOrNotTiedToTemplate;
         }
         
-        ClasicColoredPath[][] foundPaths;
+        ClassicColoredPath[][] foundPaths;
 
         if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> definedFunctionalityMapRepre)
             foundPaths = algorithm.ExecuteSearch(track, definedFunctionalityMapRepre, usableUserModels.ToArray(),
@@ -178,7 +179,7 @@ public class SearchingAlgorithmManager :
         else
             throw new ArgumentException("Provided map representation is not a graph or it is not tied to given template.");
         
-        ClasicColoredPath[]?[] resultingPaths = new ClasicColoredPath[]?[userModels.Length];
+        ClassicColoredPath[]?[] resultingPaths = new ClassicColoredPath[]?[userModels.Length];
         
         int j = 0;
         for (int i = 0; i < userModels.Length; ++i)

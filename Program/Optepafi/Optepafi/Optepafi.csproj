@@ -109,8 +109,6 @@
 
     <ItemGroup>
       <Folder Include="Models\ElevationDataMan\ElevSources\" />
-      <Folder Include="Models\Graphics\Aggregators\Path\" />
-      <Folder Include="Models\Graphics\Objects\Path\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />
     </ItemGroup>
 

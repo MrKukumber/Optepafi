@@ -71,9 +71,11 @@
   - preco su tam nejaki reprezentanti,
   - preco algoritmus ponuka aj jeho executor,
   - aky vyznam maju mapove reprezentacie vs aky vyznam maju grafy,
+  - vyznam nepredavania celeho grafu algoritmu aby sa mohol dynamicky generovat
   - ...
 - preco som sa rozhodol pre drzanie kolekcie mapovych objektov aj napriec modelViewvmi, preco nevytvaram tuto kolekciu vzdy od zaciatku, pro a proti, preco nevytvaram tuto kolekci vzdy znova relativne k pozadovanemu vystrihu mapy (narocne, alebo ked uz mam raz vytovrenu celu kolekciu tak sa mi ju neoplati zahadzovat a vytvarat nejaku mensiu ked ju takci tak budem potrebovat celu pri path findingu???)
 - co je potrebne spravit na pridanie specifickeho modelu (mapoveho formatu, templatu, algoritmu, ...)
+- ze nech grafy implementuju co najviac interface-ov co mozu, tym si zvyssia usabilitu v algoritmoch, nemusia sa bat ze by koli tomu ze implementuju nieco navyse stratili vykonnost, ak to po nich nieje pozadovane...proste mozu vytovrit naviac aj implementaciu pre algoritmy, ktore nevyzaduju tolko funkcionalit a teda pre ne zlepsit svoju efektivitu (napriklad vytvorit vlastny vrchol ktory bude mat shchopnost pamatat si predchodcu a jeden, ktory nebude...potom tym algoritmom ktore nevyzaduju aby si vrcholy pamatali predchodov bude predavat jednoduchsi vrchol s mensou pamatovou zlozitostou) 
 
 ## Co tam chcem mat
 

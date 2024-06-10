@@ -540,3 +540,9 @@ opozdely log z programovania projetku
 - co sa vykonnosti tyce, nahradil som vkladanie objektov do ObervableCollection za SourceList na ktory je bindnuta ReadOnly OC a tento pristup ovela zlepsil vykonnost zobrazovania....sice stale okno trocha zalagovane ale na druhu stranu uz je responzivne, nezamrza 
   - sice uplne nerozumiem z akeho dovodu sa vykonnost zleplsila....predsa len som si myslel ze problem bol s vykreslovanim objektov, nie s ich vkladanim do kolekcie...vyzera to tak ze mozno source list dokaze nejakym rozumnejsim sposobom pridavat elementy do kolekcie a teda UI nieje zahltene privalom novych objektov
 - mozem sa teda bez vycitok svädomia pustit do path finding okna s tym ze k jeho dokonceniu uz mam dokoncene takmer vsetky zavislosti....teda az na vykreslovanie cesty a implementacie smileyFace algoritmu
+
+
+### myslienky ku path findingu, Path a celkovo behu algortimu
+
+- mapova reprezentacia/graf by mala byt schopna providnut pre jednotlive vrcholy ich MapCoordinate poziciu, Path si postavi uz kazdy algoritmus podla seba
+- alogrithm kazdy typ reportu by mal mat svoj viewModel a taktiez View...to znamena v modelView-u path findingu zastavit Progress instanciu a podat managerovy pre vyhladavanie inu instanciu Progress triedy a na nej subscirbovat a nou reportovane udaje konvertovat na viewModely a az tie poslat spat ViewModelu ktory ich subscribe-uje...popravde rovnaka vec by sa mala spravit aj pre createion progress....aj ked tam je len jedna konkretna trieda ktora reprezetnuje report progressu vytvarania mapovej reprezentacie - ale pre koretknost MVVMMV by sa to spravit malo

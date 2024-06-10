@@ -22,6 +22,6 @@ public interface ISearchable<out TVertex, out TEdge, out  TVertexAttributes, out
     /// </summary>
     /// <param name="coords">Coordinate for which vertex is returned.</param>
     /// <returns>Corresponding vertex for provided <c>MapCoordinate</c>.</returns>
-    TVertex GetVertexFor(MapCoordinate coords);//TODO: mozno vytvorit reprezentaciu pre coords, nejaky struct
+    TVertex GetVertexFor(MapCoordinate coords);
 }
 

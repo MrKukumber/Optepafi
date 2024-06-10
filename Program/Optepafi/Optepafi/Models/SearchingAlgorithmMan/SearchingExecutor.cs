@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
+using Optepafi.Models.SearchingAlgorithmMan.Paths.Implementations;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
@@ -39,7 +40,7 @@ public interface ISearchingExecutor : IDisposable
     /// <param name="progress">Object by which can be progress of path finding subscribed.</param>
     /// <param name="cancellationToken">Token for search cancellation.</param>
     /// <returns>Collection of resulting found paths for legs of track.</returns>
-    ClasicColoredPath[] Search(Leg[] track, IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
+    ClassicColoredPath[] Search(Leg[] track, IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
 }
 
 /// <summary>
@@ -52,7 +53,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    public delegate ClasicColoredPath[] AlgorithmSearchingDelegate(
+    public delegate ClassicColoredPath[] AlgorithmSearchingDelegate(
         Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
         IComputingUserModel<TVertexAttributes, TEdgeAttributes> userModel,
@@ -65,7 +66,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     private Leg[] _inputTrack = null;
     private IProgress<ISearchingReport>? _inputProgress;
     private CancellationToken? _inputCancellationToken;
-    private ClasicColoredPath[] _outputPath = null;
+    private ClassicColoredPath[] _outputPath = null;
     private bool _disposed = false;
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
@@ -82,7 +83,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
         _constructionResetEvent.WaitOne();
     }
     
-    public ClasicColoredPath[] Search(Leg[] track, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
+    public ClassicColoredPath[] Search(Leg[] track, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
         if (_disposed) throw new ObjectDisposedException("SearchingExecutor");
 

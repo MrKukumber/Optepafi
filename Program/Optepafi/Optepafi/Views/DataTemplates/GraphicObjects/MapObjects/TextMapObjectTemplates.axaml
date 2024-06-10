@@ -1,9 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:moVm="clr-namespace:Optepafi.ViewModels"
-                    xmlns:mapObjects="clr-namespace:Optepafi.ViewModels.Data.Graphics.MapObjects">
+                    xmlns:moVm="clr-namespace:Optepafi.ViewModels.Data.Graphics.MapObjects">
     <DataTemplates x:Key="TextMapObjectTemplates">
-        <DataTemplate DataType="{x:Type mapObjects:WordObjectViewModel}">
+        <DataTemplate DataType="{x:Type moVm:WordObjectViewModel}">
             <TextBlock Text="{Binding Word}"/>
         </DataTemplate>
     </DataTemplates>

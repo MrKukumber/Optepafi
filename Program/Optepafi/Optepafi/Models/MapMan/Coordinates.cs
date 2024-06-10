@@ -9,7 +9,13 @@ namespace Optepafi.Models.MapMan;
 /// </summary>
 /// <param name="XPos">Position on horizontal axis.</param>
 /// <param name="YPos">Position on vertical axis.</param>
-public record struct MapCoordinate(int XPos, int YPos){} 
+public record struct MapCoordinate(int XPos, int YPos)
+{
+    public static MapCoordinate operator -(MapCoordinate coordinate1, MapCoordinate coordinate2)
+    {
+        return new MapCoordinate(coordinate1.XPos - coordinate2.XPos, coordinate1.YPos - coordinate2.YPos);
+    }
+} 
 
 /// <summary>
 /// Represents coordinate of geographic coordinate system (GCS).

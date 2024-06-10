@@ -18,6 +18,11 @@ public interface IPredecessorRemembering<out TVertex, out TEdge, out TVertexAttr
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
+    /// <summary>
+    /// Explicit implementation of method GetVertexFor of ISearchable interface for better convenience of using this interface.
+    /// </summary>
+    /// <param name="coords">Coordinate for which vertex is returned.</param>
+    /// <returns>Corresponding vertex for provided <c>MapCoordinate</c>.</returns>
     
     TVertex ISearchable<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>.GetVertexFor(MapCoordinate coords)
     {

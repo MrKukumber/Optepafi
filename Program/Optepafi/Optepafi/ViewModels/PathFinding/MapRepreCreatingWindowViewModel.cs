@@ -9,6 +9,7 @@ using Avalonia.Controls.Documents;
 using Avalonia.Data.Converters;
 using Optepafi.Models.MapRepreMan;
 using Optepafi.ModelViews.PathFinding;
+using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
@@ -49,8 +50,8 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                 {
                     CurrentProcedureInfoText = null; //TODO: localize
                     DialogText = null;
-                    IProgress<MapRepreConstructionReport> mapCreationProgress = new Progress<MapRepreConstructionReport>(
-                        report => PercentageMapRepreCreationProgress = report.PercentProgress);
+                    IProgress<MapRepreConstructionReportViewModel> mapCreationProgress = 
+                        new Progress<MapRepreConstructionReportViewModel>(report => PercentageMapRepreCreationProgress = report.PercentProgress);
                     IProgress<string> progressInfo = new Progress<string>(info => CurrentProcedureInfoText = info);
                     await _mapRepreCreatingMv.CreateMapRepreAsync(progressInfo, mapCreationProgress, ct);
                     return true;
@@ -107,9 +108,6 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
         
         OnClosedCommand = ReactiveCommand.Create(() => { });
     }
-    
-    
-    
     
     private float _percentageMapRepreCreationProgress;
     public float PercentageMapRepreCreationProgress

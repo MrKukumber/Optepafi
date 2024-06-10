@@ -10,6 +10,7 @@ using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.PathFinding;
 
@@ -19,7 +20,7 @@ public abstract class PFMapRepreCreatingModelView : ModelViewBase
     
     public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, Cancelled}
     public abstract ElevDataPrerequisiteCheckResult CheckMapRequirementsForElevData(CancellationToken ct);
-    public abstract Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReport> mapCreationProgress, CancellationToken cancellationToken);
+    public abstract Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReportViewModel> mapRepreCreationProgress, CancellationToken cancellationToken);
     public abstract void CleanMapRepre();
 }
 public partial class PathFindingSessionModelView : SessionModelView
@@ -73,8 +74,11 @@ public partial class PathFindingSessionModelView : SessionModelView
             }
         }
 
-        public override async Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReport> mapCreationProgress, CancellationToken cancellationToken)
+        public override async Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReportViewModel> mapRepreCreationProgress, CancellationToken cancellationToken)
         {
+            IProgress<MapRepreConstructionReport> mrcProgress = new Progress<MapRepreConstructionReport>
+            (report => mapRepreCreationProgress.Report(new MapRepreConstructionReportViewModel(report)));
+            
             if (_useElevData)
             {
                 if (Map is IGeoLocatedMap geoLocatedMap)
@@ -86,7 +90,7 @@ public partial class PathFindingSessionModelView : SessionModelView
                     
                     progressInfo.Report("Creating map representation"); //TODO: localize
                     MapRepresentation = await Task.Run(() => 
-                        MapRepreManager.Instance.CreateMapRepre(Template, geoLocatedMap, MapRepreRepresentative, elevData, mapCreationProgress, cancellationToken));
+                        MapRepreManager.Instance.CreateMapRepre(Template, geoLocatedMap, MapRepreRepresentative, elevData, mrcProgress, cancellationToken));
                     if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
                 }
                 else throw new InvalidOperationException("There is some error in prerequisites check method, that allows _useElevData to be set to true, when map is not even IGeoLocatedMap.");
@@ -95,7 +99,7 @@ public partial class PathFindingSessionModelView : SessionModelView
             {
                 progressInfo.Report("Creating map representation"); //TODO: localize
                 MapRepresentation = await Task.Run(() =>
-                    MapRepreManager.Instance.CreateMapRepre(Template, Map, MapRepreRepresentative, mapCreationProgress, cancellationToken));
+                    MapRepreManager.Instance.CreateMapRepre(Template, Map, MapRepreRepresentative, mrcProgress, cancellationToken));
                 if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
             }
         }
