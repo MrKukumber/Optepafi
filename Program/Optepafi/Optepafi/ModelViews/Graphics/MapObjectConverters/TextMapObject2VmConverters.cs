@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Optepafi.Models.Graphics.GraphicsObjects.MapObjects;
 using Optepafi.ViewModels;
-using Optepafi.ViewModels.Graphics;
-using Optepafi.ViewModels.Graphics.MapObjects;
+using Optepafi.ViewModels.Data.Graphics;
+using Optepafi.ViewModels.Data.Graphics.MapObjects;
 
 namespace Optepafi.ModelViews.Graphics.MapObjectConverters;
 

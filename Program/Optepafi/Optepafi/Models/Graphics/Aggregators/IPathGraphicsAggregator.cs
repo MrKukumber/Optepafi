@@ -1,9 +1,6 @@
-using System.Threading;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
-using Optepafi.ModelViews.Graphics;
-using Optepafi.ModelViews.Graphics.Collectors;
 
-namespace Optepafi.Models.Graphics;
+namespace Optepafi.Models.Graphics.GraphicsAggregators;
 
 public interface IPathGraphicsAggregator<in TPath> : IGraphicsAggregator
     where TPath : IPath

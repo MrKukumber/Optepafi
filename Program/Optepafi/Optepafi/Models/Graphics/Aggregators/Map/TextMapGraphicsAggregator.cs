@@ -4,7 +4,6 @@ using Optepafi.Models.Graphics.GraphicsObjects.MapObjects;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.ModelViews.Graphics;
-using Optepafi.ModelViews.Graphics.Collectors;
 
 namespace Optepafi.Models.Graphics.GraphicsAggregators.MapGraphicsAggregators;
 

@@ -531,3 +531,12 @@ opozdely log z programovania projetku
 -myslienku s kolektormi by som ale ponechal, nech stale graficky agregatori v modelu ich pouzivaju na skladovanie nimi vytvorenych grafickych objektov....
 
 - teda bude potrebne vitovrit v ModelView-e mechanizmus, ktory bude podporovat logiku zobrazovania grafickych objektov a konverziu na viewModely
+
+## 10.6.2024
+
+- implementovna nova logika z logu 6.6.2024
+- zatial vsak nebude potrebne vykreslovat iba nejake casti mapy, nakolko vzdy bude zobrazena cela mapa na canvase...casti sa budu hodit az pri relevance feedbacku napriklad
+
+- co sa vykonnosti tyce, nahradil som vkladanie objektov do ObervableCollection za SourceList na ktory je bindnuta ReadOnly OC a tento pristup ovela zlepsil vykonnost zobrazovania....sice stale okno trocha zalagovane ale na druhu stranu uz je responzivne, nezamrza 
+  - sice uplne nerozumiem z akeho dovodu sa vykonnost zleplsila....predsa len som si myslel ze problem bol s vykreslovanim objektov, nie s ich vkladanim do kolekcie...vyzera to tak ze mozno source list dokaze nejakym rozumnejsim sposobom pridavat elementy do kolekcie a teda UI nieje zahltene privalom novych objektov
+- mozem sa teda bez vycitok svädomia pustit do path finding okna s tym ze k jeho dokonceniu uz mam dokoncene takmer vsetky zavislosti....teda az na vykreslovanie cesty a implementacie smileyFace algoritmu

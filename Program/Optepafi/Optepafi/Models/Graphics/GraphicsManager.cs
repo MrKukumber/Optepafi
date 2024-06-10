@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
+using Optepafi.Models.Graphics.GraphicsAggregators;
 using Optepafi.Models.Graphics.GraphicsAggregators.MapGraphicsAggregators;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.ModelViews.Graphics;
-using Optepafi.ModelViews.Graphics.Collectors;
 
 namespace Optepafi.Models.Graphics;
 

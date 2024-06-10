@@ -1,4 +1,4 @@
-namespace Optepafi.ViewModels.Graphics.MapObjects;
+namespace Optepafi.ViewModels.Data.Graphics.MapObjects;
 
 
 public class WordObjectViewModel : GraphicObjectViewModel

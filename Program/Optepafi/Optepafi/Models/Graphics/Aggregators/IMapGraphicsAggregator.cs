@@ -1,9 +1,7 @@
 using System.Threading;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.ModelViews.Graphics;
-using Optepafi.ModelViews.Graphics.Collectors;
 
-namespace Optepafi.Models.Graphics;
+namespace Optepafi.Models.Graphics.GraphicsAggregators;
 
 public interface IMapGraphicsAggregator<in TMap> : IGraphicsAggregator
     where TMap : IMap

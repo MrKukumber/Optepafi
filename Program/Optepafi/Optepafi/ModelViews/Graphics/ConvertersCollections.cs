@@ -18,5 +18,7 @@ public static class ConvertersCollections
     public static Dictionary<Type, IGraphicObjects2VMConverter> PathFindingObjects2VmConverters =
         MapObjects2VmConverters
             .Concat(PathObjects2VmConverters)
-            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value); 
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+    public static List<Dictionary<Type, IGraphicObjects2VMConverter>> AllCollections = [PathFindingObjects2VmConverters];
 }

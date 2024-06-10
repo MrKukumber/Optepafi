@@ -1,6 +1,6 @@
 using ReactiveUI;
 
-namespace Optepafi.ViewModels.Graphics;
+namespace Optepafi.ViewModels.Data.Graphics;
 
 public abstract class GraphicObjectViewModel : ReactiveObject
 {

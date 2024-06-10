@@ -22,10 +22,10 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.ModelViews.Graphics;
-using Optepafi.ModelViews.Graphics.Collectors;
+using Optepafi.ModelViews.Graphics.GraphicsSources;
 using Optepafi.ModelViews.Main;
+using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.DataViewModels;
-using Optepafi.ViewModels.Graphics;
 
 namespace Optepafi.ModelViews.PathFinding;
 
@@ -134,7 +134,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     }
 
     public abstract void SaveParameters();
-
+    public abstract void ReleaseMap();
     public abstract void SetElevDataDistribution(ElevDataDistributionViewModel? elevDataDistViewModel);
     public abstract void SetTemplate(TemplateViewModel? templateViewModel);
     public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel);
@@ -142,7 +142,7 @@ public abstract class PFSettingsModelView : ModelViewBase
         MapFormatViewModel mapFormatViewModel, CancellationToken cancellationToken);
     public abstract Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync((Stream,string) streamWithPath,
         UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken);
-    public abstract GraphicsViewModel? GetLoadedMapGraphics();
+    public abstract GraphicsSourceViewModel? GetAndSetLoadedMapGraphics();
 
 }
 
@@ -155,6 +155,7 @@ public partial class PathFindingSessionModelView : SessionModelView
         public IElevDataDistribution? ElevDataDistribution { get; private set; }
         public ITemplate? Template { get; private set; }
         public IMap? Map { get; private set; }
+        public CollectingGraphicsSource? MapGraphics { get; private set; }
         public IUserModel? UserModel { get; private set; }
         public IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; private set; }
         public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
@@ -222,8 +223,9 @@ public partial class PathFindingSessionModelView : SessionModelView
                 UserModelFilePath = UserModel!.FilePath 
             });        
         }
+        public override void ReleaseMap() => Map = null;
 
-        public override GraphicsViewModel? GetLoadedMapGraphics()
+        public override GraphicsSourceViewModel? GetAndSetLoadedMapGraphics()
         {
             if (Map is null) throw new NullReferenceException("Map property should be instantiated before calling this method.");
             IMap map = Map;
@@ -231,13 +233,13 @@ public partial class PathFindingSessionModelView : SessionModelView
             var extremes = GraphicsManager.Instance.GetAxisExtremesOf(map);
             if (extremes is null) { return null; }
             var (minXPos, minYPos, maxXPos, maxYPos) = extremes.Value;
+
+            CollectingGraphicsSource graphicsSource = new CollectingGraphicsSource(minXPos, minYPos, maxXPos, maxYPos);
+            GraphicsSourceViewModel graphicsSourceViewModel = new (graphicsSource);
+            MapGraphics = graphicsSource;
             
-            GraphicsViewModel graphicsViewModel = new (maxXPos - minXPos, maxYPos - minYPos);
-            ICollection<GraphicObjectViewModel> graphicObjectViewModels = graphicsViewModel.GraphicObjectsCollection;
-            GraphicsObjects2VmConvertingCollector collector = new (graphicObjectViewModels,ConvertersCollections.MapObjects2VmConverters, minXPos, minYPos);
-            
-            Task.Run(() => GraphicsManager.Instance.AggregateMapGraphics(map, collector));
-            return graphicsViewModel;
+            Task.Run(() => GraphicsManager.Instance.AggregateMapGraphics(map, graphicsSource.Collector));
+            return graphicsSourceViewModel;
         }
     }
 }

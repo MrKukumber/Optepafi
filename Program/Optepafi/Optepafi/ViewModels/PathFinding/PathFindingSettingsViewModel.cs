@@ -16,8 +16,8 @@ using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ModelViews.PathFinding;
+using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.DataViewModels;
-using Optepafi.ViewModels.Graphics;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
@@ -114,7 +114,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
                 MapFormatViewModel? mapFormat = _settingsMv.GetCorrespondingMapFormat(mapFileName);
                 if (mapFormat is null) throw new NullReferenceException("Map format should be returned, because chosen file was filtered to be correct.");
                 var loadResult = await _settingsMv.LoadAndSetMapAsync(mapFileStreamAndPath, mapFormat, cancellationToken);
-                var mapGraphics = _settingsMv.GetLoadedMapGraphics();
+                var mapGraphics = _settingsMv.GetAndSetLoadedMapGraphics();
                 mapFileStream.Dispose();
                 return (loadResult, mapFormat, mapFilePath, mapGraphics);
             })
@@ -140,7 +140,6 @@ public class PathFindingSettingsViewModel : ViewModelBase
                     // TODO: vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
                     // v modelView-u uz nastavena tato mapa, takze urcite nenechavat aby sa uzivatel mohol navratit ku predchadzajucej
                 case MapManager.MapCreationResult.Ok:
-                    SelectedMapsPreview?.GraphicObjectsCollection.Clear();
                     CurrentlyUsedMapFormat = mapFormat;
                     SelectedMapFileName = Path.GetFileName(mapFilePath);
                     SelectedMapFilePath = mapFilePath;
@@ -187,6 +186,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
             if (successfulCreation)
             {
                 settingsMv.SaveParameters();
+                settingsMv.ReleaseMap();
                 return WhereToProceed.PathFinding;
             }
             return WhereToProceed.Settings;
@@ -317,8 +317,8 @@ public class PathFindingSettingsViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _usableMapFormats, value);
     }
 
-    private GraphicsViewModel? _selectedMapsPreview;
-    public GraphicsViewModel? SelectedMapsPreview
+    private GraphicsSourceViewModel? _selectedMapsPreview;
+    public GraphicsSourceViewModel? SelectedMapsPreview
     {
         get => _selectedMapsPreview;
         set => this.RaiseAndSetIfChanged(ref _selectedMapsPreview, value);
@@ -348,7 +348,7 @@ public class PathFindingSettingsViewModel : ViewModelBase
     
     
     
-    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string, GraphicsViewModel?)> LoadMapCommand { get; }
+    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string, GraphicsSourceViewModel?)> LoadMapCommand { get; }
     public ReactiveCommand<(Stream, string), (UserModelManager.UserModelLoadResult, UserModelTypeViewModel, string)> LoadUserModelCommand { get; }
     
     //TODO: command pre prechod do vytvaranaia mapovej reprezentacie, nech necha ukladanie parametrov na modelView-u a ten tam uklada datove triedy, nie ich ViewModelove wrappre
