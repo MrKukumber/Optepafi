@@ -11,6 +11,7 @@ using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepreReps.MapRepreRepsInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.SearchingAlgorithmMan;
+using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 using Optepafi.Models.TemplateMan;
 
 namespace Optepafi.Models.MapRepreMan;

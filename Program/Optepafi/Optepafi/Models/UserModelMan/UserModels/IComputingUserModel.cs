@@ -9,7 +9,7 @@ namespace Optepafi.Models.UserModelMan.UserModels;
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes, which is user model able to use for computing weights.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes, which is user model able to use for computing weights.</typeparam>
-public interface IComputingUserModel<in TVertexAttributes, in TEdgeAttributes> : IUserModel
+public interface IComputingUserModel<in TVertexAttributes, in TEdgeAttributes> : IUsableUserModel<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {

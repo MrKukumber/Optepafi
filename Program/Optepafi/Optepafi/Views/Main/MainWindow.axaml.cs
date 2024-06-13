@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Optepafi.Models;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.ViewModels;
+using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.DataViewModels;
 using Optepafi.ViewModels.Main;
 using ReactiveUI;

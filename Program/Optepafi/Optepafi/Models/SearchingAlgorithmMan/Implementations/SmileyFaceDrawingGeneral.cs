@@ -2,8 +2,8 @@ using System;
 using System.Threading;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
+using Optepafi.Models.ReportMan;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
-using Optepafi.Models.SearchingAlgorithmMan.Paths.Implementations;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
@@ -27,13 +27,13 @@ public class SmileyFaceDrawingGeneral : ISearchingAlgoritmImplementation
         return false;
     }
 
-    public ClassicColoredPath[][] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track, IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputingUserModel<TVertexAttributes, TEdgeAttributes>[] userModels,
+    public IPath[][] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track, IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputingUserModel<TVertexAttributes, TEdgeAttributes>[] userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         throw new NotImplementedException();
     }
 
-    public ClassicColoredPath[] ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track, IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputingUserModel<TVertexAttributes, TEdgeAttributes> userModel,
+    public IPath[] ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track, IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputingUserModel<TVertexAttributes, TEdgeAttributes> userModel,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         throw new NotImplementedException();

@@ -12,6 +12,7 @@ using Optepafi.Models.ParamsMan;
 using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.ModelViews.Main;
+using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 

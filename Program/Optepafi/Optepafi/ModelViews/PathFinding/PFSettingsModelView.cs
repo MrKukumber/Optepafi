@@ -9,6 +9,8 @@ using Avalonia.Metadata;
 using DynamicData;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.Graphics;
+using Optepafi.Models.Graphics.Sources;
+using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.Maps;
@@ -18,13 +20,13 @@ using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.ParamsMan;
 using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.SearchingAlgorithmMan;
+using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.ModelViews.Graphics;
-using Optepafi.ModelViews.Graphics.GraphicsSources;
 using Optepafi.ModelViews.Main;
 using Optepafi.ViewModels.Data.Graphics;
+using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.PathFinding;
@@ -155,7 +157,7 @@ public partial class PathFindingSessionModelView : SessionModelView
         public IElevDataDistribution? ElevDataDistribution { get; private set; }
         public ITemplate? Template { get; private set; }
         public IMap? Map { get; private set; }
-        public CollectingGraphicsSource? MapGraphics { get; private set; }
+        public CollectingGroundGraphicsSource? MapGraphics { get; private set; }
         public IUserModel? UserModel { get; private set; }
         public IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; private set; }
         public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
@@ -230,11 +232,10 @@ public partial class PathFindingSessionModelView : SessionModelView
             if (Map is null) throw new NullReferenceException("Map property should be instantiated before calling this method.");
             IMap map = Map;
             
-            var extremes = GraphicsManager.Instance.GetAxisExtremesOf(map);
-            if (extremes is null) { return null; }
-            var (minXPos, minYPos, maxXPos, maxYPos) = extremes.Value;
+            GraphicsArea? graphicsArea = GraphicsManager.Instance.GetAreaOf(map);
+            if (graphicsArea is null) { return null; }
 
-            CollectingGraphicsSource graphicsSource = new CollectingGraphicsSource(minXPos, minYPos, maxXPos, maxYPos);
+            CollectingGroundGraphicsSource graphicsSource = new CollectingGroundGraphicsSource(graphicsArea.Value);
             GraphicsSourceViewModel graphicsSourceViewModel = new (graphicsSource);
             MapGraphics = graphicsSource;
             

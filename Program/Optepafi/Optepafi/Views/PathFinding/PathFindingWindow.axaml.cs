@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.ReactiveUI;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.PathFinding;
@@ -19,6 +20,28 @@ public partial class PathFindingWindow : ReactiveWindow<PathFindingSessionViewMo
         InitializeComponent();
         this.WhenActivated(action =>
             action(ViewModel!.PathFindingSettings.MapRepreCreationInteraction.RegisterHandler(DoShowMapRepreCreatingDialogAsync)));
+        RecursiveSearchForDataTemplatesIn(Resources);
+    }
+
+    private void RecursiveSearchForDataTemplatesIn(IResourceDictionary resourceDictionary)
+    {
+        foreach (var entry in resourceDictionary)
+        {
+            Resources.TryGetResource(entry.Key, this.ActualThemeVariant, out object? value);
+            if (value is DataTemplates dataTemplates)
+            {
+                DataTemplates.AddRange(dataTemplates);
+            }
+            else if (value is IDataTemplate dataTemplate)
+            {
+                DataTemplates.Add(dataTemplate);
+            }
+        }
+        foreach (var mergedProvider in resourceDictionary.MergedDictionaries)
+        {
+            if(mergedProvider is IResourceDictionary mergedDictionary)
+                RecursiveSearchForDataTemplatesIn(mergedDictionary);
+        }
     }
 
     private bool _alreadyAsked = false;

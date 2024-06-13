@@ -109,6 +109,8 @@
 
     <ItemGroup>
       <Folder Include="Models\ElevationDataMan\ElevSources\" />
+      <Folder Include="Models\GraphicsMan\Aggregators\SearchingState\" />
+      <Folder Include="Models\GraphicsMan\Objects\SearchingState\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />
     </ItemGroup>
 
@@ -122,7 +124,7 @@
     <ItemGroup>
       <AdditionalFiles Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <AdditionalFiles Remove="Localization\**" />
-      <AdditionalFiles Include="Views\DataTemplates\GraphicObjects\MapObjects\TextMapObjectTemplates.axaml" />
+      <AdditionalFiles Include="Views\DataTemplates\Graphics\MapObjects\TextMapObjectsTemplates.axaml" />
     </ItemGroup>
 
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.Main;

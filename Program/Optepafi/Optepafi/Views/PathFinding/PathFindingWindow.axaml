@@ -11,4 +11,11 @@
         Content="{Binding CurrentViewModel}"
         Closing="Window_OnClosing"
         Closed="Window_OnClosed">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="DataTemplates/AllPathFindingDataTemplates.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 </Window>

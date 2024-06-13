@@ -12,11 +12,10 @@
              
     <Application.Resources>
        <ResourceDictionary>
-           <ResourceDictionary.MergedDictionaries>
-               <ResourceInclude Source="Views/DataTemplates/GraphicObjects/MapObjects/TextMapObjectTemplates.axaml"/>
-               <ResourceInclude Source="Views/DataTemplates/GraphicObjects/PathObjectTemplates.axaml"></ResourceInclude>
-           </ResourceDictionary.MergedDictionaries>
            <viewUtils:MicrometersToDipConverter x:Key="Micro2dipConverter"/>
+           <ResourceDictionary.MergedDictionaries>
+               <ResourceInclude Source="/Views/DataTemplates/AllDataTemplates.axaml"/>
+           </ResourceDictionary.MergedDictionaries>
        </ResourceDictionary> 
     </Application.Resources>
              

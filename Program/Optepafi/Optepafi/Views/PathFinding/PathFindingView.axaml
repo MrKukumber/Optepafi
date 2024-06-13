@@ -22,21 +22,11 @@
             <Grid Grid.Column="3"  RowDefinitions="* Auto" Margin="5">
                 <Border Grid.Row="0" BorderBrush="Black" BorderThickness="2">
                     <ScrollViewer>
-                        <Viewbox Width="" Height=""><!--TODO: bindnut na aktualnu velkost canvasu, tato hodnota sa bude moct menit v zavislosti na zoom/unzoom a convertorvat hodnoty z metrickej do DIP-->
-                            <ItemsControl Name="PathFindingCanvas" ItemsSource="">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <Canvas/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Canvas.Left" Value="{Binding }"/> <!-- TODO: bindnut a convertorvat hodnoty z metrickej do DIP-->
-                                        <Setter Property="Canvas.Bottom" Value="{Binding }"/> <!-- TODO: bindnut a convertorvat hodnoty z metrickej do DIP-->
-                                        <Setter Property="Canvas.ZIndex" Value="{Binding }"/><!-- TODO: bindnut a convertorvat hodnoty z metrickej do DIP-->
-                                    </Style>
-                                </ItemsControl.Styles>
-                            </ItemsControl>
+                        <Viewbox Width="" Height=""><!--TODO: bindnut na aktualnu velkost canvasu, tato hodnota sa bude moct menit v zavislosti na zoom/unzoom. Treba convertorvat hodnoty z metrickej do DIP-->
+                            <Panel>
+                                <ContentControl Content="{Binding }"/>
+                                <ContentControl Classes="{Binding }"/>
+                            </Panel>
                         </Viewbox>
                     </ScrollViewer>
                 </Border>

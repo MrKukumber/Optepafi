@@ -10,6 +10,7 @@ using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.ViewModels.Data.Reports;
 using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.PathFinding;

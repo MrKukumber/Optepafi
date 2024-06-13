@@ -17,14 +17,41 @@ build_property.ProjectDir = C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Roc
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 
-[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/GraphicObjects/MapObjects/TextMapObjectTemplates.axaml]
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Graphics/MapObjects/TextMapObjectsTemplates.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = 
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/GraphicObjects/PathObjectTemplates.axaml]
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/AllDataTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Graphics/GraphicsTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Graphics/MapObjects/MapObjectsTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Graphics/PathObjects/PathObjectsTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Graphics/PathObjects/SmileyFacePathObjectsTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Graphics/SearchingStateObjects/SearchingStateObjectsTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Graphics/SearchingStateObjects/SmileyFaceSearchingStateObjectsTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Reports/Path/PathReportsTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Reports/ReportsTemplates.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/DataTemplates/Reports/Searching/SearchingReportTemplates.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/Main/ElevConfigView.axaml]
@@ -46,6 +73,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/ModelCreating/ModelCreatingWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/PathFinding/DataTemplates/AllPathFindingDataTemplates.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/matej/Desktop/Škola/VÝŠKA/6.semester/Rocnikovy_projekt/Praca/kukurugya/Program/Optepafi/Optepafi/Views/PathFinding/MapRepreCreatingWindow.axaml]

@@ -17,6 +17,7 @@ using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Graphics;
+using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 

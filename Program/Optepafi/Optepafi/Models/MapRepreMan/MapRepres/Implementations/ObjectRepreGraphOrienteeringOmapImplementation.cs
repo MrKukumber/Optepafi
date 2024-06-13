@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
@@ -12,10 +13,6 @@ public class ObjectRepreGraphOrienteeringOmapImplementation :
     IObjectRepreGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>
 {
     //TODO: implement
-    public void RestoreConsistency()
-    {
-        throw new System.NotImplementedException();
-    }
 
     public string Name { get; } = "Object representation";
 
@@ -23,13 +20,23 @@ public class ObjectRepreGraphOrienteeringOmapImplementation :
     {
     }
 
-    public IBasicEdgeCoupledPredecessorRememberingVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> GetVertexFor(MapCoordinate coords)
+    public void RestoreConsistency()
+    {
+        throw new System.NotImplementedException();
+    }
+    public IBasicEdgeCoupledPredecessorRememberingVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> 
+        GetVertexFor(MapCoordinate coords)
+    {
+        throw new System.NotImplementedException();
+    }
+    
+
+    public int GetWeightFromHeuristic(IBasicEdgeCoupledBasicVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> from, IBasicEdgeCoupledBasicVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> to)
     {
         throw new System.NotImplementedException();
     }
 
-    public int GetWeightFromHeuristic(IBasicEdgeCoupledPredecessorRememberingVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> from,
-        IBasicEdgeCoupledPredecessorRememberingVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> to)
+    public List<MapCoordinate> GetPositionsOf(IEnumerable<IBasicEdgeCoupledBasicVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>> vertices)
     {
         throw new System.NotImplementedException();
     }

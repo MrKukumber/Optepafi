@@ -1,0 +1,27 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:grVm="clr-namespace:Optepafi.ViewModels.Data.Graphics">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="MapObjects/MapObjectsTemplates.axaml"/>
+        <ResourceInclude Source="PathObjects/PathObjectsTemplates.axaml"/>
+        <ResourceInclude Source="SearchingStateObjects/SearchingStateObjectsTemplates.axaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <DataTemplate x:Key="GraphicsSourceTemplate" x:DataType="{x:Type grVm:GraphicsSourceViewModel}">
+        <ItemsControl Name="SelectedMapPreview" ItemsSource="{Binding GraphicObjectsCollection}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Width="{Binding GraphicsWidth, Converter={StaticResource Micro2dipConverter}}" 
+                            Height="{Binding GraphicsHeight, Converter={StaticResource Micro2dipConverter}}"
+                            Background="Transparent"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.Styles>
+                <Style Selector="ContentPresenter" x:DataType="grVm:GraphicObjectViewModel">
+                    <Setter Property="Canvas.Left" Value="{Binding LeftPos, Converter={StaticResource Micro2dipConverter}}"/>
+                    <Setter Property="Canvas.Bottom" Value="{Binding BottomPos, Converter={StaticResource Micro2dipConverter}}"/>
+                    <Setter Property="Canvas.ZIndex" Value="{Binding Priority}"/> <!--TODO: mozno by mohol byt problem ze to nieje Canvas attached property-->
+                </Style>
+            </ItemsControl.Styles>
+        </ItemsControl>
+    </DataTemplate>
+</ResourceDictionary>

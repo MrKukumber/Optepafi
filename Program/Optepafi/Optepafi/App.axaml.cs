@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Templates;
 using HarfBuzzSharp;
 using Optepafi.ModelViews.Main;
 using Optepafi.ViewModels;
@@ -21,18 +23,29 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        RecursiveSearchForDataTemplatesIn(Resources);
+    }
 
-        Resources.TryGetResource("TextMapObjectTemplates", this.ActualThemeVariant, out object? value);
-        if (value is DataTemplates mapObjectDataTemplates)
+    private void RecursiveSearchForDataTemplatesIn(IResourceDictionary resourceDictionary)
+    {
+        foreach (var entry in resourceDictionary)
         {
-            DataTemplates.AddRange(mapObjectDataTemplates);
+            Resources.TryGetResource(entry.Key, this.ActualThemeVariant, out object? value);
+            if (value is DataTemplates dataTemplates)
+            {
+                DataTemplates.AddRange(dataTemplates);
+            }
+            else if (value is IDataTemplate dataTemplate)
+            {
+                DataTemplates.Add(dataTemplate);
+            }
         }
-        Resources.TryGetResource("PathObjectTemplates", this.ActualThemeVariant, out value);
-        if(value is DataTemplates pathObjectDataTemplates)
+        foreach (var mergedProvider in resourceDictionary.MergedDictionaries)
         {
-            DataTemplates.AddRange(pathObjectDataTemplates);
+            if(mergedProvider is IResourceDictionary mergedDictionary)
+                RecursiveSearchForDataTemplatesIn(mergedDictionary);
         }
-        //Add every dataTemplate collection needed in application
+        
     }
 
     public override void OnFrameworkInitializationCompleted()

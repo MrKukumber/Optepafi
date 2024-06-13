@@ -9,6 +9,7 @@ using Avalonia.Controls.Documents;
 using Avalonia.Data.Converters;
 using Optepafi.Models.MapRepreMan;
 using Optepafi.ModelViews.PathFinding;
+using Optepafi.ViewModels.Data.Reports;
 using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 

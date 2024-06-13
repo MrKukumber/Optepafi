@@ -16,6 +16,7 @@ using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews;
 using Optepafi.ModelViews.Main;
+using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
