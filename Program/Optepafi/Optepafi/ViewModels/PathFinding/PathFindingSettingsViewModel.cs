@@ -193,13 +193,14 @@ public class PathFindingSettingsViewModel : ViewModelBase
             return WhereToProceed.Settings;
         }, isEverythingSet);
 
+        
         CurrentlySelectedElevDataDistribution = mainSettingsMvProvider.CurrentElevDataDistribution;
 
         SelectedTemplate = settingsMv.DefaultTemplate;
 
         if (settingsMv.DefaultMapFilePath is not null)
         {
-            CurrentlyUsedMapFormat = _settingsMv.GetCorrespondingMapFormat(settingsMv.DefaultMapFilePath);
+            CurrentlyUsedMapFormat = _settingsMv.GetCorrespondingMapFormat(Path.GetFileName(settingsMv.DefaultMapFilePath));
             UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
             SearchingAlgorithmViewModel? searchingAlgorithm = settingsMv.DefaultSearchingAlgorithm;
             if (searchingAlgorithm is not null && UsableSearchingAlgorithms is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
