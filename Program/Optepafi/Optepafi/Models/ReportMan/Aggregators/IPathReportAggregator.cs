@@ -2,6 +2,7 @@ using System.Threading;
 using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Aggregators;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
@@ -11,7 +12,7 @@ public interface IPathReportAggregator<in TPath, TVertexAttributes, TEdgeAttribu
     where TPath : IPath<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
 {
-    IPathReport AggregateReport(TPath path, IUsableUserModel<TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken);
+    IPathReport AggregateReport(TPath path, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken);
 }
 
 // public interface IPathReportAggregator<TPath> : IReportAggregator

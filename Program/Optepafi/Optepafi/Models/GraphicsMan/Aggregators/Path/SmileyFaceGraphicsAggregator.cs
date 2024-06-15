@@ -2,6 +2,7 @@ using System.Threading;
 using Optepafi.Models.Graphics.Objects.Path;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
@@ -13,7 +14,7 @@ public class SmileyFaceGraphicsAggregator<TVertexAttributes, TEdgeAttributes> : 
     public static SmileyFaceGraphicsAggregator<TVertexAttributes, TEdgeAttributes> Instance { get; } = new();
     private SmileyFaceGraphicsAggregator(){}
     public void AggregateGraphics(SmileyFacePath<TVertexAttributes, TEdgeAttributes> path, 
-        IUsableUserModel<TVertexAttributes, TEdgeAttributes> userModel, 
+        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, 
         IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
         collectorForAggregatedObjects.Add(new SmileyFaceObject(path.StartPosition));

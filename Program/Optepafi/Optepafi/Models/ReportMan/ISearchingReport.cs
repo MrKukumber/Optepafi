@@ -9,7 +9,6 @@ namespace Optepafi.Models.ReportMan;
 /// </summary>
 public interface ISearchingReport
 {
-    ISearchingState ReportedSearchingState { get; }
     TOut AcceptGeneric<TOut, TOtherParams>(ISearchingReportGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams);
     TOut AcceptGeneric<TOut>(ISearchingReportGenericVisitor<TOut> genericVisitor);
 }

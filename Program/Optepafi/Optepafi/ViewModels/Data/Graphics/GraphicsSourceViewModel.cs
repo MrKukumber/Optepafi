@@ -14,7 +14,7 @@ using ReactiveUI;
 
 namespace Optepafi.ViewModels.Data.Graphics;
 
-public class GraphicsSourceViewModel : DataViewModel<IGraphicsSource>, IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinate>
+public sealed class GraphicsSourceViewModel : DataViewModel<IGraphicsSource>, IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinate>
 {
     protected override IGraphicsSource Data => GraphicsSource;
     

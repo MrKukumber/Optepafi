@@ -546,3 +546,49 @@ opozdely log z programovania projetku
 
 - mapova reprezentacia/graf by mala byt schopna providnut pre jednotlive vrcholy ich MapCoordinate poziciu, Path si postavi uz kazdy algoritmus podla seba
 - alogrithm kazdy typ reportu by mal mat svoj viewModel a taktiez View...to znamena v modelView-u path findingu zastavit Progress instanciu a podat managerovy pre vyhladavanie inu instanciu Progress triedy a na nej subscirbovat a nou reportovane udaje konvertovat na viewModely a az tie poslat spat ViewModelu ktory ich subscribe-uje...popravde rovnaka vec by sa mala spravit aj pre createion progress....aj ked tam je len jedna konkretna trieda ktora reprezetnuje report progressu vytvarania mapovej reprezentacie - ale pre koretknost MVVMMV by sa to spravit malo
+
+## 15.6.2024
+
+### mechanizmus pre reportovanie stavov vyhladavania a najdenych ciest
+
+- vytvoril som noveho manager-a ktory dokaze agregovat reporty o stavoch vyhladavani a o najdenych cestach
+- implementoval som novy typ konstruktu, tzv. SubManager
+  - tieto konstrukty su urcene pre pouzitie priamo z modelov, nie z modelView-ov
+  - vyznacuju sa tym, ze obsahuju genericke parametre, ktore by sa z modelView-u tazko dosadzovali
+  - pre modely by vsak nemal byt problem s nimi pracovat a usetri mnoho volani visitorov a pattern matchingu
+- vytvoril som subManagera pre ReportManager-a a aj pre GraphicsManager-a
+
+#### reporty
+
+- novy konstrukt
+- moze obsahovat grafiku v podobe GraphicsSource-u a reportovane informacie ci uz o stavu vyhladavania alebo o najdenej ceste
+  - path report by mal vzdy obsahovat grafiku, ktora zobrazi najdenu cestu
+- pri vytvarani reportov sa zoberie vstupna cesta alebo stav vyhladavania a zodpovedajuci user model a nasledne sa z cesty/stavu vyhladavania agreguje report za pomoci uzivatelskeho modelu
+- uzivatelsky model nieje nijak testovany na to, ci dokaze dorucit pozadovane sluzby
+  - pokial to zvladne, tak dana informacia sa do reportu vlozi, ak nie tak sa vynecha
+  - algoritmus teoreticky moze vyzadovat nejaku vlastnost od uzivatelskeho modelu o ktorej vie, ze nasledne bude potrebna pri agregacii reportu...napriklad nutnost toho, aby uzivatelsky model vedel vratit poziciu ulozenu vo vrcholovm atribute (ku vyzadovaniu funkcionalit od uzivatelskych modelov algoritmom citaj dalej o refactoringu myslienky user modelov, ...)
+- pre jednotlive reporty su nasledne vytvorene viewModely ktore su predane view-u
+- jemne rozdiely medzi pathReport-mi a SearchingReport-mi v sposobe ich distribucie z modelov:
+  - PathReport je vytvarany z algoritmom vratenej cesty - za jeho aggregovanie zodpoveda modelView
+  - SearchinReport je aggregovany z SearchingState-u algoritmom za pouzitia ReportSubManager-u a uz agregovnany report je predavany modelView-u na spracovanie
+- podobne ako pre graficke objetky, je vytvoreny system konvertorov reportov na viewModely
+  - musi vzdy existovat nejaky konvertor pre dany typ reportu, ktory ho prevedie na odpovedajuci viewModel
+  - danemu ViewModelu nasledne musi prisluchat odpovedajuci DataTemplate vo View-e, ktory ho spravne zobrazi
+
+### refactoring myslienky user modelov, mapovych reprezentacii a vyhladavacich algoritmov
+
+- doslo mi, ze je nezmyselne ocakavat od mapovej reprezentacie, ze by mala byt schopna vypocitat spravne napriklad heuristiku pre A\* algoritmus ... ona totiz nemoze mat ponatia o tom, aku vahu ma taka heuristika vygenerovat aby bola *prijatelna*
+- uvedomil som si, ze na vypocty roznych hodnot z atributov vrcholov a hran sa musi vyhradne pouzivat uzivatelsky model, ktory dokaze z atributov vypocitat vysledne hodnoty
+- tym padom som sa rozhodol pre refactoring uzivatelskych modelov ktore dosledkom su mimo ine:
+  - uzivatelske modely budu podobne ako grafy implementovat rozne funkcionality
+  - algoritmy si musi definovat, ake funkcionality uzivatelskych modelov vyzaduju pre svoj chod
+    - to znamena novo vytvorenu zavislost algoritmu na funkcionalite uzivatelskeho modelu
+  - odstranenie funkcionalit grafov, ktore sa tykaju vypoctov na uzlovych/hranovych atributoch
+    - ponechane tie, ktore definuju strukturu grafu, teda strukturu vrcholov a hran
+
+- zaroven prislo ku jemnej zmene reprezentacie zavisloti uzivatelskeho modelu na konkretnom template-e
+  - vyjadrenie zavyslosti som zosilnil v tom zmysle, ze som odstranil negenericky IUserModel a jeho funkciu presuvania nahradil IUserModel<out TTemplate>
+  - rozmyslel som si poriadne ze TTemplate logicky moze byt covariantny...popisuje totiz iba nieco, k comu je uzivatelsky model bindnuty, nie s akymi vrcholovymi a hranovymi atributmi vie pracovat
+  - to s akymi atributmi vie zaobchadzat nasledne definuju contravariantne typy v interface-u IComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes>
+- sice to niektore casti kodu jemne zneprehladnilo, myslim si ale ze myslienkou to ale tento nedostatok prebije
+- taktiez som ako do IUserModelType, tak do IUserModel pridal novu vlastnost ktora vracia bidnuty template - ulahci to pracu v tom, ze uz nebude potrebne predavat zbitocne naviac template aby sa zistilo, ake typy atributov su pouzite v uzivatelskom modelu

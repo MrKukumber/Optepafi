@@ -1,24 +1,16 @@
+using Avalonia.Controls;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.UserModelMan.UserModels;
 
 /// <summary>
-/// Represents ability to compute weights from provided edge and vertex attributes. User models which implement this interface can be used in path finding algorithms for computing weights of graph edges.
-/// IMPORTANT!! Weights are integer value of type int32. This standard holds for whole application, every implementation.
+/// Represents user model that can provide services for computing and aggregating properties bounded to some vertex/edge attributes. These services are then required for example in path finding algorithms for computing weights of edges.
+/// This interface defines no contract. It just declares, that user model is able to provide some functionality. Cast to some particular successor is required for accessing functionality.
+/// This interface should not be implemented right away. Its functionality-defining successors should be implemented instead.
 /// </summary>
-/// <typeparam name="TVertexAttributes">Type of vertex attributes, which is user model able to use for computing weights.</typeparam>
-/// <typeparam name="TEdgeAttributes">Type of edge attributes, which is user model able to use for computing weights.</typeparam>
-public interface IComputingUserModel<in TVertexAttributes, in TEdgeAttributes> : IUsableUserModel<TVertexAttributes, TEdgeAttributes>
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
-{
-    /// <summary>
-    /// Computes weights form provided vertex and edge attributes.
-    /// </summary>
-    /// <param name="from">Vertex attributes from start position vertex.</param>
-    /// <param name="through">Edge attributes of edge, for which is weight computed.</param>
-    /// <param name="to">Vertex attributes from destination vertex.</param>
-    /// <returns>Weight of edge.</returns>
-    int ComputeWeight(TVertexAttributes from, TEdgeAttributes through, TVertexAttributes to);
-}
+/// <typeparam name="TTemplate">Associated template type.</typeparam>
+/// <typeparam name="TVertexAttributes">Type of vertex attributes, which is user model able to use for delivering services.</typeparam>
+/// <typeparam name="TEdgeAttributes">Type of edge attributes, which is user model able to use for delivering services.</typeparam>
+public interface IComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes> : IUserModel<TTemplate>
+    where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes;

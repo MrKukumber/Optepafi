@@ -42,7 +42,9 @@
                 <Button Name="MapSelectingButton" Content="Choose map" Click="MapSelectingButton_OnClick" IsEnabled="{Binding UsableMapFormats, Converter={x:Static pfVm:PathFindingSettingsViewModel.IsNotEmptyNorNull}}"></Button>
                 <TextBlock Name="SelectedMapFileNameTextBlock" Text="{Binding SelectedMapFileName}"></TextBlock>
                 <Border Width="300" Height="300" BorderThickness="2" BorderBrush="Black">
-                    <Viewbox Child="{Binding SelectedMapsPreview}"/>
+                    <Viewbox>
+                        <ContentControl Content="{Binding SelectedMapsPreview}"/>
+                    </Viewbox>
                 </Border>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -51,9 +53,11 @@
                     <ComboBox.IsEnabled>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="SelectedTemplate" 
-                                     Converter="{x:Static ObjectConverters.IsNotNull}"></Binding>
+                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
                             <Binding Path="CurrentlyUsedMapFormat"
-                                     Converter="{x:Static ObjectConverters.IsNotNull}"></Binding>
+                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                            <Binding Path="CurrentlyUsedUserModelType"
+                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
                         </MultiBinding>
                     </ComboBox.IsEnabled>
                     <ComboBox.ItemTemplate>
@@ -63,7 +67,6 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
             </StackPanel>
-            <Canvas Name="MapInsightCanvas" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"></Canvas>
         </Grid>
     </DockPanel>
 </UserControl>

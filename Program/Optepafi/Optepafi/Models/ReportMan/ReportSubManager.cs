@@ -5,6 +5,7 @@ using Optepafi.Models.ReportMan.Aggregators;
 using Optepafi.Models.ReportSubMan.Aggregators;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
@@ -24,7 +25,7 @@ public class ReportSubManager<TVertexAttributes, TEdgeAttributes>
     
     
     public IPathReport? AggregatePathReport<TPath>(
-        TPath path, IUsableUserModel<TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken)
+        TPath path, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken)
         where TPath : IPath<TVertexAttributes, TEdgeAttributes> 
     {
         foreach (var pathReportAggregator in PathReportAggregators)
@@ -38,7 +39,7 @@ public class ReportSubManager<TVertexAttributes, TEdgeAttributes>
     }
     
     public ISearchingReport? AggregateSearchingReport<TSearchingState>(
-        TSearchingState searchingState, IUsableUserModel<TVertexAttributes, TEdgeAttributes> userModel)
+        TSearchingState searchingState, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TSearchingState : ISearchingState<TVertexAttributes, TEdgeAttributes> 
     {
         foreach (var searchingReportAggregator in SearchingReportAggregators)

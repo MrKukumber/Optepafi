@@ -1,6 +1,7 @@
 using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Aggregators;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
@@ -10,7 +11,7 @@ public interface ISearchingReportAggregator<in TSearchingState, TVertexAttribute
     where TSearchingState : ISearchingState<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
 {
-    ISearchingReport AggregateReport(TSearchingState searchingState, IUsableUserModel<TVertexAttributes, TEdgeAttributes> userModel);
+    ISearchingReport AggregateReport(TSearchingState searchingState, IComputingUserModel< ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel);
 }
 
 // public interface ISearchingReportAggregator<TSearchingState> : IReportAggregator

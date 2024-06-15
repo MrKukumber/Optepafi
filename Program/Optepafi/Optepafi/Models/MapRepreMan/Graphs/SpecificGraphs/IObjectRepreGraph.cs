@@ -14,8 +14,7 @@ public interface IObjectRepreGraph<TVertexAttributes, TEdgeAttributes> :
     IPredecessorRemembering<
         IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>, 
         IBasicEdge<IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>, 
-        TVertexAttributes, TEdgeAttributes>,
-    IAStarHeuristicEnsuring<IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes>, TVertexAttributes>
+        TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {

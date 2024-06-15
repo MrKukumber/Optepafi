@@ -29,15 +29,4 @@ public class ObjectRepreGraphOrienteeringOmapImplementation :
     {
         throw new System.NotImplementedException();
     }
-    
-
-    public int GetWeightFromHeuristic(IBasicEdgeCoupledBasicVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> from, IBasicEdgeCoupledBasicVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> to)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public List<MapCoordinate> GetPositionsOf(IEnumerable<IBasicEdgeCoupledBasicVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>> vertices)
-    {
-        throw new System.NotImplementedException();
-    }
 }

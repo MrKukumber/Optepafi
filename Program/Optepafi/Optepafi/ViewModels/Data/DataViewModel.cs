@@ -2,7 +2,7 @@ using ReactiveUI;
 
 namespace Optepafi.ViewModels.DataViewModels;
 
-public abstract class DataViewModel<TData> : ReactiveObject
+public abstract class DataViewModel<TData> : ViewModelBase
     where TData : notnull
 {
     protected abstract TData Data { get; }

@@ -6,6 +6,7 @@ using Optepafi.Models.Graphics.GraphicsAggregators.Path;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
@@ -25,7 +26,7 @@ public class GraphicsSubManager<TVertexAttributes, TEdgeAttributes>
     public enum AggregationResult {Aggregated, NoUsableAggregatorFound}
 
     public AggregationResult AggregatePathGraphics<TPath>(TPath path,
-        IUsableUserModel<TVertexAttributes, TEdgeAttributes> userModel,
+        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
         where TPath : IPath<TVertexAttributes, TEdgeAttributes>
     {
@@ -41,7 +42,7 @@ public class GraphicsSubManager<TVertexAttributes, TEdgeAttributes>
     }
 
     public AggregationResult AggregateSearchingStateGraphics<TSearchingState>(TSearchingState searchingState,
-        IUsableUserModel<TVertexAttributes, TEdgeAttributes> userModel,
+        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
         where TSearchingState : ISearchingState<TVertexAttributes, TEdgeAttributes>
     {

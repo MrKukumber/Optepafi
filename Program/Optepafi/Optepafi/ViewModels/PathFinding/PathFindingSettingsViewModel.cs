@@ -35,8 +35,8 @@ public class PathFindingSettingsViewModel : ViewModelBase
 
         UsableTemplates = _settingsMv.GetAllUsableTemplates();
         UsableMapFormats = _settingsMv.GetAllUsableMapFormats();
-        UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
         UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
+        UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
 
         this.WhenAnyValue(x => x.CurrentlySelectedElevDataDistribution)
             .Subscribe(currentlySelectedElevDataDistribution =>
@@ -45,11 +45,12 @@ public class PathFindingSettingsViewModel : ViewModelBase
             });
         
         this.WhenAnyValue(x => x.SelectedTemplate, 
-                x => x.CurrentlyUsedMapFormat)
+                x => x.CurrentlyUsedMapFormat,
+                x => x.CurrentlyUsedUserModelType)
             .Subscribe(tuple =>
             {
-                var (template, mapFormat) = tuple;
-                UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(template, mapFormat);
+                var (template, mapFormat, userModelType) = tuple;
+                UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(template, mapFormat, userModelType);
             });
 
         this.WhenAnyValue(x => x.SelectedTemplate)
@@ -186,8 +187,8 @@ public class PathFindingSettingsViewModel : ViewModelBase
             bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingWindowViewModel(_mapRepreCreatingMv));
             if (successfulCreation)
             {
-                settingsMv.SaveParameters();
-                settingsMv.ReleaseMap();
+                _settingsMv.SaveParameters();
+                _settingsMv.ReleaseMap();
                 return WhereToProceed.PathFinding;
             }
             return WhereToProceed.Settings;
@@ -198,16 +199,19 @@ public class PathFindingSettingsViewModel : ViewModelBase
 
         SelectedTemplate = settingsMv.DefaultTemplate;
 
-        if (settingsMv.DefaultMapFilePath is not null)
+        if (settingsMv.DefaultMapFilePath is not null && settingsMv.DefaultUserModelFilePath is not null)
         {
-            CurrentlyUsedMapFormat = _settingsMv.GetCorrespondingMapFormat(Path.GetFileName(settingsMv.DefaultMapFilePath));
-            UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat);
+            CurrentlyUsedMapFormat = settingsMv.GetCorrespondingMapFormat(Path.GetFileName(settingsMv.DefaultMapFilePath));
+            var userModelType = settingsMv.GetCorrespondingUserModelType(Path.GetFileName(settingsMv.DefaultUserModelFilePath));
+            CurrentlyUsedUserModelType = userModelType is not null && UsableUserModelTypes is not null && UsableUserModelTypes.Contains(userModelType) ? userModelType : CurrentlyUsedUserModelType; 
+            
+            UsableSearchingAlgorithms = settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
             SearchingAlgorithmViewModel? searchingAlgorithm = settingsMv.DefaultSearchingAlgorithm;
             if (searchingAlgorithm is not null && UsableSearchingAlgorithms is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
                 SelectedSearchingAlgorithm = searchingAlgorithm;
         }
         
-        if (settingsMv.DefaultMapFilePath is not null)
+        if (CurrentlyUsedMapFormat is not null && settingsMv.DefaultMapFilePath is not null)
         {
             Stream? mapFileStream = TryFindAndOpenFile(settingsMv.DefaultMapFilePath);
             if (mapFileStream is not null)
@@ -225,22 +229,22 @@ public class PathFindingSettingsViewModel : ViewModelBase
         }
 
 
-        if (settingsMv.DefaultUserModelFilePath is not null)
+        if (CurrentlyUsedUserModelType is not null && settingsMv.DefaultUserModelFilePath is not null)
         {
-            UserModelTypeViewModel? userModelType =
-                _settingsMv.GetCorrespondingUserModelType(Path.GetFileName(settingsMv.DefaultUserModelFilePath));
-            if (userModelType is not null && UsableUserModelTypes is not null &&
-                UsableUserModelTypes.Contains(userModelType))
+            Stream? userModelFileStream = TryFindAndOpenFile(settingsMv.DefaultUserModelFilePath);
+            if (userModelFileStream is not null)
+                LoadUserModelCommand
+                    .Execute((userModelFileStream, settingsMv.DefaultUserModelFilePath))
+                    .Subscribe(commandOutput =>
+                    {
+                        var (_, userModelType, _) = commandOutput;
+                        CurrentlyUsedUserModelType = userModelType;
+                    });
+            else
             {
-                Stream? userModelFileStream = TryFindAndOpenFile(settingsMv.DefaultUserModelFilePath);
-                if (userModelFileStream is not null)
-                    LoadUserModelCommand
-                        .Execute((userModelFileStream, settingsMv.DefaultUserModelFilePath))
-                        .Subscribe();
+                CurrentlyUsedUserModelType = null;
             }
         }
-        
-
     }
 
     private Stream? TryFindAndOpenFile(string path)

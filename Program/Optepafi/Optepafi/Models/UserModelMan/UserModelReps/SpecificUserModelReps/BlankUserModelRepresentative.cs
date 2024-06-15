@@ -7,14 +7,14 @@ using Optepafi.Models.UserModelMan.UserModels.SpecificUserModels;
 
 namespace Optepafi.Models.UserModelMan.UserModelTypes.SpecificUserModelReps;
 
-public class BlankUserModelRepresentative : IUserModelRepresentative<BlankTemplate, BlankUserModel>
+public class BlankUserModelRepresentative : IUserModelRepresentative<BlankUserModel, BlankTemplate>
 {
     public static BlankUserModelRepresentative Instance { get; } = new();
     private BlankUserModelRepresentative() { }
-
-    public string UserModelTypeName { get; } = "Blank user model";
-    public string UserModelFileNameSuffix { get; } = "blankUM";
-    public string UserModelFileExtension { get; } = "json";
+    public BlankTemplate AssociatedTemplate  => BlankTemplate.Instance;
+    public string UserModelTypeName  => "Blank user model";
+    public string UserModelFileNameSuffix  => "blankUM";
+    public string UserModelFileExtension  => "json";
     public BlankUserModel GetNewUserModel()
     {
         return new BlankUserModel();

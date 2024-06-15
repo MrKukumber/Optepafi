@@ -1,13 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
+using Avalonia.Controls;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.ReportMan;
 using Optepafi.Models.SearchingAlgorithmMan.Implementations;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModelTypes;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 
@@ -41,13 +45,32 @@ public interface ISearchingAlgorithm
     /// It checks if it possesses the correct functionality.
     /// </summary>
     /// <param name="mapRepreRep">Representative of map representation type that is checked.</param>
-    /// <returns>True if any of implementation can use represented map representation type.</returns>
+    /// <returns>True if any of implementations can use represented map representation type.</returns>
     sealed bool DoesRepresentUsableMapRepre(IMapRepreRepresentative<IMapRepre> mapRepreRep)
     {
-        var definedFunctionalityMapRepreRep = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
+        var graphRepresentative = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
         foreach (var implementation in Implementations)
         {
-            if (implementation.DoesRepresentUsableMapRepre(definedFunctionalityMapRepreRep))
+            if (implementation.DoesRepresentUsableMapRepre(graphRepresentative))
+                return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Method that checks whether there is some implementation of algorithm that can use user model type represented by provided <c>IUserModelTyp</c>.
+    /// It checks if it possesses the correct functionality.
+    /// </summary>
+    /// <param name="computingUserModelType">Represents computing user model type that is checked.</param>
+    /// <typeparam name="TVertexAttributes">Type of vertex attributes bounded to tested user model type.</typeparam>
+    /// <typeparam name="TEdgeAttributes">Type of edge attributes bounded to tested user model type.</typeparam>
+    /// <returns>True, if any of implementations can use represented user model type.False otherwise.</returns>
+    sealed bool DoesRepresentUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
+        where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+    {
+        foreach (var implementation in Implementations)
+        {
+            if (implementation.DoesRepresentUsableUserModel(computingUserModelType)) 
                 return true;
         }
         return false;
@@ -65,25 +88,25 @@ public interface ISearchingAlgorithm
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <returns>Collection of resulting found paths. Path report collections (for legs of track) are returned in order of corresponding user models.</returns>
-    /// <exception cref="ArgumentException">When no implementation is able to use provided graph.</exception>
-    sealed IPath[][] ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
+    /// <exception cref="ArgumentException">When no implementation is able to use provided graph or any of provided user models.</exception>
+    sealed IPath<TVertexAttributes, TEdgeAttributes>[][] ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IComputingUserModel<TVertexAttributes, TEdgeAttributes>[] userModels,
+        IEnumerable<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>> userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
-            foreach (var implementation in Implementations)
+        foreach (var implementation in Implementations)
+        {
+            if (implementation.IsUsableGraph(graph) && implementation.AreUsableUserModels(userModels))
             {
-                if (implementation.IsUsableGraph(graph))
+                lock (graph)
                 {
-                    lock (graph)
-                    {
-                        return implementation.SearchForPaths(track, graph,  userModels,progress, cancellationToken);
-                    }
+                    return implementation.SearchForPaths(track, graph, userModels, progress, cancellationToken);
                 }
             }
-            throw new ArgumentException("No implementation is able to use provided graph. Did you forget to check its type usability before execution?");
+        }
+        throw new ArgumentException("No implementation is able to use provided graph or any of provided user models. Did you forget to check their type usability before execution?");
     }
 
     /// <summary>
@@ -95,21 +118,21 @@ public interface ISearchingAlgorithm
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They  are used for retrieving weights of edges from user models.</typeparam>
     /// <returns>Executor of this searching algorithm.</returns>
-    /// <exception cref="ArgumentException">When no implementation is able to use provided graph.</exception>
+    /// <exception cref="ArgumentException">When no implementation is able to use provided graph or user model.</exception>
     sealed ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IComputingUserModel<TVertexAttributes, TEdgeAttributes> userModel)
+        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
         foreach (var implementation in Implementations)
         {
-            if (implementation.IsUsableGraph(graph))
+            if (implementation.IsUsableGraph(graph) && implementation.IsUsableUserModel(userModel))
             {
-                return implementation.GetExecutor(graph,userModel);
+                return implementation.GetExecutor(graph, userModel);
             }
         }
-        throw new ArgumentException("No implementation is able to use provided graph. Did you forget to check its type usability before execution?");
+        throw new ArgumentException("No implementation is able to use provided graph or provided user model. Did you forget to check their type usability before execution?");
     }
     
 }

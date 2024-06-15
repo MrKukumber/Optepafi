@@ -1,6 +1,7 @@
 using System.Threading;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
@@ -11,6 +12,6 @@ public interface ISearchingStateGraphicsAggregator<in TSearchingState, TVertexAt
     where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
 {
     public void AggregateGraphics(TSearchingState searchingState,
-        IUsableUserModel<TVertexAttributes, TEdgeAttributes> userModel,
+        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken);
 }

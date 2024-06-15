@@ -10,10 +10,10 @@ namespace Optepafi.Models.UserModelMan.UserModelTypes;
 /// User model representative takes care of deserializing represented user models. Serialization of user models must match with deserialization of their representatives.
 /// Preferred way to interact with representatives is through <see cref="UserModelManager"/>.
 /// </summary>
-/// <typeparam name="TTemplate">Template type which represented user model is tied to.</typeparam>
 /// <typeparam name="TUserModel">Type of represented user model.</typeparam>
-public interface IUserModelRepresentative<in TTemplate, TUserModel> :
-    IUserModelType<TUserModel>,
+/// <typeparam name="TTemplate">Template type which represented user model is tied to.</typeparam>
+public interface IUserModelRepresentative<TUserModel, TTemplate> :
+    IUserModelType<TUserModel, TTemplate>,
     IUserModelTemplateBond<TTemplate> 
     where TTemplate : ITemplate
     where TUserModel : IUserModel<TTemplate>

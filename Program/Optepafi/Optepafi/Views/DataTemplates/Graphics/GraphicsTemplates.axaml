@@ -10,7 +10,7 @@
         <ItemsControl Name="SelectedMapPreview" ItemsSource="{Binding GraphicObjectsCollection}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Width="{Binding GraphicsWidth, Converter={StaticResource Micro2dipConverter}}" 
+                    <Canvas Width="{Binding GraphicsWidth, Converter={StaticResource Micro2dipConverter}}"
                             Height="{Binding GraphicsHeight, Converter={StaticResource Micro2dipConverter}}"
                             Background="Transparent"/>
                 </ItemsPanelTemplate>

@@ -20,7 +20,7 @@ public interface ITemplateGenericVisitor<TOut, TConstraint, TOtherParams>
     /// <param name="template">Template, which accepted the visit.</param>
     /// <param name="genericParam">One generic parameter carried trough visitor pattern.</param>
     /// <param name="otherParams">Other parameters carried through visitor pattern.</param>
-    /// <typeparam name="TTemplate">Type of accepting template. Main result of this modified visitor pattern .</typeparam>
+    /// <typeparam name="TTemplate">Type of accepting template. Main result of this modified visitor pattern.</typeparam>
     /// <typeparam name="TVertexAttributes">Type of vertex attributes carried by accepting template.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes carried by accepting template.</typeparam>
     /// <typeparam name="TGenericParam">Type of generic parameter carried trough visitor pattern.</typeparam>

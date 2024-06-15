@@ -24,6 +24,7 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
         RecursiveSearchForDataTemplatesIn(Resources);
+        DataTemplates.Add(new ViewLocator());
     }
 
     private void RecursiveSearchForDataTemplatesIn(IResourceDictionary resourceDictionary)

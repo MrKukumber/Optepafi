@@ -74,19 +74,22 @@ public abstract class PFSettingsModelView : ModelViewBase
     public string? DefaultUserModelFilePath { get; }
 
     public IReadOnlyCollection<SearchingAlgorithmViewModel>? GetUsableAlgorithms(
-        TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel)
+        TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel, UserModelTypeViewModel? userModelTypeViewModel)
     {
-        if (templateViewModel is not null && mapFormatViewModel is not null)
+        if (templateViewModel is not null && mapFormatViewModel is not null && userModelTypeViewModel is not null)
         {
-            ISet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
-            HashSet<SearchingAlgorithmViewModel> usableSearchingAlgorithms = new HashSet<SearchingAlgorithmViewModel>();
-            foreach (var usableMapRepre in usableMapRepreReps)
+            HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
+            HashSet<ISearchingAlgorithm> usableSearchingAlgorithmsForUserModelType = SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(userModelTypeViewModel.UserModelType);
+            
+            HashSet<SearchingAlgorithmViewModel> usableSearchingAlgorithmViewModels = new HashSet<SearchingAlgorithmViewModel>();
+            foreach (var usableMapRepreRep in usableMapRepreReps)
             {
-                usableSearchingAlgorithms.UnionWith(
-                    SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepre)
-                        .Select(usableSearchingAlgorithm => new SearchingAlgorithmViewModel(usableSearchingAlgorithm)));
+                HashSet<ISearchingAlgorithm> usableSearchingAlgorithms = SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreRep);
+                usableSearchingAlgorithms.IntersectWith(usableSearchingAlgorithmsForUserModelType);
+                usableSearchingAlgorithmViewModels.UnionWith(usableSearchingAlgorithms
+                        .Select(searchingAlgorithm => new SearchingAlgorithmViewModel(searchingAlgorithm)));
             }
-            return usableSearchingAlgorithms;
+            return usableSearchingAlgorithmViewModels;
         }
         return null;
     }
@@ -117,7 +120,7 @@ public abstract class PFSettingsModelView : ModelViewBase
         TemplateViewModel? templateViewModel)
     {
         return templateViewModel is null ? null : UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
-            .Where(userModelType => UserModelManager.Instance.DoesRepresentComputingModelTiedTo(userModelType, templateViewModel.Template))
+            .Where(userModelType => UserModelManager.Instance.DoesRepresentComputingModel(userModelType))
             .Select(usableUserModelType => new UserModelTypeViewModel(usableUserModelType))
             .ToHashSet();
     }
@@ -148,17 +151,15 @@ public abstract class PFSettingsModelView : ModelViewBase
 
 }
 
-public partial class PathFindingSessionModelView : SessionModelView
+public partial class PathFindingSessionModelView
 {
     private class PFSettingsIntraModelView : PFSettingsModelView
     {
-        public PFSettingsIntraModelView(){}
-        
         public IElevDataDistribution? ElevDataDistribution { get; private set; }
         public ITemplate? Template { get; private set; }
         public IMap? Map { get; private set; }
         public CollectingGroundGraphicsSource? MapGraphics { get; private set; }
-        public IUserModel? UserModel { get; private set; }
+        public IUserModel<ITemplate>? UserModel { get; private set; }
         public IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; private set; }
         public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
         public override void SetElevDataDistribution(ElevDataDistributionViewModel? elevDataDistViewModel)
@@ -203,7 +204,7 @@ public partial class PathFindingSessionModelView : SessionModelView
         {
             var (userModelCreationResult, userModel) = await Task.Run(() =>
             {
-                var result = UserModelManager.Instance.TryDeserializeUserModelOfTypeFrom(streamWithPath, userModelTypeViewModel.UserModelType, cancellationToken, out IUserModel? userModel);
+                var result = UserModelManager.Instance.TryDeserializeUserModelOfTypeFrom(streamWithPath, userModelTypeViewModel.UserModelType, cancellationToken, out IUserModel<ITemplate>? userModel);
                 return (result, userModel);
             });
             switch (userModelCreationResult)

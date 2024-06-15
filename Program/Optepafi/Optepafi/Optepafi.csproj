@@ -12,6 +12,7 @@
         <AvaloniaResource Include="Assets\**" />
         <AvaloniaResource Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
         <AvaloniaResource Remove="Localization\**" />
+        <AvaloniaResource Remove="Utils\**" />
     </ItemGroup>
 
 
@@ -86,6 +87,8 @@
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataIndependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataDependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\IMapRepreConstructor.cs" />
+      <Compile Remove="Utils\**" />
+      <Compile Remove="Models\MapRepreMan\Graphs\GraphFunctionalities\IAStarHeuristicEnsuring.cs" />
     </ItemGroup>
 
 
@@ -104,6 +107,7 @@
         <LastGenOutput>Local.sk-SK.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Remove="Localization\**" />
+      <EmbeddedResource Remove="Utils\**" />
     </ItemGroup>
 
 
@@ -118,6 +122,7 @@
     <ItemGroup>
       <AvaloniaXaml Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <AvaloniaXaml Remove="Localization\**" />
+      <AvaloniaXaml Remove="Utils\**" />
     </ItemGroup>
 
 
@@ -125,11 +130,13 @@
       <AdditionalFiles Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <AdditionalFiles Remove="Localization\**" />
       <AdditionalFiles Include="Views\DataTemplates\Graphics\MapObjects\TextMapObjectsTemplates.axaml" />
+      <AdditionalFiles Remove="Utils\**" />
     </ItemGroup>
 
 
     <ItemGroup>
       <None Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <None Remove="Localization\**" />
+      <None Remove="Utils\**" />
     </ItemGroup>
 </Project>

@@ -2,19 +2,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModelAdjustables;
 
 namespace Optepafi.Models.UserModelMan.UserModels.SpecificUserModels;
 
 public class BlankUserModel : 
-    IUserModel<BlankTemplate>, 
-    IComputingUserModel<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, 
+    IWeightComputingUserModel<BlankTemplate, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, 
     ISettableUserModel
 {
     [JsonIgnore]
     public string FilePath { get; set; } = "";
     
+    [JsonIgnore]
+    public BlankTemplate AssociatedTemplate { get; } = BlankTemplate.Instance;
+
+    ITemplate IUserModel<ITemplate>.AssociatedTemplate => AssociatedTemplate;
+
     public string Serialize()
     {
         return JsonSerializer.Serialize(this);
