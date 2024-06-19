@@ -2,7 +2,7 @@ using ReactiveUI;
 
 namespace Optepafi.ModelViews;
 
-public class ModelViewBase : ReactiveObject
+public class ModelViewBase
 {
     
 }

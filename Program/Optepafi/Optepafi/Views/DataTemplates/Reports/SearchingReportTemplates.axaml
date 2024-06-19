@@ -1,0 +1,9 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:srVm="clr-namespace:Optepafi.ViewModels.Data.Reports.Searching">
+    <DataTemplates x:Key="SearchingReportTemplates">
+        <DataTemplate DataType="srVm:SmileyFacePathDrawingReportViewModel">
+            <TextBlock VerticalAlignment="Center" Text="{Binding LastDrawnSmileyFaceObjectInfo}"/>
+        </DataTemplate>
+    </DataTemplates>
+</ResourceDictionary>

@@ -12,7 +12,8 @@
              
     <Application.Resources>
        <ResourceDictionary>
-           <viewUtils:MicrometersToDipConverter x:Key="Micro2dipConverter"/>
+           <viewUtils:MicrometersToDipConverter x:Key="Micro2DipConverter"/>
+           <viewUtils:MapCoordinateToAvaloniaPointConverter x:Key="MapCoordToPointConverter"/>
            <ResourceDictionary.MergedDictionaries>
                <ResourceInclude Source="/Views/DataTemplates/AllDataTemplates.axaml"/>
            </ResourceDictionary.MergedDictionaries>

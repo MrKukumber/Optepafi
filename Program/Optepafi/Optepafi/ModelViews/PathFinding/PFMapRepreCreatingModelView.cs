@@ -22,7 +22,6 @@ public abstract class PFMapRepreCreatingModelView : ModelViewBase
     public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, Cancelled}
     public abstract ElevDataPrerequisiteCheckResult CheckMapRequirementsForElevData(CancellationToken ct);
     public abstract Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReportViewModel> mapRepreCreationProgress, CancellationToken cancellationToken);
-    public abstract void CleanMapRepre();
 }
 public partial class PathFindingSessionModelView : SessionModelView
 {
@@ -103,11 +102,6 @@ public partial class PathFindingSessionModelView : SessionModelView
                     MapRepreManager.Instance.CreateMapRepre(Template, Map, MapRepreRepresentative, mrcProgress, cancellationToken));
                 if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
             }
-        }
-
-        public override void CleanMapRepre()
-        {
-            MapRepresentation = null;
         }
 
         public PFMapRepreCreatingIntraModelView(PFSettingsIntraModelView settings)

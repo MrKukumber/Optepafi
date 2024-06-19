@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.ReportMan;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
@@ -40,7 +41,7 @@ public interface ISearchingExecutor : IDisposable
     /// <param name="progress">Object by which can be progress of path finding subscribed.</param>
     /// <param name="cancellationToken">Token for search cancellation.</param>
     /// <returns>Collection of resulting found paths for legs of track.</returns>
-    IPath[] Search(Leg[] track, IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
+    IPath Search(Leg[] track, IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
 }
 
 /// <summary>
@@ -53,7 +54,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    public delegate IPath[] AlgorithmSearchingDelegate(
+    public delegate IPath AlgorithmSearchingDelegate(
         Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
         IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
@@ -66,7 +67,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     private Leg[] _inputTrack = null;
     private IProgress<ISearchingReport>? _inputProgress;
     private CancellationToken? _inputCancellationToken;
-    private IPath[] _outputPath = null;
+    private IPath _outputPath = null;
     private bool _disposed = false;
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
@@ -83,7 +84,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
         _constructionResetEvent.WaitOne();
     }
     
-    public IPath[] Search(Leg[] track, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
+    public IPath Search(Leg[] track, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
         if (_disposed) throw new ObjectDisposedException("SearchingExecutor");
 

@@ -4,47 +4,63 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
              xmlns:utils="using:Optepafi.Views.Utils"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="Optepafi.Views.PathFinding.PathFindingView"
              x:DataType="pfVm:PathFindingViewModel">
     <DockPanel>
         <Panel DockPanel.Dock="Top" Margin="10">
             <TextBlock Name="PathFindingHeaderTextBlock" Text="Path Finding" HorizontalAlignment="Center"></TextBlock>
-            <Button Name="ExitButton" Content="Exit" HorizontalAlignment="Right" VerticalAlignment="Top"></Button>
+            <Button Name="ExitButton" Command="{Binding ExitCommand}" HorizontalAlignment="Right" VerticalAlignment="Top">Exit</Button> <!--TODO: localize--> 
         </Panel>
         <Grid ColumnDefinitions="10 * 2 5* 2 * 10">
-            <ItemsControl Grid.Column="1" Name="PathsInfoItemsControl" VerticalAlignment="Center">
-                <TextBlock Text="Blue path -  120 m"></TextBlock>
-                <TextBlock Text="Red path -  100 m"></TextBlock>
-                <TextBlock Text="Green path -  150 m"></TextBlock>
-            </ItemsControl>
-            <GridSplitter Grid.Column="2"></GridSplitter>
+            <!-- <ItemsControl Grid.Column="1" Name="PathsInfoItemsControl" VerticalAlignment="Center"> -->
+                <!-- <TextBlock Text="Blue path -  120 m"></TextBlock> -->
+                <!-- <TextBlock Text="Red path -  100 m"></TextBlock> -->
+                <!-- <TextBlock Text="Green path -  150 m"></TextBlock> -->
+            <!-- </ItemsControl> -->
+            <ContentControl Name="LastReceivedReportContent" Grid.Column="1" Content="{Binding LastReport}"></ContentControl>
+            <GridSplitter Grid.Column="2"/>
             <Grid Grid.Column="3"  RowDefinitions="* Auto" Margin="5">
                 <Border Grid.Row="0" BorderBrush="Black" BorderThickness="2">
-                    <ScrollViewer>
-                        <Viewbox Width="" Height=""><!--TODO: bindnut na aktualnu velkost canvasu, tato hodnota sa bude moct menit v zavislosti na zoom/unzoom. Treba convertorvat hodnoty z metrickej do DIP-->
-                            <Panel>
-                                <ContentControl Name="MapGraphics" Content="{Binding }" PointerPressed="MapGraphics_OnPointerPressed"/>
-                                <ContentControl Name="ReportsGraphics" Content="{Binding }"/>
-                            </Panel>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Viewbox Width="{Binding ScaledGraphicsWidth, Converter={StaticResource Micro2DipConverter}}" 
+                                 Height="{Binding ScaledGraphicsHeight, Converter={StaticResource Micro2DipConverter}}"
+                                 PointerPressed="MapGraphics_OnPointerPressed">
+                            <Grid>
+                                <ContentControl Name="MapGraphics" Content="{Binding MapGraphicsSource}" />
+                                <ContentControl Name="TrackGraphics" Content="{Binding TrackGraphicsSource}"/>
+                                <ContentControl Name="ReportsGraphics" Content="{Binding ReportGraphicsSource}"/>
+                            </Grid>
                         </Viewbox>
                     </ScrollViewer>
                 </Border>
                 <DockPanel Grid.Row="1">
-                    <TextBlock Name="GraphicsProblemTextBlock" DockPanel.Dock="Left"></TextBlock>
+                    <TextBlock Name="GraphicsProblemTextBlock" Text="{Binding GraphicsProblemText}" DockPanel.Dock="Left"/>
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Name="ZoomButton">+</Button>
-                        <Button Name="UnZoomButton">-</Button>
+                        <Button Name="ZoomButton" Content="+" Command="{Binding ZoomCommand}" >
+                            <Button.CommandParameter>
+                                <sys:Single>0.1</sys:Single>
+                            </Button.CommandParameter>
+                        </Button>
+                        <Button Name="UnZoomButton" Content="-" Command="{Binding UnZoomCommand}" >
+                            <Button.CommandParameter>
+                                <sys:Single>0.1</sys:Single>
+                            </Button.CommandParameter>
+                        </Button>
                     </StackPanel>
                 </DockPanel>
             </Grid>
-            <GridSplitter Grid.Column="4" ></GridSplitter>
-            <StackPanel Grid.Column="5" VerticalAlignment="Center">
-                <Button Name="FindPathButton" Content="Find Path" ></Button>
-                <Button Name="CancelSearchButton">Cancel Search</Button>
-                <Button Name="CleanUpButton">Clean Up</Button>
-                <TextBlock Name="InstructionsTextBlock" Text="Instructions will be displayed here" TextWrapping="Wrap" Margin="0 10 0 0 "></TextBlock>
-            </StackPanel>
+            <GridSplitter Grid.Column="4"/>
+            <DockPanel Grid.Column="5" >
+                <Button Name="RemoveLastTrackPoint" DockPanel.Dock="Bottom" Command="{Binding RemoveTrackPointCommand}" IsVisible="{Binding IsAcceptingTrack}" Margin="0 0 0 40">Remove the last one</Button> <!--TODO: localize-->
+                <StackPanel VerticalAlignment="Center">
+                    <Button Name="FindPathButton" Command="{Binding FindPathCommand}">Find Path</Button> <!--TODO: localize-->
+                    <Button Name="CancelSearchButton" Command="{Binding CancelSearchCommand}">Cancel Search</Button> <!--TODO: localize-->
+                    <Button Name="CleanUpButton"  Command="{Binding CleanUpPathReportCommand}">Clean Up</Button> <!--TODO: localize-->
+                    <TextBlock Name="InstructionsTextBlock" TextWrapping="Wrap" Margin="0 10 0 0 ">Instructions will be displayed here</TextBlock><!--TODO: implement and localize-->
+                </StackPanel>
+            </DockPanel>
         </Grid>
     </DockPanel>
 </UserControl>

@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.ReportMan;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.ModelViews.Converters2Vm.Reports.Path;
 using Optepafi.ViewModels.Data.Graphics;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Data.Reports;
 
-public abstract class PathReportViewModel : ReactiveObject
+public abstract class PathReportViewModel : ViewModelBase, IReportWithGraphicsViewModel
 {
-    public abstract GraphicsSourceViewModel PathGraphics { get; }
+    public abstract GraphicsSourceViewModel GraphicsSource { get; }
 
     public static PathReportViewModel? Construct(IPathReport pathReport, IGroundGraphicsSource relatedMapGraphics)
     {

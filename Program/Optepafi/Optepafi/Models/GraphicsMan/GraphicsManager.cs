@@ -18,7 +18,8 @@ namespace Optepafi.Models.Graphics;
 /// </summary>
 public class GraphicsManager :
     IMapGenericVisitor<GraphicsManager.AggregationResult, (IGraphicsObjectCollector, CancellationToken?)>,
-    IMapGenericVisitor<GraphicsArea?>
+    IMapGenericVisitor<GraphicsArea?>,
+    IMapGenericVisitor<GraphicsManager.AggregationResult, (IList<MapCoordinate>, IGraphicsObjectCollector)>
 {
     public static GraphicsManager Instance { get; } = new();
     private GraphicsManager() { }
@@ -31,7 +32,7 @@ public class GraphicsManager :
 
     public AggregationResult AggregateMapGraphics(IMap map, IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric(this, (collectorForAggregatedObjects, cancellationToken));
+        return map.AcceptGeneric<AggregationResult, (IGraphicsObjectCollector, CancellationToken?)>(this, (collectorForAggregatedObjects, cancellationToken));
     }
     
     AggregationResult IMapGenericVisitor<AggregationResult, (IGraphicsObjectCollector, CancellationToken?)>.GenericVisit<TMap>(TMap map, (IGraphicsObjectCollector, CancellationToken?) otherParams)
@@ -65,5 +66,24 @@ public class GraphicsManager :
             }
         }
         return null;
+    }
+
+    public AggregationResult AggregateTrackGraphicsAccordingTo(IList<MapCoordinate> trackCoordinates, IMap map, IGraphicsObjectCollector collectorForAggregateObjects)
+    {
+        return map.AcceptGeneric<AggregationResult, (IList<MapCoordinate>, IGraphicsObjectCollector)>(this, (trackCoordinates, collectorForAggregateObjects));
+    }
+
+    AggregationResult IMapGenericVisitor<AggregationResult, (IList<MapCoordinate>, IGraphicsObjectCollector)>.GenericVisit<TMap>(TMap map, (IList<MapCoordinate>, IGraphicsObjectCollector) otherParams)
+    {
+        var (trackCoordinates, collectorForAggregatedObjects) = otherParams;
+        foreach (var graphicsAggregator in MapGraphicsAggregators)
+        {
+            if (graphicsAggregator is IMapGraphicsAggregator<TMap> mapGraphicsAggregator)
+            {
+                mapGraphicsAggregator.AggregateGraphicsOfTrack(trackCoordinates, collectorForAggregatedObjects);
+                return AggregationResult.Aggregated;
+            }
+        }
+        return AggregationResult.NoUsableAggregatorFound;
     }
 }

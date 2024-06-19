@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.Graphics.GraphicsAggregators;
 using Optepafi.Models.Graphics.GraphicsAggregators.Path;
+using Optepafi.Models.Graphics.GraphicsAggregators.SearchingState;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
@@ -16,9 +17,9 @@ public class GraphicsSubManager<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
 {
     public IReadOnlySet<IGraphicsAggregator> PathGraphicsAggregators { get; } =
-        ImmutableHashSet.Create<IGraphicsAggregator>(SmileyFaceGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance);
+        ImmutableHashSet.Create<IGraphicsAggregator>(SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance);
     public IReadOnlySet<IGraphicsAggregator> SearchingStateGraphicsAggregators { get; } =
-        ImmutableHashSet.Create<IGraphicsAggregator>();
+        ImmutableHashSet.Create<IGraphicsAggregator>(SmileyFacePathDrawingStateGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance);
     
     public static GraphicsSubManager<TVertexAttributes, TEdgeAttributes> Instance { get; } = new();
     private GraphicsSubManager(){}
@@ -27,7 +28,7 @@ public class GraphicsSubManager<TVertexAttributes, TEdgeAttributes>
 
     public AggregationResult AggregatePathGraphics<TPath>(TPath path,
         IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
-        IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
+        IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken = null)
         where TPath : IPath<TVertexAttributes, TEdgeAttributes>
     {
         foreach (var graphicsAggregator in PathGraphicsAggregators)
@@ -43,7 +44,7 @@ public class GraphicsSubManager<TVertexAttributes, TEdgeAttributes>
 
     public AggregationResult AggregateSearchingStateGraphics<TSearchingState>(TSearchingState searchingState,
         IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
-        IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
+        IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken = null)
         where TSearchingState : ISearchingState<TVertexAttributes, TEdgeAttributes>
     {
         foreach (var graphicsAggregator in SearchingStateGraphicsAggregators)

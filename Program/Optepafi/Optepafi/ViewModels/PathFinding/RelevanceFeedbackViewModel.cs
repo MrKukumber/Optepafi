@@ -3,7 +3,7 @@ using Optepafi.ModelViews.PathFinding;
 
 namespace Optepafi.ViewModels.PathFinding;
 
-public class RelevanceFeedbackViewModel : ViewModelBase
+public class RelevanceFeedbackViewModel : PathFindingViewModelBase
 {
     public PFRelevanceFeedbackModelView RelevanceFeedbackMV { get; }
     public RelevanceFeedbackViewModel(PFRelevanceFeedbackModelView relevanceFeedbackMv)

@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:prVm="clr-namespace:Optepafi.ViewModels.Data.Reports.Path">
+    <DataTemplates x:Key="PathReportsTemplates">
+        <DataTemplate DataType="{x:Type prVm:SmileyFacePathReportViewModel}">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{Binding HorizontallySquishedFacesCountInfo}" 
+                           IsVisible="{Binding HorizontallySquishedFacesCountInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                <TextBlock Text="{Binding VerticallySquishedFacesCountInfo}" 
+                           IsVisible="{Binding VerticallySquishedFacesCountInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                <TextBlock Text="{Binding NotSquishedFacesCountInfo}" 
+                           IsVisible="{Binding NotSquishedFacesCountInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            </StackPanel>
+        </DataTemplate>
+    </DataTemplates>
+</ResourceDictionary>

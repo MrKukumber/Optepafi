@@ -11,7 +11,6 @@
     <DockPanel>
         <TextBlock Name="PathFindingSettingsHeaderTextBlock" Text="Path finding session settings" DockPanel.Dock="Top" HorizontalAlignment="Center" ></TextBlock>
         <Grid ColumnDefinitions="* *" DockPanel.Dock="Bottom" Margin="20">
-            <!-- <Button Name="BackToMainMenuButton" Content="Return to main menu" Grid.Column="0"></Button> -->
             <Button Name="ContinueToRelevanceFeedbackButton" Content="Continue" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding ProceedTroughMapRepreCreationCommand}"></Button>
         </Grid>
         <Grid ColumnDefinitions="* *" RowDefinitions="* *">

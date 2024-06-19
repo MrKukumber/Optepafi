@@ -1,5 +1,6 @@
 using System;
 using System.Reactive;
+using System.Runtime.InteropServices.Marshalling;
 using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ViewModels.Main;
@@ -11,16 +12,10 @@ namespace Optepafi.ViewModels.PathFinding;
 
 public class PathFindingSessionViewModel : SessionViewModel
 {
-    private ViewModelBase _currentViewModel;
     public PathFindingViewModel PathFinding { get; }
     public PathFindingSettingsViewModel PathFindingSettings { get; }
     // public RelevanceFeedbackViewModel RelevanceFeedback { get; }
 
-    public ViewModelBase CurrentViewModel
-    {
-        get => _currentViewModel;
-        set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
-    }
     public PathFindingSessionViewModel(PathFindingSessionModelView pathFindingSessionMv, MainSettingsModelView.Provider mainSettingsMvProvider)
     {
         PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings, mainSettingsMvProvider, pathFindingSessionMv.MapRepreCreating);
@@ -45,8 +40,19 @@ public class PathFindingSessionViewModel : SessionViewModel
         {
             return true;
         });
-        OnClosedCommand = ReactiveCommand.Create(() => { });
+        OnClosedCommand = ReactiveCommand.Create(() =>
+        {
+            CurrentViewModel.OnClosedCommand?.Execute().Subscribe();
+        });
     }
+
+    private PathFindingViewModelBase _currentViewModel;
+    public PathFindingViewModelBase CurrentViewModel
+    {
+        get => _currentViewModel;
+        set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
+    }
+    
     public ReactiveCommand<Unit, bool> OnClosingCommand { get; }
     public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
     

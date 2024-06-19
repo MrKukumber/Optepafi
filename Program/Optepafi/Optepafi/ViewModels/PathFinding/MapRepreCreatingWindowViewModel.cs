@@ -61,10 +61,7 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
         
         CancelMapRepreCreationCommand = ReactiveCommand.Create(() => false, CreateMapRepreCommand.IsExecuting);
         
-        this.WhenActivated(disposalbes =>
-        {
-            CheckPrerequisitiesCommand.Execute().Subscribe().DisposeWith(disposalbes);
-        });
+        OnClosedCommand = ReactiveCommand.Create(() => { });
         
         CheckPrerequisitiesCommand.Subscribe(prereqCheckResult =>
         {
@@ -107,7 +104,10 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution)
             .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataDistributionResolution));
         
-        OnClosedCommand = ReactiveCommand.Create(() => { });
+        this.WhenActivated(disposalbes =>
+        {
+            CheckPrerequisitiesCommand.Execute().Subscribe().DisposeWith(disposalbes);
+        });
     }
     
     private float _percentageMapRepreCreationProgress;

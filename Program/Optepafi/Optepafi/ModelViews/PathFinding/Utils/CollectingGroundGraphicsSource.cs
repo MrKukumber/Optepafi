@@ -1,8 +1,12 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using DynamicData;
+using Microsoft.CodeAnalysis.CSharp;
 using Optepafi.Models.Graphics.Objects;
+using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
 
-namespace Optepafi.Models.Graphics.Sources;
+namespace Optepafi.ModelViews.PathFinding.Utils;
 
 public class CollectingGroundGraphicsSource : IGroundGraphicsSource
 {
@@ -11,10 +15,11 @@ public class CollectingGroundGraphicsSource : IGroundGraphicsSource
         GraphicObjects = new SourceList<IGraphicObject>();
         GraphicsArea = graphicsArea;
     }
+
     public SourceList<IGraphicObject> GraphicObjects { get; }
     public GraphicsArea GraphicsArea { get; }
-    public IGraphicsObjectCollector Collector => new GraphicsObjectCollector(GraphicObjects);
-    private class GraphicsObjectCollector : IGraphicsObjectCollector
+    public virtual IGraphicsObjectCollector Collector => new GraphicsObjectCollector(GraphicObjects);
+    protected class GraphicsObjectCollector : IGraphicsObjectCollector
     {
         private SourceList<IGraphicObject> _graphicObjectSourceList;
 
@@ -25,6 +30,10 @@ public class CollectingGroundGraphicsSource : IGroundGraphicsSource
         public void Add<TGraphicObject>(TGraphicObject graphicObject) where TGraphicObject : IGraphicObject
         {
             _graphicObjectSourceList.Add(graphicObject);
+        }
+        public void AddRange(IEnumerable<IGraphicObject> graphicObjects)
+        {
+            _graphicObjectSourceList.AddRange(graphicObjects);
         }
     }
         

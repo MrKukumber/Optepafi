@@ -21,10 +21,7 @@ public class ObjectRepreRep : IMapRepreRepresentative<IObjectRepre>
     private ObjectRepreRep(){}
     
     public string MapRepreName { get; } = ""; //TODO: vymysliet pekne meno
-    public IImplementationIndicator<ITemplate, IMap, IObjectRepre>[] ImplementationIndicators { get; } =
-    {
-        ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep.Instance
-    };
+    public IImplementationIndicator<ITemplate, IMap, IObjectRepre>[] ImplementationIndicators { get; } = { };
 
     public IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
         GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>()

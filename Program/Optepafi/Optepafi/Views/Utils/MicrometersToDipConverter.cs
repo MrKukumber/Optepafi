@@ -1,5 +1,7 @@
 using System;
 using System.Globalization;
+using Avalonia;
+using Avalonia.Data;
 using Avalonia.Data.Converters;
 
 namespace Optepafi.Views.Utils;
@@ -17,7 +19,7 @@ public class MicrometersToDipConverter : IValueConverter
             double dip = micrometers / MicrometersPerDip;
             return dip;
         }
-        throw new InvalidOperationException("The value must be a int representing micrometers.");
+        return new BindingNotification(new InvalidOperationException("The value must be a int representing micrometers."));
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -27,6 +29,15 @@ public class MicrometersToDipConverter : IValueConverter
             int micrometers = (int) (dip * MicrometersPerDip);
             return micrometers;
         }
-        throw new InvalidOperationException("The value must be a double representing DIP.");
+        return new BindingNotification(new InvalidOperationException("The value must be a double representing DIP."));
+    }
+
+    public object? Convert(object? value)
+    {
+        return Convert(value, typeof(float), null, CultureInfo.CurrentCulture);
+    }
+    public object? ConvertBack(object? value)
+    {
+        return ConvertBack(value, typeof(Int32), null, CultureInfo.CurrentCulture);
     }
 }

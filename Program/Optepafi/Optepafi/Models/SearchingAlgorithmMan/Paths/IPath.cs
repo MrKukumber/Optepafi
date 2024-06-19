@@ -1,5 +1,6 @@
 using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.ReportMan;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.Paths;

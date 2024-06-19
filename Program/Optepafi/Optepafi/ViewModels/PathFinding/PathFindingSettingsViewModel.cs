@@ -23,7 +23,7 @@ using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
 
-public class PathFindingSettingsViewModel : ViewModelBase
+public class PathFindingSettingsViewModel : PathFindingViewModelBase
 {
     private PFSettingsModelView _settingsMv;
     private PFMapRepreCreatingModelView _mapRepreCreatingMv;
@@ -188,7 +188,8 @@ public class PathFindingSettingsViewModel : ViewModelBase
             if (successfulCreation)
             {
                 _settingsMv.SaveParameters();
-                _settingsMv.ReleaseMap();
+                // _settingsMv.ReleaseMap();
+                SelectedMapsPreview = null;
                 return WhereToProceed.PathFinding;
             }
             return WhereToProceed.Settings;

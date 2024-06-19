@@ -6,6 +6,7 @@ using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.ReportMan;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Implementations;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
@@ -87,11 +88,11 @@ public interface ISearchingAlgorithm
     /// <param name="cancellationToken">Token for search cancellation.</param>
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
-    /// <returns>Collection of resulting found paths. Path report collections (for legs of track) are returned in order of corresponding user models.</returns>
+    /// <returns>Collection of resulting found paths. Merged paths for legs of track are returned in order of corresponding user models.</returns>
     /// <exception cref="ArgumentException">When no implementation is able to use provided graph or any of provided user models.</exception>
-    sealed IPath<TVertexAttributes, TEdgeAttributes>[][] ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
+    sealed IPath<TVertexAttributes, TEdgeAttributes>[] ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IEnumerable<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>> userModels,
+        IList<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>> userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes

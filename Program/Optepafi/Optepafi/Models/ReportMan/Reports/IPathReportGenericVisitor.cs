@@ -1,4 +1,4 @@
-namespace Optepafi.Models.ReportMan;
+namespace Optepafi.Models.ReportMan.Reports;
 
 public interface IPathReportGenericVisitor<TOut, TOtherParams>
 {

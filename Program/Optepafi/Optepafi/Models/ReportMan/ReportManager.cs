@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.ReportMan.Aggregators;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.ReportSubMan.Aggregators;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
@@ -22,9 +23,9 @@ public class ReportManager :
     public enum AggregationResult {Aggregated, NonGenericPath, NotUsableUserModel, NoUsableAggregator}
     
     public AggregationResult AggregatePathReport(
-        IPath path, IUserModel<ITemplate> userModel, ITemplate template, out IPathReport? pathReport, CancellationToken? cancellationToken = null)
+        IPath path, IUserModel<ITemplate> userModel, out IPathReport? pathReport, CancellationToken? cancellationToken = null)
     {
-        var (aggregationResult, report) = template.AcceptGeneric(this, (path, userModel, cancellationToken));
+        var (aggregationResult, report) = userModel.AssociatedTemplate.AcceptGeneric(this, (path, userModel, cancellationToken));
         pathReport = report;
         return aggregationResult;
     }

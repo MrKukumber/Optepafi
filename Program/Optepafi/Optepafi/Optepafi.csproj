@@ -87,8 +87,18 @@
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataIndependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataDependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\IMapRepreConstructor.cs" />
-      <Compile Remove="Utils\**" />
       <Compile Remove="Models\MapRepreMan\Graphs\GraphFunctionalities\IAStarHeuristicEnsuring.cs" />
+      <Compile Remove="Utils\**" />
+      <Compile Remove="Models\SearchingAlgorithmMan\Implementations\BasicRefferingAStarImplementation.cs" />
+      <Compile Remove="Models\SearchingAlgorithmMan\SearchingAlgorithms\AStar.cs" />
+      <Compile Remove="Models\SearchingAlgorithmMan\Paths\ClassicColoredPath.cs" />
+      <Compile Remove="Models\TemplateMan\Templates\Orienteering_ISOM_2017_2.cs" />
+      <Compile Remove="Models\MapRepreMan\ImplementationReps\SpecificImplementationReps\ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\Implementations\ObjectRepreGraphOrienteeringOmapImplementation.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\Implementations\CompleteGraphOrienteeringOmapImplementation.cs" />
+      <Compile Remove="Models\MapMan\Maps\OMAP.cs" />
+      <Compile Remove="Models\MapMan\Maps\GeoReferenceContainingOMAP.cs" />
+      <Compile Remove="Models\MapMan\MapRepresentatives\OMAPRepresentative.cs" />
     </ItemGroup>
 
 
@@ -113,9 +123,10 @@
 
     <ItemGroup>
       <Folder Include="Models\ElevationDataMan\ElevSources\" />
-      <Folder Include="Models\GraphicsMan\Aggregators\SearchingState\" />
+      <Folder Include="Models\GraphicsMan\Collectors\" />
       <Folder Include="Models\GraphicsMan\Objects\SearchingState\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />
+      <Folder Include="ViewModels\Data\Graphics\SearchingStateObjects\" />
     </ItemGroup>
 
 

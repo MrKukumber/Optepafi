@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:poVm="clr-namespace:Optepafi.ViewModels.Data.Graphics.PathObjects">
+    <DataTemplates x:Key="SmileyFacePathObjectsTemplates">
+        <DataTemplate DataType="{x:Type poVm:SmileyFaceEyeObjectViewModel}">
+            <Ellipse Width="{Binding Width, Converter={StaticResource Micro2DipConverter}}"
+                     Height="{Binding Height, Converter={StaticResource Micro2DipConverter}}"
+                     Fill="Aqua"/>
+            <!-- <TextBlock Text="Eye"/> -->
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type poVm:SmileyFaceNoseObjectViewModel}">
+            <Ellipse Width="{Binding Width, Converter={StaticResource Micro2DipConverter}}"
+                     Height="{Binding Height, Converter={StaticResource Micro2DipConverter}}"
+                     Fill="Aqua"/>
+            <!-- <TextBlock Text="Nose"/> -->
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type poVm:SmileyFaceMouthObjectViewModel}">
+            <Path Stroke="Aqua" StrokeThickness="3">
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="{Binding StartPoint, Converter={StaticResource MapCoordToPointConverter}}" IsClosed="False">
+                            <BezierSegment Point1="{Binding Point1, Converter={StaticResource MapCoordToPointConverter}}"
+                                           Point2="{Binding Point2, Converter={StaticResource MapCoordToPointConverter}}"
+                                           Point3="{Binding Point3, Converter={StaticResource MapCoordToPointConverter}}"/>
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path>
+            <!-- <TextBlock Text="Mouth"/> -->
+        </DataTemplate>
+    </DataTemplates>
+</ResourceDictionary>

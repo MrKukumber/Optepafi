@@ -1,6 +1,7 @@
 using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.ReportMan;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.ViewModels.Data.Reports;
 
 namespace Optepafi.ModelViews.Converters2Vm.Reports.Searching;

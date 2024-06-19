@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.ReportMan.Aggregators;
+using Optepafi.Models.ReportMan.Aggregators.Path;
+using Optepafi.Models.ReportMan.Aggregators.SearchingState;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.ReportSubMan.Aggregators;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
@@ -18,10 +21,10 @@ public class ReportSubManager<TVertexAttributes, TEdgeAttributes>
     private ReportSubManager(){}
     
     public ISet<IReportAggregator> PathReportAggregators { get; } =
-        ImmutableHashSet.Create<IReportAggregator>();
+        ImmutableHashSet.Create<IReportAggregator>(SmileyFacePathReportAggregator<TVertexAttributes,TEdgeAttributes>.Instance);
 
     public ISet<IReportAggregator> SearchingReportAggregators { get; } =
-        ImmutableHashSet.Create<IReportAggregator>();
+        ImmutableHashSet.Create<IReportAggregator>(SmileyFacePathDrawingReportAggregator<TVertexAttributes, TEdgeAttributes>.Instance);
     
     
     public IPathReport? AggregatePathReport<TPath>(

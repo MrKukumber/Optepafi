@@ -1,19 +1,38 @@
+using System;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using Optepafi.Models.MapMan;
+using Optepafi.ViewModels.PathFinding;
+using Optepafi.Views.Utils;
 
 namespace Optepafi.Views.PathFinding;
 
-public partial class PathFindingView : UserControl
+public partial class PathFindingView : ReactiveUserControl<PathFindingViewModel>
 {
     public PathFindingView()
     {
         InitializeComponent();
     }
 
-    private void MapGraphics_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private async void MapGraphics_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        e.GetCurrentPoint(sender as Control);
+        var control = sender as Control;
+        if (ViewModel!.IsShowingPathReport && control is not null) return;
+        if (ViewModel.IsAcceptingTrack && control is not null)
+        {
+            var point = e.GetCurrentPoint(control);
+            MicrometersToDipConverter converter = new MicrometersToDipConverter();
+            if (converter.ConvertBack(point.Position.X/ViewModel.GraphicsScale) is int leftPos &&
+                converter.ConvertBack(control.Height/ViewModel.GraphicsScale - point.Position.Y/ViewModel.GraphicsScale) is int bottomPos)
+            {
+                await ViewModel.AddTrackPointCommand.Execute((leftPos, bottomPos, null));
+            }
+            else throw new InvalidOperationException("The conversion from dip to micrometers did not run correctly.");
+        }
     }
 }

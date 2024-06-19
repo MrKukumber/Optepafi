@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.ReportMan;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.ModelViews.Converters2Vm.Reports.Searching;
 using Optepafi.ViewModels.Data.Graphics;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Data.Reports;
 
-public abstract class SearchingReportViewModel : ReactiveObject
+public abstract class SearchingReportViewModel : ViewModelBase, IReportWithGraphicsViewModel
 {
-    public abstract GraphicsSourceViewModel? SearchingGraphics { get; }
+    public abstract GraphicsSourceViewModel? GraphicsSource { get; }
 
     public static SearchingReportViewModel? Construct(ISearchingReport searchingReport, IGroundGraphicsSource relatedMapGraphics)
     {

@@ -1,6 +1,4 @@
-using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
-
-namespace Optepafi.Models.ReportMan;
+namespace Optepafi.Models.ReportMan.Reports;
 
 /// <summary>
 /// Enables to track progress of searching for path. Each algorithm can have its own implementation of this report.

@@ -15,3 +15,16 @@ public record WordObject(MapCoordinate Position, string Text) : IGraphicObject
         return genericVisitor.GenericVisit(this);
     }
 }
+
+public record TrackPointWordObject(MapCoordinate Position) : IGraphicObject
+{
+    public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams)
+    {
+        return genericVisitor.GenericVisit(this, otherParams);
+    }
+
+    public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor)
+    {
+        return genericVisitor.GenericVisit(this);
+    }
+}

@@ -25,6 +25,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.ModelViews.Main;
+using Optepafi.ModelViews.PathFinding.Utils;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.DataViewModels;
@@ -139,7 +140,6 @@ public abstract class PFSettingsModelView : ModelViewBase
     }
 
     public abstract void SaveParameters();
-    public abstract void ReleaseMap();
     public abstract void SetElevDataDistribution(ElevDataDistributionViewModel? elevDataDistViewModel);
     public abstract void SetTemplate(TemplateViewModel? templateViewModel);
     public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel);
@@ -148,6 +148,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     public abstract Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync((Stream,string) streamWithPath,
         UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken);
     public abstract GraphicsSourceViewModel? GetAndSetLoadedMapGraphics();
+    public abstract void ReleaseMap();
 
 }
 
@@ -155,13 +156,6 @@ public partial class PathFindingSessionModelView
 {
     private class PFSettingsIntraModelView : PFSettingsModelView
     {
-        public IElevDataDistribution? ElevDataDistribution { get; private set; }
-        public ITemplate? Template { get; private set; }
-        public IMap? Map { get; private set; }
-        public CollectingGroundGraphicsSource? MapGraphics { get; private set; }
-        public IUserModel<ITemplate>? UserModel { get; private set; }
-        public IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; private set; }
-        public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
         public override void SetElevDataDistribution(ElevDataDistributionViewModel? elevDataDistViewModel)
         {
             ElevDataDistribution = elevDataDistViewModel?.ElevDataDistribution;
@@ -194,6 +188,7 @@ public partial class PathFindingSessionModelView
                 case MapManager.MapCreationResult.Ok:
                 case MapManager.MapCreationResult.Incomplete:
                     Map = map;
+                    MapFormat = mapFormatViewModel.MapFormat;
                     break;
             }
             return mapCreationResult;
@@ -226,7 +221,11 @@ public partial class PathFindingSessionModelView
                 UserModelFilePath = UserModel!.FilePath 
             });        
         }
-        public override void ReleaseMap() => Map = null;
+
+        public override void ReleaseMap()
+        {
+            //TODO: mozno vymazat obsah mapy....zatial nechat tak
+        }
 
         public override GraphicsSourceViewModel? GetAndSetLoadedMapGraphics()
         {
@@ -243,5 +242,14 @@ public partial class PathFindingSessionModelView
             Task.Run(() => GraphicsManager.Instance.AggregateMapGraphics(map, graphicsSource.Collector));
             return graphicsSourceViewModel;
         }
+        
+        public IElevDataDistribution? ElevDataDistribution { get; private set; }
+        public ITemplate? Template { get; private set; }
+        public IMap? Map { get; private set; }
+        public IMapFormat<IMap>? MapFormat { get; private set; }
+        public CollectingGroundGraphicsSource? MapGraphics { get; private set; }
+        public IUserModel<ITemplate>? UserModel { get; private set; }
+        public IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; private set; }
+        public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
     }
 }

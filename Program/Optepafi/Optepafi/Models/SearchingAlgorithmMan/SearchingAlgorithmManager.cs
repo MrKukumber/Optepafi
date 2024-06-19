@@ -6,6 +6,7 @@ using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.ReportMan;
+using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 using Optepafi.Models.TemplateMan;
@@ -20,8 +21,8 @@ namespace Optepafi.Models.SearchingAlgorithmMan;
 /// All operations provided by this class are thread safe as long as same method arguments are not use concurrently multiple times.
 /// </summary>
 public class SearchingAlgorithmManager : 
-    ITemplateGenericVisitor<(SearchingAlgorithmManager.Result[], IPath[]?[]),(Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>,
-    ITemplateGenericVisitor<IPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IProgress<ISearchingReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<(SearchingAlgorithmManager.SearchResult[], IPath?[]),(Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<IPath, (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IProgress<ISearchingReport>?, CancellationToken?)>,
     ITemplateGenericVisitor<ISearchingExecutor, (ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>)>,
     ITemplateGenericVisitor<HashSet<ISearchingAlgorithm>,IUserModelType<IUserModel<ITemplate>,ITemplate>>,
     ITemplateGenericVisitor<bool, (IUserModelType<IUserModel<ITemplate>,ITemplate>, ISearchingAlgorithm)>
@@ -33,7 +34,7 @@ public class SearchingAlgorithmManager :
     /// Set of all usable searching algorithms.
     /// </summary>
     public ISet<ISearchingAlgorithm> SearchingAlgorithms { get; } =
-        ImmutableHashSet.Create<ISearchingAlgorithm>(SmileyFaceDrawing.Instance);
+        ImmutableHashSet.Create<ISearchingAlgorithm>(SmileyFacesDrawer.Instance);
 
     /// <summary>
     /// Returns all algorithms that are able to use map representation type represented by provided representative.
@@ -141,7 +142,7 @@ public class SearchingAlgorithmManager :
         return false;
     }
     
-    public enum Result{Ok = 1, NotComputingUserModelOrNotTiedToTemplate }
+    public enum SearchResult{Ok = 1, NotComputingUserModelOrNotTiedToTemplate}
 
 
     /// <summary>
@@ -155,15 +156,15 @@ public class SearchingAlgorithmManager :
     /// <param name="userModel">User model used in searching execution. Its associated template defines vertex and edge attributes types used in algorithm execution.</param>
     /// <param name="progress">Object by which can be progress of path finding subscribed.</param>
     /// <param name="cancellationToken">Token for search cancellation.</param>
-    /// <returns>Collection of resulting found paths for legs of track. This array should be used for reading only.</returns>
+    /// <returns>Found merged paths for legs of track.</returns>
     /// <exception cref="ArgumentException">Thrown if eiter map representation is not graph or user model is not computing one or if graph is not tied to user models associated template.</exception>
-    public IPath[] ExecuteSearch(Leg[] track, ISearchingAlgorithm algorithm, IMapRepre mapRepre, IUserModel<ITemplate> userModel, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
+    public IPath ExecuteSearch(Leg[] track, ISearchingAlgorithm algorithm, IMapRepre mapRepre, IUserModel<ITemplate> userModel, IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
-        return userModel.AssociatedTemplate.AcceptGeneric<IPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IProgress<ISearchingReport>?, CancellationToken?)>
+        return userModel.AssociatedTemplate.AcceptGeneric<IPath, (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IProgress<ISearchingReport>?, CancellationToken?)>
                 (this, (track, algorithm, mapRepre, userModel, progress, cancellationToken));
     }
 
-    IPath[]  ITemplateGenericVisitor<IPath[], (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IProgress<ISearchingReport>?, CancellationToken?)>
+    IPath  ITemplateGenericVisitor<IPath, (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IProgress<ISearchingReport>?, CancellationToken?)>
         .GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>
         (TTemplate template, (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IProgress<ISearchingReport>?, CancellationToken?) otherParams) 
     {
@@ -196,27 +197,27 @@ public class SearchingAlgorithmManager :
     /// <param name="mapRepre">Map representation on which should be searching executed.</param>
     /// <param name="userModels">Collection of user models used in searching executions.</param>
     /// <param name="template">Template which define vertex and edge attribute types that should be used in algorithm execution.</param>
-    /// <param name="resultingPaths">Out parameter that returns resulting found paths. Path report collections (for legs of track) are returned in order of corresponding user models.</param>
+    /// <param name="resultingMergedPaths">Out parameter that returns resulting found paths. Path report collections (for legs of track) are returned in order of corresponding user models.</param>
     /// <param name="progress">Object by which can be progress of path finding subscribed.</param>
     /// <param name="cancellationToken">Token for search cancellation.</param>
     /// <returns>Collection of algorithm execution results.</returns>
     /// <exception cref="ArgumentException">Thrown if map representation is not graph or it is not tied to provided template.</exception>
-    public Result[] TryExecuteSearch(Leg[] track, ISearchingAlgorithm algorithm, IMapRepre mapRepre, 
-        IUserModel<ITemplate>[] userModels, ITemplate template, out IPath[]?[] resultingPaths,
+    public SearchResult[] TryExecuteSearch(Leg[] track, ISearchingAlgorithm algorithm, IMapRepre mapRepre, 
+        IUserModel<ITemplate>[] userModels, ITemplate template, out IPath?[] resultingMergedPaths,
         IProgress<ISearchingReport>? progress = null, CancellationToken? cancellationToken = null)
     {
-        var (searchingExecutionResults, paths) = template.AcceptGeneric<(Result[], IPath[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>(this, (track, algorithm, mapRepre, userModels, progress, cancellationToken));
-        resultingPaths = paths;
+        var (searchingExecutionResults, mergedPaths) = template.AcceptGeneric<(SearchResult[], IPath?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>(this, (track, algorithm, mapRepre, userModels, progress, cancellationToken));
+        resultingMergedPaths = mergedPaths;
         return searchingExecutionResults;
     }
     
-    (Result[], IPath[]?[]) ITemplateGenericVisitor<(Result[], IPath[]?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>.
+    (SearchResult[], IPath?[]) ITemplateGenericVisitor<(SearchResult[], IPath?[]), (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>.
         GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template,
         (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?) otherParams)
     {
         var (track, algorithm, mapRepre, userModels, progress, cancellationToken) = otherParams;
         
-        Result[] results = new Result[userModels.Length];
+        SearchResult[] results = new SearchResult[userModels.Length];
         List<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> usableUserModels = new();
         for(int i = 0; i < userModels.Length; ++i)
         {
@@ -224,25 +225,26 @@ public class SearchingAlgorithmManager :
             {
                 usableUserModels.Add(computingUserModel);
             }
-            else results[i] = Result.NotComputingUserModelOrNotTiedToTemplate;
+            else results[i] = SearchResult.NotComputingUserModelOrNotTiedToTemplate;
         }
         
-        IPath[][] foundPaths;
+        IPath[] foundPaths;
 
         if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> definedFunctionalityMapRepre)
-            foundPaths = algorithm.ExecuteSearch(track, definedFunctionalityMapRepre, usableUserModels.ToArray(),
-                progress, cancellationToken);
+            foundPaths = usableUserModels.Count == 0 ? [] : algorithm.ExecuteSearch(track, definedFunctionalityMapRepre, usableUserModels, progress, cancellationToken);
         else
             throw new ArgumentException("Provided map representation is not a graph or it is not tied to given template.");
+
+        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return ([], []);
         
-        IPath[]?[] resultingPaths = new IPath[]?[userModels.Length];
+        IPath?[] resultingPaths = new IPath?[userModels.Length];
         
         int j = 0;
         for (int i = 0; i < userModels.Length; ++i)
         {
             if (results[i] == 0)
             {
-                results[i] = Result.Ok;
+                results[i] = SearchResult.Ok;
                 resultingPaths[i] = foundPaths[j++];
             }
             else

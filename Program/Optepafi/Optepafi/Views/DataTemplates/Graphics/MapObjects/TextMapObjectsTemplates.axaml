@@ -5,5 +5,8 @@
         <DataTemplate DataType="{x:Type moVm:WordObjectViewModel}">
             <TextBlock Text="{Binding Word}"/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:TrackPointWordObjectViewModel}">
+            <TextBlock Text="o" Foreground="Red"></TextBlock>
+        </DataTemplate>
     </DataTemplates>
 </ResourceDictionary>

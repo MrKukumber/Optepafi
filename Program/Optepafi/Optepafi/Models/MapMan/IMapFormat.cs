@@ -25,6 +25,7 @@ public interface IMapFormat<out TMap> where TMap : IMap
     /// <summary>
     /// Tries to parse provided stream into the map object.
     /// This parsing should be done in linear time complexity relatively to size of the map file stream.
+    /// Stream should not be saved. It can be disposed after maps creation.
     /// </summary>
     /// <param name="inputMapStreamWithPath">Provided map file stream intended to be parsed. It comes along side with path to the source file</param>
     /// <param name="cancellationToken">Token for cancellation of parsing.</param>
