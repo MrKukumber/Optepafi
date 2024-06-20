@@ -3,8 +3,8 @@
                     xmlns:moVm="clr-namespace:Optepafi.ViewModels.Data.Graphics.MapObjects">
     <DataTemplates x:Key="TextMapObjectTemplates">
         <DataTemplate DataType="{x:Type moVm:WordObjectViewModel}">
-            <!-- <TextBlock Text="{Binding Word}"/> -->
-            <Ellipse Fill="Chartreuse" Width="5" Height="5"/>
+            <TextBlock Text="{Binding Word}"/>
+            <!-- <Ellipse Fill="Chartreuse" Width="5" Height="5"/> -->
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:TrackPointWordObjectViewModel}">
             <TextBlock Text="o" Foreground="Red"></TextBlock>
