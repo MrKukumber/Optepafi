@@ -4,7 +4,7 @@ using Optepafi.ModelViews.ModelCreating;
 
 namespace Optepafi.ViewModels.ModelCreating;
 
-public class ModelCreatingSettingsViewModel : ViewModelBase
+public class ModelCreatingSettingsViewModel : ModelCreatingViewModelBase
 {
     public MCSettingsModelView SettingsMv { get; }
     public ParamsManager ParamsManaging { get; }

@@ -25,8 +25,8 @@ public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
         {
             collectorForAggregatedObjects.Add(new WordObject(
                 new MapCoordinate(
-                    generator.Next(0,100000), 
-                    generator.Next(0,100000)), 
+                    generator.Next(-50000,50000), 
+                    generator.Next(-50000,50000)), 
                 word));
             if (cancellationToken?.IsCancellationRequested ?? false) return;
         }
@@ -44,6 +44,6 @@ public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
 
     public GraphicsArea GetAreaOf(TextMap map)
     {
-        return new GraphicsArea(new MapCoordinate(0, 0), new MapCoordinate(100000, 100000));
+        return new GraphicsArea(new MapCoordinate(-50000, -50000), new MapCoordinate(50000, 50000));
     }
 }

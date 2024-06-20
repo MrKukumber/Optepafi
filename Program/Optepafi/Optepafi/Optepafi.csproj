@@ -99,6 +99,9 @@
       <Compile Remove="Models\MapMan\Maps\OMAP.cs" />
       <Compile Remove="Models\MapMan\Maps\GeoReferenceContainingOMAP.cs" />
       <Compile Remove="Models\MapMan\MapRepresentatives\OMAPRepresentative.cs" />
+      <Compile Remove="Views\ModelCreating\ModelCreatingSettingsWindow.axaml.cs" />
+      <Compile Remove="ModelViews\ModelCreating\MCPathFindingModelView.cs" />
+      <Compile Remove="ModelViews\ModelCreating\MCGraphCreatingModelView.cs" />
     </ItemGroup>
 
 
@@ -134,6 +137,7 @@
       <AvaloniaXaml Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <AvaloniaXaml Remove="Localization\**" />
       <AvaloniaXaml Remove="Utils\**" />
+      <AvaloniaXaml Remove="Views\ModelCreating\ModelCreatingSettingsWindow.axaml" />
     </ItemGroup>
 
 

@@ -21,7 +21,7 @@ public class RegionViewModel : DataViewModel<Region>
 
     public string Name => Region.Name;
     public SubRegionViewModel[] SubRegions { get; }
-    public List<GeoCoordinate>? Geometry => Region.Geometry;
+    public List<GeoCoordinate>? Geometry => Region.Geometry; //TODO: namiesto GeoCoordinate dat CanvasCoordinate a prekonvertovat Region.Geometry na CanvasCoordinate
     public enum PresenceState{Downloaded, IsDownloading, IsDeleting, NotDownloaded}
     private PresenceState _presence;
     public PresenceState Presence

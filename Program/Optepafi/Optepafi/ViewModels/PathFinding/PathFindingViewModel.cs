@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Avalonia.Controls;
 using Avalonia.Controls.Converters;
 using DynamicData;
 using Optepafi.Models.MapMan;
@@ -11,6 +12,7 @@ using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Reports;
+using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
@@ -20,7 +22,7 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     public ViewModelActivator Activator { get; }
     private PFPathFindingModelView _pathFindingMv; 
 
-    private List<(int leftPos, int bottomPos)> _acceptedTrackPointList = new();
+    private List<CanvasCoordinate> _acceptedTrackPointList = new();
     private int _acceptedTrackPointsCount = 0;
     private int AcceptedTrackPointsCount
     {
@@ -75,10 +77,10 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
             LastReport = null;
         }, isShowingPathReport);
         
-        AddTrackPointCommand = ReactiveCommand.CreateFromTask(async ((int leftPos, int bottomPos, int? index) parameters) =>
+        AddTrackPointCommand = ReactiveCommand.CreateFromTask(async ((CanvasCoordinate position, int? index) parameters) =>
         {
-            if(parameters.index is null) _acceptedTrackPointList.Add((parameters.leftPos, parameters.bottomPos));
-            else _acceptedTrackPointList.Insert(parameters.index.Value, (parameters.leftPos, parameters.bottomPos));
+            if(parameters.index is null) _acceptedTrackPointList.Add(parameters.position);
+            else _acceptedTrackPointList.Insert(parameters.index.Value, parameters.position);
             return await pathFindingMv.GetTrackGraphicsAsync(_acceptedTrackPointList);
         }, isAcceptingTrack);
 
@@ -227,7 +229,7 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     public ReactiveCommand<Unit, PathReportViewModel?> FindPathCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelSearchCommand { get; }
     public ReactiveCommand<Unit, Unit> CleanUpPathReportCommand { get; }
-    public ReactiveCommand<(int, int, int?), GraphicsSourceViewModel> AddTrackPointCommand { get; }
+    public ReactiveCommand<(CanvasCoordinate, int?), GraphicsSourceViewModel> AddTrackPointCommand { get; }
     public ReactiveCommand<int?, GraphicsSourceViewModel> RemoveTrackPointCommand { get; }
     public ReactiveCommand<float, Unit> ZoomCommand { get; }
     public ReactiveCommand<float, Unit> UnZoomCommand { get; }

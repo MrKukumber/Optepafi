@@ -8,21 +8,13 @@ namespace Optepafi.ViewModels.ModelCreating;
 
 public class ModelCreatingSessionViewModel : SessionViewModel
 {
-    private ViewModelBase _currentViewModel;
     public ModelCreatingViewModel ModelCreating { get; }
-    public ModelCreatingSettingsViewModel ModelCreatingSettings { get; }
-    public ViewModelBase CurrentViewModel
-    {
-        get => _currentViewModel;
-        set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
-    }
-
+    // public ModelCreatingSettingsViewModel ModelCreatingSettings { get; }
     public ModelCreatingSessionViewModel(ModelCreatingSessionModelView modelCreatingSessionMv)
     {
-        ModelCreating = new ModelCreatingViewModel(modelCreatingSessionMv.ModelCreating);
-        ModelCreatingSettings = new ModelCreatingSettingsViewModel(modelCreatingSessionMv.Settings);
-        CurrentViewModel = ModelCreatingSettings;
-        
+        ModelCreating = new ModelCreatingViewModel(modelCreatingSessionMv.ModelCreating, modelCreatingSessionMv.Settings);
+        // ModelCreatingSettings = new ModelCreatingSettingsViewModel(modelCreatingSessionMv.Settings);
+        CurrentViewModel = ModelCreating;
         OnClosingCommand = ReactiveCommand.Create(() =>
         {
             return true;
@@ -30,6 +22,12 @@ public class ModelCreatingSessionViewModel : SessionViewModel
         OnClosedCommand = ReactiveCommand.Create(() => { });
     }
     
+    private ModelCreatingViewModelBase _currentViewModel;
+    public ModelCreatingViewModelBase CurrentViewModel
+    {
+        get => _currentViewModel;
+        set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
+    }
     public ReactiveCommand<Unit, bool> OnClosingCommand { get; }
     public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
 }

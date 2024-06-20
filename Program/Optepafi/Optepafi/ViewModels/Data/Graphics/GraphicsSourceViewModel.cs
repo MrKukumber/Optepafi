@@ -39,7 +39,7 @@ public sealed class GraphicsSourceViewModel : DataViewModel<IGraphicsSource>, IG
     GraphicObjectViewModel? IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinate>.GenericVisit<TGraphicObject>(TGraphicObject graphicObject, MapCoordinate leftBottomVertex)
     {
         if (GraphicObjects2VmConverters.Converters[typeof(TGraphicObject)] is IGraphicObjects2VmConverter<TGraphicObject> converter)
-            return converter.ConvertToViewModel(graphicObject, leftBottomVertex.XPos, leftBottomVertex.YPos);
+            return converter.ConvertToViewModel(graphicObject, leftBottomVertex);
         //TODO: lognut ked neni pritomny konverter
         return null;
     }

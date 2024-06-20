@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Optepafi.Models.MapMan;
+using Optepafi.ViewModels.DataViewModels;
 using Optepafi.ViewModels.PathFinding;
 using Optepafi.Views.Utils;
 
@@ -30,7 +31,7 @@ public partial class PathFindingView : ReactiveUserControl<PathFindingViewModel>
             if (converter.ConvertBack(point.Position.X/ViewModel.GraphicsScale) is int leftPos &&
                 converter.ConvertBack(control.Height/ViewModel.GraphicsScale - point.Position.Y/ViewModel.GraphicsScale) is int bottomPos)
             {
-                await ViewModel.AddTrackPointCommand.Execute((leftPos, bottomPos, null));
+                await ViewModel.AddTrackPointCommand.Execute((new CanvasCoordinate(leftPos, bottomPos), null));
             }
             else throw new InvalidOperationException("The conversion from dip to micrometers did not run correctly.");
         }

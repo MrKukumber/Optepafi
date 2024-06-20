@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Optepafi.Models.Graphics.Objects.Path;
 using Optepafi.Models.MapMan;
+using Optepafi.ModelViews.Utils;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Graphics.PathObjects;
 
@@ -24,11 +25,9 @@ public class SmileyFaceEyeObject2VmConverter : IGraphicObjects2VmConverter<Smile
     public static SmileyFaceEyeObject2VmConverter Instance { get; } = new();
     private SmileyFaceEyeObject2VmConverter(){}
 
-    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceEyeObject graphicsObject, int minimalXPosition,
-        int minimalYPosition)
+    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceEyeObject graphicsObject, MapCoordinate mapsLeftBottomVertex)
     {
-        return new SmileyFaceEyeObjectViewModel(graphicsObject.Position.XPos - minimalXPosition,
-            graphicsObject.Position.YPos - minimalYPosition, graphicsObject.Width, graphicsObject.Height);
+        return new SmileyFaceEyeObjectViewModel(graphicsObject.Position.ToCanvasCoordinate(mapsLeftBottomVertex), graphicsObject.Width, graphicsObject.Height);
     }
 }
 
@@ -36,12 +35,10 @@ public class SmileyFaceNoseObject2VmConverter : IGraphicObjects2VmConverter<Smil
 {
     public static SmileyFaceNoseObject2VmConverter Instance { get; } = new();
     private SmileyFaceNoseObject2VmConverter(){}
-    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceNoseObject graphicsObject, int minimalXPosition,
-        int minimalYPosition)
+    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceNoseObject graphicsObject, MapCoordinate mapsLeftBottomVertex)
     {
         
-        return new SmileyFaceNoseObjectViewModel(graphicsObject.Position.XPos - minimalXPosition,
-            graphicsObject.Position.YPos - minimalYPosition, graphicsObject.Width, graphicsObject.Height);
+        return new SmileyFaceNoseObjectViewModel(graphicsObject.Position.ToCanvasCoordinate(mapsLeftBottomVertex), graphicsObject.Width, graphicsObject.Height);
     }
 }
 
@@ -49,12 +46,10 @@ public class SmileyFaceMouthObject2VmConverter : IGraphicObjects2VmConverter<Smi
 {
     public static SmileyFaceMouthObject2VmConverter Instance { get; } = new();
     private SmileyFaceMouthObject2VmConverter(){}
-    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceMouthObject graphicsObject, int minimalXPosition,
-        int minimalYPosition)
+    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceMouthObject graphicsObject, MapCoordinate mapsLeftBottomVertex)
     {
         return new SmileyFaceMouthObjectViewModel(
-            graphicsObject.BezierCurveData.Item1.XPos - minimalXPosition,
-            graphicsObject.BezierCurveData.Item1.YPos - minimalYPosition, (
+            graphicsObject.BezierCurveData.Item1.ToCanvasCoordinate(mapsLeftBottomVertex), (
                 new MapCoordinate(0, 0),
                 graphicsObject.BezierCurveData.Item2 - graphicsObject.BezierCurveData.Item1,
                 graphicsObject.BezierCurveData.Item3 - graphicsObject.BezierCurveData.Item1,

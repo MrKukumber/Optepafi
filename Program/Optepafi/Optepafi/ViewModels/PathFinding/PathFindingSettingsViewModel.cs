@@ -8,6 +8,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Security;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Data.Converters;
 using Avalonia.Platform.Storage;
 using Optepafi.Models.MapMan;
@@ -189,7 +190,7 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
             {
                 _settingsMv.SaveParameters();
                 // _settingsMv.ReleaseMap();
-                SelectedMapsPreview = null;
+                Task.Run(() => SelectedMapsPreview = null);
                 return WhereToProceed.PathFinding;
             }
             return WhereToProceed.Settings;

@@ -48,6 +48,7 @@
         <entry key="Optepafi/Views/MainMenuView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/MainWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/ModelCreating/ModelCreatingSettingsView.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/ModelCreating/ModelCreatingSettingsWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/ModelCreating/ModelCreatingView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/ModelCreating/ModelCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/ModelCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />

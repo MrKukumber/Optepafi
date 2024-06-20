@@ -17,8 +17,8 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.Styles>
                 <Style Selector="ContentPresenter" x:DataType="grVm:GraphicObjectViewModel">
-                    <Setter Property="Canvas.Left" Value="{Binding LeftPos, Converter={StaticResource Micro2DipConverter}}"/>
-                    <Setter Property="Canvas.Bottom" Value="{Binding BottomPos, Converter={StaticResource Micro2DipConverter}}"/>
+                    <Setter Property="Canvas.Left" Value="{Binding Position.LeftPos, Converter={StaticResource Micro2DipConverter}}"/>
+                    <Setter Property="Canvas.Bottom" Value="{Binding Position.BottomPos, Converter={StaticResource Micro2DipConverter}}"/>
                     <Setter Property="Canvas.ZIndex" Value="{Binding Priority}"/> <!--TODO: mozno by mohol byt problem ze to nieje Canvas attached property-->
                 </Style>
             </ItemsControl.Styles>
