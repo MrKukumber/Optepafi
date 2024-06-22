@@ -1,16 +1,15 @@
 using System;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan;
-using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.Graphs.Representatives;
+using Optepafi.Models.MapRepreMan.Implementations.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
-using Optepafi.Models.MapRepreMan.MapRepreImplementationReps;
-using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreReps;
+namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 
 /// <summary>
 /// Represents representative of map representation :).
@@ -19,7 +18,7 @@ namespace Optepafi.Models.MapRepreMan.MapRepreReps;
 /// - collection of implementation indicators
 /// - reference to the corresponding graph representative
 ///
-/// Implementation indicator collection should contain either <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>. or <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> instances so they could be used for map creation too.
+/// Implementation indicator collection should contain either <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>. or <see cref="MapRepreManager"/> instances so they could be used for map creation too.
 /// Each implementation representative should occur in this collection for one template-map combination at most once. So there should be at most one elev data dependent and at most one elev data independent implementation for each template-map combination.
 /// Corresponding graph representative provides work with corresponding graph derived from represented map representation by implementation of this interface.
 /// Each map representation should have its own representative, so it could be presented at <see cref="MapRepreManager"/> as viable map representation.

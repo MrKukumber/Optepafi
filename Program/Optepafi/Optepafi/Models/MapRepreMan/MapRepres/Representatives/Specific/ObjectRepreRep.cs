@@ -1,19 +1,12 @@
-using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
-using Optepafi.Models.MapRepreMan.MapRepreImplementationReps;
-using Optepafi.Models.MapRepreMan.MapRepreImplementationReps.SpecificImplementationReps;
-using Optepafi.Models.MapRepreMan.MapRepres;
-using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
-using Optepafi.Models.MapRepreMan.Representatives.GraphRepresentatives;
+using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
-using Optepafi.Models.TemplateMan.Templates;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreReps.MapRepreRepsInterfaces;
+namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives.Specific;
+
 
 public class ObjectRepreRep : IMapRepreRepresentative<IObjectRepre>
 {

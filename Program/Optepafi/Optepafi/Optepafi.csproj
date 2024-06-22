@@ -102,6 +102,27 @@
       <Compile Remove="Views\ModelCreating\ModelCreatingSettingsWindow.axaml.cs" />
       <Compile Remove="ModelViews\ModelCreating\MCPathFindingModelView.cs" />
       <Compile Remove="ModelViews\ModelCreating\MCGraphCreatingModelView.cs" />
+      <Compile Remove="Models\MapRepreMan\Representatives\MapRepreRepresentatives\ObjectRepreRep.cs" />
+      <Compile Remove="Models\MapRepreMan\Representatives\MapRepreRepresentatives\CompleteGraphRepreRep.cs" />
+      <Compile Remove="Models\MapRepreMan\Representatives\GraphRepresentatives\ObjectRepreGraphRep.cs" />
+      <Compile Remove="Models\MapRepreMan\Representatives\GraphRepresentatives\CompleteGraphRep.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\SpecificMapRepres\ICompleteGraphRepre.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\SpecificMapRepres\IObjectRepre.cs" />
+      <Compile Remove="Models\MapRepreMan\Graphs\SpecificGraphs\IObjectRepreGraph.cs" />
+      <Compile Remove="Models\MapRepreMan\Graphs\SpecificGraphs\ICompleteGraph.cs" />
+      <Compile Remove="Models\MapRepreMan\Implementations\SpecificImplementationReps\ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep.cs" />
+      <Compile Remove="Models\MapRepreMan\Implementations\Representatives\SpecificImplementationReps\ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep.cs" />
+      <Compile Remove="Models\MapRepreMan\Implementations\Representatives\Specific\ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep.cs" />
+      <Compile Remove="Models\MapRepreMan\Implementations\Specific\ObjectRepreGraphOrienteeringOmapImplementation.cs" />
+      <Compile Remove="Models\MapRepreMan\Implementations\Specific\CompleteGraphOrienteeringOmapImplementation.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\MapRepreRepresentatives\CompleteGraphRepreRep.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\MapRepreRepresentatives\ObjectRepreRep.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\Representatives\Specific\CompleteGraphRepreRep.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\Representatives\Specific\ObjectRepreRep.cs" />
+      <Compile Remove="Models\MapRepreMan\Graphs\Specific\IObjectRepreGraph.cs" />
+      <Compile Remove="Models\MapRepreMan\Graphs\Specific\ICompleteGraph.cs" />
+      <Compile Remove="Models\MapRepreMan\Graphs\Representatives\Specific\ObjectRepreGraphRep.cs" />
+      <Compile Remove="Models\MapRepreMan\Graphs\Representatives\Specific\CompleteGraphRep.cs" />
     </ItemGroup>
 
 

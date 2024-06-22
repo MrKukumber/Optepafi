@@ -1,15 +1,13 @@
 using System;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan;
-using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreReps;
+namespace Optepafi.Models.MapRepreMan.Graphs.Representatives;
 
 /// <summary>
 /// Represents representative of graph that is tied to some map representation.

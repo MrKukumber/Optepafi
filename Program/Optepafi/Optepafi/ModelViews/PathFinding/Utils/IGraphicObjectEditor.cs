@@ -3,7 +3,7 @@ using Optepafi.Models.GraphicsMan;
 
 namespace Optepafi.ModelViews.PathFinding.Utils;
 
-public interface IGraphicsObjectEditor : IGraphicsObjectCollector
+public interface IGraphicObjectEditor : IGraphicObjectCollector
 {
     public void Remove(IGraphicObject graphicObject);
     

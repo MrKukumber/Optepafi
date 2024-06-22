@@ -1,10 +1,13 @@
 using Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
-using Optepafi.Models.MapRepreMan.MapRepreReps;
-using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.Representatives.GraphRepresentatives;
+namespace Optepafi.Models.MapRepreMan.Graphs.Representatives.Specific;
 
+/// <summary>
+/// Singleton class which represents blank graph. Its instance is contained in <c>BlankRepreRep</c> so it can be used for creation of represented map representation/graph. 
+/// </summary>
+/// <typeparam name="TVertexAttributes">Type of vertex attributes used in represented graph.</typeparam>
+/// <typeparam name="TEdgeAttributes">Type of edge attributes used in represented graph.</typeparam>
 public class BlankGraphRep<TVertexAttributes, TEdgeAttributes> : IGraphRepresentative<IBlankGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes

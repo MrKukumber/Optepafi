@@ -22,7 +22,7 @@ public interface IMapGenericVisitor<TOut, TOtherParams>
     /// <summary>
     /// Visiting method to be implemented.
     /// </summary>
-    /// <param name="map">Map, which accepted the visit.</param>
+    /// <param name="map">Map which accepted the visit.</param>
     /// <param name="otherParams">Other parameters carried through visitor pattern.</param>
     /// <typeparam name="TMap">Type of accepting map. Main result of this modified visitor pattern.</typeparam>
     /// <returns>Value of type <c>TOut</c>.</returns>

@@ -17,14 +17,14 @@ public class EditableGroundGraphicsSource : IGroundGraphicsSource
             GraphicObjects.Add(graphicObject);
         }
         GraphicsArea = groundGraphicsSource.GraphicsArea;
-        Editor = new GraphicsObjectEditor(GraphicObjects);
+        Editor = new GraphicObjectEditor(GraphicObjects);
     }
 
     public EditableGroundGraphicsSource(GraphicsArea graphicsArea)
     {
         GraphicObjects = new SourceList<IGraphicObject>();
         GraphicsArea = graphicsArea;
-        Editor = new GraphicsObjectEditor(GraphicObjects);
+        Editor = new GraphicObjectEditor(GraphicObjects);
     }
 
     public EditableGroundGraphicsSource(IGraphicsSource graphicsSource, GraphicsArea graphicsArea)
@@ -36,24 +36,24 @@ public class EditableGroundGraphicsSource : IGroundGraphicsSource
             GraphicObjects.Add(graphicObject);
         }
         GraphicsArea = graphicsArea;
-        Editor = new GraphicsObjectEditor(GraphicObjects);
+        Editor = new GraphicObjectEditor(GraphicObjects);
     }
     
     public SourceList<IGraphicObject> GraphicObjects { get; }
     public GraphicsArea GraphicsArea { get; }
 
-    public IGraphicsObjectEditor Editor { get; } 
-    private class GraphicsObjectEditor : IGraphicsObjectEditor
+    public IGraphicObjectEditor Editor { get; } 
+    private class GraphicObjectEditor : IGraphicObjectEditor
     {
         private SourceList<IGraphicObject> _graphicsObjectSourceList;
         private List<IGraphicObject> _addedGraphicObjects = new();
 
-        public GraphicsObjectEditor(SourceList<IGraphicObject> graphicsObjectSourceList)
+        public GraphicObjectEditor(SourceList<IGraphicObject> graphicsObjectSourceList)
         {
             _graphicsObjectSourceList = graphicsObjectSourceList;
         }
 
-        public void Add<TGraphicObject>(TGraphicObject graphicObject) where TGraphicObject : IGraphicObject
+        public void Add(IGraphicObject graphicObject)
         {
             _graphicsObjectSourceList.Add(graphicObject);
             _addedGraphicObjects.Add(graphicObject);

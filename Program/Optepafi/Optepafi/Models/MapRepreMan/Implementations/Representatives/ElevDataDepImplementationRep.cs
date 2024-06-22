@@ -5,12 +5,10 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepreConstrs;
-using Optepafi.Models.MapRepreMan.MapRepreReps;
-using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreImplementationReps;
+namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 
 /// <summary>
 /// Abstract class which represents map representations/graphs implementation for some template and map format.

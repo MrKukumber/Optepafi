@@ -10,16 +10,28 @@ using ReactiveUI;
 
 namespace Optepafi.Models.Graphics.GraphicsAggregators.Path;
 
+/// <summary>
+/// Singleton class representing aggregator of graphic objects for <see cref="SmileyFacePath{TVertexAttributes,TEdgeAttributes}"/> path type.
+/// For more info on path graphics aggregators see <see cref="IPathGraphicsAggregator{TPath,TVertexAttributes,TEdgeAttributes}"/>.
+/// </summary>
+/// <typeparam name="TVertexAttributes">Type of vertex attributes which path can contain and user model can use for computing.</typeparam>
+/// <typeparam name="TEdgeAttributes">Type of edge attributes which path can contain and user model can use for computing.</typeparam>
 public class SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes> : IPathGraphicsAggregator<SmileyFacePath<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
 {
     public static SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes> Instance { get; } = new();
     private SmileyFacePathGraphicsAggregator(){}
+    
+    /// <inheritdoc cref="IPathGraphicsAggregator{TPath,TVertexAttributes,TEdgeAttributes}.AggregateGraphics"/>
+    /// <remarks>
+    /// <c>SmileyFacePath</c> provides set of legs for which smiley face drawing was created.
+    /// Aggregator will create graphic objects for each such leg and submit them into collector.
+    /// </remarks>
     public void AggregateGraphics(SmileyFacePath<TVertexAttributes, TEdgeAttributes> path, 
         IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, 
-        IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
+        IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
-        foreach (var (legStart, legFinish) in path.Path)
+        foreach (var (legStart, legFinish) in path.PathSegments)
         {
             int width = int.Abs(legFinish.XPos - legStart.XPos);
             int height = int.Abs(legFinish.YPos - legStart.YPos);

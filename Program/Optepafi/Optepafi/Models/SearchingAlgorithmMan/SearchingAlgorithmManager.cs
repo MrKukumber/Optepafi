@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.MapRepreMan.Graphs;
-using Optepafi.Models.MapRepreMan.MapRepreReps;
 using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
@@ -55,7 +55,7 @@ public class SearchingAlgorithmManager :
 
     /// <summary>
     /// Returns all algorithms that are able to use at least one map representation type represented by provided collection of representatives.
-    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.MapRepreMan.MapRepreReps.IMapRepreRepresentative{Optepafi.Models.MapRepreMan.MapRepres.IMapRepre})"/> for each of provided representative and then joins results. 
+    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.MapRepreMan.MapRepres.Representatives.IMapRepreRepresentative{Optepafi.Models.MapRepreMan.MapRepres.IMapRepre})"/> for each of provided representative and then joins results. 
     /// </summary>
     /// <param name="mapRepreReps">Representatives of tested map representations.</param>
     /// <returns>Set of usable algorithms for set of tested map representation types.</returns>

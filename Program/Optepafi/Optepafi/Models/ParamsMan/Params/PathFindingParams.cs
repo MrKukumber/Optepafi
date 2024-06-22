@@ -10,6 +10,7 @@ public class PathFindingParams : IParams
     public required string MapFilePath { get; init; }
     public required string UserModelFilePath { get; init; }
     
+    /// <inheritdoc cref="IParams.AcceptParamsManager"/>
     public void AcceptParamsManager(ParamsManager paramsManager)
     {
         paramsManager.Visit(this);

@@ -17,11 +17,22 @@ using Optepafi.ModelViews.PathFinding.Utils;
 
 namespace Optepafi.Models.ReportMan.Aggregators.SearchingState;
 
+/// <summary>
+/// Singleton class which aggregates report for <see cref="SmileyFacePathDrawingState{TVertexAttributes,TEdgeAttributes}"/> searching state type.
+/// For more information on searching report aggregators see <see cref="ISearchingReportAggregator{TSearchingState,TVertexAttributes,TEdgeAttributes}"/>.
+/// </summary>
+/// <typeparam name="TVertexAttributes">Type of vertex attributes which searching state can contain and user model can use for computing.</typeparam>
+/// <typeparam name="TEdgeAttributes">Type of edge attributes which searching state can contain and user model can use for computing.</typeparam>
 public class SmileyFacePathDrawingReportAggregator<TVertexAttributes, TEdgeAttributes> : ISearchingReportAggregator<SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
 {
     public static SmileyFacePathDrawingReportAggregator<TVertexAttributes, TEdgeAttributes> Instance { get; } = new();
     private SmileyFacePathDrawingReportAggregator(){}
+    
+    /// <inheritdoc cref="ISearchingReportAggregator{TSearchingState,TVertexAttributes,TEdgeAttributes}.AggregateReport"/>
+    /// <remarks>
+    /// Creates collecting graphic source to which collector graphics of searching state will be collected. Returns report which includes created graphics and indication of most recently drawn object.
+    /// </remarks>
     public ISearchingReport AggregateReport(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken = null)
     {
         CollectingGraphicsSource collectingGraphicsSource = new();
@@ -42,22 +53,44 @@ public class SmileyFacePathDrawingReportAggregator<TVertexAttributes, TEdgeAttri
             }, searchingState.LastAddedObject.associatedLegsOrder);
     }
     
+    /// <summary>
+    /// Graphic source implementation that is able to provide collector by which its graphic objects are collected.
+    /// For more information on graphics sources see <see cref="IGraphicsSource"/>.
+    /// </summary>
     private class CollectingGraphicsSource : IGraphicsSource
     {
+        /// <inheritdoc cref="IGraphicsSource.GraphicObjects"/>
         public SourceList<IGraphicObject> GraphicObjects { get; } = new SourceList<IGraphicObject>();
-        public IGraphicsObjectCollector Collector => new GraphicsObjectCollector(GraphicObjects);
-        private class GraphicsObjectCollector : IGraphicsObjectCollector
+        /// <summary>
+        /// Collector by which graphic objects of this class can be collected.
+        /// </summary>
+        public IGraphicObjectCollector Collector => new GraphicObjectCollector(GraphicObjects);
+        /// <summary>
+        /// Collector implementation which appends added graphic objects directly to the <c>GraphicObjects</c> source list.
+        /// </summary>
+        private class GraphicObjectCollector : IGraphicObjectCollector
         {
+            /// <summary>
+            /// Graphics sources source list to which added objects shall be appended.
+            /// </summary>
             private SourceList<IGraphicObject> _graphicObjectSourceList;
-            public GraphicsObjectCollector(SourceList<IGraphicObject> graphicObjectSourceList)
+            
+            public GraphicObjectCollector(SourceList<IGraphicObject> graphicObjectSourceList)
             {
                 _graphicObjectSourceList = graphicObjectSourceList;
             }
-            public void Add<TGraphicObject>(TGraphicObject graphicObject) where TGraphicObject : IGraphicObject
+            /// <inheritdoc cref="IGraphicObjectCollector.Add"/>
+            /// <remarks>
+            /// Appends added objects directly to provided source list.
+            /// </remarks>
+            public void Add(IGraphicObject graphicObject)
             {
                 _graphicObjectSourceList.Add(graphicObject);    
             }
-
+            /// <inheritdoc cref="IGraphicObjectCollector.AddRange"/>
+            /// <remarks>
+            /// Appends added object ranges directly to provided source list.
+            /// </remarks>
             public void AddRange(IEnumerable<IGraphicObject> graphicObjects)
             {
                 _graphicObjectSourceList.AddRange(graphicObjects);

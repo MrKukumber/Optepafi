@@ -4,11 +4,15 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
-using Optepafi.Models.MapRepreMan.MapRepres.GraphImplementations;
+using Optepafi.Models.MapRepreMan.Implementations.Specific;
 using Optepafi.Models.TemplateMan.Templates;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreImplementationReps.SpecificImplementationReps;
+namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.SpecificImplementationReps;
 
+/// <summary>
+/// Represents implementation of blank map representation/graph for <c>BlankTemplate</c> template type and <c>TextMap</c> map type. Represented implementation does not need elevation data for its creation.
+/// For more information on representatives of elevation data independent implementations see <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>.
+/// </summary>
 public class BlankGraphElevDataIndepBlankTemplateTextMapImplementationRep :
     ElevDataIndepImplementationRep<BlankTemplate, TextMap, TextMap, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
@@ -16,9 +20,16 @@ public class BlankGraphElevDataIndepBlankTemplateTextMapImplementationRep :
     private BlankGraphElevDataIndepBlankTemplateTextMapImplementationRep() { }
 
 
+    /// <inheritdoc cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}.UsedTemplate"/>
     public override BlankTemplate UsedTemplate { get; } = BlankTemplate.Instance;
+    
+    /// <inheritdoc cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}.UsedMapFormat"/>
     public override IMapFormat<TextMap> UsedMapFormat { get; } = TextMapRepresentative.Instance;
 
+    /// <inheritdoc cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}.ConstructMapRepre"/>
+    /// <remarks>
+    /// It simulates implementations creation with reporting state of simulated process.
+    /// </remarks>
     public override IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes> ConstructMapRepre
     (BlankTemplate template, TextMap map, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
     {
@@ -31,6 +42,9 @@ public class BlankGraphElevDataIndepBlankTemplateTextMapImplementationRep :
         }
         return new BlankGraphElevDataIndepBlankTemplateTextMapIntraImplementation();
     }
+    /// <summary>
+    /// Hidden intra class which inherits form <c>BlankGraphElevDataIndepBlankTemplateTextMapImplementation </c>. Its instance is returned in <c>ConstructMapRepre</c> method.
+    /// </summary>
     private class BlankGraphElevDataIndepBlankTemplateTextMapIntraImplementation :
         BlankGraphElevDataIndepBlankTemplateTextMapImplementation { }
 }

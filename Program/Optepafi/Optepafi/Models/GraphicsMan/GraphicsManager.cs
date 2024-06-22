@@ -4,6 +4,7 @@ using System.Threading;
 using Optepafi.Models.Graphics.GraphicsAggregators;
 using Optepafi.Models.Graphics.GraphicsAggregators.MapGraphicsAggregators;
 using Optepafi.Models.Graphics.GraphicsAggregators.Path;
+using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
@@ -14,28 +15,46 @@ using Optepafi.ViewModels.Data.Graphics;
 namespace Optepafi.Models.Graphics;
 
 /// <summary>
-/// 
+/// Singleton class used for managing of graphics aggregation. It is main channel between graphics aggregation mechanism and applications logic (ModelViews/ViewModels).
+/// It provides supporting methods for correct calling of graphics aggregators.
+/// Additionally there is also  <see cref="GraphicsSubManager{TVertexAttributes,TEdgeAttributes}"/> singleton which is intended to provide graphics aggregation services for other managers and constructs in Model.
+///
+/// Map graphics aggregation is done by accepting <see cref="IGraphicObjectCollector"/> instance and filling it with graphic objects by appropriate aggregator.
+/// Reason for this design is possibility for application logic to retrieve graphics asynchronously so aggregated objects could be delivered right after their creation.
+/// Graphic objects are aggregated from provided construct, for which must aggregator exist. Its instance must be added to appropriate collection (either in this class or in sub-manager).
 /// </summary>
 public class GraphicsManager :
-    IMapGenericVisitor<GraphicsManager.AggregationResult, (IGraphicsObjectCollector, CancellationToken?)>,
+    IMapGenericVisitor<GraphicsManager.AggregationResult, (IGraphicObjectCollector, CancellationToken?)>,
     IMapGenericVisitor<GraphicsArea?>,
-    IMapGenericVisitor<GraphicsManager.AggregationResult, (IList<MapCoordinate>, IGraphicsObjectCollector)>
+    IMapGenericVisitor<GraphicsManager.AggregationResult, (IList<MapCoordinate>, IGraphicObjectCollector)>
 {
     public static GraphicsManager Instance { get; } = new();
     private GraphicsManager() { }
 
+    /// <summary>
+    /// Collection of aggregators for specific map types. It is searched when map graphics is to be aggregated.
+    /// </summary>
     public IReadOnlySet<IGraphicsAggregator> MapGraphicsAggregators { get; } =
         ImmutableHashSet.Create<IGraphicsAggregator>(TextMapGraphicsAggregator.Instance);
 
     
     public enum AggregationResult {Aggregated, NoUsableAggregatorFound, Cancelled}
 
-    public AggregationResult AggregateMapGraphics(IMap map, IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken = null)
+    /// <summary>
+    /// Method for aggregating of map graphics. It accepts map for aggregation and collector which will be filled with aggregated objects.
+    /// It do it so by use of "generic visitor pattern" on map. After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.
+    /// When such aggregator is found, its aggregating method is called.
+    /// </summary>
+    /// <param name="map">Map whose graphics is to be aggregated.</param>
+    /// <param name="collectorForAggregatedObjects">Collector for aggregated map graphic objects.</param>
+    /// <param name="cancellationToken">Cancellation token for cancellation of aggregation.</param>
+    /// <returns>Result of aggregation.</returns>
+    public AggregationResult AggregateMapGraphics(IMap map, IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric<AggregationResult, (IGraphicsObjectCollector, CancellationToken?)>(this, (collectorForAggregatedObjects, cancellationToken));
+        return map.AcceptGeneric<AggregationResult, (IGraphicObjectCollector, CancellationToken?)>(this, (collectorForAggregatedObjects, cancellationToken));
     }
     
-    AggregationResult IMapGenericVisitor<AggregationResult, (IGraphicsObjectCollector, CancellationToken?)>.GenericVisit<TMap>(TMap map, (IGraphicsObjectCollector, CancellationToken?) otherParams)
+    AggregationResult IMapGenericVisitor<AggregationResult, (IGraphicObjectCollector, CancellationToken?)>.GenericVisit<TMap>(TMap map, (IGraphicObjectCollector, CancellationToken?) otherParams)
     {
         var (collectorForAggregatedObjects, cancellationToken) = otherParams;
         foreach (var graphicsAggregator in MapGraphicsAggregators)
@@ -51,6 +70,14 @@ public class GraphicsManager :
         return AggregationResult.NoUsableAggregatorFound;
     }
 
+    /// <summary>
+    /// Method for retrieving the area of specific map. Area of map is meant to be rectangle which contains whole map. It is defined by its left-bottom and right-top vertices.
+    /// Retrieved area then can be used for creating of <see cref="IGroundGraphicsSource"/> tied to this map.
+    /// It uses "generic visitor pattern" on provided map. After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.
+    /// When such aggregator is found, method for retrieving are of map is called on it. Area is then returned.
+    /// </summary>
+    /// <param name="map">Map whose area is requested.</param>
+    /// <returns>Area of map.</returns>
     public GraphicsArea? GetAreaOf(IMap map)
     {
         return map.AcceptGeneric(this);
@@ -68,12 +95,21 @@ public class GraphicsManager :
         return null;
     }
 
-    public AggregationResult AggregateTrackGraphicsAccordingTo(IList<MapCoordinate> trackCoordinates, IMap map, IGraphicsObjectCollector collectorForAggregateObjects)
+    /// <summary>
+    /// Method for aggregating graphics of provided track. It accepts track to be aggregated, map for indication of correct aggregator and collector which should be filled with aggregated objects.
+    /// It do it so by use of "generic visitor pattern" on provided map.  After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.
+    /// When it is found, the track coordinates are handed over to it together with graphic objects collector.
+    /// </summary>
+    /// <param name="trackCoordinates">Coordinates of track which graphics is to be aggregated.</param>
+    /// <param name="map">Map for indication of correct aggregator.</param>
+    /// <param name="collectorForAggregateObjects">Collector for aggregated track graphic objects.</param>
+    /// <returns>Result of aggregation.</returns>
+    public AggregationResult AggregateTrackGraphicsAccordingTo(IList<MapCoordinate> trackCoordinates, IMap map, IGraphicObjectCollector collectorForAggregateObjects)
     {
-        return map.AcceptGeneric<AggregationResult, (IList<MapCoordinate>, IGraphicsObjectCollector)>(this, (trackCoordinates, collectorForAggregateObjects));
+        return map.AcceptGeneric<AggregationResult, (IList<MapCoordinate>, IGraphicObjectCollector)>(this, (trackCoordinates, collectorForAggregateObjects));
     }
 
-    AggregationResult IMapGenericVisitor<AggregationResult, (IList<MapCoordinate>, IGraphicsObjectCollector)>.GenericVisit<TMap>(TMap map, (IList<MapCoordinate>, IGraphicsObjectCollector) otherParams)
+    AggregationResult IMapGenericVisitor<AggregationResult, (IList<MapCoordinate>, IGraphicObjectCollector)>.GenericVisit<TMap>(TMap map, (IList<MapCoordinate>, IGraphicObjectCollector) otherParams)
     {
         var (trackCoordinates, collectorForAggregatedObjects) = otherParams;
         foreach (var graphicsAggregator in MapGraphicsAggregators)

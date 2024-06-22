@@ -8,6 +8,11 @@ using Optepafi.Models.UserModelMan.UserModelAdjustables;
 
 namespace Optepafi.Models.UserModelMan.UserModels.SpecificUserModels;
 
+/// <summary>
+/// Blank user model tied to blank template. It does not bear any information besides one <c>VoidAdjust</c> adjustable property.
+/// This type is just demonstrative template for presenting application functionality.
+/// For more information on templates see <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/>.
+/// </summary>
 public class BlankUserModel : 
     IWeightComputingUserModel<BlankTemplate, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, 
     ISettableUserModel
@@ -18,23 +23,28 @@ public class BlankUserModel :
     [JsonIgnore]
     public BlankTemplate AssociatedTemplate { get; } = BlankTemplate.Instance;
 
+    /// <inheritdoc cref="IUserModel{TTemplate}.AssociatedTemplate"/>
     ITemplate IUserModel<ITemplate>.AssociatedTemplate => AssociatedTemplate;
 
+    /// <inheritdoc cref="IUserModel{TTemplate}.Serialize"/>
     public string Serialize()
     {
         return JsonSerializer.Serialize(this);
     }
 
+    /// <inheritdoc cref="IUserModel{TTemplate}.SerializeTo"/>
     public void SerializeTo(Stream stream)
     {
         JsonSerializer.Serialize(stream, this);
     }
 
+    /// <inheritdoc cref="IWeightComputingUserModel{TTemplate,TVertexAttributes,TEdgeAttributes}.ComputeWeight"/>
     public int ComputeWeight(BlankTemplate.VertexAttributes from, BlankTemplate.EdgeAttributes through, BlankTemplate.VertexAttributes to)
     {
         return VoidAdjust.Value * 13;
     }
 
+    /// <inheritdoc cref="ISettableUserModel.GetAdjustables"/>
     public IReadOnlySet<IUserModelAdjustable> GetAdjustables()
     {
         return new HashSet<IUserModelAdjustable> {VoidAdjust};
@@ -43,6 +53,10 @@ public class BlankUserModel :
     [JsonInclude] 
     private VoidAdjustable VoidAdjust { get; set; } = new();
     
+    /// <summary>
+    /// Void adjustable. Just to have some adjustable in blank user model.
+    /// This type is just demonstrative adjustable for presenting application functionality.
+    /// </summary>
     public class VoidAdjustable : IValueAdjustable<int>
     {
         public VoidAdjustable(){}

@@ -18,16 +18,16 @@ public class CollectingGroundGraphicsSource : IGroundGraphicsSource
 
     public SourceList<IGraphicObject> GraphicObjects { get; }
     public GraphicsArea GraphicsArea { get; }
-    public virtual IGraphicsObjectCollector Collector => new GraphicsObjectCollector(GraphicObjects);
-    protected class GraphicsObjectCollector : IGraphicsObjectCollector
+    public virtual IGraphicObjectCollector Collector => new GraphicObjectCollector(GraphicObjects);
+    protected class GraphicObjectCollector : IGraphicObjectCollector
     {
         private SourceList<IGraphicObject> _graphicObjectSourceList;
 
-        public GraphicsObjectCollector(SourceList<IGraphicObject> graphicObjectSourceList)
+        public GraphicObjectCollector(SourceList<IGraphicObject> graphicObjectSourceList)
         {
             _graphicObjectSourceList = graphicObjectSourceList;
         }
-        public void Add<TGraphicObject>(TGraphicObject graphicObject) where TGraphicObject : IGraphicObject
+        public void Add(IGraphicObject graphicObject)
         {
             _graphicObjectSourceList.Add(graphicObject);
         }

@@ -7,19 +7,33 @@ using Optepafi.Models.UserModelMan.UserModels.SpecificUserModels;
 
 namespace Optepafi.Models.UserModelMan.UserModelTypes.SpecificUserModelReps;
 
+/// <summary>
+/// Representative of blank user model.
+/// For more information on user model representatives see <see cref="IUserModelRepresentative{TUserModel,TTemplate}"/>, <see cref="IUserModelType{TUserModel,TTemplate}"/> or <see cref="IUserModelTemplateBond{TTemplate}"/>.
+/// </summary>
 public class BlankUserModelRepresentative : IUserModelRepresentative<BlankUserModel, BlankTemplate>
 {
     public static BlankUserModelRepresentative Instance { get; } = new();
     private BlankUserModelRepresentative() { }
+    
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.AssociatedTemplate"/>
     public BlankTemplate AssociatedTemplate  => BlankTemplate.Instance;
+    
+    
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.UserModelTypeName"/>
     public string UserModelTypeName  => "Blank user model";
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.UserModelFileNameSuffix"/>
     public string UserModelFileNameSuffix  => "blankUM";
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.UserModelFileExtension"/>
     public string UserModelFileExtension  => "json";
+    
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.GetNewUserModel"/>
     public BlankUserModel GetNewUserModel()
     {
         return new BlankUserModel();
     }
 
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.DeserializeUserModel"/>
     public BlankUserModel? DeserializeUserModel((Stream, string) serializationWithPath, CancellationToken? cancellationToken,
         out UserModelManager.UserModelLoadResult result)
     {

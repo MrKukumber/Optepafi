@@ -9,14 +9,26 @@ using Optepafi.Models.UserModelMan.UserModels;
 
 namespace Optepafi.Models.Graphics.GraphicsAggregators.SearchingState;
 
+/// <summary>
+/// Singleton class representing aggregator of graphic objects for <see cref="SmileyFacePathDrawingState{TVertexAttributes,TEdgeAttributes}"/> searching state type.
+/// For more info on searching state graphics aggregators see <see cref="ISearchingStateGraphicsAggregator{TSearchingState,TVertexAttributes,TEdgeAttributes}"/>.
+/// </summary>
+/// <typeparam name="TVertexAttributes">Type of vertex attributes which searching state can contain and user model can use for computing.</typeparam>
+/// <typeparam name="TEdgeAttributes">Type of edge attributes which searching state can contain and user model can use for computing.</typeparam>
 public class SmileyFacePathDrawingStateGraphicsAggregator<TVertexAttributes, TEdgeAttributes> : 
     ISearchingStateGraphicsAggregator<SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
 {
     public static SmileyFacePathDrawingStateGraphicsAggregator<TVertexAttributes, TEdgeAttributes> Instance { get; } = new();
     private SmileyFacePathDrawingStateGraphicsAggregator(){}
+    
+    /// <inheritdoc cref="ISearchingStateGraphicsAggregator{TSearchingState,TVertexAttributes,TEdgeAttributes}.AggregateGraphics"/>
+    /// <remarks>
+    /// <c>SmileyFacePathDrawingState</c> provides information about which parts of drawing were already drawn.
+    /// Aggregator will create graphic object for each such part and submit it into collector. 
+    /// </remarks>
     public void AggregateGraphics(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
-        IGraphicsObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
+        IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
         foreach (var ((legStart, legFinish), smileyFaceObjects) in searchingState.DrawnObjects)
         {

@@ -20,15 +20,15 @@
                 <!-- </ItemsPanelTemplate> -->
             <!-- </ListBox.ItemsPanel> -->
         <!-- </ListBox> -->
-        <Grid ColumnDefinitions="* *">
+        <Grid ColumnDefinitions="*">
             <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Name="PathFindingSesstionTextBlock" Text="Path finding"></TextBlock>
                 <Button Name="CreatePathFindingSessionButton" Content="Create" Command="{Binding CreatePathFindingSessionCommand}"></Button>
             </StackPanel>
-            <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Name="ModelCreatingSessionTextBlock" Text="Model creating"></TextBlock>
-                <Button Name="CreateModelCreatingSessionButton" Content="Create" Command="{Binding CreateModelCreatingSessionCommand}"></Button>
-            </StackPanel>
+            <!-- <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"> -->
+                <!-- <TextBlock Name="ModelCreatingSessionTextBlock" Text="Model creating"></TextBlock> -->
+                <!-- <Button Name="CreateModelCreatingSessionButton" Content="Create" Command="{Binding CreateModelCreatingSessionCommand}"></Button> -->
+            <!-- </StackPanel> -->
         </Grid>
     </DockPanel>
 </UserControl>
