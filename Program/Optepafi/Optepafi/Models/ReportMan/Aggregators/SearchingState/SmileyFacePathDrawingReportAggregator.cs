@@ -10,6 +10,7 @@ using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.ReportMan.Reports.SearchingState;
 using Optepafi.Models.ReportSubMan.Aggregators;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
@@ -79,6 +80,7 @@ public class SmileyFacePathDrawingReportAggregator<TVertexAttributes, TEdgeAttri
             {
                 _graphicObjectSourceList = graphicObjectSourceList;
             }
+            
             /// <inheritdoc cref="IGraphicObjectCollector.Add"/>
             /// <remarks>
             /// Appends added objects directly to provided source list.

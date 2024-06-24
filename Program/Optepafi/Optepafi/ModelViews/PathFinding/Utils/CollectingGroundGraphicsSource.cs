@@ -8,33 +8,18 @@ using Optepafi.Models.GraphicsMan;
 
 namespace Optepafi.ModelViews.PathFinding.Utils;
 
-public class CollectingGroundGraphicsSource : IGroundGraphicsSource
+/// <summary>
+/// Collecting graphics source that is also ground graphics source.
+/// For more information on collecting graphic sources see <see cref="CollectingGraphicsSource"/>.
+/// For more information on ground graphics sources see <see cref="IGroundGraphicsSource"/>.
+/// </summary>
+public class CollectingGroundGraphicsSource : CollectingGraphicsSource, IGroundGraphicsSource
 {
     public CollectingGroundGraphicsSource(GraphicsArea graphicsArea)
     {
-        GraphicObjects = new SourceList<IGraphicObject>();
         GraphicsArea = graphicsArea;
     }
-
-    public SourceList<IGraphicObject> GraphicObjects { get; }
+    
+    /// <inheritdoc cref="IGroundGraphicsSource.GraphicsArea"/>
     public GraphicsArea GraphicsArea { get; }
-    public virtual IGraphicObjectCollector Collector => new GraphicObjectCollector(GraphicObjects);
-    protected class GraphicObjectCollector : IGraphicObjectCollector
-    {
-        private SourceList<IGraphicObject> _graphicObjectSourceList;
-
-        public GraphicObjectCollector(SourceList<IGraphicObject> graphicObjectSourceList)
-        {
-            _graphicObjectSourceList = graphicObjectSourceList;
-        }
-        public void Add(IGraphicObject graphicObject)
-        {
-            _graphicObjectSourceList.Add(graphicObject);
-        }
-        public void AddRange(IEnumerable<IGraphicObject> graphicObjects)
-        {
-            _graphicObjectSourceList.AddRange(graphicObjects);
-        }
-    }
-        
 }

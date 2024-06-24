@@ -10,6 +10,7 @@ using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.ReportMan.Reports.Path;
 using Optepafi.Models.ReportSubMan.Aggregators;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
+using Optepafi.Models.SearchingAlgorithmMan.Paths.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;

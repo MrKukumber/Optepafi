@@ -133,7 +133,7 @@ public class ElevConfigViewModel : ViewModelBase
         get => _currentElevDataDist;
         set => this.RaiseAndSetIfChanged(ref _currentElevDataDist, value);
     }
-    public IEnumerable<ElevDataDistributionViewModel> ElevDataDistributions { get; } = ElevDataModelView.Instance.ElevDataSoruceViewModels
+    public IEnumerable<ElevDataDistributionViewModel> ElevDataDistributions { get; } = ElevDataModelView.Instance.GetElevDataSources()
         .SelectMany(elevDataSource => elevDataSource.ElevDataDistributions);
 
     private string? _userName;

@@ -1,6 +1,8 @@
 using Optepafi.Models.SearchingAlgorithmMan.Implementations;
+using Optepafi.Models.SearchingAlgorithmMan.Implementations.SmileyFaceDrawer;
+using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 
-namespace Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
+namespace Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms.Specific;
 
 /// <summary>
 /// Algorithm that simply draws smiley faces in areas defined by individual legs.

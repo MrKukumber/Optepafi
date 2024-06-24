@@ -6,7 +6,6 @@ using Avalonia.Controls;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.Models.MapRepreMan.MapRepreConstrs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives.Specific;

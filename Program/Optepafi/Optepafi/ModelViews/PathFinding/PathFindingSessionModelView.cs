@@ -1,5 +1,9 @@
 namespace Optepafi.ModelViews.PathFinding;
 
+/// <summary>
+/// Path finding sessions ModelView. It contains all ModelViews which contribute to effort of delivering of path finding mechanism to the user.
+/// Fore more information about session ModelViews see <see cref="SessionModelView"/>.
+/// </summary>
 public partial class PathFindingSessionModelView : SessionModelView
 {
     public PFSettingsModelView Settings { get; }
@@ -9,7 +13,6 @@ public partial class PathFindingSessionModelView : SessionModelView
     
     public PathFindingSessionModelView()
     {
-        /*Model budu singletony, ktore proste na vyziadanie budu dorucovat sluzby*/
         var settingsIntra = new PFSettingsIntraModelView();
         var graphCreatingIntra = new PFMapRepreCreatingIntraModelView(settingsIntra);
         var relevanceFeedbackIntra = new PFRelevanceFeedbackIntraModelView(settingsIntra, graphCreatingIntra);
@@ -19,9 +22,5 @@ public partial class PathFindingSessionModelView : SessionModelView
         MapRepreCreating = graphCreatingIntra;
         RelevanceFeedback = relevanceFeedbackIntra;
         PathFinding = pathFindingIntra;
-
     }
-
-    
-    
 }

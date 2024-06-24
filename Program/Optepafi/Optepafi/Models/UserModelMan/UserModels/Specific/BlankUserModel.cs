@@ -17,9 +17,12 @@ public class BlankUserModel :
     IWeightComputingUserModel<BlankTemplate, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, 
     ISettableUserModel
 {
+    
+    /// <inheritdoc cref="IUserModel{TTemplate}.FilePath"/>
     [JsonIgnore]
     public string FilePath { get; set; } = "";
     
+    /// <inheritdoc cref="IUserModel{TTemplate}.AssociatedTemplate"/>
     [JsonIgnore]
     public BlankTemplate AssociatedTemplate { get; } = BlankTemplate.Instance;
 
@@ -50,23 +53,35 @@ public class BlankUserModel :
         return new HashSet<IUserModelAdjustable> {VoidAdjust};
     }
 
+    /// <summary>
+    /// Void adjustable that represents void inside this template.
+    /// </summary>
     [JsonInclude] 
-    private VoidAdjustable VoidAdjust { get; set; } = new();
+    public VoidAdjustable VoidAdjust { get; private set; } = new();
     
     /// <summary>
-    /// Void adjustable. Just to have some adjustable in blank user model.
+    /// Void adjustable. It represents void inside blank user model.
     /// This type is just demonstrative adjustable for presenting application functionality.
     /// </summary>
     public class VoidAdjustable : IValueAdjustable<int>
     {
         public VoidAdjustable(){}
         
+        /// <inheritdoc cref="IUserModelAdjustable.Name"/>
         [JsonIgnore]
         public string Name { get; } = "Void"; //TODO: localize
+        
+        /// <inheritdoc cref="IUserModelAdjustable.Caption"/>
         [JsonIgnore]
         public string Caption { get; } = "Void"; //TODO: localize
+        
+        /// <inheritdoc cref="IUserModelAdjustable.ValueUnit"/>
         [JsonIgnore]
         public string ValueUnit { get; } = "light years"; //TODO: localize
+        
+        /// <summary>
+        /// Value of void adjustable.
+        /// </summary>
         public int Value { get; set; } = 42;
     }
 }

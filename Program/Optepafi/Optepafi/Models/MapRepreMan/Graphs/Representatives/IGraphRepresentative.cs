@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.Models.MapRepreMan.MapRepreConstrs;
+using Optepafi.Models.MapRepreMan.Implementations.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;

@@ -2,11 +2,11 @@ using ReactiveUI;
 
 namespace Optepafi.ViewModels.DataViewModels;
 
+
 public abstract class DataViewModel<TData> : ViewModelBase
     where TData : notnull
 {
     protected abstract TData Data { get; }
-    
     
     public override bool Equals(object? obj)
     {

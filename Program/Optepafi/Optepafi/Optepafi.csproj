@@ -13,6 +13,9 @@
         <AvaloniaResource Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
         <AvaloniaResource Remove="Localization\**" />
         <AvaloniaResource Remove="Utils\**" />
+        <AvaloniaResource Remove="ModelViews\ModelCreating\**" />
+        <AvaloniaResource Remove="ViewModels\ModelCreating\**" />
+        <AvaloniaResource Remove="Views\ModelCreating\**" />
     </ItemGroup>
 
 
@@ -123,6 +126,13 @@
       <Compile Remove="Models\MapRepreMan\Graphs\Specific\ICompleteGraph.cs" />
       <Compile Remove="Models\MapRepreMan\Graphs\Representatives\Specific\ObjectRepreGraphRep.cs" />
       <Compile Remove="Models\MapRepreMan\Graphs\Representatives\Specific\CompleteGraphRep.cs" />
+      <Compile Remove="ModelViews\PathFinding\Utils\EditableGroundGraphicsSource.cs" />
+      <Compile Remove="ModelViews\PathFinding\Utils\IGraphicObjectEditor.cs" />
+      <Compile Remove="ModelViews\ModelCreating\**" />
+      <Compile Remove="ViewModels\ModelCreating\**" />
+      <Compile Remove="Views\ModelCreating\**" />
+      <Compile Remove="Models\SearchingAlgorithmMan\Paths\Specific\ClassicColoredPath.cs" />
+      <Compile Remove="Models\SearchingAlgorithmMan\SearchingAlgorithms\Specific\AStar.cs" />
     </ItemGroup>
 
 
@@ -142,6 +152,9 @@
       </EmbeddedResource>
       <EmbeddedResource Remove="Localization\**" />
       <EmbeddedResource Remove="Utils\**" />
+      <EmbeddedResource Remove="ModelViews\ModelCreating\**" />
+      <EmbeddedResource Remove="ViewModels\ModelCreating\**" />
+      <EmbeddedResource Remove="Views\ModelCreating\**" />
     </ItemGroup>
 
 
@@ -159,6 +172,9 @@
       <AvaloniaXaml Remove="Localization\**" />
       <AvaloniaXaml Remove="Utils\**" />
       <AvaloniaXaml Remove="Views\ModelCreating\ModelCreatingSettingsWindow.axaml" />
+      <AvaloniaXaml Remove="ModelViews\ModelCreating\**" />
+      <AvaloniaXaml Remove="ViewModels\ModelCreating\**" />
+      <AvaloniaXaml Remove="Views\ModelCreating\**" />
     </ItemGroup>
 
 
@@ -167,6 +183,9 @@
       <AdditionalFiles Remove="Localization\**" />
       <AdditionalFiles Include="Views\DataTemplates\Graphics\MapObjects\TextMapObjectsTemplates.axaml" />
       <AdditionalFiles Remove="Utils\**" />
+      <AdditionalFiles Remove="ModelViews\ModelCreating\**" />
+      <AdditionalFiles Remove="ViewModels\ModelCreating\**" />
+      <AdditionalFiles Remove="Views\ModelCreating\**" />
     </ItemGroup>
 
 
@@ -174,5 +193,8 @@
       <None Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <None Remove="Localization\**" />
       <None Remove="Utils\**" />
+      <None Remove="ModelViews\ModelCreating\**" />
+      <None Remove="ViewModels\ModelCreating\**" />
+      <None Remove="Views\ModelCreating\**" />
     </ItemGroup>
 </Project>

@@ -15,21 +15,56 @@ using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.PathFinding;
 
+/// <summary>
+/// ModelView which is responsible for logic of map representations creation in path finding session.
+/// It uses <c>MapRepreManager</c> for:
+/// - checking requirements for map representations creation
+/// - the creation of maps representation itself
+/// This is an abstract class. The path finding session ModelView will creates its successor which will then be able to implement methods of this class by using data hidden from the outside world. 
+/// </summary>
 public abstract class PFMapRepreCreatingModelView : ModelViewBase
 {
     protected PFMapRepreCreatingModelView(){}
-    
+    /// <summary>
+    /// Enumeration of elevation data check results. It contains result for every circumstance that can occur during check.
+    /// </summary>
     public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, Cancelled}
+    /// <summary>
+    /// Method for elevation data requirements check.
+    /// It contains logic of this check and resolves multiple circumstances that can occur.
+    /// </summary>
+    /// <param name="ct">Cancellation token for cancelling the check.</param>
+    /// <returns>Result of elevation data requirements check.</returns>
     public abstract ElevDataPrerequisiteCheckResult CheckMapRequirementsForElevData(CancellationToken ct);
+    /// <summary>
+    /// Method for creating map representation asynchronously. Check of map representations creation prerequisites should take place before calling this method.
+    /// In other way there could be risk of thrown exceptions for invalidity of operations. Also these checks can assign some configuration that is needed for correct map creation execution. 
+    /// </summary>
+    /// <param name="progressInfo">Instance for reporting information about maps creation progress. This is just textual information about progress. It is not meant to be propagated any further to Model.</param>
+    /// <param name="mapRepreCreationProgress">Instance reporting progress of maps creation. This progress instance is meant for propagation to <c>MapRepreManager</c> so the maps creation can be shown. </param>
+    /// <param name="cancellationToken">Cancellation token for cancelling of maps creation.</param>
+    /// <returns></returns>
     public abstract Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReportViewModel> mapRepreCreationProgress, CancellationToken cancellationToken);
 }
 public partial class PathFindingSessionModelView : SessionModelView
 {
-    private class PFMapRepreCreatingIntraModelView : PFMapRepreCreatingModelView
+    /// <summary>
+    /// Successor of <see cref="PFMapRepreCreatingModelView"/> created by this session ModelView so some of its methods could be implemented by using data hidden from the outside world.
+    /// </summary>
+    private class PFMapRepreCreatingIntraModelView(PFSettingsIntraModelView settings) : PFMapRepreCreatingModelView
     {
-        private PFSettingsIntraModelView Settings { get; }
+        /// <summary>
+        /// Connection to the settings ModelView.
+        /// </summary>
+        private PFSettingsIntraModelView Settings { get; } = settings;
 
+        /// <summary>
+        /// Indicator whether map representation should be created by use of elevation data.
+        /// This indicator is set in <c>CheckMapRequirementsForElevData</c> method.
+        /// </summary>
         private bool _useElevData;
+        
+        /// <inheritdoc cref="PFMapRepreCreatingModelView.CheckMapRequirementsForElevData"/>
         public override ElevDataPrerequisiteCheckResult CheckMapRequirementsForElevData(CancellationToken ct)
         {
             IMapFormat<IMap> mapFormat= MapManager.Instance.GetFormat(Map);
@@ -74,6 +109,7 @@ public partial class PathFindingSessionModelView : SessionModelView
             }
         }
 
+        /// <inheritdoc cref="PFMapRepreCreatingModelView.CreateMapRepreAsync"/>
         public override async Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReportViewModel> mapRepreCreationProgress, CancellationToken cancellationToken)
         {
             IProgress<MapRepreConstructionReport> mrcProgress = new Progress<MapRepreConstructionReport>
@@ -104,15 +140,29 @@ public partial class PathFindingSessionModelView : SessionModelView
             }
         }
 
-        public PFMapRepreCreatingIntraModelView(PFSettingsIntraModelView settings)
-        {
-            Settings = settings;
-        }
-
+        /// <summary>
+        /// Template retrieved from settings ModelView used in map representation creation.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when template in settings is not set. When map creating ModelView is used it should be set already.</exception>
         private ITemplate Template => Settings.Template ?? throw new ArgumentNullException( nameof(Settings.Template), "Template should be set before using PFMapRepreCreatingModelView");
+        /// <summary>
+        /// Map retrieved form settings ModelView whose representation is created.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when map in settings is not set. When map creating ModelView is used it should be set already.</exception>
         private IMap Map => Settings.Map ?? throw new  ArgumentNullException(nameof(Settings.Map), "Map should be set before using PFMapRepreCreatingModelView");
+        /// <summary>
+        /// Map representation representative retrieved from settings ModelView. Represents map representation which should be created.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when representative in settings is not set. When map creating ModelView is used it should be set already.</exception>
         private IMapRepreRepresentative<IMapRepre> MapRepreRepresentative => Settings.MapRepreRepresentative ?? throw new ArgumentNullException( nameof(Settings .MapRepreRepresentative), "Map representation representative should be set before using PFMapRepreCreatingModelView");
+        /// <summary>
+        /// Elevation data distribution retrieved from settings ModelView. This distribution is eventually used in map representations creation.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when elevation data distribution in settings is not set. When map creating ModelView is used it should be set already.</exception>
         private IElevDataDistribution ElevDataDistribution => Settings.ElevDataDistribution ?? throw new ArgumentNullException( nameof(Settings.ElevDataDistribution), "Elevation data distribution should be set before using PFMapRepreCreatingModelView");
+        /// <summary>
+        /// Reference to created map representation. Main result of this ModelView mechanism. Other ModelViews may use it for further work.
+        /// </summary>
         public IMapRepre? MapRepresentation { get; private set; }
 
     }

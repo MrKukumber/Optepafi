@@ -81,10 +81,6 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
                     DialogText = "Elevation data can not be retrieved for given map.\n" +
                                  "Please, choose different map or elevation data source and try again."; //TODO: localize
                     break;
-                case PrerequisitiesCheckResult.Canceled:
-                    CurrentProcedureInfoText = "Creation canceled"; //TODO: localize
-                    DialogText = null;
-                    break;
             }
         });
 

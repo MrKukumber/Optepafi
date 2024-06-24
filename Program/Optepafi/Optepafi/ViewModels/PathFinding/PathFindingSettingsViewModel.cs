@@ -15,7 +15,6 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews.Main;
-using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Representatives;

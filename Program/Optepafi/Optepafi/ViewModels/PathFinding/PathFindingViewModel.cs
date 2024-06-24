@@ -8,7 +8,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Converters;
 using DynamicData;
 using Optepafi.Models.MapMan;
-using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Reports;
@@ -62,7 +61,7 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
                 {
                     IsAcceptingTrack = false;
                     IProgress<SearchingReportViewModel> searchingProgress = new Progress<SearchingReportViewModel>(
-                        report => LastReport = report);
+                        report => { if (!cancellationToken.IsCancellationRequested) LastReport = report; });
                     return await _pathFindingMv.FindPathAsync(_acceptedTrackPointList, searchingProgress, cancellationToken);
                 })
                 .TakeUntil(CancelSearchCommand)
@@ -112,7 +111,12 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
         {
             IsShowingPathReport = true;
             LastReport = pathReport;
-            if (pathReport is null) CleanUpPathReportCommand.Execute().Subscribe();
+        });
+
+        CancelSearchCommand.Subscribe( _ =>
+        {
+            IsAcceptingTrack = true;
+            LastReport = null;
         });
 
         CleanUpPathReportCommand.Subscribe(_ => { IsAcceptingTrack = true; });

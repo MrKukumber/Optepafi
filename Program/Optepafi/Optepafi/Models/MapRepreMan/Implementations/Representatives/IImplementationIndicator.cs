@@ -1,10 +1,9 @@
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.Models.MapRepreMan.Implementations.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 
-namespace Optepafi.Models.MapRepreMan.MapRepreConstrs;
+namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 
 /// <summary>
 /// Represents indicator of map representations implementations properties. It can be used to gain information about prerequisites of map repre. implementations creation.

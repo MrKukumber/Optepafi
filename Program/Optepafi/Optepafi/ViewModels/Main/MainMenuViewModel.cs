@@ -1,15 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Reactive.Disposables;
-using System.Windows.Input;
-using ExCSS;
 using Optepafi.ModelViews.Main;
-using Optepafi.ModelViews.ModelCreating;
-using Optepafi.ViewModels.ModelCreating;
 using Optepafi.ViewModels.PathFinding;
-using Optepafi.Views.ModelCreating;
-using Optepafi.Views.PathFinding;
 using ReactiveUI;
 using PathFindingSessionModelView = Optepafi.ModelViews.PathFinding.PathFindingSessionModelView;
 
@@ -37,18 +30,18 @@ public class MainMenuViewModel : ViewModelBase
                 return pathFindingSession;
             },
             isSessionsCountNotMaximal);
-        CreateModelCreatingSessionCommand = ReactiveCommand.Create(() =>
-            {
-                var modelCreatingSession = new ModelCreatingSessionViewModel(new ModelCreatingSessionModelView());
-                Sessions.Add(modelCreatingSession);
-                modelCreatingSession.WhenAnyObservable(x => x.OnClosedCommand)
-                    .Subscribe(_ => Sessions.Remove(modelCreatingSession));
-                return modelCreatingSession;
-            },
-            isSessionsCountNotMaximal);
+        // CreateModelCreatingSessionCommand = ReactiveCommand.Create(() =>
+            // {
+                // var modelCreatingSession = new ModelCreatingSessionViewModel(new ModelCreatingSessionModelView());
+                // Sessions.Add(modelCreatingSession);
+                // modelCreatingSession.WhenAnyObservable(x => x.OnClosedCommand)
+                    // .Subscribe(_ => Sessions.Remove(modelCreatingSession));
+                // return modelCreatingSession;
+            // },
+            // isSessionsCountNotMaximal);
     }
     
     public ReactiveCommand<Unit,Unit> GoToSettingsCommand { get; }
     public ReactiveCommand<Unit, PathFindingSessionViewModel> CreatePathFindingSessionCommand { get; }
-    public ReactiveCommand<Unit, ModelCreatingSessionViewModel> CreateModelCreatingSessionCommand{ get; }
+    // public ReactiveCommand<Unit, ModelCreatingSessionViewModel> CreateModelCreatingSessionCommand{ get; }
 }

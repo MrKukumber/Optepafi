@@ -1,12 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Optepafi.Models.Graphics.Objects.Path;
-using Optepafi.Models.MapMan;
-using Optepafi.Models.ReportMan.Aggregators.Path;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
+namespace Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 
 /// <summary>
 /// Represents drawing state of <c>SmileyFaceDrawer</c> algorithm. It indicates which facial objects where most recently drawn by it.

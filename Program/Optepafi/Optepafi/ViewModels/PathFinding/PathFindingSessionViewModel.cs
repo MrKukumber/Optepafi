@@ -2,7 +2,6 @@ using System;
 using System.Reactive;
 using System.Runtime.InteropServices.Marshalling;
 using Optepafi.ModelViews.Main;
-using Optepafi.ModelViews.ModelCreating;
 using Optepafi.ViewModels.Main;
 using Optepafi.Views.Main;
 using ReactiveUI;

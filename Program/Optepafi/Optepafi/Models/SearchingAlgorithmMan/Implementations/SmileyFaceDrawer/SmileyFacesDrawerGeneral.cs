@@ -2,21 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Avalonia.Input;
-using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.Graphs.Representatives;
 using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
-using Optepafi.Models.ReportMan.Reports.SearchingState;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
+using Optepafi.Models.SearchingAlgorithmMan.Paths.Specific;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModelTypes;
 
-namespace Optepafi.Models.SearchingAlgorithmMan.Implementations;
+namespace Optepafi.Models.SearchingAlgorithmMan.Implementations.SmileyFaceDrawer;
 
 /// <summary>
 /// Basic implementation of <c>SmileyFaceDrawer</c> algorithm. It simulates drawing of bunch of smiley faces according to provided track.

@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
 using Optepafi.ViewModels.Main;
-using Optepafi.Views.ModelCreating;
 using Optepafi.Views.PathFinding;
 using ReactiveUI;
 
@@ -18,15 +17,15 @@ public partial class MainMenuView : ReactiveUserControl<MainMenuViewModel>
         InitializeComponent();
         this.WhenActivated(disposables =>
         {
-            ViewModel!.CreateModelCreatingSessionCommand.Subscribe(modelCreatingSession =>
-                {
-                    var newWindow = new ModelCreatingWindow
-                    {
-                        DataContext = modelCreatingSession,
-                    };
-                    newWindow.Show();
-                })
-                .DisposeWith(disposables);
+            // ViewModel!.CreateModelCreatingSessionCommand.Subscribe(modelCreatingSession =>
+                // {
+                    // var newWindow = new ModelCreatingWindow
+                    // {
+                        // DataContext = modelCreatingSession,
+                    // };
+                    // newWindow.Show();
+                // })
+                // .DisposeWith(disposables);
 
             ViewModel!.CreatePathFindingSessionCommand.Subscribe(pathFindingSession =>
                 {

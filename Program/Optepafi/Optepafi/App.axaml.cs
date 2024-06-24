@@ -12,7 +12,6 @@ using Optepafi.ViewModels;
 using Optepafi.ViewModels.Main;
 using Optepafi.Views;
 using Optepafi.Views.Main;
-using Optepafi.Views.ModelCreating;
 using Optepafi.Views.PathFinding;
 using MainWindow = Optepafi.Views.Main.MainWindow;
 
@@ -29,6 +28,11 @@ public partial class App : Application
 
     private void RecursiveSearchForDataTemplatesIn(IResourceDictionary resourceDictionary)
     {
+        foreach (var mergedProvider in resourceDictionary.MergedDictionaries)
+        {
+            if(mergedProvider is IResourceDictionary mergedDictionary)
+                RecursiveSearchForDataTemplatesIn(mergedDictionary);
+        }
         foreach (var entry in resourceDictionary)
         {
             Resources.TryGetResource(entry.Key, this.ActualThemeVariant, out object? value);
@@ -41,12 +45,6 @@ public partial class App : Application
                 DataTemplates.Add(dataTemplate);
             }
         }
-        foreach (var mergedProvider in resourceDictionary.MergedDictionaries)
-        {
-            if(mergedProvider is IResourceDictionary mergedDictionary)
-                RecursiveSearchForDataTemplatesIn(mergedDictionary);
-        }
-        
     }
 
     public override void OnFrameworkInitializationCompleted()

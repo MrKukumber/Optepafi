@@ -37,7 +37,7 @@ public class SmileyFaceNoseObjectViewModel : GraphicObjectViewModel
 public class SmileyFaceMouthObjectViewModel : GraphicObjectViewModel
 {
     
-    public SmileyFaceMouthObjectViewModel(CanvasCoordinate position, (MapCoordinate, MapCoordinate, MapCoordinate, MapCoordinate) data)
+    public SmileyFaceMouthObjectViewModel(CanvasCoordinate position, (CanvasCoordinate, CanvasCoordinate, CanvasCoordinate, CanvasCoordinate) data)
     {
         Position = position;
         Priority = 420;
@@ -48,8 +48,8 @@ public class SmileyFaceMouthObjectViewModel : GraphicObjectViewModel
     }
     public override CanvasCoordinate Position { get; }
     public override int Priority { get; }
-    public MapCoordinate StartPoint { get; }
-    public MapCoordinate Point1 { get; }
-    public MapCoordinate Point2 { get; }
-    public MapCoordinate Point3 { get; }
+    public CanvasCoordinate StartPoint { get; }
+    public CanvasCoordinate Point1 { get; }
+    public CanvasCoordinate Point2 { get; }
+    public CanvasCoordinate Point3 { get; }
 }
