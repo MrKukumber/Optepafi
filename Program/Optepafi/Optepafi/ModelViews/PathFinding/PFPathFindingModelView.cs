@@ -30,7 +30,8 @@ namespace Optepafi.ModelViews.PathFinding;
 /// - providing in settings ModelView aggregated map graphics
 /// - aggregate graphics for selected tracks
 /// - aggregate reports for founded paths by searching algorithm
-/// This is an abstract class. The path finding session ModelView will create its successor which will then be able to implement methods of this class by using data hidden from the outside world. 
+/// This is an abstract class. The path finding session ModelView will create its successor which will then be able to implement methods of this class by using data hidden from the outside world.
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.
 /// </summary>
 public abstract class PFPathFindingModelView : ModelViewBase
 {

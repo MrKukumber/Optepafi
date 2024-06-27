@@ -15,17 +15,40 @@ using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
 
-public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewModel
+/// <summary>
+/// ViewModel which is responsible for control over map representation creation for path finding session.
+/// Its tasks include:
+/// - providing check of prerequisites for map representation creation (elevation data dependency, ...).
+/// - provides commands for cancelling of map representations creation
+/// - when all prerequisites are checked and resolved, it executes map representation creation
+/// - provides ViewModel of map repre. creation report. It contains percentage progress of creation.
+///
+/// For more information on path finding ViewModels see <see cref="PathFindingViewModelBase"/>.
+/// </summary>
+public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableViewModel
 {
     public ViewModelActivator Activator { get; }
     
+    /// <summary>
+    /// Corresponding ModelView to this ViewModel used for providing data and services over Model layer of application.
+    /// </summary>
     private PFMapRepreCreatingModelView _mapRepreCreatingMv;
-    public MapRepreCreatingWindowViewModel(PFMapRepreCreatingModelView mapRepreCreatingMv)
+    
+    /// <summary>
+    /// Constructs map representation creation ViewModel.
+    /// It initialize all reactive constructs and creates various reactions to them.
+    /// It also calls <c>WhenActivated</c> method which calls prerequisites check method right after ViewModels activation.
+    /// </summary>
+    /// <param name="mapRepreCreatingMv">Corresponding ModelView to this ViewModel.</param>
+    public MapRepreCreatingViewModel(PFMapRepreCreatingModelView mapRepreCreatingMv)
     {
         _mapRepreCreatingMv = mapRepreCreatingMv;
         Activator = new ViewModelActivator();
+
+        IObservable<bool> isAwaitingElevDataAbsenceResolution = this.WhenAnyValue(x => x.IsAwaitingElevDataAbsenceResolution);
+        IObservable<bool> isAwaitingMapNotSupportedByElevDataDistributionResolution= this.WhenAnyValue(x => x.IsAwaitingMapNotSupportedByElevDataDistributionResolution);
         
-        CheckPrerequisitiesCommand = ReactiveCommand.CreateFromTask(async ct =>
+        CheckPrerequisitesCommand = ReactiveCommand.CreateFromTask(async ct =>
         {
             CurrentProcedureInfoText = "Elevation data requirements checking"; //TODO: localize
             DialogText = null;
@@ -43,7 +66,9 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
             return PrerequisitiesCheckResult.Ok;
         });
 
-        ReturnCommand = ReactiveCommand.Create(() => false);
+        ReturnCommand = ReactiveCommand.Create(() => false, 
+                isAwaitingElevDataAbsenceResolution.CombineLatest(isAwaitingMapNotSupportedByElevDataDistributionResolution,
+                    (x,y) => x || y));
         
         CreateMapRepreCommand = ReactiveCommand.CreateFromObservable(
             () => Observable
@@ -61,9 +86,8 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
         
         CancelMapRepreCreationCommand = ReactiveCommand.Create(() => false, CreateMapRepreCommand.IsExecuting);
         
-        OnClosedCommand = ReactiveCommand.Create(() => { });
         
-        CheckPrerequisitiesCommand.Subscribe(prereqCheckResult =>
+        CheckPrerequisitesCommand.Subscribe(prereqCheckResult =>
         {
             switch (prereqCheckResult)
             {
@@ -88,56 +112,108 @@ public class MapRepreCreatingWindowViewModel : ViewModelBase, IActivatableViewMo
             .ToProperty(this, nameof(IsMapRepreCreateCommandExecuting));
         _isAwaitingElevDataAbsenceResolution = this.WhenAnyObservable(
                 x => x.CreateMapRepreCommand.IsExecuting,
-                x => x.CheckPrerequisitiesCommand.IsExecuting,
-                x => x.CheckPrerequisitiesCommand,
+                x => x.CheckPrerequisitesCommand.IsExecuting,
+                x => x.CheckPrerequisitesCommand,
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => 
                     !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.ElevDataAbsent)
             .ToProperty(this, nameof(IsAwaitingElevDataAbsenceResolution));
         _isAwaitingMapNotSupportedByElevDataDistributionResolution = this.WhenAnyObservable(
-                x => x.CheckPrerequisitiesCommand.IsExecuting,
+                x => x.CheckPrerequisitesCommand.IsExecuting,
                 x => x.CreateMapRepreCommand.IsExecuting,
-                x => x.CheckPrerequisitiesCommand,
+                x => x.CheckPrerequisitesCommand,
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution)
             .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataDistributionResolution));
         
         this.WhenActivated(disposalbes =>
         {
-            CheckPrerequisitiesCommand.Execute().Subscribe().DisposeWith(disposalbes);
+            CheckPrerequisitesCommand.Execute().Subscribe().DisposeWith(disposalbes);
         });
     }
     
-    private float _percentageMapRepreCreationProgress;
+    /// <summary>
+    /// Percentage progress of map representations creation indicator.
+    /// It raises notification about change of its value.
+    /// </summary>
     public float PercentageMapRepreCreationProgress
     {
         get => _percentageMapRepreCreationProgress;
         set => this.RaiseAndSetIfChanged(ref _percentageMapRepreCreationProgress, value);
     }
+    private float _percentageMapRepreCreationProgress;
 
-    private string? _dialogText = null;
+    /// <summary>
+    /// Text which can be shown to user when his action is needed. Used for resolving of prerequisites check problems.
+    /// It raises notification about change of its value.
+    /// </summary>
     public string? DialogText
     {
         get => _dialogText;
         set => this.RaiseAndSetIfChanged(ref _dialogText, value);
     }
+    private string? _dialogText = null;
 
-    private string? _currentProcedureInfoText = null;
+    /// <summary>
+    /// Text of information about currently executed procedure. It can contain simple information about what process is currently running at background. 
+    /// It raises notification about change of its value.
+    /// </summary>
     public string? CurrentProcedureInfoText
     {
         get => _currentProcedureInfoText;
         set => this.RaiseAndSetIfChanged(ref _currentProcedureInfoText, value);
     }
+    private string? _currentProcedureInfoText = null;
     
-    private ObservableAsPropertyHelper<bool> _isAwaitingElevDataAbsenceResolution;
+    /// <summary>
+    /// Indicates state of map repre. creation process when absence of elevation data for creation should be resolved. In this state application waits for input from user. 
+    /// It raises notification about change of its value.
+    /// </summary>
     public bool IsAwaitingElevDataAbsenceResolution => _isAwaitingElevDataAbsenceResolution.Value;
-    private ObservableAsPropertyHelper<bool> _isAwaitingMapNotSupportedByElevDataDistributionResolution;
+    private ObservableAsPropertyHelper<bool> _isAwaitingElevDataAbsenceResolution;
+    /// <summary>
+    /// Indicates state of map repre. creation process when problem with distribution not supporting provided map type should be resolved. In this state application waits for input from user. 
+    /// It raises notification about change of its value.
+    /// </summary>
     public bool IsAwaitingMapNotSupportedByElevDataDistributionResolution => _isAwaitingMapNotSupportedByElevDataDistributionResolution.Value;
-    private ObservableAsPropertyHelper<bool> _isMapRepreCreateCommandExecuting;
+    private ObservableAsPropertyHelper<bool> _isAwaitingMapNotSupportedByElevDataDistributionResolution;
+    /// <summary>
+    /// Indicates that map representation creation takes place. 
+    /// It raises notification about change of its value.
+    /// </summary>
     public bool IsMapRepreCreateCommandExecuting { get => _isMapRepreCreateCommandExecuting.Value; }
+    private ObservableAsPropertyHelper<bool> _isMapRepreCreateCommandExecuting;
     
+    /// <summary>
+    /// Enumeration of every prerequisity check results.
+    /// </summary>
     public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataDistribution, Canceled}
-    public ReactiveCommand<Unit, PrerequisitiesCheckResult> CheckPrerequisitiesCommand { get; }
+    
+    /// <summary>
+    /// Reactive command whether all prerequisites for map representation creation are satisfied.
+    /// It runs asynchronously check for elevation data requirements of map repre. creation.
+    /// Based on result reports corresponding <c>PrerequisitesCheckResult</c>.
+    /// This command can be expanded by other prerequisites checks which could in future occure.
+    /// </summary>
+    public ReactiveCommand<Unit, PrerequisitiesCheckResult> CheckPrerequisitesCommand { get; }
+    
+    /// <summary>
+    /// Reactive command for executing of maps creation.
+    /// This command is called from <c>CheckPrerequisitesCommand</c>s subscription upon positive prerequisites check.
+    /// It creates instance of map repre. creation progress for tracking of reports about creation process and asynchronously asks ModelView for execution of map repre. creation.
+    /// In the end it returns true for indication that map representation creation was successful.
+    /// Commands execution will take until it is done or cancellation command is executed.
+    /// </summary>
     public ReactiveCommand<Unit, bool> CreateMapRepreCommand { get; }
+    /// <summary>
+    /// Reactive command for cancelling of map representations creation.
+    /// It returns false for indication that map representation was not created.
+    /// It can be executed only when <c>CreateMapRepreCommand</c> is executing.
+    /// </summary>
     public ReactiveCommand<Unit, bool> CancelMapRepreCreationCommand { get; }
+    /// <summary>
+    /// Reactive command for unsuccessful returning from map representation creation ViewModel.
+    /// It returns false for indication that map representation was not created.
+    /// It can be executed only when resolution with some prerequisite is expected.
+    /// It represents ability for user to exit map repre. creation part of path finding session and return to settings. 
+    /// </summary>
     public ReactiveCommand<Unit, bool> ReturnCommand { get; }
-    public ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
 }

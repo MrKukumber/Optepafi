@@ -23,7 +23,8 @@ public partial class PathFindingSessionModelView : SessionModelView
 {
     /// <summary>
     /// Successor of <see cref="PFRelevanceFeedbackModelView"/> created by this session ModelView so some of its methods could be implemented by using data hidden from the outside world.
-    /// For this time it just deliver hidden data from previous path finding ModelViews in hierarchy to following ones. 
+    /// For this time it just deliver hidden data from previous path finding ModelViews in hierarchy to following ones.
+    /// For more information on ModelViews see <see cref="ModelViewBase"/>.
     /// </summary>
     private class PFRelevanceFeedbackIntraModelView(PFSettingsIntraModelView settings, PFMapRepreCreatingIntraModelView mapRepreCreating) : PFRelevanceFeedbackModelView
     {

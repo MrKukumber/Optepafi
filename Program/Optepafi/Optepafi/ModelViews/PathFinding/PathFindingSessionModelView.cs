@@ -2,7 +2,7 @@ namespace Optepafi.ModelViews.PathFinding;
 
 /// <summary>
 /// Path finding sessions ModelView. It contains all ModelViews which contribute to effort of delivering of path finding mechanism to the user.
-/// Fore more information about session ModelViews see <see cref="SessionModelView"/>.
+/// For more information about session ModelViews see <see cref="SessionModelView"/>.
 /// </summary>
 public partial class PathFindingSessionModelView : SessionModelView
 {

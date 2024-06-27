@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mVm="using:Optepafi.ViewModels.Main"
+             xmlns:mV="using:Optepafi.Views.Main"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Optepafi.Views.Main.ElevConfigView"
              x:DataType="mVm:ElevConfigViewModel">
@@ -18,7 +19,13 @@
                 <TextBlock Name="ElevSourceTextBlock" Text="Source of elevation"></TextBlock>
                 <ComboBox Name="ElevSourceComboBox" HorizontalAlignment="Left"
                           ItemsSource="{Binding ElevDataDistributions}"
-                          SelectedItem="{Binding CurrentElevDataDist}"></ComboBox>
+                          SelectedItem="{Binding CurrentElevDataDist}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
             <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="False" Height="1"></ProgressBar>
             <ListBox Grid.Row="2" ItemsSource="{Binding CurrentAvailableRegions}"
@@ -31,7 +38,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" 
-                                   Background="{Binding Presence, Converter={x:Static mVm:ElevConfigViewModel.PresenceToColorConverter}}"></TextBlock>
+                                   Background="{Binding Presence, Converter={x:Static mV:ElevConfigView.PresenceToColorConverter}}"></TextBlock>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -61,8 +68,22 @@
                 <Button Name="DownloadButton" Content="Download" Margin="0 0 20 0" Command="{Binding DownloadRegionCommand}"></Button>
                 <Button Name="DeleteButton" Content="Delete" Command="{Binding DeleteRegionCommand}"></Button>
                 <Button Name="CancelButton" Content="Cancel" Command="{Binding CancelDownloadingCommand}"></Button>
-                <TextBox Name="UserNameTextBlock" Watermark="Insert user name" Text="{Binding UserName, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}"></TextBox>
-                <!-- <TextBox Name="PasswordTextBlock" Watermark="Insert password" Text="{Binding Password, Mode=OneWayToSource}" IsVisible="{Binding CredentialsAreRequired}" PasswordChar="*"></TextBox> -->
+                <TextBox Name="UserNameTextBlock" Watermark="Insert user name" Text="{Binding UserName, Mode=OneWayToSource}" >
+                    <TextBox.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="CredentialsAreRequired"/>
+                            <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"></Binding>
+                        </MultiBinding>
+                    </TextBox.IsVisible>
+                </TextBox>
+                <TextBox Name="PasswordTextBlock" Watermark="Insert password" Text="{Binding Password, Mode=OneWayToSource}" PasswordChar="*">
+                    <TextBox.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="CredentialsAreRequired"/>
+                            <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"></Binding>
+                        </MultiBinding>
+                    </TextBox.IsVisible>
+                </TextBox>
             </StackPanel>
         </Grid>
     </DockPanel>

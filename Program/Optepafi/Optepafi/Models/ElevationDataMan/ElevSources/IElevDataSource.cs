@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Threading;
-using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.ElevationDataMan.Distributions;
 
-namespace Optepafi.Models.ElevationDataMan;
+namespace Optepafi.Models.ElevationDataMan.ElevSources;
 
 /// <summary>
 /// Represents source of elevation data. This source holds set of various data distributions, that it can provide.
@@ -13,7 +10,5 @@ namespace Optepafi.Models.ElevationDataMan;
 public interface IElevDataSource
 {
     public string Name { get; }
-    
     public IReadOnlySet<IElevDataDistribution> ElevDataDistributions { get; }
-    
 }

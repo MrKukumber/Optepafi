@@ -5,7 +5,7 @@
         xmlns:mVm="clr-namespace:Optepafi.ViewModels.Main"
         xmlns:mV="using:Optepafi.Views.Main"
         mc:Ignorable="d" 
-        x:Class="Optepafi.Views.Main.MainWindow"
+        x:Class="Optepafi.Views.Main.Windows.MainWindow"
         x:DataType="mVm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Optepafi" Width="700" Height="500"

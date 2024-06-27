@@ -1,42 +1,62 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Security;
-using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Data.Converters;
-using Avalonia.Platform.Storage;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Representatives;
-using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
 
+/// <summary>
+/// ViewModel which is responsible for control over parameter setting for path finding session.
+/// Its tasks include:
+/// - overseeing of parameter selection by user. It secures validity of selected parameters by restricting availability of users actions.
+/// - use of corresponding ModelViews methods for retrieving of needed data and for setting of their inner parameters which will be used further in path finding mechanism
+/// - providing interaction for map representation creation and handling its result
+/// - providing data ViewModels for their displaying to user. 
+/// - initiate save of lastly used parameters after successful creation of map representation, before proceeding further through path finding mechanism
+///
+/// For mor information on path finding ViewModels see <see cref="PathFindingViewModelBase"/>.
+/// </summary>
 public class PathFindingSettingsViewModel : PathFindingViewModelBase
 {
+    /// <summary>
+    /// Corresponding ModelView to this ViewModel used for providing data and services over Model layer of application.
+    /// </summary>
     private PFSettingsModelView _settingsMv;
+    /// <summary>
+    /// Map representation creation ModelView used in handling of map representation creation interaction as corresponding ModelView.
+    /// </summary>
     private PFMapRepreCreatingModelView _mapRepreCreatingMv;
 
+    /// <summary>
+    /// Constructs path findings settings ViewModel.
+    /// It initialize all reactive constructs and creates various reactions to them.
+    /// It also includes mechanism for initializing of default parameters based on saved parameters by previously run session.
+    /// </summary>
+    /// <param name="settingsMv">Corresponding ModelView to this ViewModel.</param>
+    /// <param name="mainSettingsMvProvider">Provider of main settings ModelView. It is used for main parameters retrieval.</param>
+    /// <param name="mapRepreCreatingMv">Map representation creation ModelView used in handling of map representation creation interaction.</param>
     public PathFindingSettingsViewModel(PFSettingsModelView settingsMv, MainSettingsModelView.Provider mainSettingsMvProvider, PFMapRepreCreatingModelView mapRepreCreatingMv)
     {
         _settingsMv = settingsMv;
         _mapRepreCreatingMv = mapRepreCreatingMv;
 
-        UsableTemplates = _settingsMv.GetAllUsableTemplates();
-        UsableMapFormats = _settingsMv.GetAllUsableMapFormats();
-        UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
-        UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
+        _usableTemplates = _settingsMv.GetAllUsableTemplates();
+        _usableMapFormats = _settingsMv.GetAllUsableMapFormats();
+        _usableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
+        _usableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
 
         this.WhenAnyValue(x => x.CurrentlySelectedElevDataDistribution)
             .Subscribe(currentlySelectedElevDataDistribution =>
@@ -86,27 +106,6 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
                 _settingsMv.SetSearchingAlgorithm(selectedSearchingAlgorithm);
             });
         
-        
-        // this.WhenAnyValue(x => x.UsableMapFormats)
-            // .Subscribe(usableMapFormats =>
-            // {
-                // if (usableMapFormats is null || !usableMapFormats.Contains(CurrentlyUsedMapFormat))
-                // {
-                    // CurrentlyUsedMapFormat = null;
-                    // SelectedMapFileName = null;
-                    // SelectedMapFilePath = null;
-                // }
-            // });
-        // this.WhenAnyValue(x => x.UsableUserModelTypes)
-            // .Subscribe(usableUserModelTypes =>
-            // {
-                // if (usableUserModelTypes is null || !usableUserModelTypes.Contains(CurrentlyUsedUserModelType))
-                // {
-                    // CurrentlyUsedUserModelType = null;
-                    // SelectedUserModelFileName = null;
-                    // SelectedUserModelFilePath = null;
-                // }
-            // });
 
         LoadMapCommand = ReactiveCommand.CreateFromObservable(((Stream, string) mapFileStreamAndPath) => Observable
             .StartAsync(async cancellationToken =>
@@ -116,13 +115,13 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
                 MapFormatViewModel? mapFormat = _settingsMv.GetCorrespondingMapFormat(mapFileName);
                 if (mapFormat is null) throw new NullReferenceException("Map format should be returned, because chosen file was filtered to be correct.");
                 var loadResult = await _settingsMv.LoadAndSetMapAsync(mapFileStreamAndPath, mapFormat, cancellationToken);
-                var mapGraphics = _settingsMv.GetAndSetLoadedMapGraphics();
+                var mapGraphics = _settingsMv.GetAndSetLoadedMapGraphics(loadResult);
                 mapFileStream.Dispose();
                 return (loadResult, mapFormat, mapFilePath, mapGraphics);
             })
             .TakeUntil(LoadMapCommand));
         
-        LoadUserModelCommand = ReactiveCommand.CreateFromObservable(((Stream, string) userModelFileStreamAndPath) => Observable.StartAsync(async (CancellationToken cancellationToken) => 
+        LoadUserModelCommand = ReactiveCommand.CreateFromObservable(((Stream, string) userModelFileStreamAndPath) => Observable.StartAsync(async cancellationToken => 
         { 
             var (userModelFileStream, userModelFilePath) = userModelFileStreamAndPath; 
             string userModelFileName = Path.GetFileName(userModelFilePath);
@@ -181,14 +180,13 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
             x => x.CurrentlyUsedUserModelType,
             (template, mapFormat, searchingAlgorithm, userModel) => template is not null && mapFormat is not null && searchingAlgorithm is not null && userModel is not null);
 
-        MapRepreCreationInteraction = new Interaction<MapRepreCreatingWindowViewModel, bool>();
+        MapRepreCreationInteraction = new Interaction<MapRepreCreatingViewModel, bool>();
         ProceedTroughMapRepreCreationCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingWindowViewModel(_mapRepreCreatingMv));
+            bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingViewModel(_mapRepreCreatingMv));
             if (successfulCreation)
             {
                 _settingsMv.SaveParameters();
-                // _settingsMv.ReleaseMap();
                 Task.Run(() => SelectedMapsPreview = null);
                 return WhereToProceed.PathFinding;
             }
@@ -248,6 +246,12 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         }
     }
 
+    /// <summary>
+    /// Helper method for finding and opening of file with provided path.
+    /// Stream gathered from this file is returned if opening of file was successful.
+    /// </summary>
+    /// <param name="path">Path of file which stream should be opened.</param>
+    /// <returns>Stream if opening of file was successful. Null otherwise.</returns>
     private Stream? TryFindAndOpenFile(string path)
     {
         if (Path.Exists(path))
@@ -266,102 +270,182 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     
 
 
-    private ElevDataDistributionViewModel? _currentlySelectedElevDataDistribution;
+    /// <summary>
+    /// Property which indicates currently selected and used elevation data distribution.
+    /// It raises notification about change of its value.
+    /// </summary>
     public ElevDataDistributionViewModel? CurrentlySelectedElevDataDistribution 
     { 
         get => _currentlySelectedElevDataDistribution ; 
         set => this.RaiseAndSetIfChanged(ref _currentlySelectedElevDataDistribution, value); 
     }
+    private ElevDataDistributionViewModel? _currentlySelectedElevDataDistribution;
 
-
-    private TemplateViewModel? _selectedTemplate;
+    /// <summary>
+    /// Property which indicates currently selected template. 
+    /// It raises notification about change of its value.
+    /// </summary>
     public TemplateViewModel? SelectedTemplate
     {
         get => _selectedTemplate;
         set => this.RaiseAndSetIfChanged(ref _selectedTemplate, value);
     }
-    private IEnumerable<TemplateViewModel> _usableTemplates;
+    private TemplateViewModel? _selectedTemplate;
+    /// <summary>
+    /// Collection of usable templates in current state of parameter setting.
+    /// It raises notification about change of its value.
+    /// </summary>
     public IEnumerable<TemplateViewModel> UsableTemplates
     {
         get => _usableTemplates;
         set => this.RaiseAndSetIfChanged(ref _usableTemplates, value);
     }
+    private IEnumerable<TemplateViewModel> _usableTemplates;
     
     
-
-    private SearchingAlgorithmViewModel? _selectedSearchingAlgorithm;
+    /// <summary>
+    /// Currently selected searching algorithm.
+    /// It raises notification about change of its value.
+    /// </summary>
     public SearchingAlgorithmViewModel? SelectedSearchingAlgorithm
     {
         get => _selectedSearchingAlgorithm;
         set => this.RaiseAndSetIfChanged(ref _selectedSearchingAlgorithm, value);
     }
-    private IReadOnlyCollection<SearchingAlgorithmViewModel>? _usableSearchingAlgorithms;
+    private SearchingAlgorithmViewModel? _selectedSearchingAlgorithm;
+    /// <summary>
+    /// Collection of usable searching algorithms in current state of parameter setting.
+    /// It raises notification about change of its value.
+    /// </summary>
     public IReadOnlyCollection<SearchingAlgorithmViewModel>? UsableSearchingAlgorithms
     {
         get => _usableSearchingAlgorithms;
         set => this.RaiseAndSetIfChanged(ref _usableSearchingAlgorithms, value);
     }
+    private IReadOnlyCollection<SearchingAlgorithmViewModel>? _usableSearchingAlgorithms;
     
     
-
-    private MapFormatViewModel? _currentlyUsedMapFormat;
+    /// <summary>
+    /// Map format of currently chosen map.
+    /// It raises notification about change of its value.
+    /// </summary>
     public MapFormatViewModel? CurrentlyUsedMapFormat
     {
         get => _currentlyUsedMapFormat;
         set => this.RaiseAndSetIfChanged(ref _currentlyUsedMapFormat, value);
     }
-    private string? _selectedMapFileName;
+    private MapFormatViewModel? _currentlyUsedMapFormat;
+    /// <summary>
+    /// Name of currently selected maps file. 
+    /// It raises notification about change of its value.
+    /// </summary>
     public string? SelectedMapFileName
     {
         get => _selectedMapFileName;
         set => this.RaiseAndSetIfChanged(ref _selectedMapFileName, value);
     }
+    private string? _selectedMapFileName;
+    /// <summary>
+    /// Path of currently selected maps file.
+    /// </summary>
     private string? SelectedMapFilePath { get; set; }
-    private IReadOnlyCollection<MapFormatViewModel>? _usableMapFormats;
-    public IReadOnlyCollection<MapFormatViewModel>? UsableMapFormats
+    /// <summary>
+    /// Collection of usable map formats in current state of parameter setting.
+    /// It raises notification about change of its value.
+    /// </summary>
+    public IReadOnlyCollection<MapFormatViewModel> UsableMapFormats
     {
         get => _usableMapFormats;
         set => this.RaiseAndSetIfChanged(ref _usableMapFormats, value);
     }
-
-    private GraphicsSourceViewModel? _selectedMapsPreview;
+    private IReadOnlyCollection<MapFormatViewModel> _usableMapFormats;
+    /// <summary>
+    /// Graphics source of selected map used for showing its preview.
+    /// It raises notification about change of its value.
+    /// </summary>
     public GraphicsSourceViewModel? SelectedMapsPreview
     {
         get => _selectedMapsPreview;
         set => this.RaiseAndSetIfChanged(ref _selectedMapsPreview, value);
     }
+    private GraphicsSourceViewModel? _selectedMapsPreview;
     
     
-
-    private UserModelTypeViewModel? _currentlyUsedUserModelType;
+    /// <summary>
+    /// User model type of currently selected user model.
+    /// It raises notification about change of its value.
+    /// </summary>
     public UserModelTypeViewModel? CurrentlyUsedUserModelType
     {
         get => _currentlyUsedUserModelType;
         set => this.RaiseAndSetIfChanged(ref _currentlyUsedUserModelType, value);
     }
-    private string? _selectedUserModelFileName;
+    private UserModelTypeViewModel? _currentlyUsedUserModelType;
+    /// <summary>
+    /// Name of currently selected user model file. 
+    /// It raises notification about change of its value.
+    /// </summary>
     public string? SelectedUserModelFileName
     {
         get => _selectedUserModelFileName;
         set => this.RaiseAndSetIfChanged(ref _selectedUserModelFileName, value);
     }
+    private string? _selectedUserModelFileName;
+    /// <summary>
+    /// Path of currently selected user model file.
+    /// </summary>
     private string? SelectedUserModelFilePath { get; set; }
-    private IReadOnlyCollection<UserModelTypeViewModel>? _usableUserModelTypes;
+    /// <summary>
+    /// Collection of usable user model types in current state of parameter setting.
+    /// It raises notification about change of its value.
+    /// </summary>
     public IReadOnlyCollection<UserModelTypeViewModel>? UsableUserModelTypes
     {
         get => _usableUserModelTypes;
         set => this.RaiseAndSetIfChanged(ref _usableUserModelTypes, value);
     }
+    private IReadOnlyCollection<UserModelTypeViewModel>? _usableUserModelTypes;
     
     
-    
-    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string, GraphicsSourceViewModel?)> LoadMapCommand { get; }
-    public ReactiveCommand<(Stream, string), (UserModelManager.UserModelLoadResult, UserModelTypeViewModel, string)> LoadUserModelCommand { get; }
-    
-    //TODO: command pre prechod do vytvaranaia mapovej reprezentacie, nech necha ukladanie parametrov na modelView-u a ten tam uklada datove triedy, nie ich ViewModelove wrappre
+    /// <summary>
+    /// Enumeration of options which indicates where to proceed from path finding settings ViewModel when all parameters are set and map representation is created.
+    /// </summary>
     public enum WhereToProceed{Settings, PathFinding}
+    
+    /// <summary>
+    /// Reactive command for loading of selected map from the stream.
+    /// On input it gets stream to be parsed and path of file from which stream was generated.
+    /// At first it finds out which map format corresponds to extension of files name. It should be secured by View that only files of usable map formats can be chosen by user.
+    /// Then comes map loading itself. Loaded map will be of detected format and will be parsed from the stream. This process will run asynchronously so the UI stayed responsive.
+    /// After finishing loading map its graphic representation is loaded. Source of map graphics will be returned immediately but in the background can run asynchronous process that will concurrently generate graphic objects and fill the source with them.
+    /// At the end is the stream disposed and result of load is returned for anyone who would care to subscribe on this command.
+    /// Commands execution will take until its next execution takes place. In that case current execution is cancelled. 
+    /// </summary>
+    public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string, GraphicsSourceViewModel?)> LoadMapCommand { get; }
+    /// <summary>
+    /// Reactive command for loading of selected user model from the stream.
+    /// On input it gets stream to be parsed and path of file from which stream was generated.
+    /// At first it finds out which user model type corresponds to files name suffix. It should be secured by View that only files of usable user model types can be chosen by user.
+    /// Then comes user model loading itself. Loaded user model will be of detected type and will be deserialized from the stream. This process will run asynchronously so the UI stayed responsive.
+    /// At the end is the stream disposed and result of load is returned for anyone who would care to subscribe on this command.
+    /// Commands execution will take until its next execution takes place. In that case current execution is cancelled. 
+    /// </summary>
+    public ReactiveCommand<(Stream, string), (UserModelManager.UserModelLoadResult, UserModelTypeViewModel, string)> LoadUserModelCommand { get; }
+    /// <summary>
+    /// Reactive command for proceeding from settings to map representations creation.
+    /// It can be executed only when every necessary parameter is set.
+    /// At the start it calls for handling map representation creation interaction. This interaction is handled by View preferably by dialog Window.
+    /// After interactions end the indicator of successful map representations creation is returned.
+    /// If creation of map repre. was successful application proceeds.
+    /// If it was not it stays in settings of path finding.
+    /// The path finding session ViewModel subscribes on result of this command and changes current ViewModel according to its result.
+    /// </summary>
     public ReactiveCommand<Unit, WhereToProceed> ProceedTroughMapRepreCreationCommand { get; }
-    public Interaction<MapRepreCreatingWindowViewModel, bool> MapRepreCreationInteraction { get; }
-    public static FuncValueConverter<IEnumerable, bool> IsNotEmptyNorNull { get; } =
-        new (enumerable => enumerable?.GetEnumerator().MoveNext() ?? false);
+    /// <summary>
+    /// Interaction to be handled when map representations creation takes place.
+    /// Corresponding View should implement handler for this interaction nad secure its correct execution, preferably using dialog window.
+    /// Argument of this interaction is map representation creation ModelView which should be used for processing of maps repre. creation.
+    /// Result of interaction states whether creation of map representation was successful.
+    /// </summary>
+    public Interaction<MapRepreCreatingViewModel, bool> MapRepreCreationInteraction { get; }
 }

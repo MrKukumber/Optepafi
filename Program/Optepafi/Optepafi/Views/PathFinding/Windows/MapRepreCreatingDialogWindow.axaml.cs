@@ -1,15 +1,14 @@
 using System;
-using System.Reactive.Disposables;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Optepafi.ViewModels.PathFinding;
 using ReactiveUI;
 
-namespace Optepafi.Views.PathFinding;
+namespace Optepafi.Views.PathFinding.Windows;
 
-public partial class MapRepreCreatingWindow : ReactiveWindow<MapRepreCreatingWindowViewModel>
+public partial class MapRepreCreatingDialogWindow : ReactiveWindow<MapRepreCreatingViewModel>
 {
-    public MapRepreCreatingWindow()
+    public MapRepreCreatingDialogWindow()
     {
 
         InitializeComponent();
@@ -23,5 +22,5 @@ public partial class MapRepreCreatingWindow : ReactiveWindow<MapRepreCreatingWin
             d(ViewModel!.CancelMapRepreCreationCommand.Subscribe(isPossibleToContinue => Close(isPossibleToContinue)));
         });
     }
-    private void MapRepreCreatingWindow_OnClosed(object? sender, EventArgs e) { ViewModel!.OnClosedCommand.Execute(); }
+    private void MapRepreCreatingWindow_OnClosed(object? sender, EventArgs e) { ViewModel!.OnClosedCommand?.Execute(); }
 }

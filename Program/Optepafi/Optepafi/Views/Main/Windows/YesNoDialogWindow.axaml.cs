@@ -1,13 +1,10 @@
 using System;
 using System.Reactive.Disposables;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Optepafi.ViewModels.Main;
 using ReactiveUI;
 
-namespace Optepafi.Views.Main;
+namespace Optepafi.Views.Main.Windows;
 
 public partial class YesNoDialogWindow : ReactiveWindow<YesNoDialogWindowViewModel>
 {

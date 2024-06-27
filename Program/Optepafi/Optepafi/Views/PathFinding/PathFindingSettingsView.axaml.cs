@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -98,4 +100,10 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
             ViewModel.SelectedMapFileName = "Unable to open file."; //TODO: localize
         } 
     }
+    
+    /// <summary>
+    /// Value converter that indicates whether inserted enumerable is not null or empty.
+    /// </summary>
+    public static FuncValueConverter<IEnumerable, bool> IsNotEmptyNorNull { get; } =
+        new (enumerable => enumerable?.GetEnumerator().MoveNext() ?? false);
 }

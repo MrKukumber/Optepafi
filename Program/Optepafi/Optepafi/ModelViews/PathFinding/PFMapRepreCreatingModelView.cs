@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan;
@@ -20,7 +21,8 @@ namespace Optepafi.ModelViews.PathFinding;
 /// It uses <c>MapRepreManager</c> for:
 /// - checking requirements for map representations creation
 /// - the creation of maps representation itself
-/// This is an abstract class. The path finding session ModelView will creates its successor which will then be able to implement methods of this class by using data hidden from the outside world. 
+/// This is an abstract class. The path finding session ModelView will creates its successor which will then be able to implement methods of this class by using data hidden from the outside world.
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.
 /// </summary>
 public abstract class PFMapRepreCreatingModelView : ModelViewBase
 {

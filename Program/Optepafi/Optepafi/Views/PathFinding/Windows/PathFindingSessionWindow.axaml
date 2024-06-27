@@ -5,16 +5,17 @@
         xmlns:pathFindingViews="using:Optepafi.Views.PathFinding"
         xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
         mc:Ignorable="d" 
-        x:Class="Optepafi.Views.PathFinding.PathFindingWindow"
+        x:Class="Optepafi.Views.PathFinding.Windows.PathFindingSessionWindow"
         x:DataType="pfVm:PathFindingSessionViewModel"
         Title="PathFindingWindow" Width="1000" Height="700"
         Content="{Binding CurrentViewModel}"
+        WindowStartupLocation="CenterOwner"
         Closing="Window_OnClosing"
         Closed="Window_OnClosed">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="DataTemplates/AllPathFindingDataTemplates.axaml"/>
+                <ResourceInclude Source="../DataTemplates/AllPathFindingDataTemplates.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

@@ -1,19 +1,11 @@
 using System;
-using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using System.Threading;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Input;
 using Avalonia.ReactiveUI;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Optepafi.Models;
-using Optepafi.Models.ElevationDataMan;
-using Optepafi.ViewModels;
 using Optepafi.ViewModels.Data.Representatives;
-using Optepafi.ViewModels.DataViewModels;
 using Optepafi.ViewModels.Main;
 using ReactiveUI;
 using Brushes = Avalonia.Media.Brushes;
@@ -21,33 +13,38 @@ using Pen = Avalonia.Media.Pen;
 using Point = Avalonia.Point;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
 
-namespace Optepafi.Views.Main;
+namespace Optepafi.Views.Main.Windows;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
     public MainWindow()
     {
         InitializeComponent();
-        this.WhenActivated(disposeables =>
+        this.WhenActivated(d =>
         {
-            ViewModel!.MainSettings.ElevConfigInteraction.RegisterHandler(DoShowElevConfig).DisposeWith(disposeables);
-            ViewModel.YesNoInteraction.RegisterHandler(DoShowYesNoDialog).DisposeWith(disposeables);
+            d(ViewModel!.MainSettings.ElevConfigInteraction.RegisterHandler(DoShowElevConfigAsync));
+            d(ViewModel.YesNoInteraction.RegisterHandler(DoShowYesNoDialog));
         });
     }
-
-    private void DoShowElevConfig(InteractionContext<ElevConfigViewModel, ElevDataDistributionViewModel?> interaction)
+    private async Task DoShowElevConfigAsync(InteractionContext<ElevConfigViewModel, ElevDataDistributionViewModel?> interaction)
     {
-        Content = new ElevConfigView
+        AutoResetEvent returningEvent = new AutoResetEvent(false);
+        ElevDataDistributionViewModel? result = null;
+        var elevConfigView = new ElevConfigView
         {
             DataContext = interaction.Input
         };
-
-        interaction.Input.ReturnCommand.Subscribe(result =>
+        
+        interaction.Input.ReturnCommand.Subscribe(elevDataDistr =>
         {
-            Content = ViewModel!.MainSettings;
-            interaction.SetOutput(result);
+            result = elevDataDistr;
+            returningEvent.Set();
         });
-
+        
+        Content = elevConfigView;
+        await Task.Run(() => returningEvent.WaitOne()); 
+        Content = ViewModel!.MainSettings;
+        interaction.SetOutput(result);
     }
 
     private async Task DoShowYesNoDialog(InteractionContext<YesNoDialogWindowViewModel, bool> interaction)

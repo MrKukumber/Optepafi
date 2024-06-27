@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net;
 using System.Threading;
+using Optepafi.Models.ElevationDataMan.Distributions;
+using Optepafi.Models.ElevationDataMan.ElevSources;
+using Optepafi.Models.ElevationDataMan.ElevSources.NotRealyElevDataSource;
+using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.MapMan.MapInterfaces;
 
 namespace Optepafi.Models.ElevationDataMan;
@@ -21,7 +25,7 @@ public class ElevDataManager
     /// Set of usable elevation data sources.
     /// </summary>
     public IReadOnlySet<IElevDataSource> ElevDataSources { get; } =
-        ImmutableHashSet.Create<IElevDataSource>( /*TODO: add elevation data sources*/); //TODO: este premysliet ako reprezentovat, mozno skor nejakym listom koli poradiu
+        ImmutableHashSet.Create<IElevDataSource>( NotReallyElevDataSource.Instance ); //TODO: este premysliet ako reprezentovat, mozno skor nejakym listom koli poradiu
     
     public enum DownloadingResult {Downloaded, Canceled, UnableToDownload, WrongCredentials}
 

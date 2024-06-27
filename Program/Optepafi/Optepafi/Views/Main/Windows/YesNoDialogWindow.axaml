@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mVm="clr-namespace:Optepafi.ViewModels.Main"
         mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="100"
-        x:Class="Optepafi.Views.Main.YesNoDialogWindow"
+        x:Class="Optepafi.Views.Main.Windows.YesNoDialogWindow"
         x:DataType="mVm:YesNoDialogWindowViewModel"
         Title="YesNoDialogWindow" Width="200" Height="100"
         WindowStartupLocation="CenterOwner">

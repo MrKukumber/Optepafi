@@ -13,6 +13,7 @@ namespace Optepafi.ModelViews.Main;
 /// Its work load includes:
 /// - credential and not credential based elevation data downloading for requested regions
 /// - removal of elevation data corresponding to requested region
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.
 /// </summary>
 public sealed class ElevDataModelView : ModelViewBase
 {

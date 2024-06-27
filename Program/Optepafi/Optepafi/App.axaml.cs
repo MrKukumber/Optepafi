@@ -13,7 +13,7 @@ using Optepafi.ViewModels.Main;
 using Optepafi.Views;
 using Optepafi.Views.Main;
 using Optepafi.Views.PathFinding;
-using MainWindow = Optepafi.Views.Main.MainWindow;
+using MainWindow = Optepafi.Views.Main.Windows.MainWindow;
 
 namespace Optepafi;
 

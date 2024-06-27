@@ -49,16 +49,8 @@
         <DependentUpon>MainMenuView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Views\Main\MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
       <Compile Update="Views\ModelCreating\ModelCreatingWindow.axaml.cs">
         <DependentUpon>ModelCreatingWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\PathFinding\PathFindingWindow.axaml.cs">
-        <DependentUpon>PathFindingWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
       <Compile Remove="Models\MapRepreMan\MapRepreConstrs\ElevDataDependentConstr.cs" />
@@ -82,10 +74,6 @@
         <DependentUpon>Local.sk-SK.resx</DependentUpon>
       </Compile>
       <Compile Remove="Localization\**" />
-      <Compile Update="Views\PathFinding\MapRepreCreatingWindow.axaml.cs">
-        <DependentUpon>MapRepreCreatingWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
       <Compile Remove="Models\UserModelMan\IUserModelGenericVisitor.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataIndependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataDependentConstr.cs" />
@@ -133,6 +121,24 @@
       <Compile Remove="Views\ModelCreating\**" />
       <Compile Remove="Models\SearchingAlgorithmMan\Paths\Specific\ClassicColoredPath.cs" />
       <Compile Remove="Models\SearchingAlgorithmMan\SearchingAlgorithms\Specific\AStar.cs" />
+      <Compile Remove="ViewModels\PathFinding\RelevanceFeedbackViewModel.cs" />
+      <Compile Remove="Views\PathFinding\RelevanceFeedbackView.axaml.cs" />
+      <Compile Update="Views\PathFinding\Windows\PathFindingSessionWindow.axaml.cs">
+        <DependentUpon>PathFindingSessionWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\PathFinding\Windows\MapRepreCreatingDialogWindow.axaml.cs">
+        <DependentUpon>MapRepreCreatingWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Main\Windows\YesNoDialogWindow.axaml.cs">
+        <DependentUpon>YesNoDialogWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Main\Windows\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
 
@@ -159,7 +165,6 @@
 
 
     <ItemGroup>
-      <Folder Include="Models\ElevationDataMan\ElevSources\" />
       <Folder Include="Models\GraphicsMan\Collectors\" />
       <Folder Include="Models\GraphicsMan\Objects\SearchingState\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />
@@ -175,6 +180,7 @@
       <AvaloniaXaml Remove="ModelViews\ModelCreating\**" />
       <AvaloniaXaml Remove="ViewModels\ModelCreating\**" />
       <AvaloniaXaml Remove="Views\ModelCreating\**" />
+      <AvaloniaXaml Remove="Views\PathFinding\RelevanceFeedbackView.axaml" />
     </ItemGroup>
 
 

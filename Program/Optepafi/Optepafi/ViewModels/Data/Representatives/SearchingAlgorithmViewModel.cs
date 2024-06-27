@@ -3,14 +3,20 @@ using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 
-public class SearchingAlgorithmViewModel : DataViewModel<ISearchingAlgorithm>
-{
-    protected override ISearchingAlgorithm Data => SearchingAlgorithm;
-    public ISearchingAlgorithm SearchingAlgorithm { get; }
-    public SearchingAlgorithmViewModel(ISearchingAlgorithm searchingAlgorithm)
-    {
-        SearchingAlgorithm = searchingAlgorithm;
-    }
 
+/// <summary>
+/// Wrapping ViewModel for <c>ISearchingAlgorithm</c> type.
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// </summary>
+/// <param name="searchingAlgorithm">Searching algorithm instance to which will be this ViewModel coupled.</param>
+public class SearchingAlgorithmViewModel(ISearchingAlgorithm searchingAlgorithm) : WrappingDataViewModel<ISearchingAlgorithm>
+{
+    
+    /// <inheritdoc cref="WrappingDataViewModel{TData}.Data"/>
+    protected override ISearchingAlgorithm Data => SearchingAlgorithm;
+    /// <summary>
+    /// Coupled searching algorithm instance.
+    /// </summary>
+    public ISearchingAlgorithm SearchingAlgorithm { get; } = searchingAlgorithm;
     public string Name => SearchingAlgorithm.Name;
 }

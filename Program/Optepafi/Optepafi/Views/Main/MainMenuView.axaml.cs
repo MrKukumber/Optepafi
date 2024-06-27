@@ -7,6 +7,7 @@ using Avalonia.ReactiveUI;
 using Optepafi.ViewModels.Main;
 using Optepafi.Views.PathFinding;
 using ReactiveUI;
+using PathFindingSessionWindow = Optepafi.Views.PathFinding.Windows.PathFindingSessionWindow;
 
 namespace Optepafi.Views.Main;
 
@@ -29,7 +30,7 @@ public partial class MainMenuView : ReactiveUserControl<MainMenuViewModel>
 
             ViewModel!.CreatePathFindingSessionCommand.Subscribe(pathFindingSession =>
                 {
-                    var newWindow = new PathFindingWindow
+                    var newWindow = new PathFindingSessionWindow
                     {
                         DataContext = pathFindingSession
                     };

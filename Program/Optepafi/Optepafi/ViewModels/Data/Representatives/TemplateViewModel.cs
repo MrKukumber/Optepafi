@@ -3,14 +3,19 @@ using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 
-public class TemplateViewModel : DataViewModel<ITemplate>
+/// <summary>
+/// Wrapping ViewModel for <c>ITemplate</c> type.
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// </summary>
+/// <param name="template">Template instance to which will be this ViewModel coupled.</param>
+public class TemplateViewModel(ITemplate template) : WrappingDataViewModel<ITemplate>
 {
+    /// <inheritdoc cref="WrappingDataViewModel{TData}.Data"/>
     protected override ITemplate Data => Template;
-    public ITemplate Template { get; }
-    public TemplateViewModel(ITemplate template)
-    {
-        Template = template;
-    }
-
+    /// <summary>
+    /// Coupled user template instance. 
+    /// </summary>
+    public ITemplate Template { get; } = template;
+    
     public string Name => Template.TemplateName;
 }

@@ -43,6 +43,7 @@
         <entry key="Optepafi/Views/Main/MainMenuView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/MainSettingsView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/MainWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/Main/Windows/MainWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/YesNoDialogWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/MainConfigView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/MainMenuView.axaml" value="Optepafi/Optepafi.csproj" />
@@ -55,12 +56,16 @@
         <entry key="Optepafi/Views/PathFinding/DataTemplates/AllPathFindingDataTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/MapRepreCreatingDialog/MapCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/MapRepreCreatingDialog/MapRepreCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/PathFinding/MapRepreCreatingView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/MapRepreCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/PatFindingSettingsView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/PathFindingSettingsView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/PathFindingView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/PathFindingWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFinding/RelevanceFeedbackView.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/PathFinding/Windows/MapRepreCreatingDialogWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/PathFinding/Windows/MapRepreCreatingWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/PathFinding/Windows/PathFindingSessionWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/PathFindingWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/SettingsWindow.axaml" value="Optepafi/Optepafi.csproj" />
       </map>

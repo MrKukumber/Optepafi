@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Optepafi.Models;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews;
 using Optepafi.ModelViews.Main;
@@ -22,27 +24,36 @@ using ReactiveUI;
 
 namespace Optepafi.ViewModels.Main;
 
+/// <summary>
+/// ViewModel which is responsible for control over elevation data configuration mechanism.
+/// This is a special type of ViewModel because all instances of this ViewModel use the same one instance of <c>ElevDtaModelView</c>.
+/// This design is intentional so instance of this ModelView does not have to be created every time when new elev. data configuring ViewModel is created. Elevation data ModelView does not bear any data so there is no flaw in having only one its instance in whole application.
+/// Its tasks include:
+/// - overseeing of elevation data configuration. It secures validity of actions done by user. It reacts to results of data machinations by processing and providing meaningful information to be shown to user.
+/// - understanding principles of elevation data retrieval and removal. Understanding hierarchy of regions.
+/// - selection of currently used elevation data distribution.
+/// - letting user to assign its credentials for accessing of elevation data from distributions which demand it.
+///
+/// For more information on ViewModels in general see <see cref="ViewModelBase"/>.
+/// </summary>
 public class ElevConfigViewModel : ViewModelBase
 {
-    private ElevDataDistributionViewModel? _currentElevDataDist;
-    public ElevConfigViewModel(ElevDataDistributionViewModel? currentElevDataDist)
+    /// <summary>
+    /// Construction of new elevation configuration ViewModel instance.
+    /// It initialize all reactive constructs and assigns currently used elevation data distribution to value of provided argument.
+    /// </summary>
+    /// <param name="selectedElevDataDist">Argument according to which is currently used elevation data distribution set.</param>
+    public ElevConfigViewModel(ElevDataDistributionViewModel? selectedElevDataDist)
     {
-        _currentElevDataDist = currentElevDataDist;
-        ReturnCommand = ReactiveCommand.Create(() => _currentElevDataDist);
-
-        _currentAvailableRegions = this.WhenAnyValue(x => x.CurrentElevDataDist)
-            .Select(ceds => ceds?.AllTopRegions.SelectMany(topRegion => GetAllSubRegions(topRegion)))
-            .ToProperty(this, nameof(CurrentAvailableRegions));
-        
         IObservable<bool> isRegionSelectedNotDownloaded = this.WhenAnyValue(
-            x => x.SelectedRegion,
-            region => region?.Presence == RegionViewModel.PresenceState.NotDownloaded);
+            x => x.SelectedRegion.Presence,
+            region => region == RegionViewModel.PresenceState.NotDownloaded);
         IObservable<bool> isRegionSelectedDownloaded = this.WhenAnyValue(
-            x => x.SelectedRegion,
-            region => region?.Presence == RegionViewModel.PresenceState.Downloaded);
+            x => x.SelectedRegion.Presence,
+            presence => presence == RegionViewModel.PresenceState.Downloaded);
         IObservable<bool> isRegionSelectedDownloading = this.WhenAnyValue(
-            x => x.SelectedRegion,
-            region => region?.Presence == RegionViewModel.PresenceState.IsDownloading);
+            x => x.SelectedRegion.Presence,
+            presence => presence == RegionViewModel.PresenceState.IsDownloading);
         IObservable<bool> areCredentialsSet = this.WhenAnyValue(
             x => x.UserName,
             x => x.Password,
@@ -51,42 +62,45 @@ public class ElevConfigViewModel : ViewModelBase
             x => x.CurrentElevDataDist,
             (ElevDataDistributionViewModel? elevDataDist) => elevDataDist is CredentialsRequiringElevDataDistributionViewModel);
         
-        _credentialsAreRequired = areCredentialsRequired
-            .ToProperty(this, nameof(CredentialsAreRequired));
             
+        
         DownloadRegionCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            SelectedRegion!.Presence = RegionViewModel.PresenceState.IsDownloading;
-            SelectedRegion.DownloadingCancellationTokenSource = new CancellationTokenSource();
+            var currentSelectedRegion = SelectedRegion;
+            var currentElevDataDist = CurrentElevDataDist;
+            currentSelectedRegion!.Presence = RegionViewModel.PresenceState.IsDownloading;
+            foreach(var subRegion in currentSelectedRegion.SubRegions ) 
+                SetRecursivelySubRegionsPresenceToIsDownloadingAsSubregion(subRegion);
+            currentSelectedRegion.DownloadingCancellationTokenSource = new CancellationTokenSource();
             ElevDataManager.DownloadingResult result;
-            switch (CurrentElevDataDist)
+            switch (currentElevDataDist)
             {
                 case CredentialsNotRequiringElevDataDistributionViewModel cnredtvm :
-                   result =  await ElevDataModelView.Instance.DownloadAsync(cnredtvm, SelectedRegion);
+                   result =  await ElevDataModelView.Instance.DownloadAsync(cnredtvm, currentSelectedRegion);
                    break;
                 case CredentialsRequiringElevDataDistributionViewModel credtvm :
                     var userName = UserName; var password = Password;
                     UserName = ""; Password = "";
-                    result = await ElevDataModelView.Instance.DownloadAsync(credtvm, SelectedRegion, new NetworkCredential(userName, password));
+                    result = await ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new NetworkCredential(userName, password));
                     break;
                 default:
                     throw new ArgumentException("Not supported " + nameof(ElevDataDistributionViewModel)+" ancestor type given.");
             }
+            UpdateRecursivelySubRegionsPresence(currentSelectedRegion);
             switch (result)
             {
                 case ElevDataManager.DownloadingResult.Downloaded:
-                    SelectedRegion.Presence = RegionViewModel.PresenceState.Downloaded;
                     break;
                 case ElevDataManager.DownloadingResult.Canceled:    
-                    SelectedRegion.Presence = RegionViewModel.PresenceState.NotDownloaded;
                     break;
                 case ElevDataManager.DownloadingResult.WrongCredentials:
                     //TODO: nejake upozornenie, ze zadane kredencialy neboli platne
                     break;
-                default:
-                    SelectedRegion.Presence = RegionViewModel.PresenceState.NotDownloaded;
+                case ElevDataManager.DownloadingResult.UnableToDownload:
                     //TODO: nejake upozornenie, ze sa stahovanie nepodarilo
                     break;
+                default:
+                    throw new InvalidEnumArgumentException("result", (int) result, typeof(ElevDataManager.DownloadingResult));
             }
 
         }, isRegionSelectedNotDownloaded.CombineLatest(
@@ -95,15 +109,32 @@ public class ElevConfigViewModel : ViewModelBase
             (x,y) => x && y));
         DeleteRegionCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            SelectedRegion!.Presence = RegionViewModel.PresenceState.IsDeleting;
-            await ElevDataModelView.Instance.RemoveAsync(CurrentElevDataDist!, SelectedRegion);
-            SelectedRegion.Presence = RegionViewModel.PresenceState.NotDownloaded;
+            var currentSelectedRegion = SelectedRegion;
+            var currentElevDataDist = CurrentElevDataDist;
+            SetRecursivelySubRegionsPresenceToIsDeletingIfNotDeletedAlready(currentSelectedRegion!);
+            SetRecursivelyUpperRegionsPresenceToIsDeletingIfNotDeletedAlready(currentSelectedRegion!);
+            await ElevDataModelView.Instance.RemoveAsync(currentElevDataDist!, currentSelectedRegion!);
+            UpdateRecursivelySubRegionsPresence(currentSelectedRegion!);
+            UpdateRecursivelyUpperRegionsPresence(currentSelectedRegion!);
         }, isRegionSelectedDownloaded);
         
         CancelDownloadingCommand = ReactiveCommand.Create(() =>
         {
             SelectedRegion!.DownloadingCancellationTokenSource.Cancel();   
         }, isRegionSelectedDownloading);
+        
+        ReturnCommand = ReactiveCommand.Create(() => _currentElevDataDist);
+        
+        _currentAvailableRegions = this.WhenAnyValue(x => x.CurrentElevDataDist)
+            .Select(ceds => ceds?.AllTopRegions.SelectMany(topRegion => GetAllSubRegions(topRegion)))
+            .ToProperty(this, nameof(CurrentAvailableRegions));
+        _credentialsAreRequired = this.WhenAnyValue( x => x.CurrentElevDataDist)
+            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel)
+            .ToProperty(this, nameof(CredentialsAreRequired));
+        
+        ElevDataDistributions = ElevDataModelView.Instance.GetElevDataSources()
+            .SelectMany(elevDataSource => elevDataSource.ElevDataDistributions);
+        CurrentElevDataDist = ElevDataDistributions.Contains(selectedElevDataDist) ? selectedElevDataDist : null;
     }
 
     private List<RegionViewModel> GetAllSubRegions(RegionViewModel region)
@@ -116,54 +147,131 @@ public class ElevConfigViewModel : ViewModelBase
         return subRegions;
     }
 
-
-
-
-    private ObservableAsPropertyHelper<IEnumerable<RegionViewModel>?> _currentAvailableRegions;
-    public IEnumerable<RegionViewModel>? CurrentAvailableRegions => _currentAvailableRegions.Value;
-
-    private RegionViewModel? _selectedRegion;
-    public RegionViewModel? SelectedRegion
+    private void SetRecursivelySubRegionsPresenceToIsDownloadingAsSubregion(RegionViewModel region)
     {
-        get => _selectedRegion;
-        set => this.RaiseAndSetIfChanged(ref _selectedRegion, value);
+        region.Presence = RegionViewModel.PresenceState.IsDownloadingAsSubRegion;
+        foreach (var subRegion in region.SubRegions)
+        {
+            SetRecursivelySubRegionsPresenceToIsDownloadingAsSubregion(subRegion);
+        }
     }
+    private void SetRecursivelySubRegionsPresenceToIsDeletingIfNotDeletedAlready(RegionViewModel region)
+    {
+        
+        if (region.Presence is not RegionViewModel.PresenceState.NotDownloaded)
+            region.Presence = RegionViewModel.PresenceState.IsDeleting;
+        foreach (var subRegion in region.SubRegions)
+        {
+            SetRecursivelySubRegionsPresenceToIsDeletingIfNotDeletedAlready(subRegion);
+        }
+    }
+
+    private void SetRecursivelyUpperRegionsPresenceToIsDeletingIfNotDeletedAlready(RegionViewModel region)
+    {
+        if (region.Presence is not RegionViewModel.PresenceState.NotDownloaded)
+            region.Presence = RegionViewModel.PresenceState.IsDeleting;
+        if(region is SubRegionViewModel subRegion) SetRecursivelyUpperRegionsPresenceToIsDeletingIfNotDeletedAlready(subRegion.UpperRegion);
+    }
+
+    private void UpdateRecursivelySubRegionsPresence(RegionViewModel region)
+    {
+        region.UpdatePresence();
+        foreach (var subRegion in region.SubRegions)
+        {
+            UpdateRecursivelySubRegionsPresence(subRegion);
+        }
+    }
+
+    private void UpdateRecursivelyUpperRegionsPresence(RegionViewModel region)
+    {
+        region.UpdatePresence();
+        if(region is SubRegionViewModel subRegionViewModel) UpdateRecursivelyUpperRegionsPresence(subRegionViewModel.UpperRegion);
+    }
+
+    /// <summary>
+    /// Currently selected elevation data distribution which regions and their corresponding elev. data can be managed by user.
+    /// When application is closing this properties value is returned as currently used elevation data distribution.
+    /// </summary>
     public ElevDataDistributionViewModel? CurrentElevDataDist
     {
         get => _currentElevDataDist;
         set => this.RaiseAndSetIfChanged(ref _currentElevDataDist, value);
     }
-    public IEnumerable<ElevDataDistributionViewModel> ElevDataDistributions { get; } = ElevDataModelView.Instance.GetElevDataSources()
-        .SelectMany(elevDataSource => elevDataSource.ElevDataDistributions);
+    private ElevDataDistributionViewModel? _currentElevDataDist;
 
-    private string? _userName;
+    /// <summary>
+    /// Collection of all currently available regions for which corresponding elevation data can be downloaded.
+    /// </summary>
+    public IEnumerable<RegionViewModel>? CurrentAvailableRegions => _currentAvailableRegions.Value;
+    private ObservableAsPropertyHelper<IEnumerable<RegionViewModel>?> _currentAvailableRegions;
+
+    /// <summary>
+    /// Currently selected region by user. Selected region can be managed by user according to its <c>RegionViewModel.PresenceState</c>.
+    /// </summary>
+    public RegionViewModel? SelectedRegion
+    {
+        get => _selectedRegion;
+        set => this.RaiseAndSetIfChanged(ref _selectedRegion, value);
+    }
+    private RegionViewModel? _selectedRegion;
+    
+    /// <summary>
+    /// Collection of all elevation data distributions provided for accessing the data.
+    /// </summary>
+    public IEnumerable<ElevDataDistributionViewModel> ElevDataDistributions { get; } 
+
+    /// <summary>
+    /// User name part of credentials used for accessing of elevation data from distributions which demand it.
+    /// </summary>
     public string? UserName
     {
         get => _userName;
         set => this.RaiseAndSetIfChanged(ref _userName, value);
     }
+    private string? _userName;
 
-    private string? _password;
+    /// <summary>
+    /// Password part of credentials used for accessing of elevation data from distributions which demand it.
+    /// </summary>
     public string? Password
     {
-        private get => _password;
+        get => _password;
         set => this.RaiseAndSetIfChanged(ref _password, value);
     }
+    private string? _password;
 
+    /// <summary>
+    /// Indicates whether providing of credentials for accessing elevation data form distribution which demand it from user is required.
+    /// </summary>
+    public bool CredentialsAreRequired => _credentialsAreRequired.Value;
     private ObservableAsPropertyHelper<bool> _credentialsAreRequired;
-    public bool CredentialsAreRequired
-    {
-        get => _credentialsAreRequired.Value;
-    }
-    public ReactiveCommand<Unit, ElevDataDistributionViewModel?> ReturnCommand { get; }
+    /// <summary>
+    /// Reactive command used for downloading of elevation data for currently selected region.
+    /// Firstly it sets currently selected regions and its sub-regions presence state to <c>IsDownloading</c>.
+    /// Then according to distributions requirement fo credentials it calls asynchronously correct method on ModelView for downloading of elevation data which correspond to selected region.
+    /// It receives result of this download.
+    /// It the lets selected region and its subregions update their presence status.
+    /// In the end it processes result of download so that user could be informed about it.
+    /// Downloading of elevation data is enabled only in case that selected region is not downloaded yet and current distribution does not requires credentials or if it does, they are set.
+    /// </summary>
     public ReactiveCommand<Unit, Unit> DownloadRegionCommand { get; }
+    /// <summary>
+    /// Reactive command used for deleting of downloaded elevation data for currently selected region.
+    /// It is simpler than <c>DownloadRegionCommand</c>.
+    /// Firstly currently selected regions and its subregions presence state is set to <c>IsDeleting</c>. The state is set in such way only if given region is not deleted already.
+    /// Also all upper regions of currently selected region states are set in that way.
+    /// Then asynchronous removal of elevation data itself takes place.
+    /// After it finishes, selected regions sub-regions and upper-regions are let to update their presence status.
+    /// Removing of selected regions elevation data is enabled only if they are downloaded already. 
+    /// </summary>
     public ReactiveCommand<Unit, Unit> DeleteRegionCommand { get; }
+    /// <summary>
+    /// Reactive command for cancelling of elevation data download
+    /// </summary>
     public ReactiveCommand<Unit, Unit> CancelDownloadingCommand { get; }
-    public static FuncValueConverter<RegionViewModel.PresenceState, IBrush> PresenceToColorConverter { get; } =
-        new(presence => presence switch
-        {
-            RegionViewModel.PresenceState.Downloaded => Brushes.GreenYellow,
-            RegionViewModel.PresenceState.NotDownloaded => Brushes.White,
-            _ => Brushes.DarkOrange
-        });
+    /// <summary>
+    /// Reactive command used for returning form elevation data configuration ViewModel.
+    /// It returns currently selected elevation data distribution which should be used now used in whole application as default one. 
+    /// </summary>
+    public ReactiveCommand<Unit, ElevDataDistributionViewModel?> ReturnCommand { get; }
 }

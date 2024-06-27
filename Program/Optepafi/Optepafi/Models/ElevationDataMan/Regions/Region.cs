@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Optepafi.Models.MapMan;
 
-namespace Optepafi.Models.ElevationDataMan;
+namespace Optepafi.Models.ElevationDataMan.Regions;
 
 /// <summary>
 /// This class represents one whole region, that is used by elevation data distributions for organizing of their data management.
@@ -19,7 +16,7 @@ public abstract class Region
     /// <summary>
     /// List of sub-regions of this region. When some operation with this region is done, they should be took into consideration too.
     /// </summary>
-    public abstract SubRegion[] SubRegions { get; }
+    public abstract HashSet<SubRegion> SubRegions { get; }
     /// <summary>
     /// List of <see cref="GeoCoordinate"/>s that defines the geometry of this region. It can be used for nicer presenting of regions to users.
     /// </summary>

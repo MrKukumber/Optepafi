@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Metadata;
 using DynamicData;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.Graphics;
 using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
@@ -40,6 +41,7 @@ namespace Optepafi.ModelViews.PathFinding;
 /// - aggregating map graphics
 /// - saving parameter selection for future use
 /// This is an abstract class. The path finding session ModelView will create its successor which will then be able to implement methods of this class by using data hidden from the outside world. 
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.
 /// </summary>
 public abstract class PFSettingsModelView : ModelViewBase
 {
@@ -241,7 +243,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// <summary>
     /// Method for setting chosen searching algorithm.
     /// </summary>
-    /// <param name="elevDataDistViewModel">ViewModel of chosen searching algorithm.</param>
+    /// <param name="searchingAlgorithmViewModel">ViewModel of chosen searching algorithm.</param>
     public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel);
     
     /// <summary>
@@ -271,7 +273,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// It should create <c>GraphicSource</c> whose ViewModel is sent to be displayed for user while it is filled by map graphic objects in parallel. 
     /// </summary>
     /// <returns>Graphics source view model which will be continuously filled by maps graphics.</returns>
-    public abstract GraphicsSourceViewModel? GetAndSetLoadedMapGraphics();
+    public abstract GraphicsSourceViewModel? GetAndSetLoadedMapGraphics(MapManager.MapCreationResult mapCreationResult);
     
     /// <summary>
     /// It was meant to release map after map representation creation completes and maps graphics is gathered.
@@ -366,9 +368,11 @@ public partial class PathFindingSessionModelView
         }
 
         /// <inheritdoc cref="PFSettingsModelView.GetAndSetLoadedMapGraphics"/>
-        public override GraphicsSourceViewModel? GetAndSetLoadedMapGraphics()
+        public override GraphicsSourceViewModel? GetAndSetLoadedMapGraphics(MapManager.MapCreationResult mapCreationResult)
         {
             if (Map is null) throw new NullReferenceException("Map property should be instantiated before calling this method.");
+            if (mapCreationResult is not (MapManager.MapCreationResult.Ok or MapManager.MapCreationResult.Incomplete))
+                return null;
             IMap map = Map;
             
             GraphicsArea? graphicsArea = GraphicsManager.Instance.GetAreaOf(map);

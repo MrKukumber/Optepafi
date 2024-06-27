@@ -30,7 +30,7 @@
                             <Grid>
                                 <ContentControl Name="MapGraphics" Content="{Binding MapGraphicsSource}" />
                                 <ContentControl Name="TrackGraphics" Content="{Binding TrackGraphicsSource}"/>
-                                <ContentControl Name="ReportsGraphics" Content="{Binding ReportGraphicsSource}"/>
+                                <ContentControl Name="ReportsGraphics" Content="{Binding LastReportGraphicsSource}"/>
                             </Grid>
                         </Viewbox>
                     </ScrollViewer>

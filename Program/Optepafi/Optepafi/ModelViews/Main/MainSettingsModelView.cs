@@ -1,5 +1,6 @@
 using System.Globalization;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.ParamsMan;
 using Optepafi.Models.ParamsMan.Params;
 using Optepafi.ViewModels.Data.Representatives;
@@ -15,8 +16,9 @@ namespace Optepafi.ModelViews.Main;
 /// - work with <c>ParamsManager</c> for achieving persistence of applications parameters
 /// - work with <c>ElevDataManager</c> for correct identification of elevation data distributions
 /// - provides instance of <c>Provider</c> class which can be offered to sessions for safe accessing of main parameters
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.
 /// </summary>
-public class MainSettingsModelView
+public class MainSettingsModelView : ModelViewBase
 {
     /// <summary>
     /// Instance of <c>MainSettingsParams</c> which is used for changing and following saving of main parameters. 
@@ -33,7 +35,7 @@ public class MainSettingsModelView
         ParamsManager.Instance.SetParams(_mainSettingsParams);
         
         _currentCulture = CultureInfo.GetCultureInfo(_mainSettingsParams.CultureName);
-        _currentElevDataType = GetElevDataDistributionByTypeName(_mainSettingsParams.ElevDataTypeViewModelTypeName);
+        _currentElevDataDistribution = GetElevDataDistributionByTypeName(_mainSettingsParams.ElevDataTypeViewModelTypeName);
         ProviderOfSettings = new Provider(this);
     }
     /// <summary>
@@ -84,16 +86,25 @@ public class MainSettingsModelView
     /// <summary>
     /// Backing field of <c>CurrentElevDataDistribution</c> property.
     /// </summary>
-    private IElevDataDistribution? _currentElevDataType;
+    private IElevDataDistribution? _currentElevDataDistribution;
     /// <summary>
-    /// Represents currently selected elevation data distribution which is used in application. When new value is set, it is also saved to <c>_mainSettingsParams</c> variable.
+    /// Represents currently selected elevation data distributions ViewModel which is used in application.
+    /// When new value is set, it is also saved to <c>_mainSettingsParams</c> variable.
     /// </summary>
     public ElevDataDistributionViewModel? CurrentElevDataDistribution
     {
-        get => _currentElevDataType is null ? null : new ElevDataDistributionViewModel(_currentElevDataType);
+        get
+        {
+            return _currentElevDataDistribution switch
+            {
+                ICredentialsNotRequiringElevDataDistribution credNotReqElevDataDist => new CredentialsNotRequiringElevDataDistributionViewModel(credNotReqElevDataDist),
+                ICredentialsRequiringElevDataDistribution credReqElevDataDist => new CredentialsRequiringElevDataDistributionViewModel(credReqElevDataDist),
+                _ => null
+            };
+        }
         set
         {
-            _currentElevDataType = value?.ElevDataDistribution;
+            _currentElevDataDistribution = value?.ElevDataDistribution;
             _mainSettingsParams.ElevDataTypeViewModelTypeName = value?.ElevDataDistribution.GetType().Name;
         }
     }

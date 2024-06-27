@@ -1,37 +1,11 @@
-using ReactiveUI;
-
 namespace Optepafi.ViewModels.DataViewModels;
 
-
-public abstract class DataViewModel<TData> : ViewModelBase
-    where TData : notnull
-{
-    protected abstract TData Data { get; }
-    
-    public override bool Equals(object? obj)
-    {
-        if (obj is DataViewModel<TData> correctObj)
-            return correctObj.Data.Equals(Data); 
-        return false;
-    }
-
-    public override int GetHashCode()
-    {
-        return Data.GetHashCode();
-    }
-
-    public static bool operator ==(DataViewModel<TData>? operand1, DataViewModel<TData>? operand2)
-    {
-        if (operand1 is null)
-        {
-            if (operand2 is null) return true;
-            return false;
-        }
-        return operand1.Equals(operand2);
-    }
-
-    public static bool operator !=(DataViewModel<TData>? operand1, DataViewModel<TData>? operand2)
-    {
-        return !(operand1 == operand2);
-    }
-}
+/// <summary>
+/// Represents base class for ViewModels for all sorts of data produced by Model.
+/// These ViewModels are then passed to View so it could create their graphic representation and display them.
+/// Every data view model type therefore should has its corresponding defined View/DataTemplate.
+/// DataViewModels are usually created from data by ModelView layer and passed to ViewModel layer of application.
+/// 
+/// For achieving coupling of ViewModel with one specific instance of datum and backward retrieval of this datum class must implement <see cref="WrappingDataViewModel{TData}"/> succcessor.
+/// </summary>
+public abstract class DataViewModel : ViewModelBase;
