@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.DataViewModels;
 
@@ -10,15 +11,30 @@ namespace Optepafi.ModelViews.Main;
 
 /// <summary>
 /// ModelView which is responsible for logic behind elevation data management and their acquisition.
+/// This ModelView is special by its design. It is singleton class. Reason for this is its ability to be used simultaneously from multiple ViewModels.
 /// Its work load includes:
 /// - credential and not credential based elevation data downloading for requested regions
 /// - removal of elevation data corresponding to requested region
+/// - keeping hold of ViewModels for all Regions of all elevation data distributions. Thees region ViewModels are provided to corresponding ViewModel so it could use them for showing to user. The main idea behind them is that they are always the same instances. They can therefore hold their information and provide it across multiple elevation configurations at once.
+/// 
 /// For more information on ModelViews see <see cref="ModelViewBase"/>.
 /// </summary>
 public sealed class ElevDataModelView : ModelViewBase
 {
+    
     public static ElevDataModelView Instance { get; } = new();
-    private ElevDataModelView(){}
+
+    private ElevDataModelView()
+    {
+        TopRegionsOfAllDistributions = ElevDataManager.Instance.ElevDataSources
+            .SelectMany(elevDataSource => elevDataSource.ElevDataDistributions)
+            .ToDictionary(
+                elevDataDistr => new ElevDataDistributionViewModel(elevDataDistr), 
+                elevDataDistr => elevDataDistr.AllTopRegions
+                    .Select(topRegion => new TopRegionViewModel(topRegion)).ToList());
+    }
+    
+    public Dictionary<ElevDataDistributionViewModel, List<TopRegionViewModel>> TopRegionsOfAllDistributions { get; }
     
     /// <summary>
     /// Method for retrieving of all elevation data sources that are available in <c>ElevDataManager</c>. 
@@ -72,4 +88,5 @@ public sealed class ElevDataModelView : ModelViewBase
         var region = regionViewModel.Region;
         await Task.Run(() => ElevDataManager.Instance.RemoveRegion(elevDataDistribution, region));
     }
+    
 }

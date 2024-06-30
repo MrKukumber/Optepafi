@@ -1,0 +1,12 @@
+-co si mysli o kniznici Avalonia, Xamarin/MAUI, WPF, WindowForms, 
+  -multiplatformita - ci to stoji za to
+-akym spososobom spravne zavolat ten pythonovsky skript
+- ako spravne vykreslovat tu mapu, ci cez tie avalonia objekty, alebo presdsa len si radsej spravit nejaku svg repre a potom ukazovak len obrazok a nanho nejak nasadit tie vyhladane cesty...
+
+
+
+-ukazat mu aky je zatial moj navrh aplikacie
+-opytat sa ho na ten casovy plan, ci by mi nevedel nejako poradit ako by som si to mal nastavit
+-ako by mi doporucil spravit ten model
+-opytat sa, co si mysli na ten navrh, jak budu fungovat tie algoritmy
+................................

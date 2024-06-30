@@ -21,10 +21,6 @@ public class ElevDataDistributionViewModel(IElevDataDistribution elevDataDistrib
     /// </summary>
     public IElevDataDistribution ElevDataDistribution { get; } = elevDataDistribution;
     public string Name => ElevDataDistribution.Name;
-    /// <summary>
-    /// All top regions for which is elevation data distribution able to provide elevation data.
-    /// </summary>
-    public IEnumerable<TopRegionViewModel> AllTopRegions { get; } = elevDataDistribution.AllTopRegions.Select(region => new TopRegionViewModel(region));
 }
 
 /// <summary>

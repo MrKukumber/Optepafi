@@ -125,8 +125,8 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// <param name="templateViewModel">ViewModel of template according to which are searching algorithms looked for.</param>
     /// <param name="mapFormatViewModel">ViewModel of map format according to which are searching algorithms looked for.</param>
     /// <param name="userModelTypeViewModel">ViewModel of user model type according to which are searching algorithms looked for.</param>
-    /// <returns>Usable searching algorithm collection. If some of provided ViewModels is null, returns null.</returns>
-    public IReadOnlyCollection<SearchingAlgorithmViewModel>? GetUsableAlgorithms(
+    /// <returns>Usable searching algorithm collection. If some of provided ViewModels is null, returns blank collection.</returns>
+    public HashSet<SearchingAlgorithmViewModel> GetUsableAlgorithms(
         TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel, UserModelTypeViewModel? userModelTypeViewModel)
     {
         if (templateViewModel is not null && mapFormatViewModel is not null && userModelTypeViewModel is not null)
@@ -140,11 +140,11 @@ public abstract class PFSettingsModelView : ModelViewBase
                 HashSet<ISearchingAlgorithm> usableSearchingAlgorithms = SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreRep);
                 usableSearchingAlgorithms.IntersectWith(usableSearchingAlgorithmsForUserModelType);
                 usableSearchingAlgorithmViewModels.UnionWith(usableSearchingAlgorithms
-                        .Select(searchingAlgorithm => new SearchingAlgorithmViewModel(searchingAlgorithm)));
+                        .Select(searchingAlgorithm => new SearchingAlgorithmViewModel(searchingAlgorithm)).ToHashSet());
             }
             return usableSearchingAlgorithmViewModels;
         }
-        return null;
+        return [];
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// That means it returns all templates for which exist at least one corresponding map representations implementation.
     /// </summary>
     /// <returns>Collection of usable templates.</returns>
-    public IEnumerable<TemplateViewModel> GetAllUsableTemplates()
+    public HashSet<TemplateViewModel> GetAllUsableTemplates()
     {
         var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
         return usableTemplateMapFormatCombs
@@ -180,21 +180,23 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// <param name="templateViewModel">ViewModel of template whose usability is checked.</param>
     /// <param name="mapFormatViewModel">ViewModel of map format whose usability is checked.</param>
     /// <returns>True if they are usable combination. False otherwise.</returns>
-    public bool AreTheyUsableCombination(TemplateViewModel templateViewModel, MapFormatViewModel mapFormatViewModel)
+    public bool AreTheyUsableCombination(TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel)
     {
+        if (templateViewModel is null || mapFormatViewModel is null) return false;
         var usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
         return SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps.ToArray()).Count > 0;
     }
     
     /// <summary>
     /// Returns all user model types which are tied to provided template and represent computing user models.
+    /// If provided template is null, returns blank collection.
     /// </summary>
     /// <param name="templateViewModel">ViewModel of template to which user model must be tied.</param>
-    /// <returns></returns>
-    public IReadOnlyCollection<UserModelTypeViewModel>? GetUsableUserModelTypes(
+    /// <returns>Collection of user model types which are tied to provided template.</returns>
+    public IReadOnlyCollection<UserModelTypeViewModel> GetUsableUserModelTypes(
         TemplateViewModel? templateViewModel)
     {
-        return templateViewModel is null ? null : UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
+        return templateViewModel is null ? [] : UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
             .Where(userModelType => UserModelManager.Instance.DoesRepresentComputingModel(userModelType))
             .Select(usableUserModelType => new UserModelTypeViewModel(usableUserModelType))
             .ToHashSet();

@@ -12,7 +12,7 @@
     <DockPanel>
         <TextBlock Name="PathFindingSettingsHeaderTextBlock" Text="Path finding session settings" DockPanel.Dock="Top" HorizontalAlignment="Center" ></TextBlock>
         <Grid ColumnDefinitions="* *" DockPanel.Dock="Bottom" Margin="20">
-            <Button Name="ContinueToRelevanceFeedbackButton" Content="Continue" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding ProceedTroughMapRepreCreationCommand}"></Button>
+            <Button Name="ProceedingToMapRepreCreation" Content="Continue" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding ProceedTroughMapRepreCreationCommand}"/>
         </Grid>
         <Grid ColumnDefinitions="* *" RowDefinitions="* *">
             <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -52,7 +52,7 @@
                 <ComboBox Name="AlgorithmSelectingComboBox" ItemsSource="{Binding UsableSearchingAlgorithms}" SelectedItem="{Binding SelectedSearchingAlgorithm}">
                     <ComboBox.IsEnabled>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
-                            <Binding Path="SelectedTemplate" 
+                            <Binding Path="SelectedTemplate"
                                      Converter="{x:Static ObjectConverters.IsNotNull}"/>
                             <Binding Path="CurrentlyUsedMapFormat"
                                      Converter="{x:Static ObjectConverters.IsNotNull}"/>

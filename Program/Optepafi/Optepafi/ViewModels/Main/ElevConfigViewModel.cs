@@ -26,9 +26,11 @@ namespace Optepafi.ViewModels.Main;
 
 /// <summary>
 /// ViewModel which is responsible for control over elevation data configuration mechanism.
-/// This is a special type of ViewModel because all instances of this ViewModel use the same one instance of <c>ElevDtaModelView</c>.
-/// This design is intentional so instance of this ModelView does not have to be created every time when new elev. data configuring ViewModel is created. Elevation data ModelView does not bear any data so there is no flaw in having only one its instance in whole application.
-/// Its tasks include:
+/// This is a special type of ViewModel because all instances of this ViewModel use the same one instance of <c>ElevDataModelView</c> singleton.
+/// It also is special in that way it is designed and intended to be used in dialog windows. 
+/// Singleton design of mentioned ModelView is intentional so instance of this ModelView could be used in application on more places at once.
+/// It opens opportunity for having elevation configuration ViewModels opened simultaneously on multiple places. ModelView ensures that this simultaneous opening will run flawlessly.
+/// Among tasks of this ViewModel belongs:
 /// - overseeing of elevation data configuration. It secures validity of actions done by user. It reacts to results of data machinations by processing and providing meaningful information to be shown to user.
 /// - understanding principles of elevation data retrieval and removal. Understanding hierarchy of regions.
 /// - selection of currently used elevation data distribution.
@@ -126,7 +128,9 @@ public class ElevConfigViewModel : ViewModelBase
         ReturnCommand = ReactiveCommand.Create(() => _currentElevDataDist);
         
         _currentAvailableRegions = this.WhenAnyValue(x => x.CurrentElevDataDist)
-            .Select(ceds => ceds?.AllTopRegions.SelectMany(topRegion => GetAllSubRegions(topRegion)))
+            .Select(ceds => ceds is null 
+                ? null : ElevDataModelView.Instance.TopRegionsOfAllDistributions[ceds]
+                    .SelectMany(topRegion => GetAllSubRegions(topRegion))) 
             .ToProperty(this, nameof(CurrentAvailableRegions));
         _credentialsAreRequired = this.WhenAnyValue( x => x.CurrentElevDataDist)
             .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel)
@@ -245,10 +249,11 @@ public class ElevConfigViewModel : ViewModelBase
     /// </summary>
     public bool CredentialsAreRequired => _credentialsAreRequired.Value;
     private ObservableAsPropertyHelper<bool> _credentialsAreRequired;
+    
     /// <summary>
     /// Reactive command used for downloading of elevation data for currently selected region.
-    /// Firstly it sets currently selected regions and its sub-regions presence state to <c>IsDownloading</c>.
-    /// Then according to distributions requirement fo credentials it calls asynchronously correct method on ModelView for downloading of elevation data which correspond to selected region.
+    /// Firstly it sets currently selected region to state <c>IsDownloading</c> and its sub-regions presence state to <c>IsDownloadingAsSubregion</c> .
+    /// Then according to distributions requirement for credentials it calls asynchronously correct method on ModelView for downloading of elevation data which correspond to selected region.
     /// It receives result of this download.
     /// It the lets selected region and its subregions update their presence status.
     /// In the end it processes result of download so that user could be informed about it.

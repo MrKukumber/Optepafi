@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using Avalonia.Data.Converters;
+using DynamicData;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews.Main;
@@ -53,10 +54,10 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         _settingsMv = settingsMv;
         _mapRepreCreatingMv = mapRepreCreatingMv;
 
-        _usableTemplates = _settingsMv.GetAllUsableTemplates();
-        _usableMapFormats = _settingsMv.GetAllUsableMapFormats();
-        _usableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
-        _usableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
+        UsableTemplates = _settingsMv.GetAllUsableTemplates();
+        UsableMapFormats = _settingsMv.GetAllUsableMapFormats(); 
+        UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
+        UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
 
         this.WhenAnyValue(x => x.CurrentlySelectedElevDataDistribution)
             .Subscribe(currentlySelectedElevDataDistribution =>
@@ -77,17 +78,19 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
             .Subscribe(selectedTemplate =>
             {
                 _settingsMv.SetTemplate(selectedTemplate);
-                if (selectedTemplate is not null && CurrentlyUsedMapFormat is not null)
+                if (!_settingsMv.AreTheyUsableCombination(selectedTemplate, CurrentlyUsedMapFormat))
                 {
-                    if (!_settingsMv.AreTheyUsableCombination(selectedTemplate, CurrentlyUsedMapFormat))
-                    {
-                        CurrentlyUsedMapFormat = null;
-                        SelectedMapFileName = null;
-                        SelectedMapFilePath = null;
-                    }
+                    CurrentlyUsedMapFormat = null;
+                    SelectedMapFileName = null;
+                    SelectedMapFilePath = null;
                 }
-
                 UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(selectedTemplate);
+                if (!UsableUserModelTypes.Contains(CurrentlyUsedUserModelType))
+                {
+                    CurrentlyUsedMapFormat = null;
+                    SelectedUserModelFileName = null;
+                    SelectedUserModelFilePath = null;
+                }
             });
 
         this.WhenAnyValue(x => x.CurrentlyUsedMapFormat)
@@ -105,8 +108,20 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
             {
                 _settingsMv.SetSearchingAlgorithm(selectedSearchingAlgorithm);
             });
-        
 
+        this.WhenAnyValue(x => x.UsableSearchingAlgorithms)
+            .Subscribe(usableSearchingAlgorithms =>
+            {
+                if (SelectedSearchingAlgorithm is not null && !usableSearchingAlgorithms.Contains( SelectedSearchingAlgorithm))
+                    SelectedSearchingAlgorithm = null;
+            });
+        this.WhenAnyValue(x => x.UsableTemplates)
+            .Subscribe(usableTemplates =>
+            {
+                if (SelectedTemplate is not null && !usableTemplates.Contains(SelectedTemplate))
+                    SelectedTemplate = null;
+            });
+        
         LoadMapCommand = ReactiveCommand.CreateFromObservable(((Stream, string) mapFileStreamAndPath) => Observable
             .StartAsync(async cancellationToken =>
             {
@@ -202,12 +217,14 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         {
             CurrentlyUsedMapFormat = settingsMv.GetCorrespondingMapFormat(Path.GetFileName(settingsMv.DefaultMapFilePath));
             var userModelType = settingsMv.GetCorrespondingUserModelType(Path.GetFileName(settingsMv.DefaultUserModelFilePath));
-            CurrentlyUsedUserModelType = userModelType is not null && UsableUserModelTypes is not null && UsableUserModelTypes.Contains(userModelType) ? userModelType : CurrentlyUsedUserModelType; 
+            CurrentlyUsedUserModelType = userModelType is not null && UsableUserModelTypes.Contains(userModelType) ? userModelType : CurrentlyUsedUserModelType; 
             
             UsableSearchingAlgorithms = settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
             SearchingAlgorithmViewModel? searchingAlgorithm = settingsMv.DefaultSearchingAlgorithm;
-            if (searchingAlgorithm is not null && UsableSearchingAlgorithms is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
+            if (searchingAlgorithm is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
+            {
                 SelectedSearchingAlgorithm = searchingAlgorithm;
+            }
         }
         
         if (CurrentlyUsedMapFormat is not null && settingsMv.DefaultMapFilePath is not null)
@@ -317,12 +334,12 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// Collection of usable searching algorithms in current state of parameter setting.
     /// It raises notification about change of its value.
     /// </summary>
-    public IReadOnlyCollection<SearchingAlgorithmViewModel>? UsableSearchingAlgorithms
+    public IReadOnlySet<SearchingAlgorithmViewModel> UsableSearchingAlgorithms
     {
         get => _usableSearchingAlgorithms;
         set => this.RaiseAndSetIfChanged(ref _usableSearchingAlgorithms, value);
     }
-    private IReadOnlyCollection<SearchingAlgorithmViewModel>? _usableSearchingAlgorithms;
+    private IReadOnlySet<SearchingAlgorithmViewModel> _usableSearchingAlgorithms;
     
     
     /// <summary>
@@ -399,12 +416,12 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// Collection of usable user model types in current state of parameter setting.
     /// It raises notification about change of its value.
     /// </summary>
-    public IReadOnlyCollection<UserModelTypeViewModel>? UsableUserModelTypes
+    public IReadOnlyCollection<UserModelTypeViewModel> UsableUserModelTypes
     {
         get => _usableUserModelTypes;
         set => this.RaiseAndSetIfChanged(ref _usableUserModelTypes, value);
     }
-    private IReadOnlyCollection<UserModelTypeViewModel>? _usableUserModelTypes;
+    private IReadOnlyCollection<UserModelTypeViewModel> _usableUserModelTypes;
     
     
     /// <summary>

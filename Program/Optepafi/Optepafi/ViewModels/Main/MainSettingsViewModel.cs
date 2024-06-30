@@ -36,8 +36,8 @@ public class MainSettingsViewModel : ViewModelBase
     {
         _mainSettingsMv = mainSettingsMv;
 
-        _currentElevDataDistribution = mainSettingsMv.CurrentElevDataDistribution;
-        _currentCulture = mainSettingsMv.CurrentCulture;
+        CurrentElevDataDistribution = mainSettingsMv.CurrentElevDataDistribution;
+        CurrentCulture = mainSettingsMv.CurrentCulture;
         Assets.Localization.Local.Culture = _currentCulture;
         
         this.WhenAnyValue(x => x.CurrentCulture)
@@ -47,10 +47,9 @@ public class MainSettingsViewModel : ViewModelBase
         
         
         ElevConfigInteraction = new Interaction<ElevConfigViewModel, ElevDataDistributionViewModel?>();
-        var elevDataConfig = new ElevConfigViewModel(_currentElevDataDistribution);
         OpenElevConfigCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            CurrentElevDataDistribution = await ElevConfigInteraction.Handle(elevDataConfig);
+            CurrentElevDataDistribution = await ElevConfigInteraction.Handle(new ElevConfigViewModel(CurrentElevDataDistribution));
         });
         GoToMainMenuCommand = ReactiveCommand.Create(() => { });
         
@@ -89,7 +88,7 @@ public class MainSettingsViewModel : ViewModelBase
     /// <summary>
     /// Reactive command for showing elevation data configuration to user so he could manage elevation data download and removal.
     /// It is also used for setting of currently used elevation data distribution.
-    /// Command calls for handling of elevation data configuration interaction. This interaction is handled by corresponding View.
+    /// Command calls for handling of elevation data configuration interaction. This interaction is handled by corresponding View. Always new instance of <c>ElevConfigViewModel</c> is passed to interaction.
     /// After interactions end its returned value is set to currently used data distribution parameter. 
     /// </summary>
     public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }

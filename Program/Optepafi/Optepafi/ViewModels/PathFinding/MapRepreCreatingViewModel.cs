@@ -45,8 +45,11 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
         _mapRepreCreatingMv = mapRepreCreatingMv;
         Activator = new ViewModelActivator();
 
-        IObservable<bool> isAwaitingElevDataAbsenceResolution = this.WhenAnyValue(x => x.IsAwaitingElevDataAbsenceResolution);
-        IObservable<bool> isAwaitingMapNotSupportedByElevDataDistributionResolution= this.WhenAnyValue(x => x.IsAwaitingMapNotSupportedByElevDataDistributionResolution);
+        
+        IObservable<bool> isAwaitingResolution = this.WhenAnyValue(
+            x => x.IsAwaitingElevDataAbsenceResolution,
+            x => x.IsAwaitingMapNotSupportedByElevDataDistributionResolution,
+            (a,b) => a || b);
         
         CheckPrerequisitesCommand = ReactiveCommand.CreateFromTask(async ct =>
         {
@@ -66,9 +69,6 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
             return PrerequisitiesCheckResult.Ok;
         });
 
-        ReturnCommand = ReactiveCommand.Create(() => false, 
-                isAwaitingElevDataAbsenceResolution.CombineLatest(isAwaitingMapNotSupportedByElevDataDistributionResolution,
-                    (x,y) => x || y));
         
         CreateMapRepreCommand = ReactiveCommand.CreateFromObservable(
             () => Observable
@@ -108,7 +108,8 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
             }
         });
 
-        _isMapRepreCreateCommandExecuting = CreateMapRepreCommand.IsExecuting
+        _isMapRepreCreateCommandExecuting = this.WhenAnyObservable(
+            x => x.CreateMapRepreCommand.IsExecuting)
             .ToProperty(this, nameof(IsMapRepreCreateCommandExecuting));
         _isAwaitingElevDataAbsenceResolution = this.WhenAnyObservable(
                 x => x.CreateMapRepreCommand.IsExecuting,
@@ -123,6 +124,8 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                 x => x.CheckPrerequisitesCommand,
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution)
             .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataDistributionResolution));
+        
+        ReturnCommand = ReactiveCommand.Create(() => false, isAwaitingResolution);
         
         this.WhenActivated(disposalbes =>
         {
