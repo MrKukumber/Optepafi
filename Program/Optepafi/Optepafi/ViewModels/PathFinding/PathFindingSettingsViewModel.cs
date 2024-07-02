@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,8 +6,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Security;
 using System.Threading.Tasks;
-using Avalonia.Data.Converters;
-using DynamicData;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews.Main;

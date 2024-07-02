@@ -1,0 +1,93 @@
+\babel@toc {czech}{}\relax 
+\contentsline {chapter}{Úvod}{7}{chapter*.2}%
+\contentsline {chapter}{\numberline {1}Nápověda k~sazbě}{8}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Úprava práce}{8}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Jednoduché příklady}{8}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Matematické vzorce a výrazy}{9}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Definice, věty, důkazy, \dots }{11}{section.1.4}%
+\contentsline {chapter}{\numberline {2}Odkazy na literaturu}{12}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Několik ukázek}{12}{section.2.1}%
+\contentsline {chapter}{\numberline {3}Tabulky, obrázky, programy}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Tabulky}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Obrázky}{14}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Programy}{14}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Formát PDF/A}{19}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Obecné informácie o aplikácii}{20}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Motivácia}{20}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Aspekty hľadania najrýchlejšej trasy (v OB)}{20}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Mapy}{21}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Mapové reprezentácie}{21}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Užívateľské modely}{22}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}Výškové dáta}{22}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}Atribútové template-y}{23}{subsection.5.2.5}%
+\contentsline {subsection}{\numberline {5.2.6}Vyhľadávacie algoritmy}{23}{subsection.5.2.6}%
+\contentsline {section}{\numberline {5.3}Zvolené prostriedky}{25}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Použitý programovací jazyk}{25}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Užívateľské rozhranie}{25}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Architektúra Model-View-ViewModel (MVVM)}{26}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Reaktívne programovanie}{26}{subsection.5.3.4}%
+\contentsline {chapter}{\numberline {6}Architektúra ako celok}{27}{chapter.6}%
+\contentsline {section}{\numberline {6.1}MVVM(MV) návrhový vzor}{27}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}View}{27}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}View model}{28}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Model view}{29}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}Model}{30}{subsection.6.1.4}%
+\contentsline {section}{\numberline {6.2}Session-y + \textit {hlavné okno}}{32}{section.6.2}%
+\contentsline {chapter}{Závěr}{33}{chapter*.11}%
+\contentsline {chapter}{Literatura}{34}{chapter*.12}%
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\babel@toc {czech}{}\relax 
+\contentsline {chapter}{Seznam obr\'azk\r {u}}{36}{chapter*.13}%
+\contentsline {chapter}{Seznam použitých zkratek}{37}{chapter*.14}%
+\contentsline {chapter}{\numberline {A}Přílohy}{38}{appendix.A}%
+\contentsline {section}{\numberline {A.1}První příloha}{38}{section.A.1}%

@@ -1,0 +1,544 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{Andel07}{book}{}
+      \name{author}{1}{}{%
+        {{hash=2fad11038fc64bcc1dfc944587cc4569}{%
+           family={Anděl},
+           familyi={A\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Praha}%
+      }
+      \list{publisher}{1}{%
+        {Matfyzpress}%
+      }
+      \strng{namehash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{fullhash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{bibnamehash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{authorbibnamehash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{authornamehash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{authorfullhash}{2fad11038fc64bcc1dfc944587cc4569}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{80-7378-001-1}
+      \field{series}{Druhé opravené vydání}
+      \field{title}{Základy matematické statistiky}
+      \field{year}{2007}
+    \endentry
+    \entry{ThesisTemplate}{online}{}
+      \name{editor}{1}{}{%
+        {{hash=7edf5301e657e5ba0d693bc1bf33c87b}{%
+           family={Mareš},
+           familyi={M\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{fullhash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{bibnamehash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{editorbibnamehash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{editornamehash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{editorfullhash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \field{extraname}{1}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{editor}
+      \field{labeltitlesource}{title}
+      \field{title}{Šablona závěrečné práce na MFF UK v \LaTeX{}u}
+      \field{urlday}{2}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://gitlab.mff.cuni.cz/teaching/thesis-templates/thesis-cs
+      \endverb
+      \verb{url}
+      \verb https://gitlab.mff.cuni.cz/teaching/thesis-templates/thesis-cs
+      \endverb
+    \endentry
+    \entry{ThesisWeb}{online}{}
+      \name{author}{1}{}{%
+        {{hash=7edf5301e657e5ba0d693bc1bf33c87b}{%
+           family={Mareš},
+           familyi={M\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{fullhash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{bibnamehash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{authorbibnamehash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{authornamehash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \strng{authorfullhash}{7edf5301e657e5ba0d693bc1bf33c87b}
+      \field{extraname}{2}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Jak psát bakalářskou (či jinou) práci}
+      \field{urlday}{2}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://mj.ucw.cz/vyuka/bc/
+      \endverb
+      \verb{url}
+      \verb https://mj.ucw.cz/vyuka/bc/
+      \endverb
+    \endentry
+    \entry{KaplanMeier58}{article}{}
+      \name{author}{2}{}{%
+        {{hash=bed2cb36936919857be6848c7e32e975}{%
+           family={Kaplan},
+           familyi={K\bibinitperiod},
+           given={E.\bibnamedelimi L.},
+           giveni={E\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=ca19d18a019b7beef5efc77a12c8c652}{%
+           family={Meier},
+           familyi={M\bibinitperiod},
+           given={P.},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{78b92d90bed0870cdfcbd10478b3864c}
+      \strng{fullhash}{78b92d90bed0870cdfcbd10478b3864c}
+      \strng{bibnamehash}{78b92d90bed0870cdfcbd10478b3864c}
+      \strng{authorbibnamehash}{78b92d90bed0870cdfcbd10478b3864c}
+      \strng{authornamehash}{78b92d90bed0870cdfcbd10478b3864c}
+      \strng{authorfullhash}{78b92d90bed0870cdfcbd10478b3864c}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the American Statistical Association}
+      \field{number}{282}
+      \field{title}{Nonparametric estimation from incomplete observations}
+      \field{volume}{53}
+      \field{year}{1958}
+      \field{pages}{457\bibrangedash 481}
+      \range{pages}{25}
+    \endentry
+    \entry{Cox72}{article}{}
+      \name{author}{1}{}{%
+        {{hash=2d4d0b24655232a7821096d23c2354b5}{%
+           family={Cox},
+           familyi={C\bibinitperiod},
+           given={D.\bibnamedelimi R.},
+           giveni={D\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \strng{namehash}{2d4d0b24655232a7821096d23c2354b5}
+      \strng{fullhash}{2d4d0b24655232a7821096d23c2354b5}
+      \strng{bibnamehash}{2d4d0b24655232a7821096d23c2354b5}
+      \strng{authorbibnamehash}{2d4d0b24655232a7821096d23c2354b5}
+      \strng{authornamehash}{2d4d0b24655232a7821096d23c2354b5}
+      \strng{authorfullhash}{2d4d0b24655232a7821096d23c2354b5}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the Royal Statistical Society, Series B}
+      \field{number}{2}
+      \field{title}{Regression models and life-tables (with {D}iscussion)}
+      \field{volume}{34}
+      \field{year}{1972}
+      \field{pages}{187\bibrangedash 220}
+      \range{pages}{34}
+    \endentry
+    \entry{Student08}{article}{}
+      \name{author}{1}{}{%
+        {{hash=f5c0a1c9384c2e25e79ba1abf5d9a037}{%
+           family={Student},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{f5c0a1c9384c2e25e79ba1abf5d9a037}
+      \strng{fullhash}{f5c0a1c9384c2e25e79ba1abf5d9a037}
+      \strng{bibnamehash}{f5c0a1c9384c2e25e79ba1abf5d9a037}
+      \strng{authorbibnamehash}{f5c0a1c9384c2e25e79ba1abf5d9a037}
+      \strng{authornamehash}{f5c0a1c9384c2e25e79ba1abf5d9a037}
+      \strng{authorfullhash}{f5c0a1c9384c2e25e79ba1abf5d9a037}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Biometrika}
+      \field{title}{On the probable error of the mean}
+      \field{volume}{6}
+      \field{year}{1908}
+      \field{pages}{1\bibrangedash 25}
+      \range{pages}{25}
+    \endentry
+    \entry{Andel98}{book}{}
+      \name{author}{1}{}{%
+        {{hash=2fad11038fc64bcc1dfc944587cc4569}{%
+           family={Anděl},
+           familyi={A\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Praha}%
+      }
+      \list{publisher}{1}{%
+        {Matfyzpress}%
+      }
+      \strng{namehash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{fullhash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{bibnamehash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{authorbibnamehash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{authornamehash}{2fad11038fc64bcc1dfc944587cc4569}
+      \strng{authorfullhash}{2fad11038fc64bcc1dfc944587cc4569}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{80-85863-27-8}
+      \field{series}{Druhé přepracované vydání}
+      \field{title}{Statistické metody}
+      \field{year}{1998}
+    \endentry
+    \entry{LehmannCasella98}{book}{}
+      \name{author}{2}{}{%
+        {{hash=808b954963d0bddf6d17af82a209aaeb}{%
+           family={Lehmann},
+           familyi={L\bibinitperiod},
+           given={E.\bibnamedelimi L.},
+           giveni={E\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=8a4df6a0714cf1f4a59f8e9b5a2637c6}{%
+           family={Casella},
+           familyi={C\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{1}{%
+        {Springer-Verlag}%
+      }
+      \strng{namehash}{133e2e88efd9def61cba5236a267a283}
+      \strng{fullhash}{133e2e88efd9def61cba5236a267a283}
+      \strng{bibnamehash}{133e2e88efd9def61cba5236a267a283}
+      \strng{authorbibnamehash}{133e2e88efd9def61cba5236a267a283}
+      \strng{authornamehash}{133e2e88efd9def61cba5236a267a283}
+      \strng{authorfullhash}{133e2e88efd9def61cba5236a267a283}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{0-387-98502-6}
+      \field{series}{{S}econd {E}dition}
+      \field{title}{Theory of Point Estimation}
+      \field{year}{1998}
+    \endentry
+    \entry{DempsterLairdRubin77}{article}{}
+      \name{author}{3}{}{%
+        {{hash=09d592a5388131e31704c9c4464439c9}{%
+           family={Dempster},
+           familyi={D\bibinitperiod},
+           given={A.\bibnamedelimi P.},
+           giveni={A\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=fe02498c1cfcd510f8d219a94a103188}{%
+           family={Laird},
+           familyi={L\bibinitperiod},
+           given={N.\bibnamedelimi M.},
+           giveni={N\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=fa537601df11ba114c0c74ca6806de99}{%
+           family={Rubin},
+           familyi={R\bibinitperiod},
+           given={D.\bibnamedelimi B.},
+           giveni={D\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{c8910ee3ba86b99d043c03162dbbb660}
+      \strng{fullhash}{8a5d801114e869ed61f35e1fd30408ef}
+      \strng{bibnamehash}{8a5d801114e869ed61f35e1fd30408ef}
+      \strng{authorbibnamehash}{8a5d801114e869ed61f35e1fd30408ef}
+      \strng{authornamehash}{c8910ee3ba86b99d043c03162dbbb660}
+      \strng{authorfullhash}{8a5d801114e869ed61f35e1fd30408ef}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the Royal Statistical Society, Series B}
+      \field{number}{1}
+      \field{title}{Maximum likelihood from incomplete data via the {EM} algorithm}
+      \field{volume}{39}
+      \field{year}{1977}
+      \field{pages}{1\bibrangedash 38}
+      \range{pages}{38}
+    \endentry
+    \entry{Genberget08}{article}{}
+      \name{author}{10}{}{%
+        {{hash=94ecad8cc7d5e014defa51de9ad20c1b}{%
+           family={Genberg},
+           familyi={G\bibinitperiod},
+           given={B.\bibnamedelimi L.},
+           giveni={B\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=0e8f561f32fc3c201bf8716f0be896c2}{%
+           family={Kulich},
+           familyi={K\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=289b1b9bbee3d4852ff9a5271bd956a4}{%
+           family={Kawichai},
+           familyi={K\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+        {{hash=c7d3d67350822f53654e668167030817}{%
+           family={Modiba},
+           familyi={M\bibinitperiod},
+           given={P.},
+           giveni={P\bibinitperiod}}}%
+        {{hash=88e116b4d6a171ef7c94c28118ac8349}{%
+           family={Chingono},
+           familyi={C\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=ccc561372ef26cfed04b5c1071ff49f5}{%
+           family={Kilonzo},
+           familyi={K\bibinitperiod},
+           given={G.\bibnamedelimi P.},
+           giveni={G\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=5a7ebe80e0349c3d7415240313b31150}{%
+           family={Richter},
+           familyi={R\bibinitperiod},
+           given={L.},
+           giveni={L\bibinitperiod}}}%
+        {{hash=b7efc171d4b24d9f97661844f178c354}{%
+           family={Pettifor},
+           familyi={P\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=9e42c3769ed27396246cb61effe426e3}{%
+           family={Sweat},
+           familyi={S\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=13111568c52570127e160fe4a4e5fa8f}{%
+           family={Celentano},
+           familyi={C\bibinitperiod},
+           given={D.\bibnamedelimi D.},
+           giveni={D\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \strng{namehash}{a4909be3a4c1c4ff8cbbcdba71e22e34}
+      \strng{fullhash}{3d6f4e14be4c4343c06b479d5d520833}
+      \strng{bibnamehash}{3d6f4e14be4c4343c06b479d5d520833}
+      \strng{authorbibnamehash}{3d6f4e14be4c4343c06b479d5d520833}
+      \strng{authornamehash}{a4909be3a4c1c4ff8cbbcdba71e22e34}
+      \strng{authorfullhash}{3d6f4e14be4c4343c06b479d5d520833}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Acquired Immune Deficiency Syndrome}
+      \field{title}{{HIV} risk behaviors in Sub-{S}aharan {A}frica and {N}orthern {T}hailand: {B}aseline behavioral data from project {A}ccept}
+      \field{volume}{49}
+      \field{year}{2008}
+      \field{pages}{309\bibrangedash 319}
+      \range{pages}{11}
+    \endentry
+    \entry{CoJeOrientak}{online}{}
+      \name{author}{1}{}{%
+        {{hash=3216274e689d86829d084b7341daae03}{%
+           family={SZOS},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{3216274e689d86829d084b7341daae03}
+      \strng{fullhash}{3216274e689d86829d084b7341daae03}
+      \strng{bibnamehash}{3216274e689d86829d084b7341daae03}
+      \strng{authorbibnamehash}{3216274e689d86829d084b7341daae03}
+      \strng{authornamehash}{3216274e689d86829d084b7341daae03}
+      \strng{authorfullhash}{3216274e689d86829d084b7341daae03}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Čo je to orientačný beh?}
+      \field{urlday}{29}
+      \field{urlmonth}{6}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.orienteering.sk/page/co-je-to-orientacny-beh
+      \endverb
+      \verb{url}
+      \verb https://www.orienteering.sk/page/co-je-to-orientacny-beh
+      \endverb
+    \endentry
+    \entry{WpfGuide}{article}{}
+      \name{author}{5}{}{%
+        {{hash=9ecd74085a04ef7487f1cde27f0a0cec}{%
+           family={adegeo},
+           familyi={a\bibinitperiod}}}%
+        {{hash=7b27e1f22ab97123a8640eff4df4e7f1}{%
+           family={ihsansfd},
+           familyi={i\bibinitperiod}}}%
+        {{hash=aa0bc51fc7611b6c341ccf54809623a1}{%
+           family={alexbuckgit},
+           familyi={a\bibinitperiod}}}%
+        {{hash=fdc4e8c198a358bf86f3ad1ca7e7aa3b}{%
+           family={v-trisshores},
+           familyi={v\bibinithyphendelim t\bibinitperiod}}}%
+        {{hash=b9e780ad248d7aa3264d71728ec96ad1}{%
+           family={DCtheGeek},
+           familyi={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{7f0d98ee5be451b87b319fda5fed50ca}
+      \strng{fullhash}{17e2412df9ef86698fb4ccc159933faa}
+      \strng{bibnamehash}{17e2412df9ef86698fb4ccc159933faa}
+      \strng{authorbibnamehash}{17e2412df9ef86698fb4ccc159933faa}
+      \strng{authornamehash}{7f0d98ee5be451b87b319fda5fed50ca}
+      \strng{authorfullhash}{17e2412df9ef86698fb4ccc159933faa}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Desktop Guide (WPF .NET)}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://learn.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-8.0
+      \endverb
+      \verb{url}
+      \verb https://learn.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-8.0
+      \endverb
+    \endentry
+    \entry{WhatIsMAUI}{article}{}
+      \name{author}{5}{}{%
+        {{hash=ed9e73f338f985ff26c6557a50ef08cf}{%
+           family={davidbritch},
+           familyi={d\bibinitperiod}}}%
+        {{hash=bf24615ba3f78d0c4d0d235c6966d825}{%
+           family={mhrastegari},
+           familyi={m\bibinitperiod}}}%
+        {{hash=c9da387f3129e8a3b4eb3aff3946e5e7}{%
+           family={jonpryor},
+           familyi={j\bibinitperiod}}}%
+        {{hash=07cc78e40eb423b75dc8ca42785cb127}{%
+           family={Banovvv},
+           familyi={B\bibinitperiod}}}%
+        {{hash=b8c0015eba90b0de274814f9fb4e1177}{%
+           family={jconrey},
+           familyi={j\bibinitperiod}}}%
+      }
+      \strng{namehash}{6f2fb7f7eaae495c19574fcd3727616d}
+      \strng{fullhash}{2f652ba4023c99fc2e2ce5f776b45aeb}
+      \strng{bibnamehash}{2f652ba4023c99fc2e2ce5f776b45aeb}
+      \strng{authorbibnamehash}{2f652ba4023c99fc2e2ce5f776b45aeb}
+      \strng{authornamehash}{6f2fb7f7eaae495c19574fcd3727616d}
+      \strng{authorfullhash}{2f652ba4023c99fc2e2ce5f776b45aeb}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{What is .NET MAUI?}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://learn.microsoft.com/en-us/dotnet/maui/what-is-maui?view=net-maui-8.0
+      \endverb
+      \verb{url}
+      \verb https://learn.microsoft.com/en-us/dotnet/maui/what-is-maui?view=net-maui-8.0
+      \endverb
+    \endentry
+    \entry{AvaloniaMauiComparison}{article}{}
+      \name{author}{1}{}{%
+        {{hash=a70a0f8b3b330417fec5c512494b78e0}{%
+           family={JAMES},
+           familyi={J\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{a70a0f8b3b330417fec5c512494b78e0}
+      \strng{fullhash}{a70a0f8b3b330417fec5c512494b78e0}
+      \strng{bibnamehash}{a70a0f8b3b330417fec5c512494b78e0}
+      \strng{authorbibnamehash}{a70a0f8b3b330417fec5c512494b78e0}
+      \strng{authornamehash}{a70a0f8b3b330417fec5c512494b78e0}
+      \strng{authorfullhash}{a70a0f8b3b330417fec5c512494b78e0}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Avalonia UI and MAUI - Something for everyone}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://avaloniaui.net/blog/avalonia-ui-and-maui-something-for-everyone
+      \endverb
+      \verb{url}
+      \verb https://avaloniaui.net/blog/avalonia-ui-and-maui-something-for-everyone
+      \endverb
+    \endentry
+    \entry{AvaloniaDokumentacia}{online}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{Welcome}
+      \field{urlday}{30}
+      \field{urlmonth}{6}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://docs.avaloniaui.net/docs/welcome
+      \endverb
+      \verb{url}
+      \verb https://docs.avaloniaui.net/docs/welcome
+      \endverb
+    \endentry
+    \entry{MVVMDefByAvalonia}{online}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{The MVVM pattern}
+      \field{urlday}{30}
+      \field{urlmonth}{6}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://docs.avaloniaui.net/docs/concepts/the-mvvm-pattern/
+      \endverb
+      \verb{url}
+      \verb https://docs.avaloniaui.net/docs/concepts/the-mvvm-pattern/
+      \endverb
+    \endentry
+    \entry{ReactiveProgrammingByReactiveUI}{online}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{Reactive Programming}
+      \field{urlday}{30}
+      \field{urlmonth}{6}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.reactiveui.net/docs/reactive-programming/index.html
+      \endverb
+      \verb{url}
+      \verb https://www.reactiveui.net/docs/reactive-programming/index.html
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

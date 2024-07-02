@@ -1,0 +1,86 @@
+%%% Vyplňte prosím základní údaje o závěrečné práci (odstraňte \xxx{...}).
+%%% Automaticky se pak vloží na všechna místa, kde jsou potřeba.
+
+% Druh práce:
+%	"bc" pro bakalářskou
+%	"mgr" pro diplomovou
+%	"phd" pro disertační
+%	"rig" pro rigorozní
+\def\ThesisType{bc}
+
+% Název práce v jazyce práce (přesně podle zadání)
+\def\ThesisTitle{Trasy v mapách pro orientační běh}
+
+% Název práce v angličtině
+\def\ThesisTitleEN{Navigation in orienteering maps}
+
+% Jméno autora (vy)
+\def\ThesisAuthor{Matej Kukurugya}
+
+% Rok odevzdání
+\def\YearSubmitted{2024}
+
+% Název katedry nebo ústavu, kde byla práce oficiálně zadána
+% (dle Organizační struktury MFF UK:
+% https://www.mff.cuni.cz/cs/fakulta/organizacni-struktura,
+% případně plný název pracoviště mimo MFF)
+\def\Department{Informatický ústav Univerzity Karlovy}
+\def\DepartmentEN{Computer science institute of Charles University}
+
+% Jedná se o katedru (department) nebo o ústav (institute)?
+\def\DeptType{ústav}
+\def\DeptTypeEN{institute}
+
+% Vedoucí práce: Jméno a příjmení s~tituly
+\def\Supervisor{RNDr. Ondřej Pangrác, Ph.D.}
+
+% Pracoviště vedoucího (opět dle Organizační struktury MFF)
+\def\SupervisorsDepartment{Informatický ústav Univerzity Karlovy}
+\def\SupervisorsDepartmentEN{Computer science institute of Charles University}
+
+% Studijní program (kromě rigorozních prací)
+\def\StudyProgramme{Informatika (B0613A140006)}
+
+% Nepovinné poděkování (vedoucímu práce, konzultantovi, tomu, kdo
+% vám nosil pizzu a vařil čaj apod.)
+\def\Dedication{%
+\xxx{Poděkování.}
+}
+
+% Abstrakt (doporučený rozsah cca 80-200 slov; nejedná se o zadání práce)
+\def\Abstract{
+Původním záměrem této bakalářské práce bylo vytvořit aplikaci, která bude na základe mapových dat hledat vhodnou trasu v prostředí orientačního běhu. Tento záměr však nebyl plně naplněn, neboť až příliš času zabralo vytvoření návrhu a naprogramování samotné aplikace. Tím pádem nezbyl čas na vytvoření vyhledávacích alogirtmů ani mechanizmů na spracováni map na kterých by jse cesty hledaly. Z tohto důvodu vznikla jenom 'skořápka' aplikace, která toho v týhle chvíli sama o sobě nic nedelá.
+Objektový návrh je za to velmi detailně promyšlen a propracován. 
+Tato bakalářská práce tedy v konečném důsledku pojednává právě o objektovém návrhu vytovřené aplikace a myšlenkách aplikovaných v průběhu jeho tvorby. 
+}
+
+% Anglická verze abstraktu
+\def\AbstractEN{
+The prior intention of this bachelor thesis was creating and application which based on map data will look for suitable route in orienteering environment. This intention was not completly fulfilled though. Creating and programming of application itsel took to much time so there was left none for creating of usable searching algorithms nor mechanisms for processing of maps on which routes would be looked for. For this reason the 'eggshell' of application was created which currently does not do nothing usefull. On the other side design of application is thought out and elaborated in detail.
+This bachelor thesis talks in the end specifically about design of created application and ideas applied during its creation process. 
+}
+
+% 3 až 5 klíčových slov (doporučeno) oddělených \sep
+% Hodí se pro nalezení práce podle tématu.
+\def\ThesisKeywords{
+objektový návrh\sep MVVM\sep hledáni tras v otevřeném terénu
+}
+
+\def\ThesisKeywordsEN{
+object desing\sep MVVM\sep path finding in open terrain
+}
+
+% Pokud některá z položek metadat obsahuje TeXové řídící sekvence, je potřeba
+% dodat i verzi v obyčejném textu, která se objeví v metadatech formátu XMP
+% zabudovaných do výstupního souboru PDF. Pokud si nejste jistí, prohlédněte si
+% vygenerovaný soubor thesis.xmpdata.
+\def\ThesisAuthorXMP{\ThesisAuthor}
+\def\ThesisTitleXMP{\ThesisTitle}
+\def\ThesisKeywordsXMP{\ThesisKeywords}
+\def\AbstractXMP{\Abstract}
+
+% Máte-li dlouhý abstrakt a nechceme se mu vejít na informační stranu,
+% můžete použít toto nastavení ke zmenšení písma informační strany.
+% (Uvažte nicméně zkrácení abstraktu, to je často lepší.)
+\def\InfoPageFont{}
+%\def\InfoPageFont{\small}  % odkomentujte pro zmenšení písma
