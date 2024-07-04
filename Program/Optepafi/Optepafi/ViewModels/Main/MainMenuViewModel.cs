@@ -75,6 +75,5 @@ public class MainMenuViewModel : ViewModelBase
     /// It is enabled only when count of all opened sessions does not exceeds maximal sessions count.
     /// </summary>
     public ReactiveCommand<Unit, PathFindingSessionViewModel> CreatePathFindingSessionCommand { get; }
-    
     // public ReactiveCommand<Unit, ModelCreatingSessionViewModel> CreateModelCreatingSessionCommand{ get; }
 }

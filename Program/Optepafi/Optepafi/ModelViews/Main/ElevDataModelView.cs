@@ -34,6 +34,12 @@ public sealed class ElevDataModelView : ModelViewBase
                     .Select(topRegion => new TopRegionViewModel(topRegion)).ToList());
     }
     
+    /// <summary>
+    /// Dictionary, which holds all top regions for all elevation data distributions in application.
+    /// It is used by view model for accessing of region view models, which it can then use for showing them to user.
+    /// This dictionary is key component of this model views ability to be used concurrently at multiple elevation data configurations at the same time.
+    /// It ensures, that all elevation data configurations will hve the same information about presence of regions.
+    /// </summary>
     public Dictionary<ElevDataDistributionViewModel, List<TopRegionViewModel>> TopRegionsOfAllDistributions { get; }
     
     /// <summary>

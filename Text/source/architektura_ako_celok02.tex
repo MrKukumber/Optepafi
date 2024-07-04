@@ -1,12 +1,12 @@
 \chapter{Architektúra ako celok}
 
-O architektúre aplikácie sa dá premýšlať ako o \textit{mriežke}. Je rozdelená na horizontálne (MVVM návrhový vzor) a vertikálne (\textit{session}y) vrstvy. V následujúcich sekciách popíšeme, ako jednotlivé vrstvy vyzerajú, aké su ich úlohy a ako medzi sebou komunikujú.
+O architektúre aplikácie sa dá premýšlať ako o \textit{mriežke}. Je rozdelená na horizontálne (MVVM návrhový vzor) a vertikálne (\textit{session}-y + hlavné okno) vrstvy. V následujúcich sekciách popíšeme, ako jednotlivé vrstvy vyzerajú, aké su ich úlohy a ako medzi sebou komunikujú. Na konci kapitoly je následne k nahliadnutiu diagram \ref{obr02:priklad_struktury} znázorňujúci príklad možnej architektúry aplikácie.   
 
 \section{MVVM(MV) návrhový vzor}\label{MVVMNavrhovyVzor}
 
-Ako už bolo spomenuté v podsekcii \ref{ArchitekturaMVVM}, v aplikácii je využívaný návrhový vzor MVVM s drobnou obmenou. Táto obmena sa týka rozdelenia originálnej vrstvy view model na dve časti: view model a model view. Toto rozdelenie zaručí ešte o niečo lepšiu separáciu kódu a odľahčí tým úlohy view model vrstvy.  
+Ako už bolo spomenuté v podsekcii \ref{ArchitekturaMVVM}, v aplikácii je využívaný návrhový vzor MVVM s drobnou obmenou. Táto obmena sa týka rozdelenia originálnej vrstvy view model na dve časti: view model a model view. Toto rozdelenie zaručí ešte o niečo lepšiu separáciu kódu a odľahčí tým úlohy view model vrstvy. 
 
-MVVM(MV) architektúra teda rozdeluje aplikáciu na 4 vrstvy: View, ViewModel, ModelView a Model. Popis jednotlivých vrstiev je k nahliadnutiu v následujúcich podsekciách. Na konci sekcie je v na obrázku \ref{obr02:horizontalna_struktura}
+MVVM(MV) architektúra teda rozdeluje aplikáciu na 4 vrstvy: View, ViewModel, ModelView a Model. Popis jednotlivých vrstiev je k nahliadnutiu v následujúcich podsekciách. 
 
 \subsection{View}
 
@@ -25,11 +25,11 @@ View vrstva je kompletne implementovaná za pomoci Avalonia UI framework-u. V n�
 
 View vrstva je implementovaná pomocou dvoch jazykov a to C\# a XAML. Pomocu XAML definujeme všetky polohy a tvary grafických objektov a bind-ujeme vlastnosti týchto objektov na vlastnosti z vrstvy View model. Pre každý view máme obecne jeden špecifický XAML súbor ktorým ho implementujeme. Ku väčšine XAML súborov je priradený C\# zdrojový súbor v ktorom sa implementuje takzvaný \textit{code-behind}. V tomto zdrojovom súbore môžeme doplniť všetku funkcionalitu View-u, ktorú nebolo možné vyjadriť jazykom XAML.    
 
-\subsection{View model}
+\subsection{View model}\label{ViewModel}
 
 Druhou v poradí je vrstva View model. Táto vrstva je zodpovedná za logiku spracovania akcií užívateľa oznámených reaktívnym spôsobom View vrstvou a disponuje vedomím toho, aké akcie, v akom poradí sa majú vykonať pre zabezpečenie patričnej reakcie na daný impulz. K tomuto účelu využíva služby nižších vrstiev prostredníctvom volania na vrstve Model view. Tá na základe svojej vnútornej logiky vráti odpoveď s požadovanými údajmi. View model následne spracuje dodané dáta a predostrie ich view-u aby ich mohla ukázať užívateľovi.
 
-View model zároveň, na základe aplikačnej logiky, koriguje a obmedzuje akcie užívateľa a tým zabraňuje vzniku nekonzistentných stavov aplikácie. Taktiež v niektorých prípadoch iniciuje interakcie s inými view modelmi za účelom dodania ích doplňujúcich služieb a aplikačnej logiky do jeho vlastného procesu.
+View model zároveň, na základe aplikačnej logiky, koriguje a obmedzuje akcie užívateľa a tým zabraňuje vzniku nekonzistentných stavov aplikácie. Taktiež v niektorých prípadoch iniciuje interakcie s inými view modelmi za účelom dodania ich doplňujúcich služieb a aplikačnej logiky do jeho vlastného procesu.
 
 
 Podobne ako vo View vrstve sa view modely delia natri základné typy:
@@ -38,13 +38,15 @@ Podobne ako vo View vrstve sa view modely delia natri základné typy:
     
     Každý session view model obsahuje kolekciu príslušných view model-ov ktoré spoločne implementujú mechanizmus daného session-u. Je zvykom, že v jednej chvíli je aktívny iba jeden view model. O aktívnom view modelu informuje session view model naviazané okno, ktoré potom v sebe zobrazuje odpovedajúci view aktívneho view modelu. Informovanie o aktívnom view modelu je aj hlavnou pracovnou náplňou session view modelu.
 
-    K ďalším jeho povinnostiam patrí spracovávanie užívateľom vyvolaných akcií, ktoré sa týkajú samotného naviazaného okna. Príkladom takej akcie môže byť napríklad požiadavka o zatvorenie dotyčného okna.
-    \item \textbf{View model} - reprezentujú zložky, ktorých funkcionalita sa najväčšmi ponáša na obecnú, vyššie popísanú funkcionalitu vrstvy View model. Každý view model vo väčšine prípadov spadá pod réžiu konkrétneho session-u (alebo hlavného okna), pre ktorý implementuje určitú časť jeho mechanizmu. Klasicky sú view modely naviazané na príslušné view-y z View vrstvy. S tými následne reaktívne komunikujú a reagujú na ích podnety. View modely sú navzájom nezávislé. To znamená, že medzi nimi neprebieha takmer žiadna komunikácia ani presun dát. Túto funkciu na seba berie Model view vrstva.
+    K ďalším jeho povinnostiam patrí spracovávanie užívateľom vyvolaných akcií, ktoré sa týkajú samotného viazaného okna. Príkladom takej akcie môže byť požiadavka o zatvorenie dotyčného okna.
+    \item \textbf{View model} - reprezentujú zložky, ktorých funkcionalita sa najväčšmi ponáša na obecnú, vyššie popísanú funkcionalitu vrstvy View model. Každý view model vo väčšine prípadov spadá pod réžiu konkrétneho session-u (alebo hlavného okna), pre ktorý implementuje určitú časť jeho mechanizmu. Klasicky sú view modely naviazané na príslušné view-y z View vrstvy. S tými následne reaktívne komunikujú a reagujú na ich podnety. View modely sú navzájom nezávislé. To znamená, že medzi nimi neprebieha takmer žiadna komunikácia ani presun dát. Túto funkciu na seba berie Model view vrstva.
 
-    Väčšina view modelov by mala byť zahrnutá v zodpovedajúcom session view modele (poprípade Main window view modele). Ten potom zabezpečuje správu toho, ktorý view model je v danej chvíli aktívny. Výnimkou sú view modely, ktoré sú výhradne používane pre interakcie z iných view modelov, ktorým týmto spôsobom doručujú svoje služby. Tieto view modely sú väčšinou vytvorené na mieste interakcie a po jej dokončení zanikajú.
-    \item \textbf{Data view model} - slúžia ako kontajnery pre informácie abstrahované z dát vygenerovaných v Model vrstve. Dáta sú klasicky konvertované do ich zodpovedajúcich view modelov v Model view vrstve a už takto zabalené informácie sú predávané do View model vrstvy kde sú spracované a pomocou vlastností odovzdané vrstve View na vykreslenie. 
+    Väčšina view modelov by mala byť zahrnutá v zodpovedajúcom session view modele (poprípade Main window view modele). Ten potom zabezpečuje správu toho, ktorý view model je v danej chvíli aktívny. Výnimkou sú view modely, ktoré sú výhradne používane pre interakcie z iných view modelov, ktorým týmto spôsobom doručujú svoje služby. 
     
-    Z toho vyplýva, že na to aby nejaký údaj vygenerovaný v Model vrstve mohol byť prezentovaný užívateľovi, musí preňho existovať zodpovedajúci dátový view model. Zároveň na to, aby informácie obsiahnuté v dátovom view modele mohli byť vykreslené pre užívateľa, musí vo View vrstve existovať zodpovedajúci \textit{dátový template}, ktorý sa postará o ích správne grafické znázornenie.
+    Tieto view modely sú väčšinou vytvorené na mieste interakcie a po jej dokončení zanikajú. Pri ich vytvorení im sú zvyčajne predané nejaké vstupné parametre a keď je ich práca dokončená, tak vracajú jej výsledok.
+    \item \textbf{Data view model} - slúžia ako kontajnery pre informácie abstrahované z dát vygenerovaných v Model vrstve. Dáta sú klasicky konvertované do ich zodpovedajúcich view modelov v Model view vrstve a už takto zabalené informácie sú predávané do View model vrstvy kde sú spracované a pomocou vlastností odovzdané vrstve View na vykreslenie. Data view modely môžu dodané informácie drobne upraviť takým spôsobom, aby ich bolo jednoduchšie vo View vrstve zobraziť.
+    
+    Z toho vyplýva, že na to aby nejaký údaj vygenerovaný v Model vrstve mohol byť prezentovaný užívateľovi, musí preňho existovať zodpovedajúci dátový view model. Zároveň na to, aby informácie obsiahnuté v dátovom view modele mohli byť vykreslené pre užívateľa, musí vo View vrstve existovať zodpovedajúci \textit{dátový template}, ktorý sa postará o ich správne grafické znázornenie.
 
     Niektoré dátové view modely nielen že obsahujú informácie príslušných dát ale obsahujú aj dáta samotné. Takéto dátové view modely označujeme pomocou slova \textit{wrapping}. (tvoria akýsi obal okolo dátových inštancií). Táto funkcionalita je dôležitá hlavne v prípadoch, kedy dátový view model slúži taktiež pre spätnú komunikáciu s Model view vrstvou. V takých prípadoch musí byť možné identifikovať, ktorú dátovú inštanciu \uv{obaluje}. Wrapping dátové view modely sú stotožnené s ich dátovým objektom a tiež sa pomocou neho identifikujú.  
 \end{itemize}
@@ -58,45 +60,66 @@ Treťou v poradí je, do klasickej MVVM architektúry pridaná, Model view vrstv
 \begin{itemize}
     \item prijímanie a spracovávanie požiadaviek od View modelu a dodávanie očakávaných výsledkov.  
     \item zabezpečovať vnútro-session-ovú komunikáciu. Model view-y v rámci jedného session-u si na seba držia referencie a predávajú si medzi sebou držané dáta. Táto komunikácia by mala byť vyšším vrstvam skrytá a na povrch by mal byť vidieť iba interface, pomocou ktorého prebieha komunikácia s View modelom.
-    \item konverzia dát, získaných od Model vrstvy, do odpovedajúcich Data view modelov pri ích posielaní do vyšších vrstiev.  
+    \item konverzia dát, získaných od Model vrstvy, do odpovedajúcich Data view modelov pri ich posielaní do vyšších vrstiev.  
 \end{itemize}
 Na druhú stranu medzi jej povinnosti nepatrí kontrola konzistentnosti jej vlastného stavu. O konzistenciu stavu aplikácie sa má starať View model.
 
 V aplikácii používame model view-y dvoch typov:
 \begin{itemize}
-    \item \textbf{Session model view} - odpovedajú jednotlivým session-om. Ich hlavnou a v podstate jedinou úlohou je vytvoriť a distribuovať model view-y odpovedajúce danému session-u. Pri ich tvorbe vytvorí medzi nimi väzby, ktoré sú následne počas behu aplikácie využívané na spomínanú vnútro-session-ovú komunikáciu. 
+    \item \textbf{Session model view} + \textit{Main window model view}  - odpovedajú jednotlivým session-om. (Viac informácií o session-och je možné nájsť v sekcii \ref{Sessions}). 
     
-    Každému session model view-u odpovedá jeden session view model. Ten pri svojej konštrukcii predá model view-y, dodané v session model view-e, zodpovedajúcim view modelom.   
-    \item \textbf{Model view} - typ, ktorý nesie vyššie popísanú funkcionalitu Model view vrstvy. Zvyčajne pre každý view model existuje dedikovaný model view ktorý sa preň stará o zabezpečenie ním požadovaných služieb. Nie je to však pravidlo, view model môže mať odkazy na viacero model view-ov ktorých služby následne využíva alebo sú predané, kvôli interakciám vytvoreným, view modelom.
+    Ich hlavnou úlohou je vytvoriť a distribuovať model view-y odpovedajúce danému session-u. Pri ich inicializácii vytvorí medzi nimi väzby, ktoré sú následne počas behu aplikácie využívané na spomínanú vnútro-session-ovú komunikáciu. Taktiež zabezpečujú spracovávanie požiadaviek pre odpovedajúce session view modely. Tieto požiadavky sa typicky týkajú akcií, ktoré súvisia so session-om ako takým (nie s nejakou jeho časťou).  
+    
+    Výnimkou je práve \textit{main window model view}, ktorý je viazaný na view model hlavného okna a spracováva jeho požiadavky. V ostatných aspektoch je ale identický s klasickým session model view-om.
+    
+    Každému session model view-u odpovedá jeden konkrétny session view model. Ten pri svojej inicializácii predá model view-y, dodané v session model view-e, odpovedajúcim view modelom.   
+    \item \textbf{Model view} - typ, ktorý nesie vyššie popísanú funkcionalitu Model view vrstvy. Zvyčajne pre každý view model existuje dedikovaný model view, ktorý sa stará o zabezpečenie view modelom požadovaných služieb. Nie je to však pravidlo, view model môže obsahovať odkazy na viacero model view-ov, ktorých služby následne využíva alebo sú predané vytvoreným, v interakciách využívaným, view modelom.
 
-    Väčšina model view-ov spadá pod nejaký konkrétny session. V takom prípade je daný model view vytváraný v odpovedajúcom session model view-e. Výnimkou sú model view-y, ktoré zodpovedajú view modelom pracujúcim v hlavnom okne. Model view-y dotyčných view modelov v základe nezabezpečujú vzájomnú komunikáciu. Pri aktuálnom návrhu aplikácie to nie je potrebné. Ak takáto potreba vznikne, môže sa návrh týchto model view-ov prerobiť.  
+    Je zvykom, že každý model view spadá pod nejaký konkrétny session alebo hlavné okno. V takom prípade je daný model view vytváraný a distribuovaný odpovedajúcim session model view-om/main window model view-om.  
 \end{itemize}
 
 \subsection{Model}
 
-Poslednou \uv{horizontálnou} vrstvou je Model. Model sa svojou štruktúrou diametrálne odlišuje od predchádzajúcich vrstiev. Je tvorený jednotlivými oblasťami, ktoré spravujú dedikovaní \textit{manažéri}. Manažéri sú pristupovaný z jednotlivých model view-ov a doručujú im svoje služby, či už informačné alebo výpočtové. Predstavujú interface-y ponúkajúce prívetivejší spôsob práce s vnútornými mechanizmami modelov.
+Poslednou \uv{horizontálnou} vrstvou je Model. Model sa svojou štruktúrou diametrálne odlišuje od predchádzajúcich vrstiev. Je tvorený jednotlivými oblasťami, ktoré spravujú dedikovaní \textit{manažéri}. Manažéri sú pristupovaný z jednotlivých model view-ov a doručujú im svoje služby, či už informačné alebo výpočtové. Predstavujú interface-y ponúkajúce prívetivejší spôsob práce s vnútornými mechanizmami modelov. 
 
-Špecifickým znakom komunikácie medzi Model a Model view vrstvami je, že pri nej dochádza ku strate typovej informácie dodávaných dát. Táto vlastnosť je motivovaná jednoduchým faktom, ktorým je udržanie vrstvy Model view jednoduchou. V Model vrstve sa totiž vo veľkom využívajú generiká pre jednoduché prenášanie typovej informácie v ích mechanizmoch. 
+Model je predstaviteľom jedinej perzistentnej \uv{horizontálnej} vrstvy. Manažéri sú väčšinou singleton triedy, ktoré ponúkajú služby všetkým session-om počas celej doby behu aplikácie. Vďaka tomuto spôsobu obsluhovania je Model jediná vrstva, ktorej konštrukty niesu viazané na žiadnu vertikálnu vrstvu (session/hlavné okno). Z tohto návrhu Model vrstvy vyplýva ešte jedna dôležitá vlastnosť modelov a to, že musia byť schopné svoje služby dodávať paralelne pre viacero session-ov. 
+
+Vrstva modelov je jednoducho rozšíriteľná o nových manažérov. Vďaka \textit{singleton} štruktúre sú dosiahnuteľný v podstate z akéhokoľvek miesta v programe a teda nemusia by5 nikde zahrnutí. Manažéri by zasa nemali mať problém prijímať nové, primerane vytvorené implementácie mechanizmov z ich oblastí. Napríklad by nemalo byť zložité dodať nový vyhľadávací algoritmus odpovedajúcemu manažérovi, ktorý ho následne bude ponúkať zvyšku aplikácie. %TODO mozno referencia na miesto, kde sa blizsie hovori o praci manazerov a jak si drzia kolekcie reprezentantov jednotlivych typov pouzitelnych v aplikacii.    
+
+Špecifickým znakom komunikácie medzi Model a Model view vrstvami je, že pri nej dochádza ku strate typovej informácie dodávaných dát. Táto vlastnosť je motivovaná jednoduchým faktom, ktorým je udržanie vrstvy Model view jednoduchou. V Model vrstve sa totiž vo veľkom využívajú generiká pre jednoduché prenášanie typovej informácie v ich mechanizmoch. 
 
 Využívanie generík v Model view vrstve by však prinieslo značné komplikácie v jej implementácii a tomu odpovedajúce zneprehladnenie kódu. Už len Model samotný trpí jemnou, generikami spôsobenou neprehľadnosťou. Z tohto dôvodu bolo rozhodnuté zabezpečiť jednoduchosť vrstvy Model view za cenu straty typovej informácie dát tečúcich z modelov do model view-ov. 
 
-Pri opačnej komunikácii, z model view-ov do modelov, je manažérmi typová správnosť dodaných parametrov opäť testovaná/získaná (väčšinou za pomoci tzv. \textit{generic visitor pattern}. Viac informácii o tejto modifikácii klasického \textit{visitor pattern} návrhového vzoru nájdete v % kde bude viac informa8cii...referencia na ne).  
+Pri opačnom smere komunikácie je manažérmi typová informácia dodaných parametrov opäť testovaná/získaná (väčšinou za pomoci tzv. \textit{generic visitor pattern}. Viac informácii o tejto modifikácii klasického \textit{visitor pattern} návrhového vzoru nájdete v % kde bude viac informa8cii...referencia na ne).  
 
 V modelu existujú popri manažéroch ešte aj tzv. \textit{sub-manažéri}. Tieto entity sú ale určené pre využitie priamo z modelov. Podporujú generickú komunikáciu, na ktorej báze modely fungujú, bez straty typovej informácie a teda sú príjemnejšie pre modelovú komunikáciu než klasickí manažéri.     
 
-\begin{figure}[h]\centering
-\includegraphics[]{img/horizontalna_struktura}
-\caption{Príklad možnej horizontálnej štruktúry aplikácie} 
-\label{obr02:horizontalna_struktura}
-\end{figure}
-
-\pagebreak
-
 \section{Session-y + \textit{hlavné okno}}\label{Sessions}
 
-Aplikácia, či už z vizuálneho, logického či implementačného hladiska je rozdelená do tzv. \textit{session}-ov. Session-y sú najväčšie stavebné jednotky z ktorých každá predstavuje jedinečný mechanizmus dodávaný aplikáciou. Session-ov (aj rovnakého druhu) môže byť v aplikácii pustených viacero naraz.  
+\subsection{Session-y}
 
-Session-y sú vytvárané v \textit{hlavnom okne}.
+Aplikácia, či už z vizuálneho, logického či implementačného hladiska, je rozdelená do tzv. \textit{session}-ov. Session-y sú najväčšie stavebné jednotky z ktorých každá predstavuje jedinečný mechanizmus dodávaný aplikáciou. Existencia ich inštancií je pominuteľná - vznikajú a zanikajú na popud užívateľa. Session-ov (aj rovnakého druhu) môže byť v aplikácii spustených viacero naraz. Každý session je klasicky tvorený odpovedajúcimi objektmi z prvých troch vrstiev horizontálnej štruktúry. 
 
+Následne môžu session-y využívať dodatočné objekty z týchto vrstiev, ktoré patria hlavnému oknu alebo inému typu session-u. V takom prípade by malo byť ale poriadne rozmyslené, či takéto \uv{postranné} využitie dáva zmysel a či sa ním neporušujú zasady používania daného objektu. 
 
+Poprípade je možné využívať špecifické model viewy a view modely prostredníctvom interakcií. V takom prípade by ale dané objekty mali byť na daný účel prispôsobené (info v podsekcii \ref{ViewModel}, bod \textbf{View model}, 3. odsek).
 
+Session-y sú klasicky rozdelené na logické časti, ktoré spolupracujú na dodaní požadovaného mechanizmu. Môžu napríklad reprezentovať fázy jeho procesu. Tieto časti sú väčšinou tvorené špecifickými objektmi naprieč prvými tromi vrstvami horizontálnej štruktúry. 
+
+Session-ové inštancie by medzi sebou nemali navzájom komunikovať ani zdielať svoje dáta. Mohlo by to viesť ku problémom s paralelizáciou služieb vykonávaných Model vrstvou.
+
+Session-y ako také reprezentujú cestu ku všeobecnej rozšíriteľnosti aplikácie o nové mechanizmy. Ak by vznikla potreba, aby aplikácia obsahovala nejaký nový mechanizmus, stačí preňho vytvoriť odpovedajúci session a upraviť hlavné okno tak, aby ho vedelo ponúknuť užívateľovi ako jednu z možností.  
+
+\subsection{Hlavné okno}\label{Hlavne_okno_obecne}
+
+Session-y sú vytvárané a spravované \textit{hlavným oknom}. Je to jediná perzistentná \uv{vertikálna} vrstva aplikácie. Beh aplikácie začína s otvorením tohto okna a končí jeho zatvorením. Hlavné okno môže byť používané počas celého behu aplikácie. Pokiaľ je vydaný pokyn na uzavretie hlavného okna, pričom sú stále živé nejaké session-y, užívateľ môže byť na tento fakt upozornený. Ak mu to ale neprekáža, zatvorením hlavného okna sa zavrú aj všetky ostatné a aplikácia sa ukončí. Logika session-ov by mala túto skutočnosť brať do úvahy.
+
+Horizontálna štruktúra je veľmi podobná tej session-ovej. Taktiež využíva MVVM(MV) architektúru. Jej časti sú ale z podstaty hlavného okna vytvárané len raz pri štarte aplikácie a zanikajú pri jej ukončení. \textit{Session view model} a \textit{Session model view} sú nahradené za funkčne identické \textit{Main window view model} a \textit{Main window model view}. Podobne ako pri session-och, aj hlavné okno je rozdelené do niekoľkých častí. Tie si medzi sebou rozdeľujú jeho funkcionalitu. Niektoré z jeho častí môžu byť sprístupnené rôznym session-om, aby si z nich mohli vytiahnuť potrebné parametre platiace pre celú aplikáciu.     
+
+Ako bolo spomenuté na začiatku tejto podsekcie, hlavné okno vytvára, eviduje a spravuje inštancie všetkých session-ov. Definuje maximálny počet otvorených okien, spravuje session-y pri ukončovaní aplikácie, poskytuje dodávateľa hlavných parametrov, inicializuje pri vytváraní session-u jeho view modely a model viewy.  
+
+\begin{figure}[p]\centering
+\includegraphics[]{img/priklad_struktury}
+\caption{Príklad možnej \uv{mriežkovej} štruktúry aplikácie.} 
+\label{obr02:priklad_struktury}
+\end{figure}

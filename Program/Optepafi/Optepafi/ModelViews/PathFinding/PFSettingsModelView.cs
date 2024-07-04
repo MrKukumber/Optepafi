@@ -161,12 +161,12 @@ public abstract class PFSettingsModelView : ModelViewBase
     }
 
     /// <summary>
-    /// Returns all usable templates.
-    /// That means it returns all templates for which exist at least one corresponding map representations implementation.
+    /// Returns all templates.
     /// </summary>
-    /// <returns>Collection of usable templates.</returns>
+    /// <returns>Collection of templates.</returns>
     public HashSet<TemplateViewModel> GetAllUsableTemplates()
     {
+        return TemplateManager.Instance.Templates.Select(template => new TemplateViewModel(template)).ToHashSet();
         var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
         return usableTemplateMapFormatCombs
             .Select(comb => new TemplateViewModel(comb.Item1))
