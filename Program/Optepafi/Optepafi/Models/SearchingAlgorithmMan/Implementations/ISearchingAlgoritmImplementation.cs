@@ -17,7 +17,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan.Implementations;
 
 /// <summary>
 /// Implementation of an algorithm. Each implementation is tied to some particular searching algorithm and it should obey its principles. All algorithm implementations are collected and presented in searching algorithm singleton.
-/// Every implementation defines its requirements for used map representations functionality in process of searching. This requirements can be tested by <see cref="IsUsableGraph{TVertexAttributes,TEdgeAttributes}"/> and <see cref="DoesRepresentUsableMapRepre"/> methods.
+/// Every implementation defines its requirements for used map representations functionality in process of searching. This requirements can be tested by <see cref="IsUsableGraph{TVertexAttributes,TEdgeAttributes}"/> and <see cref="DoesRepresentUsableGraph"/> methods.
 /// For more information about searching algorithms see <see cref="ISearchingAlgorithm"/>.
 /// </summary>
 public interface ISearchingAlgoritmImplementation
@@ -29,7 +29,7 @@ public interface ISearchingAlgoritmImplementation
     /// </summary>
     /// <param name="graphRepresentative">Representative of graph type whose functionalities are tested.</param>
     /// <returns>True if all requirements are satisfied. Otherwise false.</returns>
-    bool DoesRepresentUsableMapRepre(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>
+    bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>
             graphRepresentative);
 
     /// <summary>
@@ -45,7 +45,7 @@ public interface ISearchingAlgoritmImplementation
 
     /// <summary>
     /// Checks whether provided graphs functionality satisfies implementations requirements.
-    /// This test has to correspond to test provided by <see cref="DoesRepresentUsableMapRepre"/> method.
+    /// This test has to correspond to test provided by <see cref="DoesRepresentUsableGraph"/> method.
     /// </summary>
     /// <param name="graph">Graph to be tested for its functionalities.</param>
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in vertices of graph.</typeparam>

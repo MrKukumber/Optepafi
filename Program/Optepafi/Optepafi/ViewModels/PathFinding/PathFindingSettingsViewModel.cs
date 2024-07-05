@@ -51,9 +51,9 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         _settingsMv = settingsMv;
         _mapRepreCreatingMv = mapRepreCreatingMv;
 
-        UsableTemplates = _settingsMv.GetAllUsableTemplates();
-        UsableMapFormats = _settingsMv.GetAllUsableMapFormats(); 
-        UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
+        UsableTemplates = _settingsMv.GetAllTemplates();
+        UsableMapFormats = _settingsMv.GetAllMapFormats(); 
+        UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate, CurrentlyUsedMapFormat);
         UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
 
         this.WhenAnyValue(x => x.CurrentlySelectedElevDataDistribution)
@@ -70,6 +70,19 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
                 var (template, mapFormat, userModelType) = tuple;
                 UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(template, mapFormat, userModelType);
             });
+        this.WhenAnyValue(x => x.SelectedTemplate,
+                x => x.CurrentlyUsedMapFormat)
+            .Subscribe(tuple =>
+            {
+                var (template, mapFormat) = tuple;
+                UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(template, mapFormat);
+                if (!UsableUserModelTypes.Contains(CurrentlyUsedUserModelType))
+                {
+                    CurrentlyUsedUserModelType = null;
+                    SelectedUserModelFileName = null;
+                    SelectedUserModelFilePath = null;
+                }
+            });
 
         this.WhenAnyValue(x => x.SelectedTemplate)
             .Subscribe(selectedTemplate =>
@@ -80,13 +93,6 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
                     CurrentlyUsedMapFormat = null;
                     SelectedMapFileName = null;
                     SelectedMapFilePath = null;
-                }
-                UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(selectedTemplate);
-                if (!UsableUserModelTypes.Contains(CurrentlyUsedUserModelType))
-                {
-                    CurrentlyUsedMapFormat = null;
-                    SelectedUserModelFileName = null;
-                    SelectedUserModelFilePath = null;
                 }
             });
 

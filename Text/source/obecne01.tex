@@ -12,7 +12,7 @@ Takýto software by však našiel uplatnenie taktiež v rekreačných aktivitác
 
 Rád by som vyzdvihol špecificky jedno športové odvetvie, ktoré veľmi úzko súvisí s hľadaním ciest v otvorenom teréne a to \textit{orientačný beh}. \uv{Orientačný beh (skratka OB) je športové odvetvie vytrvalostného charakteru, pri ktorom je úlohou prejsť alebo prebehnúť podľa mapy a buzoly trať vyznačenú na mape za čo najkratší čas. V teréne nie je trať vyznačená, sú tam umiestnené iba kontrolné stanovišťa (Kontroly)}\cite{CoJeOrientak}. Tento šport bol hlavnou motiváciou pre vytvorenie aplikácie, v ktorej by si užívateľ mohol nechať vykresliť na mape najrýchlejší postup pre ním zadanú trať. 
 
-\section{Aspekty hľadania najrýchlejšej trasy (v OB)}
+\section{Aspekty hľadania najrýchlejšej trasy (v OB)}\label{Aspekty_hladania}
 
 Mapy pre orientačný beh bývajú veľmi detailné a bežec má preto dostatok informácie na to aby si mohol vybrať ideálnu trasu. Za predpokladu že bežec nerobí chyby a beží presne podľa svojho zámeru, sú pre výber najrýchlejšieho postupu dôležité dva druhy objektov: líniové (cesty, potoky, prieseky, ...) a polygonálne (lúky, kroviská, vodné objekty, močiare, ...). Tie určujú typ terénu nachádzajúci sa v danej časti mapy a tým pádom aj veľkosť odporu ktorý je kladený rýchlosti behu pretekára. Táto veličina sa dá použiť ako hlavný parameter ktorý bude určovať preferencie výberu postupu.
 
@@ -137,7 +137,7 @@ Informované rozhodnutie pre výber GUI knižnice bolo učinené na základe zdr
 
 \subsection{Architektúra Model-View-ViewModel (MVVM)}\label{ArchitekturaMVVM}
 
-Jeden z ďalších dôležitých aspektov ktorý hral dôležitú úlohu vo výbere knižnice pre užívateľské rozhranie bola podpora MVVM návrhového vzoru. Dokumentácia Avalonia UI popisuje architektúru MVVM následovne: \uv{The Model-View-View Model (MVVM) pattern is a common way of structuring a UI application. It uses a data binding system that helps move data between its view and view model parts. This means it achieves separation of application logic (view model) from the display of the UI (view). Separation between the application logic and the business services (model) is commonly achieved by a Dependency Injection (DI) system.}\cite{MVVMDefByAvalonia}.
+Jeden z ďalších dôležitých aspektov ktorý hral úlohu vo výbere knižnice pre užívateľské rozhranie bola podpora MVVM návrhového vzoru. Dokumentácia Avalonia UI popisuje architektúru MVVM následovne: \uv{The Model-View-View Model (MVVM) pattern is a common way of structuring a UI application. It uses a data binding system that helps move data between its view and view model parts. This means it achieves separation of application logic (view model) from the display of the UI (view). Separation between the application logic and the business services (model) is commonly achieved by a Dependency Injection (DI) system.}\cite{MVVMDefByAvalonia}.
 
 MVVM architektúra je vhodná pre našu aplikáciu, nakoľko pre jej rozsah by klasická \textit{event-driven code-behind} architektúra nemusela postačovať. Týmto spôsobom zaručíme lepšiu separáciu a dostačujúcu vnútornú nezávislosť kódu.    
 

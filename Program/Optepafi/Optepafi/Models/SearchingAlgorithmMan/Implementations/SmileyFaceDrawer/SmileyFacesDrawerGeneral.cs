@@ -27,12 +27,12 @@ public class SmileyFacesDrawerGeneral : ISearchingAlgoritmImplementation
 {
     public static SmileyFacesDrawerGeneral Instance { get; } = new();
     private SmileyFacesDrawerGeneral(){}
-    
-    /// <inheritdoc cref="ISearchingAlgoritmImplementation.DoesRepresentUsableMapRepre"/>
+
+    /// <inheritdoc cref="ISearchingAlgoritmImplementation.DoesRepresentUsableGraph"/>
     /// <remarks>
     /// Used graph does not have to provide none special functionality.
     /// </remarks>
-    public bool DoesRepresentUsableMapRepre(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes> graphRepresentative)
+    public bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes> graphRepresentative)
     {
         if (graphRepresentative is IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>) 
             return true;
@@ -41,7 +41,7 @@ public class SmileyFacesDrawerGeneral : ISearchingAlgoritmImplementation
 
     /// <inheritdoc cref="ISearchingAlgoritmImplementation.DoesRepresentUsableUserModel{TVertexAttributes,TEdgeAttributes}"/>
     /// <remarks>
-    /// Used user models do not have to provide none special functionality.
+    /// Used user model does not have to provide none special functionality.
     /// </remarks>
     public bool DoesRepresentUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType)
         where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes

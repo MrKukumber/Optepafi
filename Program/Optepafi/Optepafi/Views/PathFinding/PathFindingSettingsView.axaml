@@ -31,6 +31,8 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="SelectedTemplate" 
                                      Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                            <Binding Path="CurrentlyUsedMapFormat"
+                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
                             <Binding Path="UsableUserModelTypes"
                                      Converter="{x:Static pfV:PathFindingSettingsView.IsNotEmptyNorNull}"/>
                         </MultiBinding>

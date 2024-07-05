@@ -42,17 +42,39 @@ public interface ISearchingAlgorithm
     protected ISearchingAlgoritmImplementation[] Implementations { get; }
 
     /// <summary>
+    /// Method that checks whether there is some implementation of algorithm that can use both  map representation type and user model type represented by provided representatives.
+    /// It checks if they possess the correct functionality.
+    /// </summary>
+    /// <param name="mapRepreRep">Representative of map representation type that is checked.</param>
+    /// <param name="userModelType">Represents computing user model type that is checked.</param>
+    /// <typeparam name="TVertexAttributes">Type of vertex attributes bounded to tested user model type.</typeparam>
+    /// <typeparam name="TEdgeAttributes">Type of edge attributes bounded to tested user model type.</typeparam>
+    /// <returns>True if any of implementations can use both represented map representation type and user model type. False otherwise</returns>
+    sealed bool DoesRepresentUsableMapRepreUserModelCombination<TVertexAttributes, TEdgeAttributes>(IMapRepreRepresentative<IMapRepre> mapRepreRep, IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) 
+        where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+    {
+        var graphRepresentative = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
+        foreach (var implementation in Implementations)
+        {
+            if (implementation.DoesRepresentUsableGraph(graphRepresentative) && implementation.DoesRepresentUsableUserModel(userModelType))
+                return true;
+        }
+        return false;
+        
+    }
+    
+    /// <summary>
     /// Method that checks whether there is some implementation of algorithm that can use map representation type represented by provided representative.
     /// It checks if it possesses the correct functionality.
     /// </summary>
     /// <param name="mapRepreRep">Representative of map representation type that is checked.</param>
-    /// <returns>True if any of implementations can use represented map representation type.</returns>
+    /// <returns>True if any of implementations can use represented map representation type. False otherwise.</returns>
     sealed bool DoesRepresentUsableMapRepre(IMapRepreRepresentative<IMapRepre> mapRepreRep)
     {
         var graphRepresentative = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
         foreach (var implementation in Implementations)
         {
-            if (implementation.DoesRepresentUsableMapRepre(graphRepresentative))
+            if (implementation.DoesRepresentUsableGraph(graphRepresentative))
                 return true;
         }
         return false;

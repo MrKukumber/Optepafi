@@ -1,20 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Metadata;
-using DynamicData;
-using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.Graphics;
-using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
@@ -25,11 +19,9 @@ using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.PathFinding.Utils;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Representatives;
-using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.PathFinding;
 
@@ -132,50 +124,35 @@ public abstract class PFSettingsModelView : ModelViewBase
         if (templateViewModel is not null && mapFormatViewModel is not null && userModelTypeViewModel is not null)
         {
             HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
-            HashSet<ISearchingAlgorithm> usableSearchingAlgorithmsForUserModelType = SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(userModelTypeViewModel.UserModelType);
-            
-            HashSet<SearchingAlgorithmViewModel> usableSearchingAlgorithmViewModels = new HashSet<SearchingAlgorithmViewModel>();
-            foreach (var usableMapRepreRep in usableMapRepreReps)
-            {
-                HashSet<ISearchingAlgorithm> usableSearchingAlgorithms = SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreRep);
-                usableSearchingAlgorithms.IntersectWith(usableSearchingAlgorithmsForUserModelType);
-                usableSearchingAlgorithmViewModels.UnionWith(usableSearchingAlgorithms
-                        .Select(searchingAlgorithm => new SearchingAlgorithmViewModel(searchingAlgorithm)).ToHashSet());
-            }
-            return usableSearchingAlgorithmViewModels;
+            return SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, [userModelTypeViewModel.UserModelType])
+                .Select(searchingAlgorithm => new SearchingAlgorithmViewModel(searchingAlgorithm))
+                .ToHashSet();
         }
         return [];
     }
 
     /// <summary>
-    /// Returns all usable map formats.
-    /// That means it returns all map formats for which exist at least one corresponding map representations implementation.
+    /// Returns all map formats.
     /// </summary>
-    /// <returns>Collection of usable map formats.</returns>
-    public IReadOnlyCollection<MapFormatViewModel> GetAllUsableMapFormats()
+    /// <returns>Collection of map formats.</returns>
+    public IReadOnlyCollection<MapFormatViewModel> GetAllMapFormats()
     {
-        var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
-        return usableTemplateMapFormatCombs
-            .Select(comb => new MapFormatViewModel(comb.Item2))
-            .ToHashSet(); //Gets rid of duplicate MapFormatViewModels.
+        return MapManager.Instance.MapFormats.Select(mapFormat => new MapFormatViewModel(mapFormat)).ToHashSet();
     }
 
     /// <summary>
     /// Returns all templates.
     /// </summary>
     /// <returns>Collection of templates.</returns>
-    public HashSet<TemplateViewModel> GetAllUsableTemplates()
+    public HashSet<TemplateViewModel> GetAllTemplates()
     {
         return TemplateManager.Instance.Templates.Select(template => new TemplateViewModel(template)).ToHashSet();
-        var usableTemplateMapFormatCombs = MapRepreManager.Instance.GetAllUsableTemplateMapFormatCombinations();
-        return usableTemplateMapFormatCombs
-            .Select(comb => new TemplateViewModel(comb.Item1))
-            .ToHashSet(); //Gets rid of duplicate TemplateViewModels.
     }
 
     /// <summary>
     /// Method for checking whether provided template and map format are usable combination.
-    /// That means checking wheter there exists some map representation implementation which corresponds to this combination and whether any searching algorithm is able to use any of corresponding representations.
+    /// That means checking whether there exists some map representation type which corresponds to this combination together with user model type which corresponds to template.
+    /// If there are such map representation and user model types, there must exist at least one searching algorithm that is able to use at least one combination of these types.
     /// </summary>
     /// <param name="templateViewModel">ViewModel of template whose usability is checked.</param>
     /// <param name="mapFormatViewModel">ViewModel of map format whose usability is checked.</param>
@@ -184,20 +161,24 @@ public abstract class PFSettingsModelView : ModelViewBase
     {
         if (templateViewModel is null || mapFormatViewModel is null) return false;
         var usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
-        return SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps.ToArray()).Count > 0;
+        var usableUserModelTypes = UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template);
+        return (SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, usableUserModelTypes) .Count > 0);
     }
     
     /// <summary>
-    /// Returns all user model types which are tied to provided template and represent computing user models.
-    /// If provided template is null, returns blank collection.
+    /// Returns all user model types which are tied to provided template and are able to be used in some searching algorithm together with specific map representation created according to provided template and map format.
+    /// If provided template or map is null, returns blank collection.
     /// </summary>
     /// <param name="templateViewModel">ViewModel of template to which user model must be tied.</param>
-    /// <returns>Collection of user model types which are tied to provided template.</returns>
+    /// <param name="mapFormatViewModel">ViewModel of map format which is used together with provided template in map representation that can be used with tested user model in some searching algorithm.</param>
+    /// <returns>Collection of user model types which are valid according to provided template and map format.</returns>
     public IReadOnlyCollection<UserModelTypeViewModel> GetUsableUserModelTypes(
-        TemplateViewModel? templateViewModel)
+        TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel)
     {
-        return templateViewModel is null ? [] : UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
-            .Where(userModelType => UserModelManager.Instance.DoesRepresentComputingModel(userModelType))
+        if (templateViewModel is null || mapFormatViewModel is null) return [];
+        var usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
+        return UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
+            .Where(userModelType => SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, [userModelType]).Count > 0)
             .Select(usableUserModelType => new UserModelTypeViewModel(usableUserModelType))
             .ToHashSet();
     }
