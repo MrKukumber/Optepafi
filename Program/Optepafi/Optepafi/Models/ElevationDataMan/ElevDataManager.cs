@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.ElevationDataMan.ElevSources;
-using Optepafi.Models.ElevationDataMan.ElevSources.NotRealyElevDataSource;
+using Optepafi.Models.ElevationDataMan.ElevSources.NotReally;
 using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.MapMan.MapInterfaces;
 

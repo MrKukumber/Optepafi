@@ -1,8 +1,7 @@
-using Avalonia.Controls.Templates;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
 
-namespace Optepafi.Models.UserModelMan.UserModelTypes;
+namespace Optepafi.Models.UserModelMan.UserModelReps;
 
 /// <summary>
 /// One of three interfaces whose implementations represent individual user model types that is tied to specific template type.
@@ -12,4 +11,4 @@ namespace Optepafi.Models.UserModelMan.UserModelTypes;
 /// Thanks to contravariance of its template type parameter it is useful for correct pattern matching on its template type. 
 /// </summary>
 /// <typeparam name="TTemplate">Template type which represented user model is tied to.</typeparam>
-public interface IUserModelTemplateBond<in TTemplate> where TTemplate : ITemplate;
+public interface IUserModelTemplateBond<out TUserModel, in TTemplate> where TUserModel : IUserModel<TTemplate> where TTemplate : ITemplate;

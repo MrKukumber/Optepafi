@@ -1,5 +1,3 @@
-using Optepafi.Models.Graphics.Objects;
-
 namespace Optepafi.Models.GraphicsMan.Objects;
 
 

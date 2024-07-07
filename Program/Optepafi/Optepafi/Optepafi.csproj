@@ -139,6 +139,7 @@
         <DependentUpon>MainWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Remove="Models\MapRepreMan\IMapRepresentationGenericVisitor.cs" />
     </ItemGroup>
 
 

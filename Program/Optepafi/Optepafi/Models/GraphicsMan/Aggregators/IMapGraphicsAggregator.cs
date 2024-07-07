@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Threading;
-using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 
-namespace Optepafi.Models.Graphics.GraphicsAggregators;
+namespace Optepafi.Models.GraphicsMan.Aggregators;
 
 /// <summary>
 /// Represents aggregator of graphic objects for maps of specific type.

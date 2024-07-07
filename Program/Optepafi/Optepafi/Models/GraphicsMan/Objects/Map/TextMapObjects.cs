@@ -1,9 +1,7 @@
-using Optepafi.Models.Graphics.Objects;
-using Optepafi.Models.GraphicsMan.Objects;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.Maps;
 
-namespace Optepafi.Models.Graphics.GraphicsObjects.MapObjects;
+namespace Optepafi.Models.GraphicsMan.Objects.Map;
 
 /// <summary>
 /// Object representing one word which should be displayed for user. It contains its position and text itself.

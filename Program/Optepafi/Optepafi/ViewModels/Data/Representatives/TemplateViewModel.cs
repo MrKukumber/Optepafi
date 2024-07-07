@@ -1,5 +1,4 @@
 using Optepafi.Models.TemplateMan;
-using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 

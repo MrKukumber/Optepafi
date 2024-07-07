@@ -7,9 +7,9 @@ using System.Threading;
 using Avalonia.Controls;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.UserModelMan.UserModelReps;
+using Optepafi.Models.UserModelMan.UserModelReps.SpecificUserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.Models.UserModelMan.UserModelTypes;
-using Optepafi.Models.UserModelMan.UserModelTypes.SpecificUserModelReps;
 
 namespace Optepafi.Models.UserModelMan;
 
@@ -19,8 +19,7 @@ namespace Optepafi.Models.UserModelMan;
 /// All operations provided by this class are thread safe as long as same arguments are not used concurrently multiple times.
 /// </summary>
 public class UserModelManager : 
-    ITemplateGenericVisitor<HashSet<IUserModelType<IUserModel<ITemplate>, ITemplate>>>,
-    ITemplateGenericVisitor<bool, IUserModelType<IUserModel<ITemplate>, ITemplate>>
+    ITemplateGenericVisitor<HashSet<IUserModelType<IUserModel<ITemplate>, ITemplate>>>
 {
     public static UserModelManager Instance { get; } = new();
     private UserModelManager() { }
@@ -48,7 +47,7 @@ public class UserModelManager :
         HashSet<IUserModelType<IUserModel<ITemplate>,ITemplate>> correspondingUserModelTypes = new();
         foreach (var userModelType in UserModelTypes)
         {
-            if (userModelType is IUserModelTemplateBond<TTemplate>)
+            if (userModelType is IUserModelTemplateBond<IUserModel<TTemplate>, TTemplate>)
                 correspondingUserModelTypes.Add(userModelType);
         }
         return correspondingUserModelTypes;
@@ -69,22 +68,6 @@ public class UserModelManager :
         return null;
     }
 
-    /// <summary>
-    /// Method for testing whether provided user model type represents computing user model tied to specified template.
-    /// </summary>
-    /// <param name="userModelType">Represents tested user model type.</param>
-    /// <returns>True, if provided user model type represents computing user model. False otherwise.</returns>
-    public bool DoesRepresentComputingModel(IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
-    {
-        return userModelType.AssociatedTemplate.AcceptGeneric(this, userModelType);
-    }
-    bool ITemplateGenericVisitor<bool, IUserModelType<IUserModel<ITemplate>, ITemplate>>
-        .GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
-    {
-        if (userModelType is IUserModelType<IComputingUserModel<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate>) 
-            return true;
-        return false;
-    }
 
     /// <summary>
     /// Serializes user model to string.
@@ -137,45 +120,21 @@ public class UserModelManager :
 }
 
 
+    // ITemplateGenericVisitor<bool, IUserModelType<IUserModel<ITemplate>, ITemplate>>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // public UserModelLoadResult LoadUserModelFrom(string pathToSerialization, out IUserModel<ITemplate>? userModel)
+    /// <summary>
+    /// Method for testing whether provided user model type represents computing user model tied to specified template.
+    /// </summary>
+    /// <param name="userModelType">Represents tested user model type.</param>
+    /// <returns>True, if provided user model type represents computing user model. False otherwise.</returns>
+    // public bool DoesRepresentComputingModel(IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
     // {
-        // foreach (var userModelType in UserModelTypes)
-        // {
-            // if (Path.GetExtension(pathToSerialization) == userModelType.UserModelFileExtension) // tuna mozna chyba, lebo to berie iba extensions za jendou botkou, pricom extensions modelov su .UserModel.FileType
-            // {
-                // try
-                // {
-                    // using (StreamReader serialization = new StreamReader(pathToSerialization))
-                    // {
-                        // userModel = userModelType.DeserializeUserModel(serialization);
-                        // if (userModel is null) return UserModelLoadResult.UnableToDeserialize;
-                        // return UserModelLoadResult.Ok;
-                    // }
-                // }
-                // catch (System.IO.IOException ex)
-                // {
-                    // userModel = null;
-                    // return UserModelLoadResult.UnableToOpen;
-                // }
-            // }
-        // }
-        // userModel = null;
-        // return UserModelLoadResult.UnknownFileFormat;
+        // return userModelType.AssociatedTemplate.AcceptGeneric(this, userModelType);
+    // }
+    // bool ITemplateGenericVisitor<bool, IUserModelType<IUserModel<ITemplate>, ITemplate>>
+        // .GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
+    // {
+        // if (userModelType is IUserModelType<IComputingUserModel<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate>) 
+            // return true;
+        // return false;
     // }

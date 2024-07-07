@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.ReportMan.Aggregators;
 using Optepafi.Models.ReportMan.Reports;
-using Optepafi.Models.ReportSubMan.Aggregators;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;

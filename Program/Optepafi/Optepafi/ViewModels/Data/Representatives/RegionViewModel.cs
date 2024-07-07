@@ -4,7 +4,6 @@ using System.Threading;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.MapMan;
-using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Data.Representatives;

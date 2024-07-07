@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  5 JUL 2024 11:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  8 JUL 2024 00:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -954,7 +954,7 @@ Package biblatex Info: Reference segment=0 on input line 123.
 
  (./title.tex
 Package hyperref Info: Option `pageanchor' set `false' on input line 44.
-<img/logo-cs.pdf, id=175, 506.4591pt x 156.49065pt>
+<img/logo-cs.pdf, id=203, 506.4591pt x 156.49065pt>
 File: img/logo-cs.pdf Graphic file (type pdf)
 <use img/logo-cs.pdf>
 Package pdftex.def Info: img/logo-cs.pdf  used on input line 48.
@@ -1035,10 +1035,10 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [9{c:/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}] [10] [11]
 
 pdfTeX warning: pdflatex.exe (file ./img/konceptove_zavislosti.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<img/konceptove_zavislosti.pdf, id=287, 309.07468pt x 220.9053pt>
+<img/konceptove_zavislosti.pdf, id=323, 309.07468pt x 220.9053pt>
 File: img/konceptove_zavislosti.pdf Graphic file (type pdf)
 <use img/konceptove_zavislosti.pdf>
-Package pdftex.def Info: img/konceptove_zavislosti.pdf  used on input line 102.
+Package pdftex.def Info: img/konceptove_zavislosti.pdf  used on input line 108.
 (pdftex.def)             Requested size: 309.07391pt x 220.90475pt.
 [12 <./img/konceptove_zavislosti.pdf>] [13]) [14]
 \openout2 = `architektura_ako_celok02.aux'.
@@ -1053,7 +1053,7 @@ Kapitola 2.
 ] [16] [17] [18] [19]
 
 pdfTeX warning: pdflatex.exe (file ./img/priklad_struktury.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<img/priklad_struktury.pdf, id=358, 407.60278pt x 379.4175pt>
+<img/priklad_struktury.pdf, id=395, 407.60278pt x 379.4175pt>
 File: img/priklad_struktury.pdf Graphic file (type pdf)
 <use img/priklad_struktury.pdf>
 Package pdftex.def Info: img/priklad_struktury.pdf  used on input line 122.
@@ -1068,34 +1068,30 @@ Kapitola 3.
 
 
 
-] [23]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 71.
- (c:/texlive/2023/texmf-dist/tex/latex/lm/t1lmtt.fd
+] [23] [24] [25] [26]) [27]
+\openout2 = `modely_podrobne04.aux'.
+
+ (./modely_podrobne04.tex
+Kapitola 4.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 12.
+(c:/texlive/2023/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 74.
- [24]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 119.
- [25] [26] [27] [28]) [29]
-\openout2 = `modely_podrobne04.aux'.
-
- (./modely_podrobne04.tex
-Kapitola 4.
-) [30
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 27.
+ [28
 
 
 
 
-]
+] [29] [30] [31] [32] [33] [34] [35] [36] [37]) [38]
 \openout2 = `zaver.aux'.
 
- (./zaver.tex) [31
+ (./zaver.tex) [39
 
 
 
@@ -1107,7 +1103,7 @@ Kapitola 4.
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/lmr/m/sc/12'.
 (microtype)             Ignoring protrusion settings for this character.
-) [32
+) [40
 
 
 
@@ -1116,11 +1112,11 @@ Package microtype Info: Character `029' is missing
 \tf@lof=\write9
 \openout9 = `thesis.lof'.
 
- [33
+ [41
 
 
 
-] [34
+] [42
 
 ]
 P\v {r}\'{\i }loha A.
@@ -1132,7 +1128,7 @@ See the caption package documentation for explanation.
 Package caption Warning: Unused \captionsetup[listing] on input line 98.
 See the caption package documentation for explanation.
 
-[35
+[43
 
 ] (tmp/thesis.aux (tmp/title.aux) (tmp/uvod.aux) (tmp/obecne01.aux) (tmp/architektura_ako_celok02.aux) (tmp/sessiony_podrobne03.aux) (tmp/modely_podrobne04.aux) (tmp/zaver.aux) (tmp/literatura.aux))
  ***********
@@ -1140,24 +1136,24 @@ LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-10-10>
  ***********
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 81279FC83C423C257F98E695A39ECC8F;7025.
+(rerunfilecheck)             Checksum: E3F992AA5C5ABAC259CCCBA851848A0F;7668.
 Package logreq Info: Writing requests to 'thesis.run.xml'.
 \openout1 = `thesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 30486 strings out of 474503
- 510592 string characters out of 5756704
- 1943043 words of memory out of 5000000
- 51629 multiletter control sequences out of 15000+600000
- 644334 words of font info for 194 fonts, out of 8000000 for 9000
+ 30103 strings out of 474503
+ 507134 string characters out of 5756704
+ 1938043 words of memory out of 5000000
+ 51242 multiletter control sequences out of 15000+600000
+ 646308 words of font info for 200 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 92i,6n,95p,973b,3626s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt12.pfb>
-Output written on tmp/thesis.pdf (35 pages, 766742 bytes).
+ 92i,6n,95p,1236b,3599s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
+Output written on tmp/thesis.pdf (43 pages, 793528 bytes).
 PDF statistics:
- 569 PDF objects out of 1000 (max. 8388607)
- 486 compressed objects within 5 object streams
- 113 named destinations out of 1000 (max. 500000)
- 49516 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 623 PDF objects out of 1000 (max. 8388607)
+ 531 compressed objects within 6 object streams
+ 103 named destinations out of 1000 (max. 500000)
+ 49060 words of extra memory for PDF output out of 51595 (max. 10000000)
 

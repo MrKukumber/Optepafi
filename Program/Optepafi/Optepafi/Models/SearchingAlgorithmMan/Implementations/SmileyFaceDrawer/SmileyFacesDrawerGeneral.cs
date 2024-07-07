@@ -12,8 +12,8 @@ using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.Models.UserModelMan.UserModelTypes;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.Implementations.SmileyFaceDrawer;
 

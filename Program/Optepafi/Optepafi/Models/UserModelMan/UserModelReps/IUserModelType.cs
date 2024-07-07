@@ -1,10 +1,9 @@
 using System.IO;
 using System.Threading;
 using Optepafi.Models.TemplateMan;
-using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModels;
 
-namespace Optepafi.Models.UserModelMan.UserModelTypes;
+namespace Optepafi.Models.UserModelMan.UserModelReps;
 
 /// <summary>
 /// One of three interfaces whose implementations represent individual user model types that are tied to specific template type.

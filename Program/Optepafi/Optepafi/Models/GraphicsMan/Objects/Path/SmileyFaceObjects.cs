@@ -1,7 +1,6 @@
-using Optepafi.Models.GraphicsMan.Objects;
 using Optepafi.Models.MapMan;
 
-namespace Optepafi.Models.Graphics.Objects.Path;
+namespace Optepafi.Models.GraphicsMan.Objects.Path;
 
 /// <summary>
 /// Object representing eye of smiley face. It defines its position, width and height.

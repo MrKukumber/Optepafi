@@ -1,4 +1,4 @@
-namespace Optepafi.ViewModels.DataViewModels;
+namespace Optepafi.ViewModels.Data;
 
 /// <summary>
 /// Represents base class for ViewModels for all sorts of data produced by Model.

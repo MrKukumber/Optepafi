@@ -1,11 +1,10 @@
 using System.Threading;
-using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
-namespace Optepafi.Models.Graphics.GraphicsAggregators;
+namespace Optepafi.Models.GraphicsMan.Aggregators;
 
 /// <summary>
 /// Represents aggregator of graphic objects for paths of specific type.

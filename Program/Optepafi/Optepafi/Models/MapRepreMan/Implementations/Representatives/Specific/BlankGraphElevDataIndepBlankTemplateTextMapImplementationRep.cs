@@ -1,13 +1,13 @@
 using System;
 using System.Threading;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.MapFormats;
+using Optepafi.Models.MapMan.MapRepresentatives;
 using Optepafi.Models.MapMan.Maps;
-using Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
+using Optepafi.Models.MapRepreMan.Graphs.Specific;
 using Optepafi.Models.MapRepreMan.Implementations.Specific;
 using Optepafi.Models.TemplateMan.Templates;
 
-namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.SpecificImplementationReps;
+namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific;
 
 /// <summary>
 /// Represents implementation of blank map representation/graph for <c>BlankTemplate</c> template type and <c>TextMap</c> map type. Represented implementation does not need elevation data for its creation.

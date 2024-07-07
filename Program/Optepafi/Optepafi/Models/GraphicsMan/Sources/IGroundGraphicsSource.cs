@@ -1,10 +1,7 @@
-using DynamicData;
-using Optepafi.Models.Graphics.Objects;
-using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.MapMan;
-using Optepafi.ViewModels.DataViewModels;
+using Optepafi.ViewModels.Data;
 
-namespace Optepafi.Models.Graphics.Sources;
+namespace Optepafi.Models.GraphicsMan.Sources;
 
 /// <summary>
 /// Represents ground graphic source of graphic objects. Beside this it contains definition of area, which contains all provided graphic objects.

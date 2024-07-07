@@ -3,9 +3,9 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using Optepafi.Models.TemplateMan.Templates;
-using Optepafi.Models.UserModelMan.UserModels.SpecificUserModels;
+using Optepafi.Models.UserModelMan.UserModels.Specific;
 
-namespace Optepafi.Models.UserModelMan.UserModelTypes.SpecificUserModelReps;
+namespace Optepafi.Models.UserModelMan.UserModelReps.SpecificUserModelReps;
 
 /// <summary>
 /// Representative of blank user model.

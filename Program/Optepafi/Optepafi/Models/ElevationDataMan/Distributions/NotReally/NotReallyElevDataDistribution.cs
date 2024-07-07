@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan.Regions;
-using Optepafi.Models.ElevationDataMan.Regions.NotReally;
+using Optepafi.Models.ElevationDataMan.Regions.NotReal;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 
@@ -15,15 +15,15 @@ public class NotReallyElevDataDistribution : ICredentialsRequiringElevDataDistri
     public static NotReallyElevDataDistribution Instance { get; } = new();
     private NotReallyElevDataDistribution()
     {
-        TopRegion notRealRegion = new NotRealRegion()
+        TopRegion notRealRegion = new NotRealTopRegion()
         {
             IsDownloaded = false
         };
-        new SoNotRealRegion(notRealRegion)
+        new SoNotRealSubRegion(notRealRegion)
         {
             IsDownloaded = false
         };
-        new LittleLessNotRealReagion(notRealRegion)
+        new LittleLessNotRealSubReagion(notRealRegion)
         {
             IsDownloaded = true
         };

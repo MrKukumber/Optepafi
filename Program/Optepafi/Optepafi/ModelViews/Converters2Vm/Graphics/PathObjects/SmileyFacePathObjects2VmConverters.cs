@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Optepafi.Models.Graphics.Objects.Path;
+using Optepafi.Models.GraphicsMan.Objects.Path;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.ModelViews.Utils;
+using Optepafi.ViewModels.Data;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Graphics.PathObjects;
-using Optepafi.ViewModels.DataViewModels;
 
-namespace Optepafi.ModelViews.Converters.Graphics.PathObjects;
+namespace Optepafi.ModelViews.Converters2Vm.Graphics.PathObjects;
 
 
 /// <summary>

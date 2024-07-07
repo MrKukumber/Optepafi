@@ -1,13 +1,11 @@
 using System.Threading;
-using Optepafi.Models.ReportMan;
-using Optepafi.Models.ReportMan.Aggregators;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
-namespace Optepafi.Models.ReportSubMan.Aggregators;
+namespace Optepafi.Models.ReportMan.Aggregators;
 
 /// <summary>
 /// Represents aggregator of reports for paths of specific type. The main task of aggregator is to assemble corresponding path report and return it.

@@ -1,4 +1,4 @@
-namespace Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
+namespace Optepafi.Models.MapRepreMan.MapRepres.Specific;
 
 
 /// <summary>

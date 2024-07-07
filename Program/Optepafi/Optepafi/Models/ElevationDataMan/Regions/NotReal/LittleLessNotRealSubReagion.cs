@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-namespace Optepafi.Models.ElevationDataMan.Regions.NotReally;
+namespace Optepafi.Models.ElevationDataMan.Regions.NotReal;
 
-public class LittleLessNotRealReagion : SubRegion
+public class LittleLessNotRealSubReagion : SubRegion
 {
     public override string Name => "Little less not real region";
 
-    public LittleLessNotRealReagion(Region upperRegion)
+    public LittleLessNotRealSubReagion(Region upperRegion)
     {
         UpperRegion = upperRegion;
         upperRegion.SubRegions.Add(this);

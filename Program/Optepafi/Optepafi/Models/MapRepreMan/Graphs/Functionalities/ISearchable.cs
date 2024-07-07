@@ -2,7 +2,7 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.Graphs.GraphFunctionalities;
+namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 
 /// <summary>
 /// Represents searchable graph. 

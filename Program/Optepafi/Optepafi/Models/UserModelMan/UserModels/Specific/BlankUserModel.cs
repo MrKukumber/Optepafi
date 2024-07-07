@@ -6,7 +6,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModelAdjustables;
 
-namespace Optepafi.Models.UserModelMan.UserModels.SpecificUserModels;
+namespace Optepafi.Models.UserModelMan.UserModels.Specific;
 
 /// <summary>
 /// Blank user model tied to blank template. It does not bear any information besides one <c>VoidAdjust</c> adjustable property.
@@ -27,7 +27,7 @@ public class BlankUserModel :
     public BlankTemplate AssociatedTemplate { get; } = BlankTemplate.Instance;
 
     /// <inheritdoc cref="IUserModel{TTemplate}.AssociatedTemplate"/>
-    ITemplate IUserModel<ITemplate>.AssociatedTemplate => AssociatedTemplate;
+    BlankTemplate IUserModel<BlankTemplate>.AssociatedTemplate => AssociatedTemplate;
 
     /// <inheritdoc cref="IUserModel{TTemplate}.Serialize"/>
     public string Serialize()

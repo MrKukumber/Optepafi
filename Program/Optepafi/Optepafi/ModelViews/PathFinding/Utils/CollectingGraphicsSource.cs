@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using DynamicData;
-using Optepafi.Models.Graphics.Objects;
-using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Objects;
+using Optepafi.Models.GraphicsMan.Sources;
 
 namespace Optepafi.ModelViews.PathFinding.Utils;
 

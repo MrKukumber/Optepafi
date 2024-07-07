@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Optepafi.ModelViews.Converters.Graphics.MapObjects;
-using Optepafi.ModelViews.Converters.Graphics.PathObjects;
-using Optepafi.ModelViews.Converters.Graphics.SearchingReportObjects;
+using Optepafi.ModelViews.Converters2Vm.Graphics.MapObjects;
+using Optepafi.ModelViews.Converters2Vm.Graphics.PathObjects;
+using Optepafi.ModelViews.Converters2Vm.Graphics.SearchingStateObjects;
 
-namespace Optepafi.ModelViews.Converters.Graphics;
+namespace Optepafi.ModelViews.Converters2Vm.Graphics;
 
 /// <summary>
 /// Static class that contains root dictionary of tree hierarchy of dictionaries that contains converters of graphic objects to VieModels.

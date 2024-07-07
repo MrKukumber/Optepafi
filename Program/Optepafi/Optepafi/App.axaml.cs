@@ -1,18 +1,10 @@
-using System.Collections;
-using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
-using Avalonia.Markup.Xaml.Templates;
-using HarfBuzzSharp;
 using Optepafi.ModelViews.Main;
-using Optepafi.ViewModels;
 using Optepafi.ViewModels.Main;
-using Optepafi.Views;
-using Optepafi.Views.Main;
-using Optepafi.Views.PathFinding;
 using MainWindow = Optepafi.Views.Main.Windows.MainWindow;
 
 namespace Optepafi;

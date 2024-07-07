@@ -1,7 +1,7 @@
-using Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
+using Optepafi.Models.MapRepreMan.MapRepres.Specific;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
+namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 
 /// <summary>
 /// Blank graph. It will contain no bojects representing provided map, nor implement any functionality at all.

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.ViewModels.Data.Representatives;
-using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.Main;
 

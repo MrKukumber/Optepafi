@@ -1,17 +1,16 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
-using Optepafi.Models.Graphics.GraphicsAggregators;
-using Optepafi.Models.Graphics.GraphicsAggregators.Path;
-using Optepafi.Models.Graphics.GraphicsAggregators.SearchingState;
-using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Aggregators;
+using Optepafi.Models.GraphicsMan.Aggregators.Path;
+using Optepafi.Models.GraphicsMan.Aggregators.SearchingState;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
-namespace Optepafi.Models.Graphics;
+namespace Optepafi.Models.GraphicsMan;
 
 /// <summary>
 /// Singleton class representing sub-manager for graphics aggregation. It is main channel between graphics aggregation mechanisms and other managers/constructs of Model.

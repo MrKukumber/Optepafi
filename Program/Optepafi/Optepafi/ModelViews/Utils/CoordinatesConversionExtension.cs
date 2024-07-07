@@ -1,5 +1,5 @@
 using Optepafi.Models.MapMan;
-using Optepafi.ViewModels.DataViewModels;
+using Optepafi.ViewModels.Data;
 
 namespace Optepafi.ModelViews.Utils;
 

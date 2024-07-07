@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using DynamicData;
-using Optepafi.Models.Graphics.GraphicsObjects.MapObjects;
-using Optepafi.Models.Graphics.Objects;
-using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.Maps;
 
-namespace Optepafi.Models.Graphics.GraphicsAggregators.MapGraphicsAggregators;
+namespace Optepafi.Models.GraphicsMan.Aggregators.Map;
 
 /// <summary>
 /// Singleton class representing aggregator of graphic objects for <see cref="TextMap"/> map type.

@@ -1,7 +1,7 @@
 using Optepafi.Models.MapMan;
 using Optepafi.ViewModels.Data.Graphics;
 
-namespace Optepafi.ModelViews.Converters.Graphics;
+namespace Optepafi.ModelViews.Converters2Vm.Graphics;
 
 /// <summary>
 /// Represents converter of graphic object of specific type to its ViewModel.These ViewModels can be than presented to View for displaying to user.

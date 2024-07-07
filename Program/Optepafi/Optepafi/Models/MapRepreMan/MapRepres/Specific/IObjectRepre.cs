@@ -1,6 +1,4 @@
-using Optepafi.Models.TemplateMan;
-
-namespace Optepafi.Models.MapRepreMan.MapRepres.MapRepreInterfaces;
+namespace Optepafi.Models.MapRepreMan.MapRepres.Specific;
 
 public interface IObjectRepre : IMapRepre
 {

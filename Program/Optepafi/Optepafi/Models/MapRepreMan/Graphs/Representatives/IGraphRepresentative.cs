@@ -48,7 +48,7 @@ public interface IGraphRepresentative<out TGraph, TVertexAttributes, TEdgeAttrib
     {
         foreach (var indicator in indicators)
         {
-            if (indicator is IImplementationElevDataIndependentConstr<TTemplate, TMap, TGraph,TVertexAttributes, TEdgeAttributes> constructor)
+            if (indicator is IImplementationElevDataIndepConstr<TTemplate, TMap, TGraph,TVertexAttributes, TEdgeAttributes> constructor)
             {
                 return constructor.ConstructMapRepre(template, map, progress, cancellationToken);
             }
@@ -82,7 +82,7 @@ public interface IGraphRepresentative<out TGraph, TVertexAttributes, TEdgeAttrib
     {
         foreach (var indicator in indicators)
         {
-            if (indicator is IImplementationElevDataDependentConstr<TTemplate,TMap,TGraph,TVertexAttributes,TEdgeAttributes> constructor)
+            if (indicator is IImplementationElevDataDepConstr<TTemplate,TMap,TGraph,TVertexAttributes,TEdgeAttributes> constructor)
             {
                 return constructor.ConstructMapRepre(template, map, elevData, progress, cancellationToken);
             }

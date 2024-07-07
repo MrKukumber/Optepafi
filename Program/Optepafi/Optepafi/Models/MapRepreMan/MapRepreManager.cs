@@ -10,8 +10,11 @@ using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives.Specific;
 using Optepafi.Models.SearchingAlgorithmMan;
-using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
+using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.UserModelMan.UserModelReps;
+using Optepafi.Models.UserModelMan.UserModels;
 
 namespace Optepafi.Models.MapRepreMan;
 
@@ -21,6 +24,7 @@ namespace Optepafi.Models.MapRepreMan;
 /// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.
 /// </summary>
 public class MapRepreManager : 
+    ITemplateGenericVisitor<HashSet<IMapRepreRepresentative<IMapRepre>>, (ISearchingAlgorithm, IUserModelType<IUserModel<ITemplate>, ITemplate>)>,
     IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
     IGeoLocatedMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
     ITemplateGenericVisitor<IMapRepre, IMap, (IMapRepreRepresentative<IMapRepre>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
@@ -112,15 +116,27 @@ public class MapRepreManager :
     /// <param name="algorithm">Algorithm for which usable map representations are searched for.</param>
     /// <returns>Set of representatives of usable map representations.</returns>
     public HashSet<IMapRepreRepresentative<IMapRepre>> GetUsableMapRepreRepsFor(
-        ISearchingAlgorithm algorithm)
+        ISearchingAlgorithm algorithm, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
     {
-        HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = new();
-        foreach (var mapRepreRep in MapRepreReps)
-        {
-            if (algorithm.DoesRepresentUsableMapRepre(mapRepreRep)) usableMapRepreReps.Add(mapRepreRep);
-        }
+        return userModelType.AssociatedTemplate.AcceptGeneric(this, (algorithm, userModelType));
+    }
 
-        return usableMapRepreReps;
+    public HashSet<IMapRepreRepresentative<IMapRepre>> GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template,
+        (ISearchingAlgorithm, IUserModelType<IUserModel<ITemplate>, ITemplate>) otherParams) where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+    {
+        var (algorithm, userModelType) = otherParams;
+        if (userModelType is IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> comptuingUserModelType)
+        {
+            HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = new();
+            foreach (var mapRepreRep in MapRepreReps)
+            {
+                if (algorithm.DoesRepresentUsableMapRepreUserModelCombination(mapRepreRep, comptuingUserModelType))
+                    usableMapRepreReps.Add(mapRepreRep);
+            }
+
+            return usableMapRepreReps;
+        }
+        return [];
     }
 
     /// <summary>

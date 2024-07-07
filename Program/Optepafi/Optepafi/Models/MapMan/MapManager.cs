@@ -4,8 +4,9 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.MapMan.MapRepresentatives;
+using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 
 namespace Optepafi.Models.MapMan;
 
@@ -70,7 +71,7 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
     /// <returns>Result of map creation.</returns>
     public MapCreationResult TryGetMapFromOf((Stream,string) mapStreamWithPath, IMapFormat<IMap> mapFormat, CancellationToken? cancellationToken, out IMap? map)
     {
-        map = mapFormat.CreateMapFrom(mapStreamWithPath, cancellationToken, out MapCreationResult creationResult);
+        map =  mapFormat.CreateMapFrom(mapStreamWithPath, cancellationToken, out MapCreationResult creationResult);
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested)
             return MapCreationResult.Cancelled;
         return creationResult;

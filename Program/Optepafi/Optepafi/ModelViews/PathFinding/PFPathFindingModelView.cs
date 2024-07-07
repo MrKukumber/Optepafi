@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Optepafi.Models.Graphics;
-using Optepafi.Models.Graphics.Sources;
+using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres;
@@ -12,14 +12,14 @@ using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
-using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.ModelViews.PathFinding.Utils;
 using Optepafi.ModelViews.Utils;
+using Optepafi.ViewModels.Data;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Reports;
-using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ModelViews.PathFinding;
 

@@ -1,6 +1,4 @@
-using ReactiveUI;
-
-namespace Optepafi.ViewModels.DataViewModels;
+namespace Optepafi.ViewModels.Data;
 
 
 /// <summary>

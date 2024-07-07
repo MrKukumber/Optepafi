@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Optepafi.Models.Graphics.GraphicsObjects.MapObjects;
+using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.Maps;
 using Optepafi.ModelViews.Utils;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Graphics.MapObjects;
 
-namespace Optepafi.ModelViews.Converters.Graphics.MapObjects;
+namespace Optepafi.ModelViews.Converters2Vm.Graphics.MapObjects;
 
 /// <summary>
 /// Static class which contains dictionary of <c>TextMap</c> graphic object to ViewModel converters.

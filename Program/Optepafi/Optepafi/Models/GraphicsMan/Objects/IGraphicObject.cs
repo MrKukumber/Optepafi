@@ -1,6 +1,4 @@
-using Optepafi.Models.GraphicsMan.Objects;
-
-namespace Optepafi.Models.Graphics.Objects;
+namespace Optepafi.Models.GraphicsMan.Objects;
 
 /// <summary>
 /// This interface is used for definition of object, that is meant to be displayed for user on some canvas or image.

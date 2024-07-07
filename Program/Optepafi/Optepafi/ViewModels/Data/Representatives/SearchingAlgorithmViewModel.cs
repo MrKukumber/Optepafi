@@ -1,5 +1,4 @@
-using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
-using Optepafi.ViewModels.DataViewModels;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 

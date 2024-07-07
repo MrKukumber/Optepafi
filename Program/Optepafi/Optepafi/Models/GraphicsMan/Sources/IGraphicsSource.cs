@@ -1,7 +1,7 @@
 using DynamicData;
-using Optepafi.Models.Graphics.Objects;
+using Optepafi.Models.GraphicsMan.Objects;
 
-namespace Optepafi.Models.Graphics.Sources;
+namespace Optepafi.Models.GraphicsMan.Sources;
 
 /// <summary>
 /// Represents source of graphic objects that can be shown to user.

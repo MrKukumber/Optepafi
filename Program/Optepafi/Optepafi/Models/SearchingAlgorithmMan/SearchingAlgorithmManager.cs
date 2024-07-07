@@ -5,15 +5,13 @@ using System.Threading;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
-using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
-using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms.Specific;
 using Optepafi.Models.TemplateMan;
-using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.Models.UserModelMan.UserModelTypes;
 
 namespace Optepafi.Models.SearchingAlgorithmMan;
 
@@ -26,9 +24,8 @@ public class SearchingAlgorithmManager :
     ITemplateGenericVisitor<(SearchingAlgorithmManager.SearchResult[], IPath?[]),(Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>,
     ITemplateGenericVisitor<IPath, (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IProgress<ISearchingReport>?, CancellationToken?)>,
     ITemplateGenericVisitor<ISearchingExecutor, (ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>)>,
-    ITemplateGenericVisitor<HashSet<ISearchingAlgorithm>,IUserModelType<IUserModel<ITemplate>,ITemplate>>,
     ITemplateGenericVisitor<HashSet<ISearchingAlgorithm>,(IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>,ITemplate>)>,
-    ITemplateGenericVisitor<bool, (IUserModelType<IUserModel<ITemplate>,ITemplate>, ISearchingAlgorithm)>
+    ITemplateGenericVisitor<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>,ITemplate>, ISearchingAlgorithm)>
 {
     public static SearchingAlgorithmManager Instance { get; } = new();
     private SearchingAlgorithmManager(){}
@@ -71,7 +68,7 @@ public class SearchingAlgorithmManager :
     
     /// <summary>
     /// Returns all algorithms that are able to use at least one combination of map representation type and user model type represented by provided collections of representatives.
-    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.MapRepreMan.MapRepres.Representatives.IMapRepreRepresentative{Optepafi.Models.MapRepreMan.MapRepres.IMapRepre},Optepafi.Models.UserModelMan.UserModelTypes.IUserModelType{Optepafi.Models.UserModelMan.UserModels.IUserModel{Optepafi.Models.TemplateMan.ITemplate},Optepafi.Models.TemplateMan.ITemplate})"/> for each of provided representative combination and then joins results. 
+    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.MapRepreMan.MapRepres.Representatives.IMapRepreRepresentative{Optepafi.Models.MapRepreMan.MapRepres.IMapRepre},Optepafi.Models.UserModelMan.UserModelReps.IUserModelType{Optepafi.Models.UserModelMan.UserModels.IUserModel{Optepafi.Models.TemplateMan.ITemplate},Optepafi.Models.TemplateMan.ITemplate})"/> for each of provided representative combination and then joins results. 
     /// </summary>
     /// <param name="mapRepreReps">Representatives of tested map representations types.</param>
     /// <param name="userModelTypes">Representatives of tested user model types.</param>
@@ -88,109 +85,24 @@ public class SearchingAlgorithmManager :
             }
             return usableAlgorithms;
         }
+
     /// <summary>
-    /// Returns all algorithms that are able to use map representation type represented by provided representative.
-    /// Map representation type must satisfy set of contracts that algorithm requires so it might work correctly.
+    /// Checks whether map representation - user model types combination represented by provided representatives is usable for provided searching algorithm.
+    /// Represented types must satisfy set of contracts that algorithm requires so it might work correctly.
     /// </summary>
     /// <param name="mapRepreRep">Representative of tested map representation type.</param>
-    /// <returns>Set of usable algorithms for tested map representation type.</returns>
-    public HashSet<ISearchingAlgorithm> GetUsableAlgorithmsFor(
-        IMapRepreRepresentative<IMapRepre> mapRepreRep)
-    {
-        HashSet<ISearchingAlgorithm> usableAlgorithms = new();
-        foreach (var searchingAlgorithm in SearchingAlgorithms)
-        {
-            if (searchingAlgorithm.DoesRepresentUsableMapRepre(mapRepreRep)) usableAlgorithms.Add(searchingAlgorithm);
-        }
-        return usableAlgorithms;
-    }
-
-    /// <summary>
-    /// Returns all algorithms that are able to use at least one map representation type represented by provided collection of representatives.
-    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.MapRepreMan.MapRepres.Representatives.IMapRepreRepresentative{Optepafi.Models.MapRepreMan.MapRepres.IMapRepre})"/> for each of provided representative and then joins results. 
-    /// </summary>
-    /// <param name="mapRepreReps">Representatives of tested map representations types.</param>
-    /// <returns>Set of usable algorithms for set of tested map representation types.</returns>
-    public HashSet<ISearchingAlgorithm> GetUsableAlgorithmsFor(
-        IEnumerable<IMapRepreRepresentative<IMapRepre>> mapRepreReps)
-    {
-        HashSet<ISearchingAlgorithm> usableAlgorithms = new();
-        foreach (var mapRepreRep in mapRepreReps)
-        {
-            usableAlgorithms.UnionWith(GetUsableAlgorithmsFor(mapRepreRep));
-        }
-        return usableAlgorithms;
-    }
-
-    /// <summary>
-    /// Checks if map representation type represented by provided representative is usable for provided searching algorithm.
-    /// Map representation type must satisfy set of contracts that algorithm requires so it could work correctly.
-    /// </summary>
-    /// <param name="mapRepreRep">Representative of tested map representation type.</param>
-    /// <param name="algorithm">Algorithm which tests map representation types usability.</param>
-    /// <returns>True if map representation type is usable in provided algorithm. False otherwise.</returns>
-    public bool DoesRepresentUsableMapRepreFor(IMapRepreRepresentative<IMapRepre> mapRepreRep,
-        ISearchingAlgorithm algorithm)
-    {
-        return algorithm.DoesRepresentUsableMapRepre(mapRepreRep);
-    }
-
-    /// <summary>
-    /// Returns all algorithms that are able to use user model type represented by provided representative.
-    /// User model type must satisfy set of contracts that algorithm requires so it could work correctly.
-    /// </summary>
     /// <param name="userModelType">Representative of tested user model type.</param>
-    /// <returns>Set of usable algorithms for tested user model type.</returns>
-    public HashSet<ISearchingAlgorithm> GetUsableAlgorithmsFor(IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
+    /// <param name="algorithm">Algorithm which tests map representation - user model types combination usability.</param>
+    /// <returns>True, if provided combination of types is usable in provided algorithm. False otherwise.</returns>
+    public bool DoesRepresentUsableMapRepreUserModelCombFor(IMapRepreRepresentative<IMapRepre> mapRepreRep, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType, ISearchingAlgorithm algorithm)
     {
-        return userModelType.AssociatedTemplate.AcceptGeneric<HashSet<ISearchingAlgorithm>, IUserModelType<IUserModel<ITemplate>, ITemplate>>(this, userModelType);
+        return userModelType.AssociatedTemplate.AcceptGeneric<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>(this, (mapRepreRep, userModelType, algorithm));
     }
-    HashSet<ISearchingAlgorithm> ITemplateGenericVisitor<HashSet<ISearchingAlgorithm>, IUserModelType<IUserModel<ITemplate>, ITemplate>>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
+    bool ITemplateGenericVisitor<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm) otherParams)
     {
-        HashSet<ISearchingAlgorithm> usableAlgorithms = new();
-        if (userModelType is IUserModelType< IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
-        {
-            foreach (var searchingAlgorithm in SearchingAlgorithms)
-            {
-                if (searchingAlgorithm.DoesRepresentUsableUserModel(computingUserModelType))
-                    usableAlgorithms.Add(searchingAlgorithm);
-            }
-        }
-        return usableAlgorithms;
-    }
-
-    /// <summary>
-    /// Returns all algorithms that are able to use at least one user model type represented by provided collection of representatives.
-    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.UserModelMan.UserModelTypes.IUserModelType{Optepafi.Models.UserModelMan.UserModels.IUserModel{Optepafi.Models.TemplateMan.ITemplate},Optepafi.Models.TemplateMan.ITemplate})"/> for each of provided representative and then joins results. 
-    /// </summary>
-    /// <param name="userModelTypes">Representatives of tested user model types.</param>
-    /// <returns>Set of usable algorithms for set of tested user model types.</returns>
-    public HashSet<ISearchingAlgorithm> GetUsableAlgorithmsFor(IEnumerable<IUserModelType<IUserModel<ITemplate>, ITemplate>> userModelTypes)
-    {
-        HashSet<ISearchingAlgorithm> usableAlgorithms = new();
-        foreach (var userModelType in userModelTypes)
-        {
-            usableAlgorithms.UnionWith(GetUsableAlgorithmsFor(userModelType));
-        }
-        return usableAlgorithms;
-    }
-
-    /// <summary>
-    /// Checks if user model type represented by provided representative is usable for provided searching algorithm.
-    /// User model type must satisfy set of contracts that algorithm requires so it might work correctly.
-    /// </summary>
-    /// <param name="userModelType">Representative of tested user model type.</param>
-    /// <param name="algorithm">Algorithm which tests user model types usability.</param>
-    /// <returns>True, if user model type is usable in provided algorithm. False otherwise.</returns>
-    public bool DoesRepresentUsableUserModelFor(IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType, ISearchingAlgorithm algorithm)
-    {
-        return userModelType.AssociatedTemplate.AcceptGeneric<bool, (IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>(this, (userModelType, algorithm));
-    }
-    bool ITemplateGenericVisitor<bool, (IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm) otherParams)
-    {
-        var (userModelType, algorithm) = otherParams;
+        var (mapRepreRep, userModelType, algorithm) = otherParams;
         if (userModelType is IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
-            return algorithm.DoesRepresentUsableUserModel(computingUserModelType);
+            return algorithm.DoesRepresentUsableMapRepreUserModelCombination(mapRepreRep, computingUserModelType);
         return false;
     }
     
@@ -222,7 +134,7 @@ public class SearchingAlgorithmManager :
     {
         
         var (track, algorithm, mapRepre, userModel, progress, cancellationToken) = otherParams;
-        if (userModel is IWeightComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
+        if (userModel is IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
         {
             if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> graph)
             {
@@ -328,7 +240,7 @@ public class SearchingAlgorithmManager :
         GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>) otherParams)
     {
         var (algorithm, mapRepre, userModel) = otherParams;
-        if (userModel is IWeightComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
+        if (userModel is IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
         {
             if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> definedFunctionalityMapRepre)
             {
@@ -340,3 +252,94 @@ public class SearchingAlgorithmManager :
         throw new ArgumentException("Provided user model is not computing one.");
     }
 }
+
+
+// ITemplateGenericVisitor<HashSet<ISearchingAlgorithm>,IUserModelType<IUserModel<ITemplate>,ITemplate>>,
+
+    /// <summary>
+    /// Returns all algorithms that are able to use map representation type represented by provided representative.
+    /// Map representation type must satisfy set of contracts that algorithm requires so it might work correctly.
+    /// </summary>
+    /// <param name="mapRepreRep">Representative of tested map representation type.</param>
+    /// <returns>Set of usable algorithms for tested map representation type.</returns>
+    // public HashSet<ISearchingAlgorithm> GetUsableAlgorithmsFor(
+        // IMapRepreRepresentative<IMapRepre> mapRepreRep)
+    // {
+        // HashSet<ISearchingAlgorithm> usableAlgorithms = new();
+        // foreach (var searchingAlgorithm in SearchingAlgorithms)
+        // {
+            // if (searchingAlgorithm.DoesRepresentUsableMapRepre(mapRepreRep)) usableAlgorithms.Add(searchingAlgorithm);
+        // }
+        // return usableAlgorithms;
+    // }
+
+   
+    /// <summary>
+    /// Returns all algorithms that are able to use at least one map representation type represented by provided collection of representatives.
+    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.MapRepreMan.MapRepres.Representatives.IMapRepreRepresentative{Optepafi.Models.MapRepreMan.MapRepres.IMapRepre})"/> for each of provided representative and then joins results. 
+    /// </summary>
+    /// <param name="mapRepreReps">Representatives of tested map representations types.</param>
+    /// <returns>Set of usable algorithms for set of tested map representation types.</returns>
+    // public HashSet<ISearchingAlgorithm> GetUsableAlgorithmsFor(
+        // IEnumerable<IMapRepreRepresentative<IMapRepre>> mapRepreReps)
+    // {
+        // HashSet<ISearchingAlgorithm> usableAlgorithms = new();
+        // foreach (var mapRepreRep in mapRepreReps)
+        // {
+            // usableAlgorithms.UnionWith(GetUsableAlgorithmsFor(mapRepreRep));
+        // }
+        // return usableAlgorithms;
+    // }
+
+    /// <summary>
+    /// Checks if map representation type represented by provided representative is usable for provided searching algorithm.
+    /// Map representation type must satisfy set of contracts that algorithm requires so it could work correctly.
+    /// </summary>
+    /// <param name="mapRepreRep">Representative of tested map representation type.</param>
+    /// <param name="algorithm">Algorithm which tests map representation types usability.</param>
+    /// <returns>True if map representation type is usable in provided algorithm. False otherwise.</returns>
+    // public bool DoesRepresentUsableMapRepreFor(IMapRepreRepresentative<IMapRepre> mapRepreRep,
+        // ISearchingAlgorithm algorithm)
+    // {
+        // return algorithm.DoesRepresentUsableMapRepre(mapRepreRep);
+    // }
+
+    // /// <summary>
+    /// Returns all algorithms that are able to use user model type represented by provided representative.
+    /// User model type must satisfy set of contracts that algorithm requires so it could work correctly.
+    /// </summary>
+    /// <param name="userModelType">Representative of tested user model type.</param>
+    /// <returns>Set of usable algorithms for tested user model type.</returns>
+    // public HashSet<ISearchingAlgorithm> GetUsableAlgorithmsFor(IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
+    // {
+        // return userModelType.AssociatedTemplate.AcceptGeneric<HashSet<ISearchingAlgorithm>, IUserModelType<IUserModel<ITemplate>, ITemplate>>(this, userModelType);
+    // }
+    // HashSet<ISearchingAlgorithm> ITemplateGenericVisitor<HashSet<ISearchingAlgorithm>, IUserModelType<IUserModel<ITemplate>, ITemplate>>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
+    // {
+        // HashSet<ISearchingAlgorithm> usableAlgorithms = new();
+        // if (userModelType is IUserModelType< IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
+        // {
+            // foreach (var searchingAlgorithm in SearchingAlgorithms)
+            // {
+                // if (searchingAlgorithm.DoesRepresentUsableUserModel(computingUserModelType))
+                    // usableAlgorithms.Add(searchingAlgorithm);
+            // }
+        // }
+        // return usableAlgorithms;
+    // }
+
+    /// <summary>
+    /// Returns all algorithms that are able to use at least one user model type represented by provided collection of representatives.
+    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.UserModelMan.UserModelReps.IUserModelType{Optepafi.Models.UserModelMan.UserModels.IUserModel{Optepafi.Models.TemplateMan.ITemplate},Optepafi.Models.TemplateMan.ITemplate})"/> for each of provided representative and then joins results. 
+    /// </summary>
+    /// <param name="userModelTypes">Representatives of tested user model types.</param>
+    /// <returns>Set of usable algorithms for set of tested user model types.</returns>
+    // public HashSet<ISearchingAlgorithm> GetUsableAlgorithmsFor(IEnumerable<IUserModelType<IUserModel<ITemplate>, ITemplate>> userModelTypes)
+    // {
+        // HashSet<ISearchingAlgorithm> usableAlgorithms = new();
+        // foreach (var userModelType in userModelTypes)
+        // {
+            // usableAlgorithms.UnionWith(GetUsableAlgorithmsFor(userModelType));
+        // }
+        // return usableAlgorithms;
+    // }

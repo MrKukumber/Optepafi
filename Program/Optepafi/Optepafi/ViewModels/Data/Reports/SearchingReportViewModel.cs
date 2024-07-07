@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.ModelViews.Converters2Vm.Reports.Searching;
 using Optepafi.ViewModels.Data.Graphics;
-using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Data.Reports;

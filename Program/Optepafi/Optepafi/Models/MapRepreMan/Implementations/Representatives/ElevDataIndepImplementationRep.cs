@@ -34,8 +34,9 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 /// <typeparam name="TGraph">Type of graph (map representation) which will be constructed.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes which will be used in vertices of created graph, defined by used template.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes which will be used in edges of created graph, defined by used template.</typeparam>
-public abstract class ElevDataIndepImplementationRep<TTemplate, TMap, TUsableSubMap,TGraph, TVertexAttributes, TEdgeAttributes> : 
-    IImplementationIndicator<TTemplate, TMap, TGraph>, IImplementationElevDataIndependentConstr<TTemplate,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes>
+public abstract class ElevDataIndepImplementationRep<TTemplate, TMap, TUsableSubMap, TGraph, TVertexAttributes, TEdgeAttributes> : 
+    IImplementationIndicator<TTemplate, TMap, TGraph>, 
+    IImplementationElevDataIndepConstr<TTemplate,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes>
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
     where TMap : IMap 
     where TUsableSubMap : TMap, IMap

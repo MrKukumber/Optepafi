@@ -17,7 +17,7 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 /// <typeparam name="TGraph">Type of graph that is returned from construction.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes used in vertices of returned graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes used in edges of returned graph.</typeparam>
-public interface IImplementationElevDataIndependentConstr<in TTemplate, in TMap, out TGraph, TVertexAttributes, TEdgeAttributes> //: IMapRepreConstructor<TTemplate, TMap, TMapRepre> 
+public interface IImplementationElevDataIndepConstr<in TTemplate, in TMap, out TGraph, TVertexAttributes, TEdgeAttributes> //: IMapRepreConstructor<TTemplate, TMap, TMapRepre> 
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
     where TMap : IMap 
     where TGraph : IGraph<TVertexAttributes, TEdgeAttributes> 

@@ -1,6 +1,5 @@
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 

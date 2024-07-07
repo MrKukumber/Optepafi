@@ -1,4 +1,4 @@
-using Optepafi.Models.MapRepreMan.Graphs.SpecificGraphs;
+using Optepafi.Models.MapRepreMan.Graphs.Specific;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.Graphs.Representatives.Specific;

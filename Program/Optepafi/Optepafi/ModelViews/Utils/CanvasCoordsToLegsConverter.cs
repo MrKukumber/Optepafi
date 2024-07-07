@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.SearchingAlgorithmMan;
-using Optepafi.ViewModels.DataViewModels;
+using Optepafi.ViewModels.Data;
 
 namespace Optepafi.ModelViews.Utils;
 

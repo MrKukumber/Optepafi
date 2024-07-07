@@ -1,5 +1,3 @@
-using Optepafi.ViewModels.DataViewModels;
-
 namespace Optepafi.ViewModels.Data.Graphics.MapObjects;
 
 

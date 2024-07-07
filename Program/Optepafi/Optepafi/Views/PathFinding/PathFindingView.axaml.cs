@@ -7,7 +7,7 @@ using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Optepafi.Models.MapMan;
-using Optepafi.ViewModels.DataViewModels;
+using Optepafi.ViewModels.Data;
 using Optepafi.ViewModels.PathFinding;
 using Optepafi.Views.Utils;
 

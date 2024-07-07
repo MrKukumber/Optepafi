@@ -1,18 +1,13 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
-using Optepafi.Models.Graphics.GraphicsAggregators;
-using Optepafi.Models.Graphics.GraphicsAggregators.MapGraphicsAggregators;
-using Optepafi.Models.Graphics.GraphicsAggregators.Path;
-using Optepafi.Models.Graphics.Sources;
-using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Aggregators;
+using Optepafi.Models.GraphicsMan.Aggregators.Map;
+using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.Models.MapRepreMan.Graphs;
-using Optepafi.Models.SearchingAlgorithmMan.Paths;
-using Optepafi.ViewModels.Data.Graphics;
 
-namespace Optepafi.Models.Graphics;
+namespace Optepafi.Models.GraphicsMan;
 
 /// <summary>
 /// Singleton class used for managing of graphics aggregation. It is main channel between graphics aggregation mechanism and applications logic (ModelViews/ViewModels).

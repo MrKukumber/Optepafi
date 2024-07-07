@@ -1,0 +1,257 @@
+\chapter{Súčasná podoba vertikálnej štruktúry aplikácie}
+
+V tejto kapitole uvádzame bližší pohľad na súčasnú podobu hlavného okna a session-ov aplikácie. Aktuálne aplikácia disponuje len jedným typom session-u určeným pre samotné vyhľadávanie ciest v mapách (\textit{Path finding session}). V pláne bolo taktiež vytvoriť session určený na vytváranie užívateľských modelov ale z časových dôvodov nakoniec nebol zahrnutý. Pre obecných informácií o vertikálnej štruktúre aplikácie je možné nájsť v sekcii \ref{Sessions}.
+
+\section{Hlavné okno}
+
+O obecných úlohách hlavného okne sme sa zmienili už v podsekcii \ref{Hlavne_okno_obecne}. V tejto sa pozrieme na aktuálne implementovanú architektúru ako aj funkcionalitu hlavného okna.
+
+
+Hlavné okno je tvorené dvomi časťami: hlavným menu a hlavnými nastaveniami.
+Popri tom ešte využíva v hlavných nastaveniach interaktívne služby mechanizmu pre správu výškových dát.
+
+Ako už bolo spomenuté v podsekcii \ref{Hlavne_okno_obecne}, po zatvorení hlavného okna sa ukončuje aj samotná aplikácia. Tým pádom je úlohou hlavného okna zaistiť uloženie všetkých parametrov aplikácie pre využitie v jej budúcich behoch.
+
+\subsection{Hlavné menu}
+
+Hlavné menu je prvá časť, ktorá sa v hlavnom okne užívateľovi po zapnutí aplikácie zobrazí. Obsahuje možnosti vytvorenia inštancií session-ov a možnosť otvorenia hlavných nastavení aplikácie. 
+
+View model hlavného menu si vedie evidenciu všetkých otvorených session-ov. Na popud zatvorenia hlavného okna sa stará o ich správne ukončenie. Taktiež si drží referenciu na sprostredkovateľa hlavných nastavení. Toho následne môže predať session-om, ktorý ho môžu použiť nastavení platných pre celú aplikáciu.
+
+Zvláštnosťou tejto časti je absencia vlastného model view-u. V aktuálnej podobe aplikácie totiž nie je potrebný, nakoľko hlavné menu nepotrebuje komunikovať so žiadnym modelom. Ak by táto potreba v budúcnosti vznikla, nemal by byť problém model view pre hlavné menu doimplementovať. 
+
+Možné vylepšenie tejto časti by mohlo zahrňovať vypísanie všetkých aktuálne otvorených session-ov pre užívateľa. Zaistilo by to preňho jednoduchšiu orientáciu.
+
+\subsection{Hlavné nastavenia}
+
+Sú druhou časťou hlavného okna. Zabezpečujú možnosť pre užívateľa nastaviť parametre, ktoré sú následne aplikované na celú aplikáciu. 
+
+V aktuálnom stave sú to len dve možnosti konfigurácie: možnosť zmeny lokalizácie aplikácie a možnosť nastavenia implicitne používaného zdroja výškových dát (presnejšie konkrétnej distribúcie výškových dát z daného zdroja). 
+
+Lokalizácia je implementovaná na základe lokalizačných .resx zdrojových súborov. Avalonia je schopná takéto zdroje využívať na zmenu pevných nápisov aplikácie.
+
+Zdroj výškových dát je nastavovaný za pomoci interakcie s mechanizmom konfigurácie výškových dát. Po stlačení príslušného tlačidla sa v hlavnom okne zobrazí view zodpovedajúci tomuto mechanizmu. Užívateľ si v ňom môže vybrať, ktorú distribúciu dát chce implicitne v aplikácii využívať. Viac informácií ohľadom konfigurácie výškových dat nájdete v následujúcej podsekcii.
+
+Do budúcna sa počíta s rozšírením hlavných nastavení do takej miery, aby sa z nich dali konfigurovať aj rôzne preferencie v Model vrstve. Pre toto rozšírenie by sa však museli upraviť modeloví manažéri, aby tieto konfigurácie dokázali prijímať.
+
+\subsection{Konfigurácia výškových dát}\label{konfiguracia_vyskovych_dat}
+
+Konfigurácia výškových dát ma špecifický spôsob využitia. Je určená na to byť otváraná pomocou interakcie vytvorenej inou časťou aplikácie. Jej hlavnou funkciou je dodávanie mechanizmu sťahovania a mazania výškových dát, ktoré je možné využiť ako dodatočný informačný zdroj pri vytváraní mapových reprezentácií. 
+
+Výškové dáta sú sťahované zo špecifických zdrojov. Zdroje výškových dát môžu obsahovať viacero dátových distribúcií. Tie sa môžu líšiť v kvalite, presnosti či dostupnosti dodávaných výškových dát. 
+
+Manipulácia s dátami je vykonávaná po oblastiach zvaných \textit{regióny}. Veľkosť a tvar regiónov si každá distribúcia dát definuje sama. 
+
+V niektorých prípadoch zdroj výškových dát môže vyžadovať k ich sprístupneniu autorizáciu užívateľa pomocou mena a hesla. Táto autorizácia môže byť požadovaná iba pri niektorých jeho dátových distribúciach. V takom prípade mechanizmus zabezpečuje možnosť nechať užívateľa dané údaje poskytnúť. Následne sa aplikácia pokúsi na ich základe požadované dáta získať.   
+
+Sťahovanie a mazanie dát prebieha asynchrónne. Užívateľ je informovaný o tom, ktoré regióny su aktuálne stiahnuté, sťahované, neprítomne a mazané. Viacero regiónov môže byť sťahovaných naraz, či už z jednej distribúcie výškových dát alebo z rôznych. Správne asynchrónne fungovanie manipulácie s dátami zaručujú implementácie zdrojov výškových dát v Model vrstve.
+
+Špecifickou vlastnosťou konfigurácie výškových dát je možnosť ju používať súčasne z viacerých miest v aplikácii. Je navrhnutá tak, aby zvládala korektne akceptovať pokyny z mnohých interakcií naraz. Môže za to špecificky navrhnutý model view, ktorý drží informácie o tom, v akom štádiu sťahovania sú jednotlivé regióny. Jeho jediná inštancia je následne využívaná vo viacerých interakciách súčasne. Tým pádom sa do nich dostanú všetky potrebné informácie na to, aby v bolo možné správne korigovať manipuláciu s dátami.
+
+Proces používania konfigurácie je nasledovný:
+\begin{itemize}
+    \item Pri inicializácii interakcie je novo vytvorenému view modelu(následne použitému v interakcii) predaná aktuálne využívaná distribúcia výškových dát.
+    \item Tá je v konfigurácii nastavená ako aktuálne konfigurovaná a ukázaná pomocou view-u užívateľovi.
+    \item Následne prichádza fáza samotného konfigurovania výškových dát. Užívateľ môže:
+    \begin{itemize}
+        \item Zmeniť aktuálne konfigurovanú distribúciu výškových dát.
+        \item Sťahovať a mazať výškové dáta aktuálne vybranej distribúcie výškových dát. Tieto úkony sú uskutočňované na základe regiónov definovaných konfigurovanou distribúciou.
+        \item Zadať autorizačné údaje pre možnosť využitia dát zo špecifických distribúcií, ktoré autorizáciu vyžadujú. 
+        \item Ukončiť konfiguračnú interakciu.
+    \end{itemize} 
+    \item Pri ukončení interakcie sa posledne konfigurovaná distribúcia vráti ako novo zvolená na používanie.
+\end{itemize}
+
+\section{Session pre vyhľadávanie ciest v mapách}
+
+Vyhľadávanie ciest v mapách je hlavnou náplňou tejto aplikácie. V tejto sekcii popíšeme typ session-u, ktorý zabezpečuje mechanizmus pre doručenie tejto služby. Mechanizmus hľadania cesty v mapách zahrnuje:
+\begin{itemize}
+    \item výber vstupných parametrov tak aby ich kombinácia bola validná 
+    \item vytvorenie grafickej reprezentácie mapy
+    \item vytvorenie mapovej reprezentácie, v ktorej sa bude hladat cesta   
+    \item umožnenie užívateľovi zadať trať, na ktorej sa má cesta vyhľadať
+    \item spustenie implementácie vybraného vyhľadávacieho algoritmu na zvolenej trati a vykreslenie nájdenej cesty 
+\end{itemize} 
+V aktuálnej podobe sa mechanizmus vyhľadávania cesty skladá z troch častí: 
+\begin{itemize}
+    \item Nastavenie parametrov hľadania cesty (template, mapa, užívateľský model a vyhľadávací algoritmus).
+    \item Vytvorenie mapovej reprezentácie na základe vybranej mapy a template-u. Prípadne za pomoci prítomných výškových dát. Táto časť je navrhnutá pre použitie v interakcii. Interakciu iniciuje vyššie uvedená časť. 
+    \item Spúšťanie samotného vyhľadávania na vytvorenej mapovej reprezentácii za využitia vybraného užívateľského modelu. Zahrňuje prijímanie trate od užívateľa a vykreslovanie nájdenej cesty.
+\end{itemize} 
+
+Časť, ktorá sa z časových dôvodov nedostala do mechanizmu hľadania cesty je tzv. \textit{relevance-feedback} mechanizmus. Ten by slúžil pre užívateľa na dodatočné nastavenie hodnôt vybraného užívateľského modelu na základe jeho preferencií vzhľadom ku aktuálne vybranej mape. Z tejto časti zostal v aplikácii len odpovedajúci model view, ktorý v tejto chvíli nenesie žiadnu užitočnú funkcionalitu. Slúži iba pre prenos dát v Model view vrstve. Bol v aplikácii ponechaný z dôvodu plánovaného budúceho rozšírenia aplikácie o relevance-feedback mechanizmus.
+
+V následujúcich podsekciách popíšeme časti, z ktorých je aktuálne  aplikácia tvorená.
+
+\subsection{Nastavenia parametrov pre vyhľadávanie cesty}
+
+Nastavenia parametrov sú prvou časťou, ktorá je užívateľovi po vytvorení session-u predostretá. Ten si za jej pomoci zvolí:
+
+\begin{itemize}
+    \item template atribútov, ktoré budú extrahované do mapovej reprezentácie, 
+    \item mapový súbor, na základe ktorého sa bude vytvárať mapová reprezentácia. Teda súbor s mapou, na ktorej bude prebiehať vyhľadávanie ciest.
+    \item súbor s užívateľským modelom, ktorý bude používaný algoritmom na agregáciu hodnôt z atribútov uložených v mapovej reprezentácii  
+    \item vyhľadávací algoritmus, ktorý bude použitý na samotné hľadanie ciest v mapovej reprezentácii
+\end{itemize}
+
+Na začiatku sa predvolia parametre na posledne použité v predchádzajúcom cestu-hľadajúcom session-e. Tieto uložené parametre prežívajú aj život aplikácie samotnej a teda môžu sa načítať aj posledne použité parametre z predošlých behov aplikácie.
+
+Vyberanie parametrov sa musí riadiť istými pravidlami. To z dôvodu závislostí jednotlivých typov objektov popísaných v podsekciách sekcie \ref{Aspekty_hladania}. Danými pravidlami sú:
+\begin{itemize}
+    \item Jednotlivé parametre sa nastavujú postupne. Najprv je nutné, aby bol vybraný mapový súbor a template. Následne môže byť vybraný aj súbor s užívateľským modelom. Keď sú vybraný všetky tri predchádzajúce položky je možné vybrať vyhľadávací algoritmus. 
+    \item Pre zvolenú kombináciu template-u a formátu mapového súboru musí existovať mapová reprezentácia, ktorá túto kombináciu dokáže spracovať. Taktiež pre zvolený template-u musí existovať typ užívateľského modelu, ktorý dokáže spracovávať atribúty definované týmto template-om. Nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácie nejakého vyhľadávacieho algoritmu.   
+    
+    Vždy, keď je jedna z týchto položiek vybraná a výber druhej by spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje.
+    \item Súbor s užívateľským modelom môže byť vybraný len takého typu, ktorý dokáže spracovávať atribúty definované zvoleným template-om a ktorý spolu s ľubovoľnou mapovou reprezentáciou, ktorá dokáže spracovať aktuálne zvolenú kombináciu template-u a mapového formátu, je vhodnou kombináciou pre aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu. 
+    \item Vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý podporuje typ vybraného užívateľského modelu spolu s nejakou mapovou reprezentáciou vytvorenou na základe zvoleného template-u a mapy. 
+\end{itemize}    
+
+Po výbere mapového súboru sa ihneď z agregovanej mapy vytvori jej grafická reprezentácia a jej ukážka sa zobrazí pre užívateľa.
+
+Po dosadení všetkých parametrov môže užívateľ pokračovať do ďalšej časti mechanizmu, ktorou je vytváranie mapovej reprezentácie. V okamžiku prechodu do tejto časti sa taktiež uložia aktuálne nastavené parametre, aby mohli byť znovu použité ako predvolené v následujúcich behoch tohto session-u. 
+
+Časť vytvárania mapovej reprezentácie je prevedená za pomoci interakcie z aktuálnej časti nastavení. Na základe jej výsledku sa následne buď presunieme v mechanizme ďalej do cestu-vyhľadávacej časti (úspešné vytvorenie) alebo zostaneme v nastaveniach (neúspešné vytvorenie).  
+
+\subsection{Vytváranie mapovej reprezentácie}
+
+Vytváranie mapovej reprezentácie je akási prechodová časť medzi nastaveniami a samotným vyhľadávaním ciest v mape. Je prevedená za pomoci interakcie iniciovanej v nastaveniach po dosadení všetkých potrebných parametrov. Táto interakcia je spracovaná pomocou dialógového okna. Pomocou neho môže užívateľ pozorovať priebeh tvorby mapovej reprezentácie a aktívne sa zapájať pri riešení jej problémov.  
+
+Priebeh tvorby mapovej reprezentácie je nasledovný:
+\begin{itemize}
+    \item Ihneď po inicializácii tejto časti sa spustí proces kontroly podmienok tvorby mapovej reprezentácie. Tieto podmienky môžu byť akéhokoľvek zamerania. Aktuálne je implementovaný jediný typ podmienky a to na kontrolu prítomnosti potrebných výškových dát pri procese tvorenia mapovej reprezentácie. (Táto kontrola zahrňuje aj schopnosť mapy informovať o svojej pozícii a rozlohe).
+    
+    Pokiaľ tvorená mapová reprezentácia indikuje potrebu výškových dát, skontroluje sa či tieto dáta sú prítomné vzhľadom na polohu a rozlohu používanej mapy. Pokiaľ dáta prítomné niesu alebo mapa nie je schopná definovať svoju geografickú polohu alebo rozlohu, vytváranie mapovej reprezentácie zlyhá a užívateľ sa môže vrátiť do nastavení. 
+    
+    Do budúcna je v pláne umožniť užívateľovi z miesta riešenia problému nedostatku výškových dát ich konfiguráciu za pomoci interakcie. Viac informácii o konfigurácii výškových dát v podsekcii \ref{konfiguracia_vyskovych_dat}.
+    \item Pokiaľ kontrola podmienok dobehne úspešne, je automaticky spustený proces vytvárania mapovej reprezentácie. Tento proces môže zabrať dlhšiu dobu a teda je užívateľovi umožnené sledovať jeho vývoj a dokonca ho prerušiť. Po prerušení je užívateľ vrátený naspäť do nastavení.
+\end{itemize}
+
+\subsection{Vyhľadávanie cesty v mape}
+
+Po úspešnom vytvorení mapovej reprezentácie sa môžeme presunúť k samotnému vyhľadávaniu ciest v mape. Máme už totiž k dispozícii všetky potrebné dátové zdroje k správnemu vykonávaniu tejto činnosti.
+
+Na začiatku je vykreslená grafika mapy, ktorá bola vytvorená v nastaveniach pri výbere mapového súboru.
+
+Kolobeh vyhľadávania je rozdelený do troch fáz:
+\begin{itemize}
+    \item Prvou fázou je výber trate užívateľom. Trať sa skladá z postupností bodov medzi ktorými je následne vyhľadávaná cesta. Užívateľ môže pridávať a odoberať body na konci trate.
+    \item Po zadaní cesty prichádza na rad fáza samotného vyhľadávanie cesty. Algoritmus má možnosť reportovať postup vyhľadávania, či pomocou textovej informácie alebo grafického znázorňovania. Užívateľ mám možnosť proces vyhľadávania zrušiť. V takom prípade sa kolobeh vráti do prvej fázy výberu trate.
+    \item Pokiaľ vyhľadávania cesty dobehne úspešne príde narad tretia fáza ktorou je vykreslenie nájdenej cesty. Zároveň sa po strane môžu vypísať informácie o nájdenej trase (napríklad jej dĺžka). V tejto časti by mala byť aj možnosť pre akúsi interakciu s nájdenou cestou. Po dokončení prezerania nájdenej cesty sa opäť vrátime do prvej fáze výberu trate.  
+\end{itemize}
+
+Počas ktorejkoľvek fázy je užívateľ schopný približovať, odďalovať a hýbať s vykreslenou grafikou mapy.
+
+% \subsection{Zaujímavé implementačné postupy} % % V tejto podsekcii vymenujeme pár zaujímavých postupov využitých pri implementácii \textit{hlavného okna}.  % \begin{itemize} % \item \textbf{Zatváranie hlavného okna} - zatváranie hlavného okna je špecifické tým, že ukončuje beh celej aplikácie. Preto je v niektorých prípadoch potrebné, aby bolo možné sa opýtať užívateľa, či si je istý svojou požiadavkou na ukončenie aplikácie. Ideálnym spôsobom na zistenie užívateľovho názoru je použitie dialógového okna. Ač sa to môže zdať ako triviálna úloha, s Avalonia framework-om to zas tak jednoduché nebolo.  % % Následujúci kód ukazuje nefunkčný príklad \texttt{MainWindow\_OnClosing} metódy z triedy \texttt{MainWindow} určenej na zachytávanie a spracovanie udalosti zatvárania hlavného okna: % % \begin{lstlisting} % private async void MainWindow_OnClosing % (object? sender, WindowClosingEventArgs e) % { % bool close = % await ViewModel!.OnClosingCommand.Execute(); % if (!close) % { % e.Cancel = true; % } % } % \end{lstlisting} % 
+    % Na prvý pohľad by sa mohlo zdať že je všetko v poriadku. Pokiaľ spustený \texttt{ViewModel.OnClosingCommand} vráti indikáciu toho, že sa okno nesmie zavrieť, nastaví sa vlastnosť \texttt{Cancel} na true a tým sa zabráni zatvoreniu hlavného okna.
+    % 
+    % Problém je však v tom, že spustenie daného príkazu na view modelu prebieha asynchrónne z dôvodu možnosti otvorenia dialógového okna na komunikáciu s užívateľom. Výsledok príkazu je potrebné očakávať za pomoci kľúčového slova \texttt{await}, nakoľko jeho použitie zabezpečí, že UI thread zostane aktívne a reagujúce.
+    % 
+    % To však na druhú stranu sa stáva problémom, nakoľko UI spracuje argument \texttt{e} prv než naša metóda dokáže správne dosadiť jeho vlastnosť \texttt{Cancel}. Teda okno sa zavrie skorej, než je užívateľovi daná možnosť to zvrátiť.
+    % 
+    % Preto bol použitý následujúci návrh metódy, ktorý zaručuje správny spôsob zatvárania hlavného okna:
+    % \begin{lstlisting}
+    % private bool _alreadyAsked = false;
+    % private async void MainWindow_OnClosing
+        % (object? sender, WindowClosingEventArgs e)
+    % {
+        % if (_alreadyAsked) return;
+        % e.Cancel = true;
+        % bool close = 
+            % await ViewModel!.OnClosingCommand.Execute();
+        % if (close)
+        % {
+            % _alreadyAsked = true;
+            % Close();
+        % }
+    % }
+    % \end{lstlisting}
+% 
+    % V tomto prípade sme predošlý problém vyriešili malým trikom. Vždy keď zaznamenáme udalosť zatvárania okna iniciovanú užívateľom, nastavíme automaticky príznak \texttt{Cancel} argumentu \texttt{e} na true. Tým zabránime predčasnému zatvoreniu okna. 
+    % 
+    % Následne podobne ako v predošlom prípade asynchronne zavoláme spustenie \texttt{ViewModle.OnClosingCommand} a počkáme na výsledný indikátor. Ak indikuje pokračovanie v zatváraní aplikácie, príde na radu náš trik.  
+% 
+    % Nastavíme hodnotu, k tomuto špecifickému účelu vytvoreného, privátneho poľa \texttt{\_alreadyAsked} na true. Toto pole indikuje, že sa hlavné okno už raz užívateľa pýtalo na jeho názor na zatvorenie aplikácie a že jeho odpoveď bola pozitívna. 
+    % 
+    % Po nastavení poľa je opäť zavolaná metóda Close() na hlavnom okne. Na základe tohto volania sa opäť hlavné okno pokúsi zavrieť. Tým pádom sa znova zavolá metóda \texttt{MainWindow\_OnClosing}. Tentokrát sa však jej beh zastaví hneď na začiatku na dotaze, či pole \texttt{\_alreadyAsked} indikuje už zistený užívateľov súhlas so zavretím okna. Tým pádom sa vlastnosť \texttt{Cancel} nestihne nastaviť na true a teda hlavné okno sa následne zavrie.    
+% 
+    % Tento princíp je možné využiť taktiež v ostatných oknách aplikácie, ak by mali potrebu rovnakého mechanizmu ich zatvárania. 
+    % \item \textbf{Súbežné využívanie inštancie \texttt{ElevDataModelView}-u} - za možnosťou súbežného využívania model view-u konfigurácie výškových dát je malý trik. Na začiatok je potrebné si uvedomiť, ktoré dáta je potrebné držať synchrónne vo všetkých používaných konfiguráciách výškových dát a ktoré na druhú stranu majú byť pre každú konfiguráciu jedinečné:
+    % \begin{itemize}
+        % \item Synchrónne je potrebné držať informácie o stave prítomnosti jednotlivých regiónov všetkých distribúcií. Keby sa v týchto dátach objavila akákoľvek nesúmernosť, mohlo by to mať fatálne dôsledky na manipuláciu s výškovými dátami.
+        % \item Na druhú stranu každá konfigurácia by si mala sama určovať, ktorá distribúcia výškových dát je aktuálne konfigurovaná. Predsa len to je jedným zo zámerov procesu konfigurácie. Nechať užívateľa vybrať ním žiadanú distribúciu na použitie či upravenie.
+    % \end{itemize}
+% 
+    % Teda potrebujeme, aby inštancia \texttt{ElevDataModelView} v sebe držala informáciu o prítomnosti jednotlivých regiónov pre všetky distribúcie. Pre konkrétny región je táto informácia uložená v data view modele, do ktorého je príslušný región zabalený (viac informácií ku data view modelom nájdete v podsekcii \ref{ViewModel}). Samotný región si nesie informáciu len o tom, či sú preňho dáta stiahnuté alebo nie. Neinformuje ale o tom, čí sú dáta aktuálne sťahované alebo odstraňované.
+% 
+    % Typicky model view-y vytvárajú vždy nový data view model pre každý údaj získaný z Model vrstvy v momente posúvanie jeho informácie do vrstvy View model. Tu však prichádza na rad malý trik, kedy \texttt{ElevDataModelView} vytvorí data view modely pre všetky existujúce regióny počas svojej inicializácie a uloží ich do slovníka \texttt{TopRegionsOfAllDistributions}. Následne je tento slovník ponúkaný všetkým inštanciám triedy \texttt{ElevConfigViewModel} a teda všetky tieto inštancie pracujú s jednými a tými istými objektmi regiónových data view modelov.
+    % 
+    % Tým pádom všetky inštancie triedy \texttt{ElevConfigViewModel} zdieľajú informácie o stave prítomnosti jednotlivých regiónov a teda nemôže nastať nekonzistencia v akciách manipulujúcich s výškovými dátami. (samozrejme za predpokladu, že užívateľ nie je schopný stlačiť dve tlačidlá v rôznych konfiguračných oknách v ten istý moment. Pri klasickom používaní aplikácie by tento scenár nikdy nemal nastať).
+% 
+    % Na druhú stranu každá inštancia triedy \texttt{ElevConfigViewModel} si sama drží informáciu o aktuálne konfigurovanej distribúcii výškových dát a teda v každej z týchto inštancií môžem v rovnakom čase konfigurovať inú distribúciu.
+% \end{itemize}
+
+
+
+
+
+
+
+
+
+
+% \subsection{Zaujímavé implementačné postupy}
+% 
+% V tejto podsekcii vymenujeme pár zaujímavých postupov využitých pri implementácii \textit{session-u pre vyhľadávanie ciest v mapách}.  
+% 
+% \begin{itemize}
+    % \item \textbf{Spôsob zabezpečenia vnútornej komunikácie model view-ov} - Jednou z náplní Model view vrstvy je zabezpečovať vnútro-session-ovú komunikáciu. Nikto okrem samotných model view-ov by nemal mať k tejto komunikácii prístup. Okolie by mal mať možnosť vidieť iba metódy, ktorými Model view vrstva sprístupňuje svoje služby. 
+    % 
+    % Následujúca implementácia zaručuje ukrytie vnútornej komunikácie model view-ov cesty-vyhľadávacieho session-u. Môže slúžiť ako príklad pre implementáciu Model view vrstvy ostatných session-ov. 
+% 
+    % Model view inštancie pre daný session inicializuje \textit{session model view}. Ten ich následne aj distribuuje do ostatných potrebných častí session-u. 
+    % 
+    % Chyták však je, že vytvárané inštancie niesu typu, ktorý je navonok prezentovaný. Session model view definuje privátnych potomkov týchto prezentovaných typov, ktorí majú, narozdiel od ich predkov, implementovanú funkcionalitu vzájomnej komunikácie. Taktiež override-ujú všetku funkcionalitu predkov, v ktorej je potrebná práca s dátami prúdiacimi vo vnútornej komunikácii.
+% 
+    % Tým že sú tieto \uv{intra} triedy definované ako privátne, nie je možné mimo name-space-u session model view-u sledovať ich komunikáciu.
+% 
+    % \begin{listing}[h]
+    % \begin{lstlisting}
+    % public class PathFindingSessionModelView : SessionModelView
+    % {
+        % public PFSettingsMV Settings { get; }
+        % public PFMapRepreCreatingMV MapRepreCreating { get; }
+        % public PFRelevanceFeedbackMV RelevanceFeedback { get; }
+        % public PFPathFindingMV PathFinding { get; }
+        % 
+        % public PathFindingSessionModelView()
+        % {
+            % var setI = new PFSettingsIntraMV();
+            % var graCreI = new PFMapRepCreIntraMV(setI);
+            % var relFeeI = 
+                % new PFRelevanceFeedbackIntraMV(setI, graCreI);
+            % var patFinI = new PFPathFindingIntraMV(relFeeI);
+% 
+            % Settings = setI;
+            % MapRepreCreating = graCreI;
+            % RelevanceFeedback = relFeeI;
+            % PathFinding = patFinI;
+        % }
+        % private class PFSettingsIntraMV : PFSettingsMV        
+        % private class PFMapRepreCreatingIntraMV : 
+            % PFMapRepreCreatingMV
+        % private class PFRelevanceFeedbackIntraMV : 
+            % PFRelevanceFeedbackMV
+        % private class PFPathFindingIntraMV : PFPathFindingMV
+    % }
+% 
+    % public abstract class PFSettingsMV : ModelViewBase { }        
+    % public abstract class PFMapRepreCreatingMV : 
+        % ModelViewBase { }        
+    % public abstract class PFRelevanceFeedbackMV : 
+        % ModelViewBase { }
+    % public abstract class PFPathFindingMV : ModelViewBase { }      
+    % \end{lstlisting}
+    % \caption{Príklad návrhu session model view-u, ktorý skrýva vnútornú komunikáciu (upravený \texttt{PathFindingSessionModelView})}
+    % \end{listing}
+% 
+% \end{itemize}

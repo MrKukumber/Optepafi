@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Optepafi.Models.Graphics.Objects;
+using Optepafi.Models.GraphicsMan.Objects;
 
 namespace Optepafi.Models.GraphicsMan;
 

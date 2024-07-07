@@ -1,4 +1,4 @@
-namespace Optepafi.ViewModels.DataViewModels;
+namespace Optepafi.ViewModels.Data;
 
 /// <summary>
 /// Represents position on canvas relatively to its left-bottom corner. It is used mainly by ViewModels for communication with Views and ModelViews. Its up to ModelViews to convert these coordinates to map coordinates which are used in Model.

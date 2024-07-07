@@ -15,7 +15,7 @@ namespace Optepafi.Models.ParamsMan;
 /// The load of parameters form serializations is lazy. Only when caller asks for specific parameters, they are loaded
 /// from file and cashed.
 /// </summary>
-public sealed class ParamsManager : ModelViewBase
+public sealed class ParamsManager
 {
     private ParamsManager(){}
     public static ParamsManager Instance { get; } = new();

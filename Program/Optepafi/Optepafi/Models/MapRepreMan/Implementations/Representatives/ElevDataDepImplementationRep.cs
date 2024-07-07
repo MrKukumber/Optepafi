@@ -17,7 +17,7 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 /// </summary>
 public abstract class ElevDataDepImplementationRep<TTemplate, TMap, TUsableSubMap, TGraph, TVertexAttributes, TEdgeAttributes> :
     IImplementationIndicator<TTemplate, TMap, TGraph>, 
-    IImplementationElevDataDependentConstr<TTemplate,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes>
+    IImplementationElevDataDepConstr<TTemplate,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes>
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
     where TMap : IMap 
     where TUsableSubMap : TMap, IGeoLocatedMap

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Optepafi.Models.Graphics.Sources;
+using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.ReportMan.Reports.SearchingState;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Reports;

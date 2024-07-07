@@ -3,7 +3,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
-using Optepafi.ViewModels.DataViewModels;
+using Optepafi.ViewModels.Data;
 
 namespace Optepafi.Views.Utils;
 

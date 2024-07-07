@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Optepafi.ModelViews.Converters.Graphics.PathObjects;
+namespace Optepafi.ModelViews.Converters2Vm.Graphics.PathObjects;
 
 /// <summary>
 /// Static class which contains dictionary of path graphic object to ViewModel converters.

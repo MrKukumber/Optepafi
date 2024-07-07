@@ -1,5 +1,4 @@
 using Optepafi.Models.MapMan;
-using Optepafi.ViewModels.DataViewModels;
 using Optepafi.Views.Utils;
 
 namespace Optepafi.ViewModels.Data.Graphics.PathObjects;

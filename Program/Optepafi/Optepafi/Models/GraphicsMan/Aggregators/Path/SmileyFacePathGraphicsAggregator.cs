@@ -1,15 +1,12 @@
 using System.Threading;
-using Optepafi.Models.Graphics.Objects.Path;
-using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Objects.Path;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.Paths.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
-using ReactiveUI;
 
-namespace Optepafi.Models.Graphics.GraphicsAggregators.Path;
+namespace Optepafi.Models.GraphicsMan.Aggregators.Path;
 
 /// <summary>
 /// Singleton class representing aggregator of graphic objects for <see cref="SmileyFacePath{TVertexAttributes,TEdgeAttributes}"/> path type.

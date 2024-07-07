@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Optepafi.Models.ElevationDataMan.Distributions;
-using Optepafi.Models.Graphics;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
@@ -15,9 +14,10 @@ using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.ParamsMan;
 using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.SearchingAlgorithmMan;
-using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan;
+using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.ModelViews.PathFinding.Utils;
 using Optepafi.ViewModels.Data.Graphics;
@@ -224,7 +224,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     public abstract void SetTemplate(TemplateViewModel? templateViewModel);
     
     /// <summary>
-    /// Method for setting chosen searching algorithm.
+    /// Method for setting chosen searching algorithm. It also chooses one of suitable map representation representative.
     /// </summary>
     /// <param name="searchingAlgorithmViewModel">ViewModel of chosen searching algorithm.</param>
     public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel);
@@ -250,6 +250,16 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// <returns>Task with result of user models load.</returns>
     public abstract Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync((Stream,string) streamWithPath,
         UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken);
+    
+    
+    /// <summary>
+    /// Method which sets first found usable map representation representative so that map representation was usable with provided arguments.
+    /// </summary>
+    /// <param name="templateViewModel">Represents template, which map representation must use.</param>
+    /// <param name="mapFormatViewModel">Represents map format, which map representation must use.</param>
+    /// <param name="userModelTypeViewModel"></param>
+    /// <param name="searchingAlgorithmViewModel"></param>
+    public abstract void SetSomeSuitableMapRepreRepresentative(TemplateViewModel templateViewModel, MapFormatViewModel mapFormatViewModel, UserModelTypeViewModel userModelTypeViewModel, SearchingAlgorithmViewModel searchingAlgorithmViewModel);
     
     /// <summary>
     /// Method for retrieving maps graphics so its preview could be displayed to user.
@@ -287,10 +297,6 @@ public partial class PathFindingSessionModelView
         public override void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel)
         {
             SearchingAlgorithm = searchingAlgorithmViewModel?.SearchingAlgorithm;
-            MapRepreRepresentative = searchingAlgorithmViewModel is not null
-                ? MapRepreManager.Instance.GetUsableMapRepreRepsFor(searchingAlgorithmViewModel.SearchingAlgorithm)
-                    .First()
-                : null;
 
         }
         /// <inheritdoc cref="PFSettingsModelView.LoadAndSetMapAsync"/> 
@@ -327,9 +333,20 @@ public partial class PathFindingSessionModelView
             {
                 case UserModelManager.UserModelLoadResult.Ok:
                     UserModel = userModel;
+                    UserModelType = userModelTypeViewModel.UserModelType;
                     break;
             }
             return userModelCreationResult;
+        }
+
+
+        /// <inheritdoc cref="PFSettingsModelView.SetSomeSuitableMapRepreRepresentative"/> 
+        public override void SetSomeSuitableMapRepreRepresentative(TemplateViewModel templateViewModel, MapFormatViewModel mapFormatViewModel, UserModelTypeViewModel userModelTypeViewModel, SearchingAlgorithmViewModel searchingAlgorithmViewModel)
+        {
+            var mapRepresImplementedForTemplateMapFormatCombination = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
+            var mapRepresUsableWithUserModelTypeInSearchingAlgorithm = MapRepreManager.Instance.GetUsableMapRepreRepsFor(searchingAlgorithmViewModel.SearchingAlgorithm, userModelTypeViewModel.UserModelType);
+            mapRepresImplementedForTemplateMapFormatCombination.IntersectWith(mapRepresUsableWithUserModelTypeInSearchingAlgorithm);
+            MapRepreRepresentative = mapRepresImplementedForTemplateMapFormatCombination.First();
         }
 
         /// <inheritdoc cref="PFSettingsModelView.SaveParameters"/> 
@@ -369,6 +386,7 @@ public partial class PathFindingSessionModelView
             return graphicsSourceViewModel;
         }
         
+        
         /// <summary>
         /// Selected elevation data distribution. Other ModelViews may use it for further work.
         /// </summary>
@@ -393,6 +411,10 @@ public partial class PathFindingSessionModelView
         /// Loaded user model. Other ModelViews may use it for further work.
         /// </summary>
         public IUserModel<ITemplate>? UserModel { get; private set; }
+        /// <summary>
+        /// Indicates type of currently set user model. Other ModelViews may use it for further work. 
+        /// </summary>
+        public IUserModelType<IUserModel<ITemplate>, ITemplate>? UserModelType { get; private set; }
         /// <summary>
         /// Selected map representation representative. Other ModelViews may use it for further work.
         /// </summary>

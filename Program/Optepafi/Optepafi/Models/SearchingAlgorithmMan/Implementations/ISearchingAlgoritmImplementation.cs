@@ -6,11 +6,11 @@ using Optepafi.Models.MapRepreMan.Graphs.Representatives;
 using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
-using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.Models.UserModelMan.UserModelTypes;
 using ITemplate = Avalonia.Styling.ITemplate;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.Implementations;

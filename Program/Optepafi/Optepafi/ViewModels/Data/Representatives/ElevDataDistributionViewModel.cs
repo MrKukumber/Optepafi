@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Distributions;
-using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 

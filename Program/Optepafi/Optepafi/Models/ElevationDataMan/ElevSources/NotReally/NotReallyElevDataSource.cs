@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.ElevationDataMan.Distributions.NotReally;
 
-namespace Optepafi.Models.ElevationDataMan.ElevSources.NotRealyElevDataSource;
+namespace Optepafi.Models.ElevationDataMan.ElevSources.NotReally;
 
 public class NotReallyElevDataSource : IElevDataSource
 {

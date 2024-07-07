@@ -1,20 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Avalonia.Controls;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
-using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Implementations;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.Models.UserModelMan.UserModelTypes;
 
-namespace Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
+namespace Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 
 /// <summary>
 /// Represents one particular path searching algorithm. 
@@ -63,41 +61,6 @@ public interface ISearchingAlgorithm
         
     }
     
-    /// <summary>
-    /// Method that checks whether there is some implementation of algorithm that can use map representation type represented by provided representative.
-    /// It checks if it possesses the correct functionality.
-    /// </summary>
-    /// <param name="mapRepreRep">Representative of map representation type that is checked.</param>
-    /// <returns>True if any of implementations can use represented map representation type. False otherwise.</returns>
-    sealed bool DoesRepresentUsableMapRepre(IMapRepreRepresentative<IMapRepre> mapRepreRep)
-    {
-        var graphRepresentative = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
-        foreach (var implementation in Implementations)
-        {
-            if (implementation.DoesRepresentUsableGraph(graphRepresentative))
-                return true;
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Method that checks whether there is some implementation of algorithm that can use user model type represented by provided <c>IUserModelTyp</c>.
-    /// It checks if it possesses the correct functionality.
-    /// </summary>
-    /// <param name="computingUserModelType">Represents computing user model type that is checked.</param>
-    /// <typeparam name="TVertexAttributes">Type of vertex attributes bounded to tested user model type.</typeparam>
-    /// <typeparam name="TEdgeAttributes">Type of edge attributes bounded to tested user model type.</typeparam>
-    /// <returns>True, if any of implementations can use represented user model type.False otherwise.</returns>
-    sealed bool DoesRepresentUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
-        where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
-    {
-        foreach (var implementation in Implementations)
-        {
-            if (implementation.DoesRepresentUsableUserModel(computingUserModelType)) 
-                return true;
-        }
-        return false;
-    }
     
     /// <summary>
     /// This method executes searching of algorithm on provided graph for each leg of given track each time with respect to one of provided user models.
@@ -159,3 +122,58 @@ public interface ISearchingAlgorithm
     }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// Method that checks whether there is some implementation of algorithm that can use map representation type represented by provided representative.
+    /// It checks if it possesses the correct functionality.
+    /// </summary>
+    /// <param name="mapRepreRep">Representative of map representation type that is checked.</param>
+    /// <returns>True if any of implementations can use represented map representation type. False otherwise.</returns>
+    // sealed bool DoesRepresentUsableMapRepre(IMapRepreRepresentative<IMapRepre> mapRepreRep)
+    // {
+        // var graphRepresentative = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
+        // foreach (var implementation in Implementations)
+        // {
+            // if (implementation.DoesRepresentUsableGraph(graphRepresentative))
+                // return true;
+        // }
+        // return false;
+    // }
+
+    /// <summary>
+    /// Method that checks whether there is some implementation of algorithm that can use user model type represented by provided <c>IUserModelTyp</c>.
+    /// It checks if it possesses the correct functionality.
+    /// </summary>
+    /// <param name="computingUserModelType">Represents computing user model type that is checked.</param>
+    /// <typeparam name="TVertexAttributes">Type of vertex attributes bounded to tested user model type.</typeparam>
+    /// <typeparam name="TEdgeAttributes">Type of edge attributes bounded to tested user model type.</typeparam>
+    /// <returns>True, if any of implementations can use represented user model type.False otherwise.</returns>
+    // sealed bool DoesRepresentUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
+        // where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+    // {
+        // foreach (var implementation in Implementations)
+        // {
+            // if (implementation.DoesRepresentUsableUserModel(computingUserModelType)) 
+                // return true;
+        // }
+        // return false;
+    // }

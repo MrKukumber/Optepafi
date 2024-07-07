@@ -1,14 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
 
-namespace Optepafi.Models.ElevationDataMan.Regions.NotReally;
+namespace Optepafi.Models.ElevationDataMan.Regions.NotReal;
 
-public class SoNotRealRegion : SubRegion
+public class SoNotRealSubRegion : SubRegion
 {
     
     public override string Name => "So not real region";
 
-    public SoNotRealRegion(Region upperRegion)
+    public SoNotRealSubRegion(Region upperRegion)
     {
         UpperRegion = upperRegion;
         upperRegion.SubRegions.Add(this);

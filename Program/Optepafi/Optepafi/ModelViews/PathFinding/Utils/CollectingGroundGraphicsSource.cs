@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DynamicData;
 using Microsoft.CodeAnalysis.CSharp;
-using Optepafi.Models.Graphics.Objects;
-using Optepafi.Models.Graphics.Sources;
 using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Sources;
 
 namespace Optepafi.ModelViews.PathFinding.Utils;
 

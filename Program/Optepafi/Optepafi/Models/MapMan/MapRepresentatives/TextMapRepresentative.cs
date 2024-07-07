@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading;
 using Optepafi.Models.MapMan.Maps;
 
-namespace Optepafi.Models.MapMan.MapFormats;
+namespace Optepafi.Models.MapMan.MapRepresentatives;
 
 /// <summary>
 /// Represents <c>TextMap</c> type in application. It is included in <c>MapManager</c> where indicates usability of this type.

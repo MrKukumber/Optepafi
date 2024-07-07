@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Optepafi.ModelViews.Converters.Graphics.SearchingReportObjects;
+namespace Optepafi.ModelViews.Converters2Vm.Graphics.SearchingStateObjects;
 
 /// <summary>
 /// Static class which contains dictionary of searching state graphic object to ViewModel converters.

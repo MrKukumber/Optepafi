@@ -1,14 +1,12 @@
 using System.Threading;
-using Optepafi.Models.Graphics.Objects.Path;
-using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Objects.Path;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 
-namespace Optepafi.Models.Graphics.GraphicsAggregators.SearchingState;
+namespace Optepafi.Models.GraphicsMan.Aggregators.SearchingState;
 
 /// <summary>
 /// Singleton class representing aggregator of graphic objects for <see cref="SmileyFacePathDrawingState{TVertexAttributes,TEdgeAttributes}"/> searching state type.

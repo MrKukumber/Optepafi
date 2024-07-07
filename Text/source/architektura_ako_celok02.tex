@@ -78,19 +78,19 @@ V aplikácii používame model view-y dvoch typov:
     Je zvykom, že každý model view spadá pod nejaký konkrétny session alebo hlavné okno. V takom prípade je daný model view vytváraný a distribuovaný odpovedajúcim session model view-om/main window model view-om.  
 \end{itemize}
 
-\subsection{Model}
+\subsection{Model}\label{model}
 
-Poslednou \uv{horizontálnou} vrstvou je Model. Model sa svojou štruktúrou diametrálne odlišuje od predchádzajúcich vrstiev. Je tvorený jednotlivými oblasťami, ktoré spravujú dedikovaní \textit{manažéri}. Manažéri sú pristupovaný z jednotlivých model view-ov a doručujú im svoje služby, či už informačné alebo výpočtové. Predstavujú interface-y ponúkajúce prívetivejší spôsob práce s vnútornými mechanizmami modelov. 
+Poslednou \uv{horizontálnou} vrstvou je Model. Je zodpovedná za doručovanie dát a mechanizmov, ktoré spracovávajú tieto dáta, vyšším vrstvám. Model sa svojou štruktúrou diametrálne odlišuje od predchádzajúcich vrstiev. Je tvorený jednotlivými oblasťami, ktoré spravujú dedikovaní \textit{manažéri}. Manažéri sú pristupovaný z jednotlivých model view-ov a doručujú im svoje služby, či už informatívne alebo výpočtové. Predstavujú interface-y ponúkajúce prívetivejší spôsob práce s vnútornými mechanizmami modelov. 
 
 Model je predstaviteľom jedinej perzistentnej \uv{horizontálnej} vrstvy. Manažéri sú väčšinou singleton triedy, ktoré ponúkajú služby všetkým session-om počas celej doby behu aplikácie. Vďaka tomuto spôsobu obsluhovania je Model jediná vrstva, ktorej konštrukty niesu viazané na žiadnu vertikálnu vrstvu (session/hlavné okno). Z tohto návrhu Model vrstvy vyplýva ešte jedna dôležitá vlastnosť modelov a to, že musia byť schopné svoje služby dodávať paralelne pre viacero session-ov. 
 
-Vrstva modelov je jednoducho rozšíriteľná o nových manažérov. Vďaka \textit{singleton} štruktúre sú dosiahnuteľný v podstate z akéhokoľvek miesta v programe a teda nemusia by5 nikde zahrnutí. Manažéri by zasa nemali mať problém prijímať nové, primerane vytvorené implementácie mechanizmov z ich oblastí. Napríklad by nemalo byť zložité dodať nový vyhľadávací algoritmus odpovedajúcemu manažérovi, ktorý ho následne bude ponúkať zvyšku aplikácie. %TODO mozno referencia na miesto, kde sa blizsie hovori o praci manazerov a jak si drzia kolekcie reprezentantov jednotlivych typov pouzitelnych v aplikacii.    
+Vrstva modelov je jednoducho rozšíriteľná o nových manažérov. Vďaka \textit{singleton} štruktúre sú dosiahnuteľný v podstate z akéhokoľvek miesta v programe a teda nemusia byť nikde zahrnutí. Manažéri by zasa nemali mať problém prijímať nové, primerane vytvorené implementácie mechanizmov z ich oblastí. Napríklad by nemalo byť zložité dodať nový vyhľadávací algoritmus odpovedajúcemu manažérovi, ktorý ho následne bude ponúkať zvyšku aplikácie. Viac informácií o návrhu architektúry jednotlivých aktuálnych oblastí vrstvy Model je možné nájsť v kapitole \ref{architektura_model_vrstvy}.
 
 Špecifickým znakom komunikácie medzi Model a Model view vrstvami je, že pri nej dochádza ku strate typovej informácie dodávaných dát. Táto vlastnosť je motivovaná jednoduchým faktom, ktorým je udržanie vrstvy Model view jednoduchou. V Model vrstve sa totiž vo veľkom využívajú generiká pre jednoduché prenášanie typovej informácie v ich mechanizmoch. 
 
 Využívanie generík v Model view vrstve by však prinieslo značné komplikácie v jej implementácii a tomu odpovedajúce zneprehladnenie kódu. Už len Model samotný trpí jemnou, generikami spôsobenou neprehľadnosťou. Z tohto dôvodu bolo rozhodnuté zabezpečiť jednoduchosť vrstvy Model view za cenu straty typovej informácie dát tečúcich z modelov do model view-ov. 
 
-Pri opačnom smere komunikácie je manažérmi typová informácia dodaných parametrov opäť testovaná/získaná (väčšinou za pomoci tzv. \textit{generic visitor pattern}. Viac informácii o tejto modifikácii klasického \textit{visitor pattern} návrhového vzoru nájdete v % kde bude viac informa8cii...referencia na ne).  
+Pri opačnom smere komunikácie je manažérmi typová informácia dodaných parametrov opäť testovaná/získaná (väčšinou za pomoci tzv. \textit{generic visitor pattern}. Viac informácii o tejto modifikácii klasického \textit{visitor pattern} návrhového vzoru nájdete v kapitole \ref{architektura_model_vrstvy}.
 
 V modelu existujú popri manažéroch ešte aj tzv. \textit{sub-manažéri}. Tieto entity sú ale určené pre využitie priamo z modelov. Podporujú generickú komunikáciu, na ktorej báze modely fungujú, bez straty typovej informácie a teda sú príjemnejšie pre modelovú komunikáciu než klasickí manažéri.     
 

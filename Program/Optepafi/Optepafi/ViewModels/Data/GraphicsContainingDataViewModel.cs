@@ -1,5 +1,4 @@
 using Optepafi.ViewModels.Data.Graphics;
-using Optepafi.ViewModels.DataViewModels;
 
 namespace Optepafi.ViewModels.Data;
 

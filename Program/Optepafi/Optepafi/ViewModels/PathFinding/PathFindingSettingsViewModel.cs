@@ -201,11 +201,12 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         MapRepreCreationInteraction = new Interaction<MapRepreCreatingViewModel, bool>();
         ProceedTroughMapRepreCreationCommand = ReactiveCommand.CreateFromTask(async () =>
         {
+            _settingsMv.SetSomeSuitableMapRepreRepresentative(SelectedTemplate!, CurrentlyUsedMapFormat!, CurrentlyUsedUserModelType!, SelectedSearchingAlgorithm!);
             bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingViewModel(_mapRepreCreatingMv));
             if (successfulCreation)
             {
                 _settingsMv.SaveParameters();
-                Task.Run(() => SelectedMapsPreview = null);
+                _ = Task.Run(() => SelectedMapsPreview = null);
                 return WhereToProceed.PathFinding;
             }
             return WhereToProceed.Settings;
@@ -454,7 +455,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// <summary>
     /// Reactive command for proceeding from settings to map representations creation.
     /// It can be executed only when every necessary parameter is set.
-    /// At the start it calls for handling map representation creation interaction. This interaction is handled by View preferably by dialog Window.
+    /// At the start it lets application set some representative of map representation, that corresponds to selected template, map format, user model type and searching algorithm.
+    /// Then it calls for handling map representation creation interaction. This interaction is handled by View preferably by dialog Window.
     /// After interactions end the indicator of successful map representations creation is returned.
     /// If creation of map repre. was successful application proceeds.
     /// If it was not it stays in settings of path finding.

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Optepafi.Models.Graphics.Sources;
+using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.ReportMan.Reports.Path;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Reports;
@@ -50,8 +50,8 @@ public class SmileyFacePathReport2VmConverter : IPathReport2VmConverter<SmileyFa
         string? notSquishedFacesCountInfo = pathReport.NotSquishedFacesCount == 0
                 ? null
                 : pathReport.NotSquishedFacesCount == 1
-                    ? $"There is {pathReport.HorizontallySquishedFacesCount} normally looking smiley face." //TODO: Localize 
-                    : $"There are {pathReport.HorizontallySquishedFacesCount} normally looking smiley faces." ; //TODO: Localize 
+                    ? $"There is {pathReport.NotSquishedFacesCount} normally looking smiley face." //TODO: Localize 
+                    : $"There are {pathReport.NotSquishedFacesCount} normally looking smiley faces." ; //TODO: Localize 
 
         return new SmileyFacePathReportViewModel(pathGraphicsSourceViewModel, horizontallySquishedFacesCountInfo, verticallySquishedFacesCountInfo, notSquishedFacesCountInfo);
     }

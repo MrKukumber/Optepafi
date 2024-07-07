@@ -7,7 +7,6 @@ using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Reports;
-using Optepafi.ViewModels.DataViewModels;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;

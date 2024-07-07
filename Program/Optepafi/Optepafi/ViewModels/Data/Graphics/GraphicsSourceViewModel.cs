@@ -1,17 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Reactive.Linq;
 using DynamicData;
-using Optepafi.Models.Graphics;
-using Optepafi.Models.Graphics.Sources;
-using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.GraphicsMan.Objects;
+using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.MapInterfaces;
-using Optepafi.ModelViews.Converters;
-using Optepafi.ModelViews.Converters.Graphics;
-using Optepafi.ViewModels.DataViewModels;
+using Optepafi.ModelViews.Converters2Vm.Graphics;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Data.Graphics;

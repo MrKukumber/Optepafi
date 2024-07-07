@@ -1,5 +1,4 @@
-using Optepafi.Models.Graphics.Sources;
-using Optepafi.Models.SearchingAlgorithmMan.SearchAlgorithms;
+using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 
 namespace Optepafi.Models.ReportMan.Reports.SearchingState;
