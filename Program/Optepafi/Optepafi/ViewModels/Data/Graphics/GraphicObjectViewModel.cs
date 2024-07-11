@@ -1,5 +1,3 @@
-using ReactiveUI;
-
 namespace Optepafi.ViewModels.Data.Graphics;
 
 /// <summary>

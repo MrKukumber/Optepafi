@@ -1,87 +1,97 @@
 \chapter{Súčasná podoba vertikálnej štruktúry aplikácie}
 
-V tejto kapitole uvádzame bližší pohľad na súčasnú podobu hlavného okna a session-ov aplikácie. Aktuálne aplikácia disponuje len jedným typom session-u určeným pre samotné vyhľadávanie ciest v mapách (\textit{Path finding session}). V pláne bolo taktiež vytvoriť session určený na vytváranie užívateľských modelov ale z časových dôvodov nakoniec nebol zahrnutý. Pre obecných informácií o vertikálnej štruktúre aplikácie je možné nájsť v sekcii \ref{Sessions}.
+V tejto kapitole uvádzame bližší pohľad na súčasnú podobu hlavného okna a session-ov aplikácie. Aktuálne aplikácia disponuje len jedným typom session-u určeným pre samotné vyhľadávanie ciest v mapách (\textit{Path finding session}). Viac informácií o vertikálnej štruktúre aplikácie je možné nájsť v sekcii \ref{sessions_hlavne_okno}.
 
 \section{Hlavné okno}
 
-O obecných úlohách hlavného okne sme sa zmienili už v podsekcii \ref{Hlavne_okno_obecne}. V tejto sa pozrieme na aktuálne implementovanú architektúru ako aj funkcionalitu hlavného okna.
+O obecných úlohách hlavného okne sme sa zmienili už v podsekcii \ref{Hlavne_okno_obecne}. V tejto sekcii sa pozrieme na aktuálne implementovanú architektúru, ako aj funkcionalitu hlavného okna.
 
 
 Hlavné okno je tvorené dvomi časťami: hlavným menu a hlavnými nastaveniami.
-Popri tom ešte využíva v hlavných nastaveniach interaktívne služby mechanizmu pre správu výškových dát.
+Popri tom interaktívne využíva v nastaveniach služby mechanizmu pre správu výškových dát.
 
-Ako už bolo spomenuté v podsekcii \ref{Hlavne_okno_obecne}, po zatvorení hlavného okna sa ukončuje aj samotná aplikácia. Tým pádom je úlohou hlavného okna zaistiť uloženie všetkých parametrov aplikácie pre využitie v jej budúcich behoch.
+Ako už bolo spomenuté v podsekcii \ref{Hlavne_okno_obecne}, po zatvorení hlavného okna sa ukončuje aj aplikácia. Tým pádom je úlohou hlavného okna zaistiť uloženie všetkých parametrov aplikácie pre využitie v budúcich behoch.
+
+V následujúcich podsekciách popíšeme časti, z ktorých je aktuálne hlavné okno tvorené. Na konci tejto sekcie je zobrazený diagram \ref{obr03:hlavne_okno} reprezentujúci jeho architektúru.
 
 \subsection{Hlavné menu}
 
 Hlavné menu je prvá časť, ktorá sa v hlavnom okne užívateľovi po zapnutí aplikácie zobrazí. Obsahuje možnosti vytvorenia inštancií session-ov a možnosť otvorenia hlavných nastavení aplikácie. 
 
-View model hlavného menu si vedie evidenciu všetkých otvorených session-ov. Na popud zatvorenia hlavného okna sa stará o ich správne ukončenie. Taktiež si drží referenciu na sprostredkovateľa hlavných nastavení. Toho následne môže predať session-om, ktorý ho môžu použiť nastavení platných pre celú aplikáciu.
+View model hlavného menu si vedie evidenciu všetkých otvorených session-ov. Pri detekcii zatvorenia hlavného okna sa stará o ich správne ukončenie. Taktiež si drží referenciu na sprostredkovateľa hlavných nastavení. Toho následne môže predať session-om, ktorý ho môžu použiť pre získanie parametrov platných pre celú aplikáciu.
 
-Zvláštnosťou tejto časti je absencia vlastného model view-u. V aktuálnej podobe aplikácie totiž nie je potrebný, nakoľko hlavné menu nepotrebuje komunikovať so žiadnym modelom. Ak by táto potreba v budúcnosti vznikla, nemal by byť problém model view pre hlavné menu doimplementovať. 
+Zvláštnosťou tejto časti je absencia vlastného model view-u. V aktuálnej podobe aplikácie totiž nie je potrebný, nakoľko hlavné menu nepotrebuje komunikovať so žiadnym modelom ani inou časťou hlavného okna. Ak by táto potreba v budúcnosti vznikla, nemal by byť problém model view pre hlavné menu vytvoriť. 
 
-Možné vylepšenie tejto časti by mohlo zahrňovať vypísanie všetkých aktuálne otvorených session-ov pre užívateľa. Zaistilo by to preňho jednoduchšiu orientáciu.
+Možné vylepšenie tejto časti by mohlo zahrňovať vypísanie všetkých aktuálne otvorených session-ov pre užívateľa. Zaistilo by to preňho jednoduchšiu orientáciu v aplikácii.
 
 \subsection{Hlavné nastavenia}
 
-Sú druhou časťou hlavného okna. Zabezpečujú možnosť pre užívateľa nastaviť parametre, ktoré sú následne aplikované na celú aplikáciu. 
+Hlavné nastavenia sú druhou časťou hlavného okna. Zabezpečujú možnosť pre užívateľa nastaviť parametre, ktoré sú využívané celou aplikáciou. 
 
-V aktuálnom stave sú to len dve možnosti konfigurácie: možnosť zmeny lokalizácie aplikácie a možnosť nastavenia implicitne používaného zdroja výškových dát (presnejšie konkrétnej distribúcie výškových dát z daného zdroja). 
+V aktuálnom stave sú to len dve možnosti konfigurácie: možnosť zmeny lokalizácie aplikácie a možnosť nastavenia implicitne používaného zdroja výškových dát (presnejšie konkrétnej distribúcie výškových dát daného zdroja). 
 
-Lokalizácia je implementovaná na základe lokalizačných .resx zdrojových súborov. Avalonia je schopná takéto zdroje využívať na zmenu pevných nápisov aplikácie.
+Lokalizácia je implementovaná na základe lokalizačných .resx zdrojových súborov. Avalonia je schopná takéto zdroje využívať aj na zmenu pevných nápisov aplikácie. %Ak nestihnem prelozit aplikaciu, tak to tu spomenut...ze z casovych dovodov
 
 Zdroj výškových dát je nastavovaný za pomoci interakcie s mechanizmom konfigurácie výškových dát. Po stlačení príslušného tlačidla sa v hlavnom okne zobrazí view zodpovedajúci tomuto mechanizmu. Užívateľ si v ňom môže vybrať, ktorú distribúciu dát chce implicitne v aplikácii využívať. Viac informácií ohľadom konfigurácie výškových dat nájdete v následujúcej podsekcii.
 
-Do budúcna sa počíta s rozšírením hlavných nastavení do takej miery, aby sa z nich dali konfigurovať aj rôzne preferencie v Model vrstve. Pre toto rozšírenie by sa však museli upraviť modeloví manažéri, aby tieto konfigurácie dokázali prijímať.
+Do budúcna sa počíta s rozšírením hlavných nastavení do takej miery, aby sa z nich dali konfigurovať aj rôzne preferencie vo vrstve Model. Pre toto rozšírenie by sa však museli upraviť oblasti vrstvy Model, aby tieto konfigurácie dokázali prijímať.
 
 \subsection{Konfigurácia výškových dát}\label{konfiguracia_vyskovych_dat}
 
-Konfigurácia výškových dát ma špecifický spôsob využitia. Je určená na to byť otváraná pomocou interakcie vytvorenej inou časťou aplikácie. Jej hlavnou funkciou je dodávanie mechanizmu sťahovania a mazania výškových dát, ktoré je možné využiť ako dodatočný informačný zdroj pri vytváraní mapových reprezentácií. 
+Konfigurácia výškových dát má špecifický spôsob využitia. Je určená na to byť otváraná pomocou interakcie, vytvorenej inou časťou aplikácie. Jej hlavnou funkciou je dodávanie mechanizmu sťahovania a mazania výškových dát, ktoré je možné využiť ako dodatočný informačný zdroj pri vytváraní mapových reprezentácií. 
 
 Výškové dáta sú sťahované zo špecifických zdrojov. Zdroje výškových dát môžu obsahovať viacero dátových distribúcií. Tie sa môžu líšiť v kvalite, presnosti či dostupnosti dodávaných výškových dát. 
 
 Manipulácia s dátami je vykonávaná po oblastiach zvaných \textit{regióny}. Veľkosť a tvar regiónov si každá distribúcia dát definuje sama. 
 
-V niektorých prípadoch zdroj výškových dát môže vyžadovať k ich sprístupneniu autorizáciu užívateľa pomocou mena a hesla. Táto autorizácia môže byť požadovaná iba pri niektorých jeho dátových distribúciach. V takom prípade mechanizmus zabezpečuje možnosť nechať užívateľa dané údaje poskytnúť. Následne sa aplikácia pokúsi na ich základe požadované dáta získať.   
+V niektorých prípadoch zdroj výškových dát môže vyžadovať k ich sprístupneniu autorizáciu užívateľa pomocou mena a hesla. Táto autorizácia nemusí byť požadovaná pre všetky jeho dátových distribúciach. V prípade potreby autorizácie mechanizmus zabezpečuje možnosť užívateľovi dané údaje poskytnúť. Následne sa aplikácia pokúsi na ich základe požadované dáta získať.   
 
-Sťahovanie a mazanie dát prebieha asynchrónne. Užívateľ je informovaný o tom, ktoré regióny su aktuálne stiahnuté, sťahované, neprítomne a mazané. Viacero regiónov môže byť sťahovaných naraz, či už z jednej distribúcie výškových dát alebo z rôznych. Správne asynchrónne fungovanie manipulácie s dátami zaručujú implementácie zdrojov výškových dát v Model vrstve.
+Sťahovanie a mazanie dát prebieha asynchrónne. Užívateľ je informovaný o tom, ktoré regióny su aktuálne stiahnuté, sťahované, neprítomné a odstraňované. Viacero regiónov môže byť sťahovaných/odstraňovaných naraz, či už z jedného alebo rôznych dátových zdrojov. Správne asynchrónne fungovanie manipulácie s dátami zaručujú implementácie zdrojov výškových dát v Model vrstve.
 
-Špecifickou vlastnosťou konfigurácie výškových dát je možnosť ju používať súčasne z viacerých miest v aplikácii. Je navrhnutá tak, aby zvládala korektne akceptovať pokyny z mnohých interakcií naraz. Môže za to špecificky navrhnutý model view, ktorý drží informácie o tom, v akom štádiu sťahovania sú jednotlivé regióny. Jeho jediná inštancia je následne využívaná vo viacerých interakciách súčasne. Tým pádom sa do nich dostanú všetky potrebné informácie na to, aby v bolo možné správne korigovať manipuláciu s dátami.
+Špecifickou vlastnosťou konfigurácie výškových dát je možnosť ju používať súčasne z viacerých miest v aplikácii. Je navrhnutá tak, aby zvládala korektne akceptovať pokyny z mnohých interakcií naraz. Vďačí za to návrhu model view-u, ktorý poskytuje informácie o tom, v akom štádiu sťahovania sú jednotlivé regióny. Vďaka tomu všetky naviazané view model-y získajú aktuálne informácie a môžu správne korigovať manipuláciu s výškovými dátami.
 
-Proces používania konfigurácie je nasledovný:
+Spôsob používania konfigurácie výškových dát je následovný:
 \begin{itemize}
-    \item Pri inicializácii interakcie je novo vytvorenému view modelu(následne použitému v interakcii) predaná aktuálne využívaná distribúcia výškových dát.
+    \item Pri inicializácii interakcie je novo vytvorenému view model-u(následne použitému v interakcii) predaná aktuálne využívaná distribúcia výškových dát.
     \item Tá je v konfigurácii nastavená ako aktuálne konfigurovaná a ukázaná pomocou view-u užívateľovi.
     \item Následne prichádza fáza samotného konfigurovania výškových dát. Užívateľ môže:
     \begin{itemize}
         \item Zmeniť aktuálne konfigurovanú distribúciu výškových dát.
-        \item Sťahovať a mazať výškové dáta aktuálne vybranej distribúcie výškových dát. Tieto úkony sú uskutočňované na základe regiónov definovaných konfigurovanou distribúciou.
+        \item Sťahovať a odstraňovať výškové dáta aktuálne vybranej distribúcie. Tieto úkony sú uskutočňované na základe regiónov, definovaných konfigurovanou distribúciou.
         \item Zadať autorizačné údaje pre možnosť využitia dát zo špecifických distribúcií, ktoré autorizáciu vyžadujú. 
         \item Ukončiť konfiguračnú interakciu.
     \end{itemize} 
     \item Pri ukončení interakcie sa posledne konfigurovaná distribúcia vráti ako novo zvolená na používanie.
 \end{itemize}
 
+\begin{figure}[h]\centering
+\includegraphics[]{img/hlavne_okno}
+\caption{Diagram popisujúci architektúru hlavného okna aplikácie.} 
+\label{obr03:hlavne_okno}
+\end{figure}
+
+\pagebreak
+
 \section{Session pre vyhľadávanie ciest v mapách}
 
-Vyhľadávanie ciest v mapách je hlavnou náplňou tejto aplikácie. V tejto sekcii popíšeme typ session-u, ktorý zabezpečuje mechanizmus pre doručenie tejto služby. Mechanizmus hľadania cesty v mapách zahrnuje:
+Vyhľadávanie ciest v mapách je hlavnou náplňou aplikácie. V tejto sekcii popíšeme typ session-u, ktorý zabezpečuje logiku za doručovaním tejto služby. Mechanizmus hľadania cesty v mapách zahrnuje:
 \begin{itemize}
-    \item výber vstupných parametrov tak aby ich kombinácia bola validná 
-    \item vytvorenie grafickej reprezentácie mapy
-    \item vytvorenie mapovej reprezentácie, v ktorej sa bude hladat cesta   
-    \item umožnenie užívateľovi zadať trať, na ktorej sa má cesta vyhľadať
-    \item spustenie implementácie vybraného vyhľadávacieho algoritmu na zvolenej trati a vykreslenie nájdenej cesty 
+    \item výber vstupných parametrov tak, aby ich kombinácia bola platná, 
+    \item vytvorenie grafickej reprezentácie mapy,
+    \item vytvorenie mapovej reprezentácie, v ktorej sa bude vyhľadávať cesta,   
+    \item umožnenie užívateľovi zadať trať, na ktorej sa má cesta vyhľadať,
+    \item spustenie implementácie vybraného vyhľadávacieho algoritmu na zvolenej trati a vykreslenie nájdenej cesty. 
 \end{itemize} 
 V aktuálnej podobe sa mechanizmus vyhľadávania cesty skladá z troch častí: 
 \begin{itemize}
     \item Nastavenie parametrov hľadania cesty (template, mapa, užívateľský model a vyhľadávací algoritmus).
-    \item Vytvorenie mapovej reprezentácie na základe vybranej mapy a template-u. Prípadne za pomoci prítomných výškových dát. Táto časť je navrhnutá pre použitie v interakcii. Interakciu iniciuje vyššie uvedená časť. 
-    \item Spúšťanie samotného vyhľadávania na vytvorenej mapovej reprezentácii za využitia vybraného užívateľského modelu. Zahrňuje prijímanie trate od užívateľa a vykreslovanie nájdenej cesty.
+    \item Vytvorenie mapovej reprezentácie na základe vybranej mapy a template-u. Prípadne za pomoci prítomných výškových dát. Táto časť je navrhnutá pre použitie v interakcii. Interakciu iniciuje časť nastavovania parametrov. 
+    \item Spúšťanie zvoleného vyhľadávacieho algoritmu na vytvorenej mapovej reprezentácii za využitia vybraného užívateľského modelu. Zahrňuje prijímanie trate od užívateľa a vykreslovanie nájdenej cesty.
 \end{itemize} 
 
 Časť, ktorá sa z časových dôvodov nedostala do mechanizmu hľadania cesty je tzv. \textit{relevance-feedback} mechanizmus. Ten by slúžil pre užívateľa na dodatočné nastavenie hodnôt vybraného užívateľského modelu na základe jeho preferencií vzhľadom ku aktuálne vybranej mape. Z tejto časti zostal v aplikácii len odpovedajúci model view, ktorý v tejto chvíli nenesie žiadnu užitočnú funkcionalitu. Slúži iba pre prenos dát v Model view vrstve. Bol v aplikácii ponechaný z dôvodu plánovaného budúceho rozšírenia aplikácie o relevance-feedback mechanizmus.
 
-V následujúcich podsekciách popíšeme časti, z ktorých je aktuálne  aplikácia tvorená.
+V následujúcich podsekciách popíšeme časti, z ktorých je aktuálne session tvorený. Na konci tejto sekcie je zobrazený diagram \ref{obr04:session_vyhladavania_cesty} reprezentujúci jeho architektúru.
 
 \subsection{Nastavenia parametrov pre vyhľadávanie cesty}
 
@@ -91,55 +101,61 @@ Nastavenia parametrov sú prvou časťou, ktorá je užívateľovi po vytvorení
     \item template atribútov, ktoré budú extrahované do mapovej reprezentácie, 
     \item mapový súbor, na základe ktorého sa bude vytvárať mapová reprezentácia. Teda súbor s mapou, na ktorej bude prebiehať vyhľadávanie ciest.
     \item súbor s užívateľským modelom, ktorý bude používaný algoritmom na agregáciu hodnôt z atribútov uložených v mapovej reprezentácii  
-    \item vyhľadávací algoritmus, ktorý bude použitý na samotné hľadanie ciest v mapovej reprezentácii
+    \item vyhľadávací algoritmus použitý na hľadanie ciest v mapovej reprezentácii
 \end{itemize}
 
-Na začiatku sa predvolia parametre na posledne použité v predchádzajúcom cestu-hľadajúcom session-e. Tieto uložené parametre prežívajú aj život aplikácie samotnej a teda môžu sa načítať aj posledne použité parametre z predošlých behov aplikácie.
+Na začiatku sa predvolia parametre na tie, ktoré boli použité v predchádzajúcej inštancii session-u. Uložené parametre prežívajú aj samotné behy aplikácie.  
 
-Vyberanie parametrov sa musí riadiť istými pravidlami. To z dôvodu závislostí jednotlivých typov objektov popísaných v podsekciách sekcie \ref{Aspekty_hladania}. Danými pravidlami sú:
+Vyberanie parametrov sa musí riadiť istými pravidlami z dôvodu závislostí jednotlivých typov objektov, popísaných v podsekciách sekcie \ref{Aspekty_hladania}. Danými pravidlami sú:
 \begin{itemize}
-    \item Jednotlivé parametre sa nastavujú postupne. Najprv je nutné, aby bol vybraný mapový súbor a template. Následne môže byť vybraný aj súbor s užívateľským modelom. Keď sú vybraný všetky tri predchádzajúce položky je možné vybrať vyhľadávací algoritmus. 
-    \item Pre zvolenú kombináciu template-u a formátu mapového súboru musí existovať mapová reprezentácia, ktorá túto kombináciu dokáže spracovať. Taktiež pre zvolený template-u musí existovať typ užívateľského modelu, ktorý dokáže spracovávať atribúty definované týmto template-om. Nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácie nejakého vyhľadávacieho algoritmu.   
+    \item Jednotlivé parametre sa nastavujú postupne. Najprv je nutné, aby bol vybraný mapový súbor a template. Následne môže byť vybraný aj súbor s užívateľským modelom. Keď sú všetky tri predchádzajúce položky vybrané, je možné vybrať vyhľadávací algoritmus. 
+    \item Pre zvolenú kombináciu template-u a formátu mapového súboru musí existovať mapová reprezentácia, ktorá túto kombináciu dokáže spracovať. Taktiež pre zvolený template-u musí existovať typ užívateľského modelu, ktorý dokáže spracovávať atribúty definované týmto template-om. Nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácie ľubovoľného vyhľadávacieho algoritmu.   
     
-    Vždy, keď je jedna z týchto položiek vybraná a výber druhej by spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje.
+    Keď je vybraný buďto template alebo mapový súbor a výber druhej položky by spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje. Možným vylepšením by bolo zabezpečenie indikácie platných kombinácií template-ov a formátov mapových súborov.
     \item Súbor s užívateľským modelom môže byť vybraný len takého typu, ktorý dokáže spracovávať atribúty definované zvoleným template-om a ktorý spolu s ľubovoľnou mapovou reprezentáciou, ktorá dokáže spracovať aktuálne zvolenú kombináciu template-u a mapového formátu, je vhodnou kombináciou pre aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu. 
-    \item Vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý podporuje typ vybraného užívateľského modelu spolu s nejakou mapovou reprezentáciou vytvorenou na základe zvoleného template-u a mapy. 
+    \item Vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý podporuje typ vybraného užívateľského modelu a niektorej mapovej reprezentácie, ktorú je možné vytvoriť z vybraného template-u a mapového súboru.
 \end{itemize}    
 
-Po výbere mapového súboru sa ihneď z agregovanej mapy vytvori jej grafická reprezentácia a jej ukážka sa zobrazí pre užívateľa.
+Po výbere mapového súboru sa ihneď z agregovanej mapy vytvori jej grafická reprezentácia a jej náhľad sa zobrazí užívateľovi.
 
-Po dosadení všetkých parametrov môže užívateľ pokračovať do ďalšej časti mechanizmu, ktorou je vytváranie mapovej reprezentácie. V okamžiku prechodu do tejto časti sa taktiež uložia aktuálne nastavené parametre, aby mohli byť znovu použité ako predvolené v následujúcich behoch tohto session-u. 
+Po dosadení všetkých parametrov môže užívateľ pokračovať do ďalšej časti mechanizmu, ktorou je vytváranie mapovej reprezentácie. V okamžiku prechodu do tejto časti sa taktiež uložia aktuálne nastavené parametre, aby mohli byť znovu použité ako predvolené v následujúcich inštanciách session-u. 
 
-Časť vytvárania mapovej reprezentácie je prevedená za pomoci interakcie z aktuálnej časti nastavení. Na základe jej výsledku sa následne buď presunieme v mechanizme ďalej do cestu-vyhľadávacej časti (úspešné vytvorenie) alebo zostaneme v nastaveniach (neúspešné vytvorenie).  
+Proces vytvárania mapovej reprezentácie je vykonaný za pomoci interakcie z parametre-nastavovacej časti. Na základe jej výsledku sa následne buď presunieme v mechanizme ďalej do cestu-vyhľadávacej časti (úspešné vytvorenie) alebo zostaneme v nastaveniach.(neúspešné vytvorenie).  
 
 \subsection{Vytváranie mapovej reprezentácie}
 
-Vytváranie mapovej reprezentácie je akási prechodová časť medzi nastaveniami a samotným vyhľadávaním ciest v mape. Je prevedená za pomoci interakcie iniciovanej v nastaveniach po dosadení všetkých potrebných parametrov. Táto interakcia je spracovaná pomocou dialógového okna. Pomocou neho môže užívateľ pozorovať priebeh tvorby mapovej reprezentácie a aktívne sa zapájať pri riešení jej problémov.  
+Vytváranie mapovej reprezentácie je akási prechodová časť medzi nastaveniami a samotným vyhľadávaním ciest v mape. Je prevedená za pomoci interakcie iniciovanej v nastaveniach, po dosadení všetkých potrebných parametrov. Táto interakcia je spracovaná pomocou dialógového okna. Pomocou neho môže užívateľ pozorovať priebeh tvorby mapovej reprezentácie a aktívne sa zapájať pri riešení vzniknutých problémov.  
 
 Priebeh tvorby mapovej reprezentácie je nasledovný:
 \begin{itemize}
-    \item Ihneď po inicializácii tejto časti sa spustí proces kontroly podmienok tvorby mapovej reprezentácie. Tieto podmienky môžu byť akéhokoľvek zamerania. Aktuálne je implementovaný jediný typ podmienky a to na kontrolu prítomnosti potrebných výškových dát pri procese tvorenia mapovej reprezentácie. (Táto kontrola zahrňuje aj schopnosť mapy informovať o svojej pozícii a rozlohe).
+    \item Ihneď po inicializácii tejto časti sa spustí proces kontroly podmienok tvorby mapovej reprezentácie. Aktuálne je využívaná iba kontrola prítomnosti potrebných výškových dát pri procese tvorenia mapovej reprezentácie. (Táto kontrola zahrňuje aj schopnosť mapy dodať informácie o svojej pozícii a rozlohe, ktoré sú nevyhnutné pre získanie odpovedajúcich výškových dát).
     
-    Pokiaľ tvorená mapová reprezentácia indikuje potrebu výškových dát, skontroluje sa či tieto dáta sú prítomné vzhľadom na polohu a rozlohu používanej mapy. Pokiaľ dáta prítomné niesu alebo mapa nie je schopná definovať svoju geografickú polohu alebo rozlohu, vytváranie mapovej reprezentácie zlyhá a užívateľ sa môže vrátiť do nastavení. 
+    Pokiaľ tvorená mapová reprezentácia indikuje potrebu výškových dát, skontroluje sa, či sú odpovedajúce dáta prítomné. Pokiaľ dáta prítomné niesu alebo mapa nie je schopná definovať svoju geografickú polohu/rozlohu, vytváranie mapovej reprezentácie zlyhá a užívateľ sa môže vrátiť do nastavení. 
     
-    Do budúcna je v pláne umožniť užívateľovi z miesta riešenia problému nedostatku výškových dát ich konfiguráciu za pomoci interakcie. Viac informácii o konfigurácii výškových dát v podsekcii \ref{konfiguracia_vyskovych_dat}.
-    \item Pokiaľ kontrola podmienok dobehne úspešne, je automaticky spustený proces vytvárania mapovej reprezentácie. Tento proces môže zabrať dlhšiu dobu a teda je užívateľovi umožnené sledovať jeho vývoj a dokonca ho prerušiť. Po prerušení je užívateľ vrátený naspäť do nastavení.
+    Do budúcna je v pláne umožniť užívateľovi riešenie problému nedostatku výškových dát za pomoci interakcie s konfiguráciou výškových dát. Viac informácii o konfigurácii výškových dát je možné nájsť v podsekcii \ref{konfiguracia_vyskovych_dat}.
+    \item Pokiaľ kontrola podmienok dobehne úspešne, je automaticky spustený proces vytvárania mapovej reprezentácie. Tento proces môže trvať dlhšiu dobu a teda je užívateľovi umožnené sledovať jeho vývoj alebo ho dokonca prerušiť. Po prerušení je užívateľ vrátený naspäť do nastavení parametrov.
 \end{itemize}
 
 \subsection{Vyhľadávanie cesty v mape}
 
-Po úspešnom vytvorení mapovej reprezentácie sa môžeme presunúť k samotnému vyhľadávaniu ciest v mape. Máme už totiž k dispozícii všetky potrebné dátové zdroje k správnemu vykonávaniu tejto činnosti.
+Po úspešnom vytvorení mapovej reprezentácie sa môžeme presunúť k samotnému vyhľadávaniu ciest v mape. V tejto chvíli máme k dispozícii všetky potrebné dátové zdroje k správnemu vykonávaniu tejto činnosti.
 
 Na začiatku je vykreslená grafika mapy, ktorá bola vytvorená v nastaveniach pri výbere mapového súboru.
 
 Kolobeh vyhľadávania je rozdelený do troch fáz:
 \begin{itemize}
-    \item Prvou fázou je výber trate užívateľom. Trať sa skladá z postupností bodov medzi ktorými je následne vyhľadávaná cesta. Užívateľ môže pridávať a odoberať body na konci trate.
-    \item Po zadaní cesty prichádza na rad fáza samotného vyhľadávanie cesty. Algoritmus má možnosť reportovať postup vyhľadávania, či pomocou textovej informácie alebo grafického znázorňovania. Užívateľ mám možnosť proces vyhľadávania zrušiť. V takom prípade sa kolobeh vráti do prvej fázy výberu trate.
-    \item Pokiaľ vyhľadávania cesty dobehne úspešne príde narad tretia fáza ktorou je vykreslenie nájdenej cesty. Zároveň sa po strane môžu vypísať informácie o nájdenej trase (napríklad jej dĺžka). V tejto časti by mala byť aj možnosť pre akúsi interakciu s nájdenou cestou. Po dokončení prezerania nájdenej cesty sa opäť vrátime do prvej fáze výberu trate.  
+    \item Prvou fázou je umožnenie výberu trate užívateľovi. Trať sa skladá z postupností bodov, medzi ktorými je následne vyhľadávaná cesta. Užívateľ môže pridávať a odoberať koncové body trate.
+    \item Po zadaní cesty prichádza na rad fáza samotného vyhľadávanie cesty. Algoritmus má možnosť podávať správy o postupe vyhľadávania, či už pomocou textovej informácie alebo grafického znázorňovania. Užívateľ mám možnosť proces vyhľadávania predčasne ukončiť. V takom prípade sa kolobeh vráti do prvej fázy výberu trate.
+    \item Pokiaľ vyhľadávania cesty dobehne úspešne, príde na rad tretia fáza, ktorou je vykreslenie nájdenej cesty. Zároveň sa po strane môžu vypísať informácie o nájdenej trase (napríklad jej dĺžka, prekonané prevýšenie, atď.). V tejto fáze je užívateľovi umožnené interagovať s nájdenými cestami (s takými, ktoré takúto funkcionalitu zabezpečujú). Po dokončení prezerania nájdenej cesty sa opäť vrátime do prvej fázy výberu trate.  
 \end{itemize}
 
-Počas ktorejkoľvek fázy je užívateľ schopný približovať, odďalovať a hýbať s vykreslenou grafikou mapy.
+Počas ktorejkoľvek fázy je užívateľ schopný približovať, odďalovať a hýbať so zobrazenou grafikou vyhľadávania.
+
+\begin{figure}[h]\centering
+\includegraphics[]{img/session_vyhladavania_cesty}
+\caption{Diagram popisujúci architektúru session-u pre vyhľadávanie cesty v mapách} 
+\label{obr04:session_vyhladavania_cesty}
+\end{figure}
 
 % \subsection{Zaujímavé implementačné postupy} % % V tejto podsekcii vymenujeme pár zaujímavých postupov využitých pri implementácii \textit{hlavného okna}.  % \begin{itemize} % \item \textbf{Zatváranie hlavného okna} - zatváranie hlavného okna je špecifické tým, že ukončuje beh celej aplikácie. Preto je v niektorých prípadoch potrebné, aby bolo možné sa opýtať užívateľa, či si je istý svojou požiadavkou na ukončenie aplikácie. Ideálnym spôsobom na zistenie užívateľovho názoru je použitie dialógového okna. Ač sa to môže zdať ako triviálna úloha, s Avalonia framework-om to zas tak jednoduché nebolo.  % % Následujúci kód ukazuje nefunkčný príklad \texttt{MainWindow\_OnClosing} metódy z triedy \texttt{MainWindow} určenej na zachytávanie a spracovanie udalosti zatvárania hlavného okna: % % \begin{lstlisting} % private async void MainWindow_OnClosing % (object? sender, WindowClosingEventArgs e) % { % bool close = % await ViewModel!.OnClosingCommand.Execute(); % if (!close) % { % e.Cancel = true; % } % } % \end{lstlisting} % 
     % Na prvý pohľad by sa mohlo zdať že je všetko v poriadku. Pokiaľ spustený \texttt{ViewModel.OnClosingCommand} vráti indikáciu toho, že sa okno nesmie zavrieť, nastaví sa vlastnosť \texttt{Cancel} na true a tým sa zabráni zatvoreniu hlavného okna.

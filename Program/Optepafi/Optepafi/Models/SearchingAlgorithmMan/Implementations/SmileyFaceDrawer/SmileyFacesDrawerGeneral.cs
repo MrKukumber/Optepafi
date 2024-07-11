@@ -8,7 +8,6 @@ using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.Paths.Specific;
-using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;

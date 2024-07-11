@@ -19,7 +19,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 /// It contains collection of its implementations. Each implementation can require other graphs functionalities.
 /// Searching is done upon graph which satisfies functionality conditions.
 /// Computing of weights for edges is done by provided user model to the algorithm. Weights of graphs edges are not computed before algorithm execution. Every algorithm should check at first that weight of specific edge is computed already. If it is not, it has to let user model to compute this weight and set it to the edge during run of its execution.
-/// Before execution of algorithm should be run <see cref="DoesRepresentUsableMapRepre"/> method to check if given graph is usable for this algorithm.
+/// Before execution of algorithm should be run <see cref="DoesRepresentUsableMapRepreUserModelCombination{TVertexAttributes,TEdgeAttributes}"/> method to check if given graph - user model combination is usable for this algorithm.
 /// Methods of searching algorithm should not be called directly from logic of application (ModelViews/ViewModels). <see cref="SearchingAlgorithmManager"/> should be used instead.
 /// Each searching algorithm should be singleton and its instance presented in <see cref="SearchingAlgorithmManager"/> as viable option.
 /// <para>

@@ -1,13 +1,8 @@
 using System;
-using System.ComponentModel;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Controls.Documents;
-using Avalonia.Data.Converters;
-using Optepafi.Models.MapRepreMan;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Reports;
 using ReactiveUI;
@@ -96,13 +91,15 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                 case PrerequisitiesCheckResult.ElevDataAbsent:
                     CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
                     DialogText = "Elevation data for given map are not awailable.\n " +
-                                 "Return to elevation data settings and download corresponing data for chosen map \n" +
+                                 "Return to elevation data settings and download \n" +
+                                 "corresponing data for chosen map \n" +
                                  "or use another elevation data source."; //TODO: localize
                     break;
                 case PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution:
                     CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
                     DialogText = "Elevation data can not be retrieved for given map.\n" +
-                                 "Please, choose different map or elevation data source and try again."; //TODO: localize
+                                 "Please, choose different map or elevation data \n" +
+                                 "source and try again."; //TODO: localize
                     break;
             }
         });
@@ -152,7 +149,7 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
         get => _dialogText;
         set => this.RaiseAndSetIfChanged(ref _dialogText, value);
     }
-    private string? _dialogText = null;
+    private string? _dialogText;
 
     /// <summary>
     /// Text of information about currently executed procedure. It can contain simple information about what process is currently running at background. 
@@ -163,7 +160,7 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
         get => _currentProcedureInfoText;
         set => this.RaiseAndSetIfChanged(ref _currentProcedureInfoText, value);
     }
-    private string? _currentProcedureInfoText = null;
+    private string? _currentProcedureInfoText;
     
     /// <summary>
     /// Indicates state of map repre. creation process when absence of elevation data for creation should be resolved. In this state application waits for input from user. 
@@ -185,7 +182,7 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
     private ObservableAsPropertyHelper<bool> _isMapRepreCreateCommandExecuting;
     
     /// <summary>
-    /// Enumeration of every prerequisity check results.
+    /// Enumeration of every prerequisite check results.
     /// </summary>
     public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataDistribution, Canceled}
     
@@ -193,7 +190,7 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
     /// Reactive command whether all prerequisites for map representation creation are satisfied.
     /// It runs asynchronously check for elevation data requirements of map repre. creation.
     /// Based on result reports corresponding <c>PrerequisitesCheckResult</c>.
-    /// This command can be expanded by other prerequisites checks which could in future occure.
+    /// This command can be expanded by other prerequisites checks which could in future occur.
     /// </summary>
     public ReactiveCommand<Unit, PrerequisitiesCheckResult> CheckPrerequisitesCommand { get; }
     

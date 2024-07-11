@@ -1,6 +1,4 @@
 using Optepafi.Models.MapRepreMan;
-using ReactiveUI;
-
 namespace Optepafi.ViewModels.Data.Reports;
 
 /// <summary>

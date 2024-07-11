@@ -1,6 +1,4 @@
-using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.GraphicsMan.Sources;
-using Optepafi.Models.SearchingAlgorithmMan.Paths;
 
 namespace Optepafi.Models.ReportMan.Reports.Path;
 

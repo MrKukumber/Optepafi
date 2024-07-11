@@ -14,7 +14,7 @@ namespace Optepafi.Models.ParamsMan;
 public static class DataSerializer
 {
     
-    private static readonly string defaultSerializationsDirRelativePath = "defaultSerializationsDir";
+    private static readonly string DefaultSerializationsDirRelativePath = "defaultSerializationsDir";
     /// <summary>
     /// Serialize provided object <paramref name="obj"/> to json file named after type put as type parameter <typeparamref name="T"/>.
     /// File is saved to default relative directory "defaultSerializationsDir".
@@ -24,7 +24,7 @@ public static class DataSerializer
     /// <returns></returns>
     public static bool Serialize<T>(T obj)
     {
-        return Serialize(obj, defaultSerializationsDirRelativePath);
+        return Serialize(obj, DefaultSerializationsDirRelativePath);
     }
     
     /// <summary>
@@ -61,7 +61,7 @@ public static class DataSerializer
     public static T? TryDeserialize<T>()
         where T : IParams
     {
-        return TryDeserialize<T>(defaultSerializationsDirRelativePath);
+        return TryDeserialize<T>(DefaultSerializationsDirRelativePath);
     }
     
     /// <summary>

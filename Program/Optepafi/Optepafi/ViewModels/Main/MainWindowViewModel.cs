@@ -1,16 +1,13 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.PlatformServices;
 using Optepafi.ModelViews.Main;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.Main;
 
 /// <summary>
-/// ViewModel of the main window. It is the first ViewModel which corresponding View is shown to user when application starts. It is the top layer of main windows logic.
+/// ViewModel of the main window.  It is the top layer of main windows logic.
 /// It contains all ViewModels which are used in main window and have impact on whole applications behaviour. They do not correspond to some individual session.
 /// Additionally it handles closing main window and therefore closing of whole application.
 /// For more information on ViewModels in general see <see cref="ViewModelBase"/>.

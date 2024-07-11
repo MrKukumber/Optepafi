@@ -9,7 +9,7 @@ using PathFindingSessionModelView = Optepafi.ModelViews.PathFinding.PathFindingS
 namespace Optepafi.ViewModels.Main;
 
 /// <summary>
-/// ViewModel which is responsible for control over main menu.
+/// ViewModel which is responsible for control over main menu. It is the first ViewModel which corresponding View is shown to user when application starts.
 /// This is special case of ViewModel which does not have its own corresponding ModelView.
 /// All he needs is main settings ModelView provider which it can pass to created sessions.
 /// Its tasks include:

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.MapMan;
 using ReactiveUI;
@@ -24,9 +23,10 @@ public abstract class RegionViewModel : WrappingDataViewModel<Region>
 
     /// <summary>
     /// Construction of new region ViewModel.
+    /// It is fine, that it does not initialize <c>SubRegions</c> property, because it is initialized in constructors of all successors of this type.
     /// </summary>
     /// <param name="region">Region to which will be coupled new ViewModel.</param>
-    protected RegionViewModel(Region region)
+    protected RegionViewModel(Region region) 
     {
         // SubRegions property will be initialized in successor constructor.
         Region = region;

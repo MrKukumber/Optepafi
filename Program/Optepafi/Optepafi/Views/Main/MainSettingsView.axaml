@@ -7,14 +7,13 @@
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="350"
              x:Class="Optepafi.Views.Main.MainSettingsView"
              x:DataType="mVm:MainSettingsViewModel">
-    <UserControl.DataTemplates></UserControl.DataTemplates>
     <DockPanel>
         <TextBlock Name="MainSettingsHeaderTextBlock" Text="{x:Static local:Local.MainSettingsHeader}"
                    DockPanel.Dock="Top" HorizontalAlignment="Center"></TextBlock>
         <Button Name="MainMenuButton" Content="Main menu" Command="{Binding GoToMainMenuCommand}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"></Button>
         <Grid ColumnDefinitions="* *" RowDefinitions="* *">
             <StackPanel Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Name="LocalizationTextBlock" Text="Vyber si jazyk"></TextBlock>
+                <TextBlock Name="LocalizationTextBlock">Choose language</TextBlock>
                 <ComboBox Name="LocalizationComboBox"
                           ItemsSource="{Binding Cultures}"
                           SelectedItem="{Binding CurrentCulture}"></ComboBox>
@@ -24,12 +23,6 @@
                 <TextBlock Text="{Binding CurrentElevDataDistribution.Name}">
                 </TextBlock>
             </StackPanel>
-            <!-- <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"> -->
-                <!-- <TextBlock Name="SearchingAlgorithmTextBlock" Text="Vyber vyhladavaci algoritmus"></TextBlock> -->
-                <!-- <ComboBox Name="SearchingAlgorithmComboBox"> -->
-                    <!-- <TextBlock Text="A*"></TextBlock> -->
-                <!-- </ComboBox> -->
-            <!-- </StackPanel> -->
         </Grid>
     </DockPanel>
 </UserControl>

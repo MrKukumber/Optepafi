@@ -1,13 +1,9 @@
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.ReportMan.Aggregators;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
-using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.ViewModels.Data.Reports;
 
 namespace Optepafi.Models.ReportMan;
 

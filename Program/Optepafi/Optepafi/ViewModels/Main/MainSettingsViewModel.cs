@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Reactive;
 using System.Reactive.Linq;
-using Optepafi.Models.ParamsMan;
 using Optepafi.ModelViews.Main;
 using Optepafi.ViewModels.Data.Representatives;
 using ReactiveUI;

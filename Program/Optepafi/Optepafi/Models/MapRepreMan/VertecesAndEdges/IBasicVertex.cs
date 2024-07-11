@@ -9,26 +9,21 @@ namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
 /// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes borne by assigned type of hold edges.</typeparam>
 public interface IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes> :
-    IBasicVertex<IBasicEdge<IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>, TVertexAttributes>
+    IBasicVertex<IBasicEdge<IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>,
+        TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
-{
-    
-}
+    where TEdgeAttributes : IEdgeAttributes;
 
 /// <summary>
 /// Vertex that presents basic vertex functionality: it can bear attributes of defined type and can hold outgoing edges of defined type.
 /// </summary>
 /// <typeparam name="TEdge">Type of hold edges originating in this vertex.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
-public interface IBasicVertex<TEdge, out TVertexAttributes> :  
+public interface IBasicVertex<TEdge, out TVertexAttributes> :
     IEdgesContainingVertex<TEdge>,
     IAttributeBearingVertex<TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
-    where TEdge : IEdge
-{
-    
-}
+    where TEdge : IEdge;
 
 /// <summary>
 /// Vertex that is able to return references to oriented edges of defined type originating in this vertex. It also provides methods for setting and getting weights of these edges.
@@ -71,4 +66,4 @@ public interface IAttributeBearingVertex<out TVertexAttributes> : IVertex
 /// <summary>
 /// Base interface representing vertex of some graph.
 /// </summary>
-public interface IVertex { }
+public interface IVertex;

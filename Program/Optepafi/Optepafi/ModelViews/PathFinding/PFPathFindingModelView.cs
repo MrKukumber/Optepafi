@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.GraphicsMan.Sources;
-using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.ReportMan;
@@ -35,8 +34,6 @@ namespace Optepafi.ModelViews.PathFinding;
 /// </summary>
 public abstract class PFPathFindingModelView : ModelViewBase
 {
-    protected PFPathFindingModelView(){}
-
     /// <summary>
     /// Asynchronously returns graphics source of provided track defined by its coordinates.
     /// Graphic source is returned after collecting of tracks graphic objects is finished for better visual properties.
@@ -66,7 +63,7 @@ public abstract class PFPathFindingModelView : ModelViewBase
     public abstract void OnClosed();
 }
 
-public partial class PathFindingSessionModelView : SessionModelView
+public partial class PathFindingSessionModelView 
 {
     private class PFPathFindingIntraModelView(PFRelevanceFeedbackIntraModelView relevanceFeedback) : PFPathFindingModelView
     {

@@ -5,7 +5,7 @@
         xmlns:pfVm="clr-namespace:Optepafi.ViewModels.PathFinding"
         mc:Ignorable="d"
         x:Class="Optepafi.Views.PathFinding.Windows.MapRepreCreatingDialogWindow"
-        Title="MapCreatingWindow" Width="300" Height="150"
+        Title="MapCreatingWindow" Width="350" Height="150"
         x:DataType="pfVm:MapRepreCreatingViewModel"
         WindowStartupLocation="CenterOwner"
         Closed="MapRepreCreatingWindow_OnClosed">

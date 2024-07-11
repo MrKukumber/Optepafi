@@ -1,40 +1,47 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
 using Avalonia.Data.Converters;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
-using Optepafi.ViewModels;
 using Optepafi.ViewModels.PathFinding;
-using ReactiveUI;
 
 namespace Optepafi.Views.PathFinding;
 
+/// <summary>
+/// View for parameter setting part of the path finding mechanism.
+/// For more information on this part of mechanism see <see cref="PathFindingSettingsViewModel"/>.
+/// </summary>
 public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSettingsViewModel>
 {
     public PathFindingSettingsView()
     {
         InitializeComponent();
-        this.WhenActivated(_ => AlgorithmSelectingComboBox.SelectedItem = ViewModel!.SelectedSearchingAlgorithm);
+        
+        if (Design.IsDesignMode) return;
     }
 
+    /// <summary>
+    /// Method for handling of user model selecting buttons <c>OnClick</c> event.
+    /// It opens file picker, so that user could select file with serialized user model.
+    /// It lets user choose format, which is permitted by applications logic.
+    /// After user chooses file, its format is tested again.
+    /// It is tested again because user is able to choose file with not valid format despite previously mentioned restriction on shown files.
+    /// If format of selected file is valid, its stream and name is passed to execution of <c>LoadUserModelCommand</c>.
+    /// </summary>
+    /// <param name="sender">Sender of <c>OnClick</c> event.</param>
+    /// <param name="e"><c>OnClick</c> events arguemtns.</param>
     private async void UserModelSelectingButton_OnClick(object? sender, RoutedEventArgs e)
     {
         TopLevel topLevel = TopLevel.GetTopLevel(this)!;
         var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             AllowMultiple = false,
-            FileTypeFilter = ViewModel!.UsableUserModelTypes!
+            FileTypeFilter = ViewModel!.UsableUserModelTypes
                 .Select(userModelType => new FilePickerFileType(userModelType.UserModelTypeName) 
                 {
                     Patterns = new[] {"*." + userModelType.UserModelFileNameSuffix + "." + userModelType.UserModelFileExtension}
@@ -45,7 +52,7 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
         if (files.Count >= 1) { file = files[0]; }
         else return;
 
-        if (!ViewModel.UsableUserModelTypes!.Any(userModelType =>
+        if (!ViewModel.UsableUserModelTypes.Any(userModelType =>
             {
                 return Regex.IsMatch(file.Path.LocalPath,
                     @".*\." + userModelType.UserModelFileNameSuffix + @"\." + userModelType.UserModelFileExtension + "$");
@@ -55,7 +62,7 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
             return;
         }
         //There is no need for disposing files[0] instance. It is assigned to no other variable than variable files.
-        //Of disposing opened stream on this instance takes care ViewModel.
+        //For disposing opened stream on this instance takes care ViewModel.
         try
         {
                 await ViewModel.LoadUserModelCommand
@@ -65,13 +72,23 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
         }
     }
 
+    /// <summary>
+    /// Method for handling of map selecting buttons <c>OnClick</c> event.
+    /// It opens file picker, so that user could select file with map.
+    /// It lets user choose only format, which is permitted by applications logic.
+    /// After user chooses file, its format is tested again.
+    /// It is tested again because user is able to choose file with not valid format despite previously mentioned restriction on shown files.
+    /// If format of selected file is valid, its stream and name is passed to execution of <c>LoadMapCommand</c>.
+    /// </summary>
+    /// <param name="sender">Sender of <c>OnClick</c> event.</param>
+    /// <param name="e"><c>OnClick</c> events arguments.</param>
     private async void MapSelectingButton_OnClick(object? sender, RoutedEventArgs e)
     {
         TopLevel topLevel = TopLevel.GetTopLevel(this)!;
         var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             AllowMultiple = false,
-            FileTypeFilter = ViewModel!.UsableMapFormats?
+            FileTypeFilter = ViewModel!.UsableMapFormats
                 .Select(mapFormat => new FilePickerFileType(mapFormat.MapFormatName) 
                 {
                     Patterns = new[] {"*." + mapFormat.Extension}
@@ -81,7 +98,7 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
         if (files.Count >= 1) { file = files[0]; }
         else return;
 
-        if (!ViewModel.UsableMapFormats!.Any(mapFormat =>
+        if (!ViewModel.UsableMapFormats.Any(mapFormat =>
             {
                 return Regex.IsMatch(file.Path.LocalPath,
                     @".*\." + mapFormat.Extension + "$");
@@ -91,7 +108,7 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
             return;
         }
         //There is no need for disposing files[0] instance. It is assigned to no other variable than variable files.
-        //Of disposing opened stream on this instance takes care ViewModel.
+        //For disposing opened stream on this instance takes care ViewModel.
         try
         {
                 await ViewModel.LoadMapCommand

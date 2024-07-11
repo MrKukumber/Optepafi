@@ -10,7 +10,6 @@ using Optepafi.Models.MapRepreMan;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.TemplateMan;
-using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.ViewModels.Data.Reports;
 
 namespace Optepafi.ModelViews.PathFinding;
@@ -25,7 +24,6 @@ namespace Optepafi.ModelViews.PathFinding;
 /// </summary>
 public abstract class PFMapRepreCreatingModelView : ModelViewBase
 {
-    protected PFMapRepreCreatingModelView(){}
     /// <summary>
     /// Enumeration of elevation data check results. It contains result for every circumstance that can occur during check.
     /// </summary>
@@ -47,7 +45,7 @@ public abstract class PFMapRepreCreatingModelView : ModelViewBase
     /// <returns></returns>
     public abstract Task CreateMapRepreAsync(IProgress<string> progressInfo, IProgress<MapRepreConstructionReportViewModel> mapRepreCreationProgress, CancellationToken cancellationToken);
 }
-public partial class PathFindingSessionModelView : SessionModelView
+public partial class PathFindingSessionModelView 
 {
     /// <summary>
     /// Successor of <see cref="PFMapRepreCreatingModelView"/> created by this session ModelView so some of its methods could be implemented by using data hidden from the outside world.
@@ -68,8 +66,7 @@ public partial class PathFindingSessionModelView : SessionModelView
         /// <inheritdoc cref="PFMapRepreCreatingModelView.CheckMapRequirementsForElevData"/>
         public override ElevDataPrerequisiteCheckResult CheckMapRequirementsForElevData(CancellationToken ct)
         {
-            IMapFormat<IMap> mapFormat= MapManager.Instance.GetFormat(Map);
-            switch (MapRepreManager.Instance.DoesNeedElevData(Template, mapFormat, MapRepreRepresentative))
+            switch (MapRepreManager.Instance.DoesNeedElevData(Template, MapFormat, MapRepreRepresentative))
             {
                 case MapRepreManager.NeedsElevDataIndic.No:
                     if (ct.IsCancellationRequested) return ElevDataPrerequisiteCheckResult.Cancelled;
@@ -146,6 +143,11 @@ public partial class PathFindingSessionModelView : SessionModelView
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when template in settings is not set. When map creating ModelView is used it should be set already.</exception>
         private ITemplate Template => Settings.Template ?? throw new ArgumentNullException( nameof(Settings.Template), "Template should be set before using PFMapRepreCreatingModelView");
+        /// <summary>
+        /// Map format of map retrieved from settings ModelView whose representation is created.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when map format in settings is not set. When map creating ModelView is used it should be set already.</exception>
+        private IMapFormat<IMap> MapFormat => Settings.MapFormat ?? throw new ArgumentNullException(nameof(Settings.Map), "Map should be set before using PFMapRepreCreatingModelView"); 
         /// <summary>
         /// Map retrieved form settings ModelView whose representation is created.
         /// </summary>

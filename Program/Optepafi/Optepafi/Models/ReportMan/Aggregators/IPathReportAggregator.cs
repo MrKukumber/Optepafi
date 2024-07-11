@@ -1,4 +1,5 @@
 using System.Threading;
+using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;

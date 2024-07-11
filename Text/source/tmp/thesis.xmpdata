@@ -1,6 +1,6 @@
 % Generated automatically from metadata.tex, please don't edit here.
 \Author{Matej Kukurugya}
 \Title{Trasy v mapách pro orientační běh}
-\Keywords{ objektový návrh\sep MVVM\sep hledáni tras v otevřeném terénu }
-\Subject{ Původním záměrem této bakalářské práce bylo vytvořit aplikaci, která bude na základe mapových dat hledat vhodnou trasu v prostředí orientačního běhu. Tento záměr však nebyl plně naplněn, neboť až příliš času zabralo vytvoření návrhu a naprogramování samotné aplikace. Tím pádem nezbyl čas na vytvoření vyhledávacích alogirtmů ani mechanizmů na spracováni map na kterých by jse cesty hledaly. Z tohto důvodu vznikla jenom 'skořápka' aplikace, která toho v týhle chvíli sama o sobě nic nedelá. Objektový návrh je za to velmi detailně promyšlen a propracován. Tato bakalářská práce tedy v konečném důsledku pojednává právě o objektovém návrhu vytovřené aplikace a myšlenkách aplikovaných v průběhu jeho tvorby. }
+\Keywords{ návrh aplikace\sep MVVM\sep hledáni tras v otevřeném terénu }
+\Subject{ Původním záměrem této bakalářské práce bylo vytvořit aplikaci, která bude na základě mapových dat hledat vhodnou trasu v prostředí orientačního běhu. Tento záměr však nebyl plně naplněn, neboť až příliš času zabralo vytvoření návrhu a naprogramování samotné aplikace. Z toho důvodu nezbyl čas na vytvoření vyhledávacích alogirtmů ani mechanizmů na zpracováni map, na kterých by se cesty hledaly. Z tohoto důvodu vznikla jenom kostra, která v této chvíli sama o sobě neobsahuje žádnou konrkétní funkcionalitu. Oproti tomu objektový návrh je detailně promyšlen a propracován. Tato bakalářská práce tedy v konečném důsledku pojednává právě o objektovém návrhu vytovřené aplikace a myšlenkách aplikovaných v průběhu jeho tvorby. }
 \Publisher{Charles University}

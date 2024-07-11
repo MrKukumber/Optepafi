@@ -500,6 +500,14 @@ OUTPUT tmp/sessiony_podrobne03.aux
 INPUT ./sessiony_podrobne03.tex
 INPUT ./sessiony_podrobne03.tex
 INPUT sessiony_podrobne03.tex
+INPUT ./img/hlavne_okno.pdf
+INPUT ./img/hlavne_okno.pdf
+INPUT ./img/hlavne_okno.pdf
+INPUT ./img/hlavne_okno.pdf
+INPUT ./img/session_vyhladavania_cesty.pdf
+INPUT ./img/session_vyhladavania_cesty.pdf
+INPUT ./img/session_vyhladavania_cesty.pdf
+INPUT ./img/session_vyhladavania_cesty.pdf
 INPUT ./modely_podrobne04.tex
 INPUT ./modely_podrobne04.tex
 OUTPUT tmp/modely_podrobne04.aux
@@ -526,10 +534,6 @@ INPUT ./literatura.tex
 INPUT ./literatura.tex
 INPUT literatura.tex
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmcsc10.tfm
-INPUT tmp/thesis.lof
-INPUT tmp/thesis.lof
-INPUT tmp/thesis.lof
-OUTPUT tmp/thesis.lof
 INPUT tmp/thesis.aux
 INPUT tmp/title.aux
 INPUT tmp/title.aux

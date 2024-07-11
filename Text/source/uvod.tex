@@ -1,7 +1,24 @@
 \chapter*{Úvod}
 \addcontentsline{toc}{chapter}{Úvod}
 
-Následuje několik ukázkových kapitol, které doporučují, jak by se
-měla závěrecná práce sázet. Primárně popisují použití \TeX{}ové
-šablony, ale obecné rady poslouží dobře i~uživatelům jiných
-systémů.
+Veľmi často v živote narážame na situácie, kedy sa potrebujeme dostať z bodu A do bodu B čo najrýchlejším spôsobom. V mnohých prípadoch máme k dispozícii sieť cestných komunikácii či chodníkov, na základe ktorých sa môžeme rozhodovať, ktorá trasa je pre nás vyhovujúca. Pre takéto prípady nám veľmi dobre poslúžia už existujúce navigačné systémy, ktoré majú podrobne zmapovanú cestné siete a vedia nám na základe parametrov týchto ciest určiť najrýchlejšiu alebo najúspornejšiu trasu.
+
+Avšak môžu nastať aj situácie, kedy je cestná sieť priveľmi riedka, až takmer neprítomná. Väčšinou takéto situácie nastávajú vo voľnej prírode a oblastiach ďaleko od civilizácie. V takých prípadoch nám konvenčné navigácie veľmi dobre neposlúžia. Ak máme k dispozícii kvalitnú mapu, môžeme sa pokúsiť v nej nájsť vyhovujúcu trasu vlastnými silami, ale často existuje príliš mnoho možností, ktorými sa môžeme vydať. Preto by sa niekedy hodilo mať nástroj, ktorý na základe zadaných parametrov nájde na predloženej mape najrýchlejšiu trasu, po ktorej sa človek môže vydať k vytýčenému cieľu.
+
+Príklady využitia takéhoto software-u by sme mohli nájsť v špecifických profesiách ako sú napríklad lesníctvo, záchranné služby či ozbrojené sily. V týchto profesiách je potrebné z času na čas sa dostať na odľahlé miesto, aby bolo možné vykonať ich zámery.
+
+Takýto software by však našiel uplatnenie taktiež v rekreačných aktivitách. Či už turizmus alebo športové aktivity sa často odohrávajú vo voľnej prírode. Z rôznych dôvodov sa potom môže zísť schopnosť nájdenia najrýchlejšej trasy späť do najbližšej obývanej oblasti, či už za alebo bez pomoci ciest. 
+
+Rád by som vyzdvihol špecificky jedno športové odvetvie, ktoré veľmi úzko súvisí s hľadaním ciest v otvorenom teréne a to \textit{orientačný beh}. \uv{Orientačný beh (skratka OB) je športové odvetvie vytrvalostného charakteru, pri ktorom je úlohou prejsť alebo prebehnúť podľa mapy a buzoly trať vyznačenú na mape za čo najkratší čas. V teréne nie je trať vyznačená, sú tam umiestnené iba kontrolné stanovišťa (Kontroly)}\cite{CoJeOrientak}. Tento šport bol hlavnou motiváciou pre vytvorenie aplikácie, v ktorej by si užívateľ mohol nechať vykresliť na mape najrýchlejší postup pre ním zadanú trať. 
+
+\bigskip
+
+V tejto práci sú popísané myšlienky použité pri vytváraní spomínanej aplikácie, jej architektúry a implementácie.
+
+V prvej kapitole je možné nájsť abstrakciu nad samotnou problematikou hľadania najrýchlejšej trasy v otvorenom teréne podľa konkrétnej mapy. Táto abstrakcia je poňatá z pohľadu orientačného behu. Ďalej je v nej možné nájsť informácie o využitých prostriedkoch pri implementácii aplikácie. Týmito prostriedkami sú napríklad využívaný jazyk a knižnice, ale aj použitý návrhový vzor architektúry aplikácie. 
+
+V následujúcej kapitole je predostretý bližší pohľad na spomínanú architektúru aplikácie, jej \uv{horizontálne} a \uv{vertikálne} členenie na vrstvy. Funkcie a správanie jednotlivých vrstiev sú v tejto kapitole dopodrobna vysvetlené.
+
+V tretej kapitole sa pozrieme na aktuálne existujúce vertikálne vrstvy aplikácie. Ich funkciu a architektúru popíšeme po jednotlivých častiach. Popíšeme špecifické vlastnosti a spôsoby použitia týchto častí. 
+
+Vo štvrtej a zároveň poslednej kapitole bude možný k nahliadnutiu popis horizontálnej vrstvy zvanej \textit{Model}. Táto vrstva sa delí na mnoho oblastí, z ktorých každá spravuje určitý typ dát a mechanizmov využívaných vo zvyšných vrstvách aplikácie. Štruktúra implementácií jednotlivých oblastí bude v tejto kapitole detailne rozobraná.

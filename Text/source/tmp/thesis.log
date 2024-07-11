@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  8 JUL 2024 00:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  11 JUL 2024 12:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -954,7 +954,7 @@ Package biblatex Info: Reference segment=0 on input line 123.
 
  (./title.tex
 Package hyperref Info: Option `pageanchor' set `false' on input line 44.
-<img/logo-cs.pdf, id=203, 506.4591pt x 156.49065pt>
+<img/logo-cs.pdf, id=191, 506.4591pt x 156.49065pt>
 File: img/logo-cs.pdf Graphic file (type pdf)
 <use img/logo-cs.pdf>
 Package pdftex.def Info: img/logo-cs.pdf  used on input line 48.
@@ -1015,60 +1015,86 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
  [6]
 \openout2 = `uvod.aux'.
 
- (./uvod.tex) [7
+ (./uvod.tex [7
 
 
-]
+]) [8]
 \openout2 = `obecne01.aux'.
 
  (./obecne01.tex
 Kapitola 1.
-[8
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 9.
+(c:/texlive/2023/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [9
+
+
+
+
+{c:/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}] [10] [11]
+
+pdfTeX warning: pdflatex.exe (file ./img/konceptove_zavislosti.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/konceptove_zavislosti.pdf, id=307, 309.07468pt x 220.9053pt>
+File: img/konceptove_zavislosti.pdf Graphic file (type pdf)
+<use img/konceptove_zavislosti.pdf>
+Package pdftex.def Info: img/konceptove_zavislosti.pdf  used on input line 94.
+(pdftex.def)             Requested size: 309.07391pt x 220.90475pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[12] [13 <./img/konceptove_zavislosti.pdf>] [14]) [15]
+\openout2 = `architektura_ako_celok02.aux'.
+
+ (./architektura_ako_celok02.tex
+Kapitola 2.
+[16
 
 
 
 
 ]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 23.
- (c:/texlive/2023/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [9{c:/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}] [10] [11]
 
-pdfTeX warning: pdflatex.exe (file ./img/konceptove_zavislosti.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<img/konceptove_zavislosti.pdf, id=323, 309.07468pt x 220.9053pt>
-File: img/konceptove_zavislosti.pdf Graphic file (type pdf)
-<use img/konceptove_zavislosti.pdf>
-Package pdftex.def Info: img/konceptove_zavislosti.pdf  used on input line 108.
-(pdftex.def)             Requested size: 309.07391pt x 220.90475pt.
-[12 <./img/konceptove_zavislosti.pdf>] [13]) [14]
-\openout2 = `architektura_ako_celok02.aux'.
+LaTeX Warning: Reference `Sessions' on page 17 undefined on input line 37.
 
- (./architektura_ako_celok02.tex
-Kapitola 2.
-[15
+[17] [18]
 
+LaTeX Warning: Reference `Sessions' on page 19 undefined on input line 69.
 
-
-
-] [16] [17] [18] [19]
+[19] [20]
 
 pdfTeX warning: pdflatex.exe (file ./img/priklad_struktury.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<img/priklad_struktury.pdf, id=395, 407.60278pt x 379.4175pt>
+<img/priklad_struktury.pdf, id=382, 407.60278pt x 379.4175pt>
 File: img/priklad_struktury.pdf Graphic file (type pdf)
 <use img/priklad_struktury.pdf>
 Package pdftex.def Info: img/priklad_struktury.pdf  used on input line 122.
 (pdftex.def)             Requested size: 407.60178pt x 379.41656pt.
-) [20] [21 <./img/priklad_struktury.pdf>]
+) [21] [22 <./img/priklad_struktury.pdf>]
 \openout2 = `sessiony_podrobne03.aux'.
 
  (./sessiony_podrobne03.tex
 Kapitola 3.
-[22
+[23
 
 
 
 
-] [23] [24] [25] [26]) [27]
+] [24]
+
+pdfTeX warning: pdflatex.exe (file ./img/hlavne_okno.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/hlavne_okno.pdf, id=417, 367.3725pt x 339.18718pt>
+File: img/hlavne_okno.pdf Graphic file (type pdf)
+<use img/hlavne_okno.pdf>
+Package pdftex.def Info: img/hlavne_okno.pdf  used on input line 68.
+(pdftex.def)             Requested size: 367.37158pt x 339.18636pt.
+[25 <./img/hlavne_okno.pdf>] [26] [27]
+
+pdfTeX warning: pdflatex.exe (file ./img/session_vyhladavania_cesty.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/session_vyhladavania_cesty.pdf, id=449, 373.395pt x 411.45718pt>
+File: img/session_vyhladavania_cesty.pdf Graphic file (type pdf)
+<use img/session_vyhladavania_cesty.pdf>
+Package pdftex.def Info: img/session_vyhladavania_cesty.pdf  used on input line 155.
+(pdftex.def)             Requested size: 373.39409pt x 411.45616pt.
+[28]) [29 <./img/session_vyhladavania_cesty.pdf>]
 \openout2 = `modely_podrobne04.aux'.
 
  (./modely_podrobne04.tex
@@ -1083,15 +1109,15 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 27.
- [28
+ [30
 
 
 
 
-] [29] [30] [31] [32] [33] [34] [35] [36] [37]) [38]
+] [31] [32] [33] [34] [35] [36] [37] [38] [39]) [40]
 \openout2 = `zaver.aux'.
 
- (./zaver.tex) [39
+ (./zaver.tex) [41
 
 
 
@@ -1103,20 +1129,10 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/lmr/m/sc/12'.
 (microtype)             Ignoring protrusion settings for this character.
-) [40
+) [42
 
 
 
-
-] (tmp/thesis.lof)
-\tf@lof=\write9
-\openout9 = `thesis.lof'.
-
- [41
-
-
-
-] [42
 
 ]
 P\v {r}\'{\i }loha A.
@@ -1130,30 +1146,36 @@ See the caption package documentation for explanation.
 
 [43
 
+
+
 ] (tmp/thesis.aux (tmp/title.aux) (tmp/uvod.aux) (tmp/obecne01.aux) (tmp/architektura_ako_celok02.aux) (tmp/sessiony_podrobne03.aux) (tmp/modely_podrobne04.aux) (tmp/zaver.aux) (tmp/literatura.aux))
  ***********
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-10-10>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: E3F992AA5C5ABAC259CCCBA851848A0F;7668.
+(rerunfilecheck)             Checksum: 1CE2B7CEFC6F8CC80AE62C9016B7E060;7343.
 Package logreq Info: Writing requests to 'thesis.run.xml'.
 \openout1 = `thesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 30103 strings out of 474503
- 507134 string characters out of 5756704
+ 30120 strings out of 474503
+ 507786 string characters out of 5756704
  1938043 words of memory out of 5000000
- 51242 multiletter control sequences out of 15000+600000
- 646308 words of font info for 200 fonts, out of 8000000 for 9000
+ 51255 multiletter control sequences out of 15000+600000
+ 646824 words of font info for 204 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 92i,6n,95p,1236b,3599s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 92i,6n,95p,1236b,3583s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on tmp/thesis.pdf (43 pages, 793528 bytes).
+Output written on tmp/thesis.pdf (43 pages, 901904 bytes).
 PDF statistics:
- 623 PDF objects out of 1000 (max. 8388607)
- 531 compressed objects within 6 object streams
- 103 named destinations out of 1000 (max. 500000)
- 49060 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 635 PDF objects out of 1000 (max. 8388607)
+ 533 compressed objects within 6 object streams
+ 102 named destinations out of 1000 (max. 500000)
+ 49046 words of extra memory for PDF output out of 51595 (max. 10000000)
 

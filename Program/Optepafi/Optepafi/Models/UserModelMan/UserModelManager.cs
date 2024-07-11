@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Avalonia.Controls;
 using Optepafi.Models.TemplateMan;
-using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModelReps.SpecificUserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
@@ -118,6 +115,25 @@ public class UserModelManager :
         return result;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // ITemplateGenericVisitor<bool, IUserModelType<IUserModel<ITemplate>, ITemplate>>

@@ -10,7 +10,4 @@ namespace Optepafi.Models.MapMan;
 /// </summary>
 /// <typeparam name="TMap">Type of represented map objects.</typeparam>
 public interface IMapRepresentative<TMap> : IMapFormat<TMap>, IMapIdentifier<TMap>
-    where TMap : IMap
-{
-    
-}
+    where TMap : IMap;

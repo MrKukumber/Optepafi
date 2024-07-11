@@ -7,7 +7,7 @@ namespace Optepafi.Models.UserModelMan.UserModelReps;
 
 /// <summary>
 /// One of three interfaces whose implementations represent individual user model types that are tied to specific template type.
-/// The other two are <see cref="IUserModelRepresentative{TTemplate,TUserModel}"/> and <see cref="IUserModelTemplateBond{TTemplate}"/>.
+/// The other two are <see cref="IUserModelRepresentative{TTemplate,TUserModel}"/> and <see cref="IUserModelTemplateBond{TUserModel,TTemplate}"/>.
 /// This interface provides methods and properties, that are used for creating and deserializing user models. It also contains referenced to template to which is represented user model tied.
 /// It should not be implemented right away. All implementations should implement <c>IUserModelRepresentative{TTemplate, TUserModel}</c> instead.
 /// Thanks to covariance of its type parameters it is useful for transferring of user model representatives in non generic way.

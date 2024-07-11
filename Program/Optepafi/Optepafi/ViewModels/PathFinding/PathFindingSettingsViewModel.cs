@@ -78,38 +78,31 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
                 UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(template, mapFormat);
                 if (!UsableUserModelTypes.Contains(CurrentlyUsedUserModelType))
                 {
-                    CurrentlyUsedUserModelType = null;
                     SelectedUserModelFileName = null;
                     SelectedUserModelFilePath = null;
+                    CurrentlyUsedUserModelType = null;
                 }
             });
 
         this.WhenAnyValue(x => x.SelectedTemplate)
             .Subscribe(selectedTemplate =>
             {
-                _settingsMv.SetTemplate(selectedTemplate);
-                if (!_settingsMv.AreTheyUsableCombination(selectedTemplate, CurrentlyUsedMapFormat))
-                {
-                    CurrentlyUsedMapFormat = null;
-                    SelectedMapFileName = null;
-                    SelectedMapFilePath = null;
-                }
+                if (selectedTemplate is not null && CurrentlyUsedMapFormat is not null)
+                    if(!_settingsMv.AreTheyUsableCombination(selectedTemplate, CurrentlyUsedMapFormat))
+                    {
+                        SelectedMapFileName = null;
+                        SelectedMapFilePath = null;
+                        SelectedMapsPreview = null;
+                        CurrentlyUsedMapFormat = null;
+                    }
             });
 
         this.WhenAnyValue(x => x.CurrentlyUsedMapFormat)
             .Subscribe(currentlyUsedMapFormat =>
             {
                 if (SelectedTemplate is not null && currentlyUsedMapFormat is not null)
-                {
                     if (!_settingsMv.AreTheyUsableCombination(SelectedTemplate, currentlyUsedMapFormat))
                         SelectedTemplate = null;
-                }
-            });
-
-        this.WhenAnyValue(x => x.SelectedSearchingAlgorithm)
-            .Subscribe(selectedSearchingAlgorithm =>
-            {
-                _settingsMv.SetSearchingAlgorithm(selectedSearchingAlgorithm);
             });
 
         this.WhenAnyValue(x => x.UsableSearchingAlgorithms)
@@ -159,10 +152,10 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
                     // TODO: vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
                     // v modelView-u uz nastavena tato mapa, takze urcite nenechavat aby sa uzivatel mohol navratit ku predchadzajucej
                 case MapManager.MapCreationResult.Ok:
-                    CurrentlyUsedMapFormat = mapFormat;
                     SelectedMapFileName = Path.GetFileName(mapFilePath);
                     SelectedMapFilePath = mapFilePath;
                     SelectedMapsPreview = mapGraphics;
+                    CurrentlyUsedMapFormat = mapFormat;
                     break; 
                 case MapManager.MapCreationResult.Cancelled:
                     break;
@@ -201,6 +194,7 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         MapRepreCreationInteraction = new Interaction<MapRepreCreatingViewModel, bool>();
         ProceedTroughMapRepreCreationCommand = ReactiveCommand.CreateFromTask(async () =>
         {
+            CurrentlySelectedElevDataDistribution = mainSettingsMvProvider.CurrentElevDataDistribution;
             _settingsMv.SetSomeSuitableMapRepreRepresentative(SelectedTemplate!, CurrentlyUsedMapFormat!, CurrentlyUsedUserModelType!, SelectedSearchingAlgorithm!);
             bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingViewModel(_mapRepreCreatingMv));
             if (successfulCreation)
@@ -213,7 +207,6 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         }, isEverythingSet);
 
         
-        CurrentlySelectedElevDataDistribution = mainSettingsMvProvider.CurrentElevDataDistribution;
 
         SelectedTemplate = settingsMv.DefaultTemplate;
 
@@ -305,12 +298,18 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// <summary>
     /// Property which indicates currently selected template. 
     /// It raises notification about change of its value.
+    /// It also lets ModelView to set newly selected template.
     /// </summary>
     public TemplateViewModel? SelectedTemplate
     {
         get => _selectedTemplate;
-        set => this.RaiseAndSetIfChanged(ref _selectedTemplate, value);
+        set
+        {
+            _settingsMv.SetTemplate(value);
+            this.RaiseAndSetIfChanged(ref _selectedTemplate, value);
+        }
     }
+
     private TemplateViewModel? _selectedTemplate;
     /// <summary>
     /// Collection of usable templates in current state of parameter setting.
@@ -327,13 +326,19 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// <summary>
     /// Currently selected searching algorithm.
     /// It raises notification about change of its value.
+    /// It also lets ModelView to set newly selected searching algorithm.
     /// </summary>
     public SearchingAlgorithmViewModel? SelectedSearchingAlgorithm
     {
         get => _selectedSearchingAlgorithm;
-        set => this.RaiseAndSetIfChanged(ref _selectedSearchingAlgorithm, value);
+        set
+        {
+            _settingsMv.SetSearchingAlgorithm(value);
+            this.RaiseAndSetIfChanged(ref _selectedSearchingAlgorithm, value);
+        }
     }
     private SearchingAlgorithmViewModel? _selectedSearchingAlgorithm;
+    
     /// <summary>
     /// Collection of usable searching algorithms in current state of parameter setting.
     /// It raises notification about change of its value.

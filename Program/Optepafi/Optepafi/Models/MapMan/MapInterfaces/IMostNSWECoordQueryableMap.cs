@@ -19,8 +19,8 @@ public interface IMostNSWECoordQueryableGeoLocMap : IGeoLocatedMap
 /// </summary>
 public interface IMostNSWECoordQueryableGeoRefMap : IGeoReferencedMap
 {
-    public MapCoordinate NorthernmostCoord { get; }
-    public MapCoordinate SouthernmostCoord { get; }
-    public MapCoordinate WesternmostCoord { get; }
-    public MapCoordinate EasternmostCoord { get; }
+    public MapCoordinate NorthernmostCoords { get; }
+    public MapCoordinate SouthernmostCoords { get; }
+    public MapCoordinate WesternmostCoords { get; }
+    public MapCoordinate EasternmostCoords { get; }
 }

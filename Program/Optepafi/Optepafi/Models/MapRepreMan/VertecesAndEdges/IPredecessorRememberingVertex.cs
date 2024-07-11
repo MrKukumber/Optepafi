@@ -9,12 +9,11 @@ namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
 /// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes borne by assigned type of hold edges.</typeparam>
 public interface IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes> :
-    IPredecessorRememberingVertex<IBasicEdge<IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>, TVertexAttributes>
+    IPredecessorRememberingVertex<
+        IBasicEdge<IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>,
+        TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
-{
-    
-}
+    where TEdgeAttributes : IEdgeAttributes;
 
 /// <summary>
 /// Basic vertex that is able to remember reference to one other vertex. This can be used in path finding mechanisms for remembering vertex from which was this vertex discovered.

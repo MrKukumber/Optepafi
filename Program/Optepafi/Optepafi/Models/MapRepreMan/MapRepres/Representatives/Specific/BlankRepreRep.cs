@@ -23,7 +23,7 @@ public class BlankRepreRep : IMapRepreRepresentative<IBlankRepre>
     public string MapRepreName { get; } = "Blank representation.";
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.ImplementationIndicators"/>
-    public IImplementationIndicator<ITemplate, IMap, IBlankRepre>[] ImplementationIndicators { get; } = [BlankGraphElevDataIndepBlankTemplateTextMapImplementationRep.Instance];
+    public IImplementationIndicator<ITemplate, IMap, IBlankRepre>[] ImplementationIndicators { get; } = [BlankGraphElevDataDepBlankTemplateTextMapImplementationRep.Instance];
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.GetCorrespondingGraphRepresentative{TVertexAttributes, TEdgeAttributes}"/>
     public IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>() where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes

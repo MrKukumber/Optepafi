@@ -140,6 +140,9 @@
         <SubType>Code</SubType>
       </Compile>
       <Compile Remove="Models\MapRepreMan\IMapRepresentationGenericVisitor.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\Specific\ICompleteGraphRepre.cs" />
+      <Compile Remove="Models\MapRepreMan\MapRepres\Specific\IObjectRepre.cs" />
+      <Compile Remove="Models\ParamsMan\Params\ModelCreatingParams.cs" />
     </ItemGroup>
 
 

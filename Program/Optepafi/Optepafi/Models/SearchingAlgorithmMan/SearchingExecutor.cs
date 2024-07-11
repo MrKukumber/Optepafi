@@ -1,11 +1,7 @@
 using System;
-using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Optepafi.Models.MapRepreMan.Graphs;
-using Optepafi.Models.MapRepreMan.MapRepres;
-using Optepafi.Models.ReportMan;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
@@ -64,11 +60,11 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     private readonly AutoResetEvent _searchLoopResetEvent = new(false);
     private readonly AutoResetEvent _searchMethodResetEvent = new(false);
     private readonly AutoResetEvent _constructionResetEvent = new(false);
-    private Leg[] _inputTrack = null;
+    private Leg[] _inputTrack = null; // This is fine because this field is read always after assigment.
     private IProgress<ISearchingReport>? _inputProgress;
     private CancellationToken? _inputCancellationToken;
-    private IPath _outputPath = null;
-    private bool _disposed = false;
+    private IPath _outputPath = null; // This is fine because this field is read always after assigment.
+    private bool _disposed;
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
     private readonly IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;

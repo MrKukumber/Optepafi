@@ -7,12 +7,10 @@ using Optepafi.Models.GraphicsMan.Objects;
 using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.ReportMan.Reports.SearchingState;
-using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
-using Optepafi.ModelViews.PathFinding.Utils;
 
 namespace Optepafi.Models.ReportMan.Aggregators.SearchingState;
 

@@ -157,9 +157,8 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// <param name="templateViewModel">ViewModel of template whose usability is checked.</param>
     /// <param name="mapFormatViewModel">ViewModel of map format whose usability is checked.</param>
     /// <returns>True if they are usable combination. False otherwise.</returns>
-    public bool AreTheyUsableCombination(TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel)
+    public bool AreTheyUsableCombination(TemplateViewModel templateViewModel, MapFormatViewModel mapFormatViewModel)
     {
-        if (templateViewModel is null || mapFormatViewModel is null) return false;
         var usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
         var usableUserModelTypes = UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template);
         return (SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, usableUserModelTypes) .Count > 0);

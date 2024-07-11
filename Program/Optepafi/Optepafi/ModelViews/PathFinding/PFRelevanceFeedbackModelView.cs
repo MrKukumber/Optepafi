@@ -1,6 +1,5 @@
 using System;
 using Optepafi.Models.GraphicsMan.Sources;
-using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
@@ -14,12 +13,9 @@ namespace Optepafi.ModelViews.PathFinding;
 /// In current state of application it does not contain any functionality because relevance feeback mechanism was not added to application yet.
 /// It is an abstract class. The path finding session ModelView will creates its successor which wil be for this time used only as connecting inner class in path finding ModelView architecture.
 /// </summary>
-public abstract class PFRelevanceFeedbackModelView : ModelViewBase
-{
-    protected PFRelevanceFeedbackModelView(){}
-}
+public abstract class PFRelevanceFeedbackModelView : ModelViewBase;
 
-public partial class PathFindingSessionModelView : SessionModelView
+public partial class PathFindingSessionModelView
 {
     /// <summary>
     /// Successor of <see cref="PFRelevanceFeedbackModelView"/> created by this session ModelView so some of its methods could be implemented by using data hidden from the outside world.

@@ -1,6 +1,3 @@
-using Optepafi.Models.MapMan;
-using Optepafi.Views.Utils;
-
 namespace Optepafi.ViewModels.Data.Graphics.PathObjects;
 
 /// <summary>

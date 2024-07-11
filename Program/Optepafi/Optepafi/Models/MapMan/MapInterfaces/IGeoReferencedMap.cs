@@ -1,5 +1,3 @@
-using Optepafi.Models.ElevationDataMan;
-
 namespace Optepafi.Models.MapMan.MapInterfaces;
 
 /// <summary>

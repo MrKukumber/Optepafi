@@ -9,7 +9,6 @@ namespace Optepafi.Models.ElevationDataMan.Regions;
 /// Each region can contain list of its subRegions for more detailed area definition. When some region is operated with, his subregions and upper region should be took into consideration too.
 /// Moreover it can indicate whether it is downloaded or not.????
 /// </summary>
-//TODO: premysliet ci vlastnost IsDownloaded by mala byt sucastou tohto konstruktu
 public abstract class Region 
 {
     public abstract string Name { get; }

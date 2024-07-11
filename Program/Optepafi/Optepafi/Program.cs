@@ -5,6 +5,9 @@ using Avalonia.Controls;
 
 namespace Optepafi;
 
+/// <summary>
+/// The entry point of the application.
+/// </summary>
 sealed class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any

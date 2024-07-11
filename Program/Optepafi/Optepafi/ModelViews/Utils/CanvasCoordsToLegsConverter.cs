@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Optepafi.Models.GraphicsMan;
-using Optepafi.Models.MapMan;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.ViewModels.Data;
 

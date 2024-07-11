@@ -7,14 +7,11 @@ namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
 /// </summary>
 /// <typeparam name="TVertex">Type of hold destination vertex.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of borne edge attributes.</typeparam>
-public interface IBasicEdge<out TVertex, out TEdgeAttributes> : 
-    IDestVertexContainingEdge<TVertex>, 
+public interface IBasicEdge<out TVertex, out TEdgeAttributes> :
+    IDestVertexContainingEdge<TVertex>,
     IAttributesBearingEdge<TEdgeAttributes>
     where TEdgeAttributes : IEdgeAttributes
-    where TVertex : IVertex
-{
-    
-}
+    where TVertex : IVertex;
 
 /// <summary>
 /// Oriented edge that can hold reference of its destination vertex.
@@ -42,7 +39,7 @@ public interface IAttributesBearingEdge<out TEdgeAttributes> : IEdge
 /// <summary>
 /// Base interface representing oriented edge of some graph.
 /// </summary>
-public interface IEdge { }
+public interface IEdge;
 
 
 

@@ -65,8 +65,8 @@
    <dc:title><rdf:Alt><rdf:li xml:lang="x-default">Trasy v mapách pro orientační běh</rdf:li></rdf:Alt></dc:title>
    <dc:creator><rdf:Seq><rdf:li>Matej Kukurugya</rdf:li></rdf:Seq></dc:creator>
    <dc:publisher><rdf:Bag><rdf:li>Charles University</rdf:li></rdf:Bag></dc:publisher>
-   <dc:description><rdf:Alt><rdf:li xml:lang="x-default"> Původním záměrem této bakalářské práce bylo vytvořit aplikaci, která bude na základe mapových dat hledat vhodnou trasu v prostředí orientačního běhu. Tento záměr však nebyl plně naplněn, neboť až příliš času zabralo vytvoření návrhu a naprogramování samotné aplikace. Tím pádem nezbyl čas na vytvoření vyhledávacích alogirtmů ani mechanizmů na spracováni map na kterých by jse cesty hledaly. Z tohto důvodu vznikla jenom 'skořápka' aplikace, která toho v týhle chvíli sama o sobě nic nedelá. Objektový návrh je za to velmi detailně promyšlen a propracován. Tato bakalářská práce tedy v konečném důsledku pojednává právě o objektovém návrhu vytovřené aplikace a myšlenkách aplikovaných v průběhu jeho tvorby. </rdf:li></rdf:Alt></dc:description>
-   <dc:subject><rdf:Bag><rdf:li> objektový návrh</rdf:li>
+   <dc:description><rdf:Alt><rdf:li xml:lang="x-default"> Původním záměrem této bakalářské práce bylo vytvořit aplikaci, která bude na základě mapových dat hledat vhodnou trasu v prostředí orientačního běhu. Tento záměr však nebyl plně naplněn, neboť až příliš času zabralo vytvoření návrhu a naprogramování samotné aplikace. Z toho důvodu nezbyl čas na vytvoření vyhledávacích alogirtmů ani mechanizmů na zpracováni map, na kterých by se cesty hledaly. Z tohoto důvodu vznikla jenom kostra, která v této chvíli sama o sobě neobsahuje žádnou konrkétní funkcionalitu. Oproti tomu objektový návrh je detailně promyšlen a propracován. Tato bakalářská práce tedy v konečném důsledku pojednává právě o objektovém návrhu vytovřené aplikace a myšlenkách aplikovaných v průběhu jeho tvorby. </rdf:li></rdf:Alt></dc:description>
+   <dc:subject><rdf:Bag><rdf:li> návrh aplikace</rdf:li>
      <rdf:li>MVVM</rdf:li>
      <rdf:li>hledáni tras v otevřeném terénu </rdf:li></rdf:Bag></dc:subject>
   </rdf:Description> 
@@ -80,15 +80,15 @@
   </rdf:Description> 
   <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/"> 
    <xmp:CreatorTool>LaTeX with hyperref</xmp:CreatorTool> 
-   <xmp:ModifyDate>2024-07-08T00:34:10+02:00</xmp:ModifyDate> 
-   <xmp:CreateDate>2024-07-08T00:34:10+02:00</xmp:CreateDate> 
-   <xmp:MetadataDate>2024-07-08T00:34:10+02:00</xmp:MetadataDate> 
+   <xmp:ModifyDate>2024-07-11T12:31:44+02:00</xmp:ModifyDate> 
+   <xmp:CreateDate>2024-07-11T12:31:44+02:00</xmp:CreateDate> 
+   <xmp:MetadataDate>2024-07-11T12:31:44+02:00</xmp:MetadataDate> 
   </rdf:Description> 
   <rdf:Description rdf:about="" xmlns:xmpRights = "http://ns.adobe.com/xap/1.0/rights/"> 
   </rdf:Description> 
   <rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"> 
    <xmpMM:DocumentID>uuid:C8CFC28F-88E1-7995-E9AD-F6D12EAD346B</xmpMM:DocumentID> 
-   <xmpMM:InstanceID>uuid:7D643BD0-0A29-B4A2-D00F-B9D585E05F1E</xmpMM:InstanceID> 
+   <xmpMM:InstanceID>uuid:53C1F86C-55B9-ABE6-33CF-DB2B1CD9D6F9</xmpMM:InstanceID> 
   </rdf:Description> 
  </rdf:RDF> 
 </x:xmpmeta> 

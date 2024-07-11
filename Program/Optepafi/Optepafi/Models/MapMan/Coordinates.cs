@@ -15,7 +15,7 @@ public record struct MapCoordinate(int XPos, int YPos)
     {
         return new MapCoordinate(coordinate1.XPos - coordinate2.XPos, coordinate1.YPos - coordinate2.YPos);
     }
-} 
+}
 
 /// <summary>
 /// Represents coordinate of geographic coordinate system (GCS).
@@ -25,4 +25,4 @@ public record struct MapCoordinate(int XPos, int YPos)
 /// </summary>
 /// <param name="Longitude">Longitude of coordinate.</param>
 /// <param name="Latitude"> Latitude of coordinate.</param>
-public record struct GeoCoordinate(double Longitude, double Latitude) { }
+public record struct GeoCoordinate(double Longitude, double Latitude);

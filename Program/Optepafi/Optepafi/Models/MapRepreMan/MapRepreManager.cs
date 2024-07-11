@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Threading;
-using Avalonia.Controls;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives.Specific;
-using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
@@ -111,9 +108,10 @@ public class MapRepreManager :
     }
 
     /// <summary>
-    /// Returns representatives of all map representation that are usable for provided searching algorithm.
+    /// Returns representatives of all map representation that are together with defined user model type usable in provided searching algorithm.
     /// </summary>
     /// <param name="algorithm">Algorithm for which usable map representations are searched for.</param>
+    /// <param name="userModelType">User model type with which represented map representation type must form usable combination in provided searching algorithm.</param>
     /// <returns>Set of representatives of usable map representations.</returns>
     public HashSet<IMapRepreRepresentative<IMapRepre>> GetUsableMapRepreRepsFor(
         ISearchingAlgorithm algorithm, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
@@ -178,9 +176,7 @@ public class MapRepreManager :
     public IMapRepre CreateMapRepre(ITemplate template, IMap map, IMapRepreRepresentative<IMapRepre> mapRepreRep,
         IProgress<MapRepreConstructionReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric<IMapRepre, 
-                (ITemplate, IMapRepreRepresentative<IMapRepre>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
-                (this, (template, mapRepreRep, constructionProgress, cancellationToken));
+        return map.AcceptGeneric(this, (template, mapRepreRep, constructionProgress, cancellationToken));
     }
 
     IMapRepre IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
@@ -216,8 +212,7 @@ public class MapRepreManager :
     /// <returns></returns>
     public IMapRepre CreateMapRepre(ITemplate template, IGeoLocatedMap map, IMapRepreRepresentative<IMapRepre> mapRepreRep, IElevData elevData, IProgress<MapRepreConstructionReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
-                (this, (template, mapRepreRep, elevData, constructionProgress, cancellationToken));
+        return map.AcceptGeneric(this, (template, mapRepreRep, elevData, constructionProgress, cancellationToken));
 
     }
     IMapRepre IGeoLocatedMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IProgress<MapRepreConstructionReport>?, CancellationToken?)>

@@ -1,5 +1,3 @@
-using Optepafi.Models.SearchingAlgorithmMan.Paths;
-
 namespace Optepafi.Models.ReportMan.Reports;
 
 /// <summary>

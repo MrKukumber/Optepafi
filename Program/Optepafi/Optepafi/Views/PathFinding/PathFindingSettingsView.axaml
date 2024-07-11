@@ -4,8 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
              xmlns:pfV="using:Optepafi.Views.PathFinding"
-             xmlns:utils="using:Optepafi.Views.Utils"
-             xmlns:graphics="clr-namespace:Optepafi.ViewModels.Data.Graphics"
              mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
              x:Class="Optepafi.Views.PathFinding.PathFindingSettingsView"
              x:DataType="pfVm:PathFindingSettingsViewModel">

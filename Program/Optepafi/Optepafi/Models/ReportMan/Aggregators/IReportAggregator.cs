@@ -1,5 +1,3 @@
-using Optepafi.Models.TemplateMan.TemplateAttributes;
-
 namespace Optepafi.Models.ReportMan.Aggregators;
 
 /// <summary>

@@ -1,36 +1,51 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan.Regions;
-using Optepafi.Models.ElevationDataMan.Regions.NotReal;
+using Optepafi.Models.ElevationDataMan.Regions.Simulating;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 
-namespace Optepafi.Models.ElevationDataMan.Distributions.NotReally;
+namespace Optepafi.Models.ElevationDataMan.Distributions.Simulating;
 
-public class NotReallyElevDataDistribution : ICredentialsRequiringElevDataDistribution
+/// <summary>
+/// Elevation data source which simulates work of authorization not requiring elevation data distribution.
+/// This type is just demonstrative data source for presenting application functionality.
+/// For more information on elevation data sources which does not require authorization for accessing data see <see cref="ICredentialsNotRequiringElevDataDistribution"/>.
+/// </summary>
+public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequiringElevDataDistribution
 {
-    public static NotReallyElevDataDistribution Instance { get; } = new();
-    private NotReallyElevDataDistribution()
+    
+    public static NoAuthorizationSimulatingElevDataDistribution Instance { get; } = new();
+    
+    /// <summary>
+    /// Initialize three demonstrating regions. One top region and two subregions.
+    /// </summary>
+    private NoAuthorizationSimulatingElevDataDistribution()
     {
-        TopRegion notRealRegion = new NotRealTopRegion()
+        TopRegion topRegion = new TopRegion0()
         {
             IsDownloaded = false
         };
-        new SoNotRealSubRegion(notRealRegion)
-        {
-            IsDownloaded = false
-        };
-        new LittleLessNotRealSubReagion(notRealRegion)
+        new SubRegion2(topRegion)
         {
             IsDownloaded = true
         };
-        AllTopRegions = new HashSet<TopRegion>{ notRealRegion };
+        new SubRegion1(topRegion)
+        {
+            IsDownloaded = false
+        };
+        AllTopRegions = new HashSet<TopRegion>{ topRegion };
     }
-    public string Name => "Not really an elevation data distribution";
+    
+    /// <inheritdoc cref="IElevDataDistribution.Name"/>
+    public string Name => "No authorisation simulating elevation data distribution";
+    
+    /// <inheritdoc cref="IElevDataDistribution.AllTopRegions"/>
     public IReadOnlySet<TopRegion> AllTopRegions { get; }
+    
+    /// <inheritdoc cref="IElevDataDistribution.Remove"/>
     public void Remove(Region region)
     {
         Thread.Sleep(500); //Lot of work with removing of regions data
@@ -51,23 +66,33 @@ public class NotReallyElevDataDistribution : ICredentialsRequiringElevDataDistri
         if(region is SubRegion subRegion) SetRecursivelyUpperRegionsToNotDownloaded(subRegion.UpperRegion);
     }
 
+    
+    /// <inheritdoc cref="IElevDataDistribution.AreElevDataObtainableFor"/>
+    /// <remarks>
+    /// Elevation data of this distribution are always available for any provided map.
+    /// </remarks>
     public ElevDataManager.ElevDataObtainability AreElevDataObtainableFor(IGeoLocatedMap map, CancellationToken? cancellationToken)
     {
-        Random rnd = new Random();
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return ElevDataManager.ElevDataObtainability.Cancelled;
-        if (rnd.NextDouble() > 0.1) return ElevDataManager.ElevDataObtainability.Obtainable;
-        return ElevDataManager.ElevDataObtainability.ElevDataNotPresent;
+        return ElevDataManager.ElevDataObtainability.Obtainable;
     }
 
+    
+    /// <inheritdoc cref="IElevDataDistribution.GetElevDataFor"/>
     public IElevData GetElevDataFor(IGeoLocatedMap map, CancellationToken? cancellationToken)
     {
         return new ElevData();
     }
 
-    public ElevDataManager.DownloadingResult Download(Region region, NetworkCredential credential, CancellationToken? cancellationToken)
+    /// <inheritdoc cref="ICredentialsNotRequiringElevDataDistribution.Download"/>
+    /// <remarks>
+    /// This method simulates downloading of provided region.
+    /// It tries to download all subregions with small probability of unsuccessful download.
+    /// Responds to cancellation of downloading.
+    /// </remarks>
+    public ElevDataManager.DownloadingResult Download(Region region, CancellationToken? cancellationToken)
     {
         Random rnd = new Random();
-        if (credential.UserName != "Bobo" || credential.Password != "Boboo") return ElevDataManager.DownloadingResult.WrongCredentials;
         List<Region> subRegionsWhichWereSuccessfulyDownloaded = new();
         foreach (var subRegion in region.SubRegions)
         {
@@ -83,7 +108,12 @@ public class NotReallyElevDataDistribution : ICredentialsRequiringElevDataDistri
                 }
             }
         }
-        if(region.SubRegions.Count == 0) Thread.Sleep(1000); // Lot of work with downloading of data for this region
+        if(region.SubRegions.Count == 0)
+        {
+            Thread.Sleep(1000); // Lot of work with downloading of data for this region
+            if(cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) 
+                return ElevDataManager.DownloadingResult.Canceled;
+        }
 
         foreach (var subRegion in subRegionsWhichWereSuccessfulyDownloaded)
         {
@@ -107,13 +137,18 @@ public class NotReallyElevDataDistribution : ICredentialsRequiringElevDataDistri
         }
     }
 
+    /// <summary>
+    /// Demonstrating elevation data type. It returns elevation for every coordinate equal to 3.14.
+    /// </summary>
     private class ElevData : IElevData
     {
+        /// <inheritdoc cref="IElevData.GetElevation(Optepafi.Models.MapMan.GeoCoordinate)"/>
         public double? GetElevation(GeoCoordinate coordinate)
         {
             return 3.14;
         }
 
+        /// <inheritdoc cref="IElevData.GetElevation(Optepafi.Models.MapMan.MapCoordinate,Optepafi.Models.MapMan.GeoCoordinate)"/>
         public double? GetElevation(MapCoordinate coordinate, GeoCoordinate geoReference)
         {
             return 3.14;

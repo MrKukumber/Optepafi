@@ -254,6 +254,42 @@ public class SearchingAlgorithmManager :
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ITemplateGenericVisitor<HashSet<ISearchingAlgorithm>,IUserModelType<IUserModel<ITemplate>,ITemplate>>,
 
     /// <summary>

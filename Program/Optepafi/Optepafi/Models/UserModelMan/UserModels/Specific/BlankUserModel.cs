@@ -65,8 +65,6 @@ public class BlankUserModel :
     /// </summary>
     public class VoidAdjustable : IValueAdjustable<int>
     {
-        public VoidAdjustable(){}
-        
         /// <inheritdoc cref="IUserModelAdjustable.Name"/>
         [JsonIgnore]
         public string Name { get; } = "Void"; //TODO: localize

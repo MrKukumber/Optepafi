@@ -1,4 +1,3 @@
-using System.Dynamic;
 using System.Threading.Tasks;
 using DynamicData;
 using Optepafi.Models.GraphicsMan;

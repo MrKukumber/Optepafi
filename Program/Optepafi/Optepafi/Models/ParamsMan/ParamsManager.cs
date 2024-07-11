@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DynamicData;
-using Optepafi.ModelViews;
 
 namespace Optepafi.Models.ParamsMan;
 
@@ -20,9 +18,9 @@ public sealed class ParamsManager
     private ParamsManager(){}
     public static ParamsManager Instance { get; } = new();
 
-    private static string paramsDirRelativePath = "appStateParams";
+    private static string _paramsDirRelativePath = "appStateParams";
     
-    private Dictionary<Type, IParams?> paramsStorage = new();
+    private Dictionary<Type, IParams?> _paramsStorage = new();
     
     /// <summary>
     /// Sets and caches provided pameters in <paramref name="parameters"/>.
@@ -33,7 +31,7 @@ public sealed class ParamsManager
     public void SetParams<TParams>(TParams parameters)
     where TParams : IParams
     {
-        paramsStorage[typeof(TParams)] = parameters;
+        _paramsStorage[typeof(TParams)] = parameters;
     }
 
     /// <summary>
@@ -48,11 +46,11 @@ public sealed class ParamsManager
         where TParams : IParams
     {
         Type requestedParamsType = typeof(TParams);
-        if (paramsStorage.ContainsKey(requestedParamsType)) 
-            return (TParams?) paramsStorage[requestedParamsType];
+        if (_paramsStorage.ContainsKey(requestedParamsType)) 
+            return (TParams?) _paramsStorage[requestedParamsType];
 
-        TParams? parameters = DataSerializer.TryDeserialize<TParams>(paramsDirRelativePath);
-        paramsStorage.Add(requestedParamsType, parameters);
+        TParams? parameters = DataSerializer.TryDeserialize<TParams>(_paramsDirRelativePath);
+        _paramsStorage.Add(requestedParamsType, parameters);
         return parameters;
     }
     
@@ -63,7 +61,7 @@ public sealed class ParamsManager
     public void SaveAllParams()
     {
         List<Task> tasks = new();
-        foreach (var (_, param) in paramsStorage)
+        foreach (var (_, param) in _paramsStorage)
         {
             if (param is not null)
             {
@@ -74,7 +72,7 @@ public sealed class ParamsManager
     }
     public void Visit<TParam>(TParam param)
     {
-        DataSerializer.Serialize(param, paramsDirRelativePath);
+        DataSerializer.Serialize(param, _paramsDirRelativePath);
     }
     
 }

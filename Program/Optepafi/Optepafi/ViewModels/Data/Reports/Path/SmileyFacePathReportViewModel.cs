@@ -1,4 +1,3 @@
-using Optepafi.Models.ReportMan.Reports.Path;
 using Optepafi.ViewModels.Data.Graphics;
 
 namespace Optepafi.ViewModels.Data.Reports.Path;

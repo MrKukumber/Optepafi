@@ -1,7 +1,3 @@
-using Avalonia.Controls;
-using Optepafi.Models.TemplateMan;
-using Optepafi.Models.TemplateMan.TemplateAttributes;
-
 namespace Optepafi.Models.MapRepreMan.MapRepres;
 
 /// <summary>

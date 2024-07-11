@@ -1,26 +1,28 @@
-using System;
-using System.Reactive.Subjects;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Avalonia.ReactiveUI;
-using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.ViewModels.Data.Representatives;
 using Optepafi.ViewModels.Main;
-using ReactiveUI;
 
 namespace Optepafi.Views.Main;
 
+/// <summary>
+/// View of the elevation data configuration mechanism.
+/// For more information on this mechanism see <see cref="ElevConfigViewModel"/>. 
+/// </summary>
 public partial class ElevConfigView : UserControl
 {
-    public Subject<ElevDataDistributionViewModel?> CompleteInteraction { get; } = new();
     public ElevConfigView()
     {
         InitializeComponent();
+        
+        if (Design.IsDesignMode) return;
     }
     
+    /// <summary>
+    /// Convertor of regions presence to corresponding color.
+    /// It is used for painting a region for indication of its presence state.
+    /// </summary>
     public static FuncValueConverter<RegionViewModel.PresenceState, IBrush> PresenceToColorConverter { get; } =
         new(presence => presence switch
         {

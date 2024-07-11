@@ -10,5 +10,6 @@ namespace Optepafi.Models.UserModelMan.UserModelReps;
 /// It should not be implemented right away. All implementations should implement <c>IUserModelRepresentative{TTemplate, TUserModel}</c> instead.
 /// Thanks to contravariance of its template type parameter it is useful for correct pattern matching on its template type. 
 /// </summary>
+/// <typeparam name="TUserModel">User model to which is tied to specific template type.</typeparam>
 /// <typeparam name="TTemplate">Template type which represented user model is tied to.</typeparam>
 public interface IUserModelTemplateBond<out TUserModel, in TTemplate> where TUserModel : IUserModel<TTemplate> where TTemplate : ITemplate;

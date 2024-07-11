@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using DynamicData;
-using Microsoft.CodeAnalysis.CSharp;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.GraphicsMan.Sources;
 

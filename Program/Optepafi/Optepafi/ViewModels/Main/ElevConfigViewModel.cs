@@ -1,22 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
-using System.Windows.Input;
-using Avalonia.Data;
-using Avalonia.Data.Converters;
-using Avalonia.Media;
-using Optepafi.Models;
 using Optepafi.Models.ElevationDataMan;
-using Optepafi.Models.ElevationDataMan.Regions;
-using Optepafi.Models.UserModelMan;
-using Optepafi.ModelViews;
 using Optepafi.ModelViews.Main;
 using Optepafi.ViewModels.Data.Representatives;
 using ReactiveUI;
@@ -61,7 +51,7 @@ public class ElevConfigViewModel : ViewModelBase
             (userName, password) => !string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password));
         IObservable<bool> areCredentialsRequired = this.WhenAnyValue(
             x => x.CurrentElevDataDist,
-            (ElevDataDistributionViewModel? elevDataDist) => elevDataDist is CredentialsRequiringElevDataDistributionViewModel);
+            elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel);
         
             
         
