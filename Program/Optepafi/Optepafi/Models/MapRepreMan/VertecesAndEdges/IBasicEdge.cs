@@ -39,7 +39,10 @@ public interface IAttributesBearingEdge<out TEdgeAttributes> : IEdge
 /// <summary>
 /// Base interface representing oriented edge of some graph.
 /// </summary>
-public interface IEdge;
+public interface IEdge
+{
+    
+}
 
 
 

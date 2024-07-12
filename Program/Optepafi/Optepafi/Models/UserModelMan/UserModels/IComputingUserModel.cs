@@ -12,4 +12,9 @@ namespace Optepafi.Models.UserModelMan.UserModels;
 /// <typeparam name="TVertexAttributes">Type of vertex attributes, which is user model able to use for delivering services.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes, which is user model able to use for delivering services.</typeparam>
 public interface IComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes> : IUserModel<TTemplate>
-    where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes;
+    where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
+    where TVertexAttributes : IVertexAttributes
+    where TEdgeAttributes : IEdgeAttributes
+{
+    
+}

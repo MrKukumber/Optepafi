@@ -25,4 +25,7 @@ public record struct MapCoordinate(int XPos, int YPos)
 /// </summary>
 /// <param name="Longitude">Longitude of coordinate.</param>
 /// <param name="Latitude"> Latitude of coordinate.</param>
-public record struct GeoCoordinate(double Longitude, double Latitude);
+public record struct GeoCoordinate(double Longitude, double Latitude)
+{
+    
+}

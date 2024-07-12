@@ -9,4 +9,7 @@ namespace Optepafi.Models.MapMan;
 /// Thanks to contravariant nature of its map type parameter it is useful for correct pattern matching and identifying map representatives.
 /// </summary>
 /// <typeparam name="TMap">Type of represented map.</typeparam>
-public interface IMapIdentifier<in TMap> where TMap : IMap;
+public interface IMapIdentifier<in TMap> where TMap : IMap
+{
+    
+}

@@ -46,13 +46,19 @@ public class NotUsableTemplate : ITemplate<NotUsableTemplate.VertexAttributes, N
     /// This type are just demonstrative vertex attributes for presenting application functionality.
     /// For more information on templates see <see cref="IVertexAttributes"/>.
     /// </summary>
-    public class VertexAttributes : IVertexAttributes;
+    public class VertexAttributes : IVertexAttributes
+    {
+        
+    }
 
     /// <summary>
     /// Not usable edge attributes. They are not usable in any map representation.
     /// This type are just demonstrative vertex attributes for presenting application functionality.
     /// For more information on templates see <see cref="IVertexAttributes"/>.
     /// </summary>
-    public class EdgeAttributes : IEdgeAttributes;
+    public class EdgeAttributes : IEdgeAttributes
+    {
+        
+    }
 
 }

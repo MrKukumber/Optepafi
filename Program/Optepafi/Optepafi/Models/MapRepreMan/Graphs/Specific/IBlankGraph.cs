@@ -10,8 +10,11 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes that are provided in vertices of generated graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes that are provided in edges of generated graph.</typeparam>
-public interface IBlankGraph<TVertexAttributes, TEdgeAttributes> : 
+public interface IBlankGraph<TVertexAttributes, TEdgeAttributes> :
     IBlankRepre,
     IGraph<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes;
+    where TEdgeAttributes : IEdgeAttributes
+{
+    
+}

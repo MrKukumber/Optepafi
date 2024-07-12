@@ -5,4 +5,7 @@ namespace Optepafi.Models.TemplateMan.TemplateAttributes;
 /// The top interface for classes representing attributes used for verteces in graphs.
 /// If some implementation of this interface wants to be used as attributes, it must do so in name of some template.
 /// </summary>
-public interface IVertexAttributes;
+public interface IVertexAttributes
+{
+    
+}

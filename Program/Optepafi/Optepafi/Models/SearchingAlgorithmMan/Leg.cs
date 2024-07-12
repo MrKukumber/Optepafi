@@ -7,4 +7,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan;
 /// </summary>
 /// <param name="Start"><see cref="MapCoordinate"/> of the origin of a leg.</param>
 /// <param name="Finish"><see cref="MapCoordinate"/> of the destination of a leg.</param>
-public record struct Leg(MapCoordinate Start, MapCoordinate Finish);
+public record struct Leg(MapCoordinate Start, MapCoordinate Finish)
+{
+    
+}

@@ -10,5 +10,8 @@ namespace Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes, which can be included for extraction of information in later aggregations.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes, which can be included for extraction of information in later aggregations.</typeparam>
-public interface ISearchingState<TVertexAttributes, TEdgeAttributes> 
-    where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes;
+public interface ISearchingState<TVertexAttributes, TEdgeAttributes>
+    where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+{
+    
+}

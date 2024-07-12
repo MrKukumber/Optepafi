@@ -45,12 +45,18 @@ public class BlankTemplate : ITemplate<BlankTemplate.VertexAttributes, BlankTemp
     /// This type are just demonstrative vertex attributes for presenting application functionality.
     /// For more information on templates see <see cref="IVertexAttributes"/>.
     /// </summary>
-    public class VertexAttributes : IVertexAttributes; 
+    public class VertexAttributes : IVertexAttributes
+    {
+        
+    }
 
     /// <summary>
     /// Blank edge attributes. They does not contain any information.
     /// This type are just demonstrative edge attributes for presenting application functionality.
     /// For more information on templates see <see cref="IEdgeAttributes"/>.
     /// </summary>
-    public class EdgeAttributes : IEdgeAttributes;
+    public class EdgeAttributes : IEdgeAttributes
+    {
+        
+    }
 }

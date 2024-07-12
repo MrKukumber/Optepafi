@@ -14,6 +14,9 @@ namespace Optepafi.Models.UserModelMan.UserModelReps;
 /// <typeparam name="TTemplate">Template type which represented user model is tied to.</typeparam>
 public interface IUserModelRepresentative<TUserModel, TTemplate> :
     IUserModelType<TUserModel, TTemplate>,
-    IUserModelTemplateBond<TUserModel, TTemplate> 
+    IUserModelTemplateBond<TUserModel, TTemplate>
     where TTemplate : ITemplate
-    where TUserModel : IUserModel<TTemplate>;
+    where TUserModel : IUserModel<TTemplate>
+{
+    
+}

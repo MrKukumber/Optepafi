@@ -66,4 +66,7 @@ public interface IAttributeBearingVertex<out TVertexAttributes> : IVertex
 /// <summary>
 /// Base interface representing vertex of some graph.
 /// </summary>
-public interface IVertex;
+public interface IVertex
+{
+    
+}
