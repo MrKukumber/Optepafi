@@ -8,18 +8,18 @@
              x:Class="Optepafi.Views.Main.MainSettingsView"
              x:DataType="mVm:MainSettingsViewModel">
     <DockPanel>
-        <TextBlock Name="MainSettingsHeaderTextBlock" Text="{x:Static local:Local.MainSettingsHeader}"
+        <TextBlock Name="MainSettingsHeaderTextBlock" Text="{x:Static local:MainWindowLocal.Settings_MainSettingsHeader}"
                    DockPanel.Dock="Top" HorizontalAlignment="Center"></TextBlock>
-        <Button Name="MainMenuButton" Content="Main menu" Command="{Binding GoToMainMenuCommand}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"></Button>
+        <Button Name="MainMenuButton" Content="{x:Static local:MainWindowLocal.Settings_MainMenuButton}" Command="{Binding GoToMainMenuCommand}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"/>
         <Grid ColumnDefinitions="* *" RowDefinitions="* *">
             <StackPanel Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Name="LocalizationTextBlock">Choose language</TextBlock>
+                <TextBlock Name="LocalizationTextBlock" Text="{x:Static local:MainWindowLocal.Settings_LocalizationTextBlock}"/>
                 <ComboBox Name="LocalizationComboBox"
                           ItemsSource="{Binding Cultures}"
-                          SelectedItem="{Binding CurrentCulture}"></ComboBox>
+                          SelectedItem="{Binding CurrentCulture}"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Name="ElevConfigEntryButton" Content="Elevation config" Command="{Binding OpenElevConfigCommand}"></Button>
+                <Button Name="ElevConfigEntryButton" Content="{x:Static local:MainWindowLocal.Settings_ElevConfigEntryButton}" Command="{Binding OpenElevConfigCommand}"/>
                 <TextBlock Text="{Binding CurrentElevDataDistribution.Name}">
                 </TextBlock>
             </StackPanel>

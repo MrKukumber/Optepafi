@@ -34,8 +34,8 @@ public class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(MainWindowModelView mainWindowModelView )
     {
         _mainWindowModelView = mainWindowModelView;
-        MainMenu = new MainMenuViewModel(_mainWindowModelView.MainSettings.ProviderOfSettings);
         MainSettings = new MainSettingsViewModel(_mainWindowModelView.MainSettings); 
+        MainMenu = new MainMenuViewModel(MainSettings.ProviderOfSettings);
         CurrentViewModel = MainMenu;
 
         this.WhenAnyObservable(x => x.MainMenu.GoToSettingsCommand)

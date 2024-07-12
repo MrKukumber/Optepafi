@@ -4,6 +4,7 @@ using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.ParamsMan;
 using Optepafi.Models.ParamsMan.Params;
 using Optepafi.ViewModels.Data.Representatives;
+using ReactiveUI;
 
 namespace Optepafi.ModelViews.Main;
 
@@ -14,7 +15,6 @@ namespace Optepafi.ModelViews.Main;
 /// - setting of current culture of application and thus providing its localization
 /// - work with <c>ParamsManager</c> for achieving persistence of applications parameters
 /// - work with <c>ElevDataManager</c> for correct identification of elevation data distributions
-/// - provides instance of <c>Provider</c> class which can be offered to sessions for safe accessing of main parameters
 /// For more information on ModelViews see <see cref="ModelViewBase"/>.
 /// </summary>
 public class MainSettingsModelView : ModelViewBase
@@ -35,7 +35,6 @@ public class MainSettingsModelView : ModelViewBase
         
         _currentCulture = CultureInfo.GetCultureInfo(_mainSettingsParams.CultureName);
         _currentElevDataDistribution = GetElevDataDistributionByTypeName(_mainSettingsParams.ElevDataTypeViewModelTypeName);
-        ProviderOfSettings = new Provider(this);
     }
     /// <summary>
     /// Method for identifying elevation data distribution whose type corresponds to provided type name.
@@ -59,10 +58,6 @@ public class MainSettingsModelView : ModelViewBase
         return null;
     }
     
-    /// <summary>
-    /// Provider of settings that can be safely offered to outside word.
-    /// </summary>
-    public Provider ProviderOfSettings { get; }
     
     
     /// <summary>
@@ -108,24 +103,4 @@ public class MainSettingsModelView : ModelViewBase
         }
     }
 
-    /// <summary>
-    /// Provider of main settings parameters.
-    /// Its main task is to safely provide these parameters to outer world such as sessions.
-    /// Its instance is provided by <c>MainSettingsModelView</c> in <c>ProviderOfSettings</c> property.
-    /// </summary>
-    public class Provider(MainSettingsModelView providedMainSettingsMv)
-    {
-        /// <summary>
-        /// Main settings whose parameters shall be provided.
-        /// </summary>
-        private MainSettingsModelView _providedMainSettingsMv = providedMainSettingsMv;
-        /// <summary>
-        /// Currently used culture.
-        /// </summary>
-        public CultureInfo CurrentCulture => _providedMainSettingsMv.CurrentCulture;
-        /// <summary>
-        /// Currently chosen elevation data distribution.
-        /// </summary>
-        public ElevDataDistributionViewModel? CurrentElevDataDistribution => _providedMainSettingsMv.CurrentElevDataDistribution;
-    }
 }

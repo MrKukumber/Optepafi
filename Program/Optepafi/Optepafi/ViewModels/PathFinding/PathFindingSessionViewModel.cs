@@ -1,6 +1,6 @@
 using System;
 using System.Reactive;
-using Optepafi.ModelViews.Main;
+using Optepafi.ViewModels.Main;
 using ReactiveUI;
 using PathFindingSessionModelView = Optepafi.ModelViews.PathFinding.PathFindingSessionModelView;
 
@@ -21,14 +21,16 @@ public class PathFindingSessionViewModel : SessionViewModel
     /// Constructor of session ViewModel It initialize all reactive constructs and creates associated ViewModels.
     /// </summary>
     /// <param name="pathFindingSessionMv">Path finding session ModelView which contains path finding ModelViews which should be assigned to corresponding ViewModels.</param>
-    /// <param name="mainSettingsMvProvider">Provider of main settings ModelView. It can be used by some ViewModels/ModelViews for main parameters retrieval.</param>
-    public PathFindingSessionViewModel(PathFindingSessionModelView pathFindingSessionMv, MainSettingsModelView.Provider mainSettingsMvProvider)
+    /// <param name="mainSettingsProvider">Provider of main settings ModelView. It can be used by some ViewModels/ModelViews for main parameters retrieval.</param>
+    public PathFindingSessionViewModel(PathFindingSessionModelView pathFindingSessionMv, MainSettingsViewModel.Provider mainSettingsProvider)
     {
-        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings, mainSettingsMvProvider, pathFindingSessionMv.MapRepreCreating);
+        PathFindingSettings = new PathFindingSettingsViewModel(pathFindingSessionMv.Settings, mainSettingsProvider, pathFindingSessionMv.MapRepreCreating);
         // RelevanceFeedback = new RelevanceFeedbackViewModel(pathFindingSessionMv.RelevanceFeedback);
         PathFinding = new PathFindingViewModel(pathFindingSessionMv.PathFinding);
         CurrentViewModel = PathFindingSettings;
 
+        MainSettingsProvider = mainSettingsProvider;
+        
         this.WhenAnyObservable(x => x.PathFindingSettings.ProceedTroughMapRepreCreationCommand)
             .Subscribe(whereToContinue => 
             {
@@ -51,6 +53,8 @@ public class PathFindingSessionViewModel : SessionViewModel
             CurrentViewModel.OnClosedCommand?.Execute().Subscribe();
         });
     }
+    
+    public MainSettingsViewModel.Provider MainSettingsProvider { get; }
 
     /// <summary>
     /// Property which contains currently used ViewModel.

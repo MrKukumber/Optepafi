@@ -2,19 +2,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Optepafi.Assets.Localization"
              xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
              xmlns:pfV="using:Optepafi.Views.PathFinding"
              mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
              x:Class="Optepafi.Views.PathFinding.PathFindingSettingsView"
              x:DataType="pfVm:PathFindingSettingsViewModel">
     <DockPanel>
-        <TextBlock Name="PathFindingSettingsHeaderTextBlock" Text="Path finding session settings" DockPanel.Dock="Top" HorizontalAlignment="Center" ></TextBlock>
+        <TextBlock Name="PathFindingSettingsHeaderTextBlock" Text="{x:Static local:PathFindingLocal.Settings_PathFindingSettingsHeaderTextBlock}" DockPanel.Dock="Top" HorizontalAlignment="Center" ></TextBlock>
         <Grid ColumnDefinitions="* *" DockPanel.Dock="Bottom" Margin="20">
-            <Button Name="ProceedingToMapRepreCreation" Content="Continue" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding ProceedTroughMapRepreCreationCommand}"/>
+            <Button Name="ProceedingToMapRepreCreation" Content="{x:Static local:PathFindingLocal.Settings_ProceedingToMapRepreCreation}" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding ProceedTroughMapRepreCreationCommand}"/>
         </Grid>
         <Grid ColumnDefinitions="* *" RowDefinitions="* *">
             <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Name="TemplateSelectingTextBlock" Text="Choose template"></TextBlock>
+                <TextBlock Name="TemplateSelectingTextBlock" Text="{x:Static local:PathFindingLocal.Settings_TemplateSelectingTextBlock}"></TextBlock>
                 <ComboBox Name="TemplateSelectingComboBox" ItemsSource="{Binding UsableTemplates}" SelectedItem="{Binding SelectedTemplate}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -24,7 +25,7 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button Name="UserModelSelectingButton" Content="Choose model" Click="UserModelSelectingButton_OnClick">
+                <Button Name="UserModelSelectingButton" Content="{x:Static local:PathFindingLocal.Settings_UserModelSelectingButton}" Click="UserModelSelectingButton_OnClick">
                     <Button.IsEnabled>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="SelectedTemplate" 
@@ -39,7 +40,7 @@
                 <TextBlock Name="SelectedUserModelFileNameTextBlock" Text="{Binding SelectedUserModelFileName}"></TextBlock>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button Name="MapSelectingButton" Content="Choose map" Click="MapSelectingButton_OnClick" IsEnabled="{Binding UsableMapFormats, Converter={x:Static pfV:PathFindingSettingsView.IsNotEmptyNorNull}}"></Button>
+                <Button Name="MapSelectingButton" Content="{x:Static local:PathFindingLocal.Settings_MapSelectingButton}" Click="MapSelectingButton_OnClick" IsEnabled="{Binding UsableMapFormats, Converter={x:Static pfV:PathFindingSettingsView.IsNotEmptyNorNull}}"></Button>
                 <TextBlock Name="SelectedMapFileNameTextBlock" Text="{Binding SelectedMapFileName}"></TextBlock>
                 <Border Width="300" Height="300" BorderThickness="2" BorderBrush="Black">
                     <Viewbox>
@@ -48,7 +49,7 @@
                 </Border>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Name="AlgorithmSelectingTextBlock" Text="Choose algorithm"></TextBlock>
+                <TextBlock Name="AlgorithmSelectingTextBlock" Text="{x:Static local:PathFindingLocal.Settings_AlgorithmSelectingTextBlock}"></TextBlock>
                 <ComboBox Name="AlgorithmSelectingComboBox" ItemsSource="{Binding UsableSearchingAlgorithms}" SelectedItem="{Binding SelectedSearchingAlgorithm}">
                     <ComboBox.IsEnabled>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">

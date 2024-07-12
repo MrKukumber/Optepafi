@@ -44,6 +44,7 @@
         <entry key="Optepafi/Views/Main/MainSettingsView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/MainWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/Windows/MainWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/Main/Windows/YesNoDialogWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/YesNoDialogWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/MainConfigView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/MainMenuView.axaml" value="Optepafi/Optepafi.csproj" />

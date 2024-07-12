@@ -28,6 +28,13 @@ public partial class MapRepreCreatingDialogWindow : ReactiveWindow<MapRepreCreat
             d(ViewModel!.CreateMapRepreCommand.Subscribe(isPossibleToContinue => Close(isPossibleToContinue)));
             d(ViewModel!.ReturnCommand.Subscribe(isPossibleToContinue => Close(isPossibleToContinue)));
             d(ViewModel!.CancelMapRepreCreationCommand.Subscribe(isPossibleToContinue => Close(isPossibleToContinue)));
+            d(ViewModel.MainSettingsProvider.WhenAnyValue(x => x.CurrentCulture)
+                .Subscribe(_ =>
+                {
+                    var currentContent = Content;
+                    Content = null;
+                    Content = currentContent;
+                }));
         });
     }
     /// <summary>

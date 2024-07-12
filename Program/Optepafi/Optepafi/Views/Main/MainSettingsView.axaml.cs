@@ -22,12 +22,14 @@ public partial class MainSettingsView : ReactiveUserControl<MainSettingsViewMode
 
         if (Design.IsDesignMode) return;
         
-        this.WhenActivated(disposables => ViewModel.WhenAnyValue(x => x.CurrentCulture)
-            .Subscribe(newCulture =>
-            {
-                Assets.Localization.Local.Culture = newCulture;
-                MainSettingsHeaderTextBlock.Text = Assets.Localization.Local.MainSettingsHeader;
-            }).DisposeWith(disposables));
+        // this.WhenActivated(disposables => ViewModel.WhenAnyValue(x => x.CurrentCulture)
+            // .Subscribe(newCulture =>
+            // {
+                // MainSettingsHeaderTextBlock.Text = Assets.Localization.MainWindowLocal.Settings_MainSettingsHeader;
+                // ElevConfigEntryButton.Content = Assets.Localization.MainWindowLocal.Settings_ElevConfigEntryButton;
+                // MainMenuButton.Content = Assets.Localization.MainWindowLocal.Settings_MainMenuButton;
+                // LocalizationTextBlock.Text = Assets.Localization.MainWindowLocal.Settings_LocalizationTextBlock;
+            // }).DisposeWith(disposables));
 
     }
 

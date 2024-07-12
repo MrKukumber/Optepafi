@@ -51,7 +51,7 @@ public class ElevConfigViewModel : ViewModelBase
             (userName, password) => !string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password));
         IObservable<bool> areCredentialsRequired = this.WhenAnyValue(
             x => x.CurrentElevDataDist,
-            elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel);
+            (ElevDataDistributionViewModel? elevDataDist) => elevDataDist is CredentialsRequiringElevDataDistributionViewModel);
         
             
         

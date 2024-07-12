@@ -31,6 +31,13 @@ public partial class PathFindingSessionWindow : ReactiveWindow<PathFindingSessio
         {
             d(ViewModel!.PathFindingSettings.MapRepreCreationInteraction.RegisterHandler( DoShowMapRepreCreatingDialogAsync));
             d(ViewModel!.PathFinding.ExitCommand.Subscribe(_ => Close()));
+            d(ViewModel.MainSettingsProvider.WhenAnyValue(x => x.CurrentCulture)
+                .Subscribe(_ =>
+                {
+                    var currentContent = Content;
+                    Content = null;
+                    Content = currentContent;
+                }));
         });
         RecursiveSearchForDataTemplatesIn(Resources);
     }

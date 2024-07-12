@@ -22,7 +22,7 @@ public class MainMenuViewModel : ViewModelBase
     /// <summary>
     /// Provider of main settings. It is used for passing to created sessions so they could access main parameters.
     /// </summary>
-    private MainSettingsModelView.Provider _mainSettingsMvProvider;
+    private MainSettingsViewModel.Provider _mainSettingsVmProvider;
     
     /// <summary>
     /// Maximal count of sessions that can be opened at once.
@@ -36,17 +36,17 @@ public class MainMenuViewModel : ViewModelBase
     /// Constructor of main menu ViewModel.
     /// It initializes all reactive constructs.
     /// </summary>
-    /// <param name="mainSettingsMvProvider">Provider of main settings ModelView which can be passed to created sessions.</param>
-    public MainMenuViewModel(MainSettingsModelView.Provider mainSettingsMvProvider)
+    /// <param name="mainSettingsVmProvider">Provider of main settings ModelView which can be passed to created sessions.</param>
+    public MainMenuViewModel(MainSettingsViewModel.Provider mainSettingsVmProvider)
     {
-        _mainSettingsMvProvider = mainSettingsMvProvider;
+        _mainSettingsVmProvider = mainSettingsVmProvider;
         IObservable<bool> isSessionsCountNotMaximal = Sessions.WhenAnyValue(
             s => s.Count,
              count => count < SessionsMaxCount);
         GoToSettingsCommand = ReactiveCommand.Create(() => { });
         CreatePathFindingSessionCommand = ReactiveCommand.Create(() =>
             {
-                var pathFindingSession = new PathFindingSessionViewModel(new PathFindingSessionModelView(), _mainSettingsMvProvider);
+                var pathFindingSession = new PathFindingSessionViewModel(new PathFindingSessionModelView(), _mainSettingsVmProvider);
                 Sessions.Add(pathFindingSession);
                 pathFindingSession.WhenAnyObservable(x => x.OnClosedCommand)
                     .Subscribe(_ => Sessions.Remove(pathFindingSession));

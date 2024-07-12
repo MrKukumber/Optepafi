@@ -3,6 +3,8 @@
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=Optepafi_002FAssets_002FLocalization_002FLocal/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=Optepafi_002FAssets_002FLocalization_002FMainWindowLocal/@EntryIndexedValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=Optepafi_002FAssets_002FLocalization_002FPathFindingLocal/@EntryIndexedValue">True</s:Boolean>
 	
 	
 	
@@ -17,4 +19,10 @@
 	
 	
 	
-	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>
+	
+	
+	
+	
+	
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/ShowOnlyErrors/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>

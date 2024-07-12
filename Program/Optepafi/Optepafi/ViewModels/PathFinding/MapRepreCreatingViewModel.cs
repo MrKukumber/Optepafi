@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Reports;
+using Optepafi.ViewModels.Main;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
@@ -34,11 +35,12 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
     /// It also calls <c>WhenActivated</c> method which calls prerequisites check method right after ViewModels activation.
     /// </summary>
     /// <param name="mapRepreCreatingMv">Corresponding ModelView to this ViewModel.</param>
-    public MapRepreCreatingViewModel(PFMapRepreCreatingModelView mapRepreCreatingMv)
+    /// <param name="mainSettingsProvider">Provider of main settings.</param>
+    public MapRepreCreatingViewModel(PFMapRepreCreatingModelView mapRepreCreatingMv, MainSettingsViewModel.Provider mainSettingsProvider)
     {
         _mapRepreCreatingMv = mapRepreCreatingMv;
         Activator = new ViewModelActivator();
-
+        MainSettingsProvider = mainSettingsProvider;
         
         IObservable<bool> isAwaitingResolution = this.WhenAnyValue(
             x => x.IsAwaitingElevDataAbsenceResolution,
@@ -128,6 +130,8 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
             CheckPrerequisitesCommand.Execute().Subscribe().DisposeWith(disposalbes);
         });
     }
+
+    public MainSettingsViewModel.Provider MainSettingsProvider { get; }
     
     /// <summary>
     /// Percentage progress of map representations creation indicator.

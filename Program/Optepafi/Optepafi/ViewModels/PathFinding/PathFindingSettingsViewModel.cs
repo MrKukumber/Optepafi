@@ -8,10 +8,10 @@ using System.Security;
 using System.Threading.Tasks;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.UserModelMan;
-using Optepafi.ModelViews.Main;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Representatives;
+using Optepafi.ViewModels.Main;
 using ReactiveUI;
 
 namespace Optepafi.ViewModels.PathFinding;
@@ -44,9 +44,9 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// It also includes mechanism for initializing of default parameters based on saved parameters by previously run session.
     /// </summary>
     /// <param name="settingsMv">Corresponding ModelView to this ViewModel.</param>
-    /// <param name="mainSettingsMvProvider">Provider of main settings ModelView. It is used for main parameters retrieval.</param>
+    /// <param name="mainSettingsProvider">Provider of main settings ModelView. It is used for main parameters retrieval.</param>
     /// <param name="mapRepreCreatingMv">Map representation creation ModelView used in handling of map representation creation interaction.</param>
-    public PathFindingSettingsViewModel(PFSettingsModelView settingsMv, MainSettingsModelView.Provider mainSettingsMvProvider, PFMapRepreCreatingModelView mapRepreCreatingMv)
+    public PathFindingSettingsViewModel(PFSettingsModelView settingsMv, MainSettingsViewModel.Provider mainSettingsProvider, PFMapRepreCreatingModelView mapRepreCreatingMv)
     {
         _settingsMv = settingsMv;
         _mapRepreCreatingMv = mapRepreCreatingMv;
@@ -194,9 +194,9 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         MapRepreCreationInteraction = new Interaction<MapRepreCreatingViewModel, bool>();
         ProceedTroughMapRepreCreationCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            CurrentlySelectedElevDataDistribution = mainSettingsMvProvider.CurrentElevDataDistribution;
+            CurrentlySelectedElevDataDistribution = mainSettingsProvider.CurrentElevDataDistribution;
             _settingsMv.SetSomeSuitableMapRepreRepresentative(SelectedTemplate!, CurrentlyUsedMapFormat!, CurrentlyUsedUserModelType!, SelectedSearchingAlgorithm!);
-            bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingViewModel(_mapRepreCreatingMv));
+            bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingViewModel(_mapRepreCreatingMv, mainSettingsProvider));
             if (successfulCreation)
             {
                 _settingsMv.SaveParameters();
@@ -460,7 +460,7 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// <summary>
     /// Reactive command for proceeding from settings to map representations creation.
     /// It can be executed only when every necessary parameter is set.
-    /// At the start it lets application set some representative of map representation, that corresponds to selected template, map format, user model type and searching algorithm.
+    /// At the start it sets elevation data distribution to current implicit one and it lets application set some representative of map representation, that corresponds to selected template, map format, user model type and searching algorithm.
     /// Then it calls for handling map representation creation interaction. This interaction is handled by View preferably by dialog Window.
     /// After interactions end the indicator of successful map representations creation is returned.
     /// If creation of map repre. was successful application proceeds.

@@ -15,7 +15,8 @@ namespace Optepafi.ViewModels.Main;
 /// - overseeing of main parameters setting by user.
 /// - providing interaction with elevation data configuration
 /// - providing collection of all cultures to which is application localized
-///
+/// - provides instance of <c>Provider</c> class which can be offered to sessions for safe accessing of main parameters
+/// 
 /// For more information on ViewModels in general see <see cref="ViewModelBase"/>.
 /// </summary>
 public class MainSettingsViewModel : ViewModelBase
@@ -37,7 +38,10 @@ public class MainSettingsViewModel : ViewModelBase
 
         CurrentElevDataDistribution = mainSettingsMv.CurrentElevDataDistribution;
         CurrentCulture = mainSettingsMv.CurrentCulture;
-        Assets.Localization.Local.Culture = _currentCulture;
+        Assets.Localization.MainWindowLocal.Culture = CurrentCulture;
+        Assets.Localization.PathFindingLocal.Culture = CurrentCulture;
+        
+        ProviderOfSettings = new Provider(this);
         
         this.WhenAnyValue(x => x.CurrentCulture)
             .Subscribe(currentCulture => _mainSettingsMv.CurrentCulture = currentCulture);
@@ -51,9 +55,12 @@ public class MainSettingsViewModel : ViewModelBase
             CurrentElevDataDistribution = await ElevConfigInteraction.Handle(new ElevConfigViewModel(CurrentElevDataDistribution));
         });
         GoToMainMenuCommand = ReactiveCommand.Create(() => { });
-        
-        
     }
+    
+    /// <summary>
+    /// Provider of settings that can be safely offered to outside word.
+    /// </summary>
+    public Provider ProviderOfSettings { get; }
     
     /// <summary>
     /// Parameter that indicates currently chosen elevation data distribution that should be used in whole application for elevation data retrieval.
@@ -76,8 +83,14 @@ public class MainSettingsViewModel : ViewModelBase
     public CultureInfo CurrentCulture
     {
         get => _currentCulture;
-        set => this.RaiseAndSetIfChanged(ref _currentCulture, value);
+        set
+        {
+            Assets.Localization.MainWindowLocal.Culture = value;
+            Assets.Localization.PathFindingLocal.Culture = value;
+            this.RaiseAndSetIfChanged(ref _currentCulture, value);
+        }
     }
+
     private CultureInfo _currentCulture;
     
     /// <summary>
@@ -98,4 +111,36 @@ public class MainSettingsViewModel : ViewModelBase
     /// The returning value indicates, which elevation data distribution was selected to be currently used default distribution in whole application.
     /// </summary>
     public Interaction<ElevConfigViewModel, ElevDataDistributionViewModel?> ElevConfigInteraction { get; }
+    
+    
+    /// <summary>
+    /// Provider of main settings parameters.
+    /// Its main task is to safely provide these parameters to outer world such as sessions.
+    /// Its instance is provided by <c>MainSettingsModelView</c> in <c>ProviderOfSettings</c> property.
+    /// </summary>
+    public class Provider : ReactiveObject
+    {
+        public Provider(MainSettingsViewModel providedMainSettingsVm)
+        {
+            _providedMainSettingsVm = providedMainSettingsVm;
+            _currentCutlure = providedMainSettingsVm.WhenAnyValue(x => x.CurrentCulture)
+                .ToProperty(this, nameof(CurrentCulture));
+        }
+        
+        /// <summary>
+        /// Main settings whose parameters shall be provided.
+        /// </summary>
+        private MainSettingsViewModel _providedMainSettingsVm;
+
+        /// <summary>
+        /// Currently used culture.
+        /// </summary>
+        public CultureInfo CurrentCulture => _currentCutlure.Value;
+        private ObservableAsPropertyHelper<CultureInfo> _currentCutlure;
+        
+        /// <summary>
+        /// Currently chosen elevation data distribution.
+        /// </summary>
+        public ElevDataDistributionViewModel? CurrentElevDataDistribution => _providedMainSettingsVm.CurrentElevDataDistribution;
+    }
 }

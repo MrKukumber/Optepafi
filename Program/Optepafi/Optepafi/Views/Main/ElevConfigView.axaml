@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mVm="using:Optepafi.ViewModels.Main"
              xmlns:mV="using:Optepafi.Views.Main"
+             xmlns:local="clr-namespace:Optepafi.Assets.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Optepafi.Views.Main.ElevConfigView"
              x:DataType="mVm:ElevConfigViewModel">
@@ -11,12 +12,12 @@
         <TextBlock Name="ElevConfigHeaderTextBlock" Text="Elevation configuration" 
                    HorizontalAlignment="Center" DockPanel.Dock="Top"></TextBlock>
         <Grid DockPanel.Dock="Bottom" ColumnDefinitions="* *" Margin="10">
-            <Button Name="ReturnButton" Content="Return" Command="{Binding ReturnCommand}"
+            <Button Name="ReturnButton" Content="{x:Static local:MainWindowLocal.ElevConfig_ReturnButton}" Command="{Binding ReturnCommand}"
                     Grid.Column="1" HorizontalAlignment="Right"></Button>
         </Grid>
         <Grid Margin="0 20 0 0" RowDefinitions="Auto Auto 4* Auto *">
             <StackPanel Grid.Row="0" Margin="10 0 0 10">
-                <TextBlock Name="ElevSourceTextBlock" Text="Source of elevation"></TextBlock>
+                <TextBlock Name="ElevSourceTextBlock" Text="{x:Static local:MainWindowLocal.ElevConfig_ElevSourceTextBlock}"></TextBlock>
                 <ComboBox Name="ElevSourceComboBox" HorizontalAlignment="Left"
                           ItemsSource="{Binding ElevDataDistributions}"
                           SelectedItem="{Binding CurrentElevDataDist}">
@@ -38,7 +39,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" 
-                                   Background="{Binding Presence, Converter={x:Static mV:ElevConfigView.PresenceToColorConverter}}"></TextBlock>
+                                   Background="{Binding Presence, Converter={x:Static mV:ElevConfigView.PresenceToColorConverter}}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -64,11 +65,11 @@
                 <!-- <Button Name="UnZoomButton"></Button> -->
             <!-- </StackPanel> -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="4">
-                <TextBlock Text="Country name:" Margin="20"></TextBlock>
-                <Button Name="DownloadButton" Content="Download" Margin="0 0 20 0" Command="{Binding DownloadRegionCommand}"></Button>
-                <Button Name="DeleteButton" Content="Delete" Command="{Binding DeleteRegionCommand}"></Button>
-                <Button Name="CancelButton" Content="Cancel" Command="{Binding CancelDownloadingCommand}"></Button>
-                <TextBox Name="UserNameTextBlock" Watermark="Insert user name" Text="{Binding UserName, Mode=OneWayToSource}" >
+                <TextBlock Name="RegionNameTextBlock" Text="{x:Static local:MainWindowLocal.ElevConfig_RegionNameTextBlock}" Margin="20"/>
+                <Button Name="DownloadButton" Content="{x:Static local:MainWindowLocal.ElevConfig_DownloadButton}" Margin="0 0 20 0" Command="{Binding DownloadRegionCommand}"/>
+                <Button Name="RemoveButton" Content="{x:Static local:MainWindowLocal.ElevConfig_RemoveButton}" Command="{Binding DeleteRegionCommand}"/>
+                <Button Name="CancelButton" Content="{x:Static local:MainWindowLocal.ElevConfig_CancelButton}" Command="{Binding CancelDownloadingCommand}"/>
+                <TextBox Name="UserNameTextBlock" Watermark="{x:Static local:MainWindowLocal.ElevConfig_UserNameTextBlock_Watermark}" Text="{Binding UserName, Mode=OneWayToSource}">
                     <TextBox.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="CredentialsAreRequired"/>
@@ -76,11 +77,11 @@
                         </MultiBinding>
                     </TextBox.IsVisible>
                 </TextBox>
-                <TextBox Name="PasswordTextBlock" Watermark="Insert password" Text="{Binding Password, Mode=OneWayToSource}" PasswordChar="*">
+                <TextBox Name="PasswordTextBlock" Watermark="{x:Static local:MainWindowLocal.ElevConfig_PasswordTextBlock_Watermark}" Text="{Binding Password, Mode=OneWayToSource}" PasswordChar="*">
                     <TextBox.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="CredentialsAreRequired"/>
-                            <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"></Binding>
+                            <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"/>
                         </MultiBinding>
                     </TextBox.IsVisible>
                 </TextBox>
