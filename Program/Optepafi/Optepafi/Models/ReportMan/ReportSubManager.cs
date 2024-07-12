@@ -16,8 +16,8 @@ namespace Optepafi.Models.ReportMan;
 /// <summary>
 /// Singleton class used for sub-managing of reports aggregation. It is main channel between report aggregation mechanisms and other managers/constructs of Model.
 /// It provides supporting methods for correct calling of report aggregators.
-/// Its functionality is similar to <see cref="ReportManager"/> singleton class which is intended for user from applications logic (ModelViews\ViewModels).
-/// Main difference in way of use of these classes is that, this class has two generci parameters (representing used vertex and edge attributes in aggregation of report) and in provided methods request for specific properties of inserted object types.
+/// Its functionality is similar to <see cref="ReportManager"/> singleton class which is intended for user from applications logic (ModelViews/ViewModels).
+/// Main difference in way of use of these classes is that, this class has two generic parameters (representing used vertex and edge attributes in aggregation of report) and in provided methods request for specific properties of inserted object types.
 /// This is the reason why this class is intended for use from Model constructs. It is property of these constructs they know functionality of their data already. So the check for their functionality again would be redundant. They also work with specific type of vertex/edge attributes so they are able to provide them.
 ///
 /// For more information about process of reports aggregation see <see cref="ReportManager"/>.
