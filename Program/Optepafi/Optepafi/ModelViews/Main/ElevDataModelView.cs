@@ -9,13 +9,15 @@ namespace Optepafi.ModelViews.Main;
 
 /// <summary>
 /// ModelView which is responsible for logic behind elevation data management and their acquisition.
-/// This ModelView is special by its design. It is singleton class. Reason for this is its ability to be used simultaneously from multiple ViewModels.
+/// 
+/// This ModelView is special by its design. It is singleton class. Reason for this is its ability to be used simultaneously from multiple ViewModels.  
 /// Its work load includes:
+/// 
 /// - credential and not credential based elevation data downloading for requested regions
 /// - removal of elevation data corresponding to requested region
 /// - keeping hold of ViewModels for all Regions of all elevation data distributions. Thees region ViewModels are provided to corresponding ViewModel so it could use them for showing to user. The main idea behind them is that they are always the same instances. They can therefore hold their information and provide it across multiple elevation configurations at once.
 /// 
-/// For more information on ModelViews see <see cref="ModelViewBase"/>.
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.  
 /// </summary>
 public sealed class ElevDataModelView : ModelViewBase
 {
@@ -34,9 +36,10 @@ public sealed class ElevDataModelView : ModelViewBase
     
     /// <summary>
     /// Dictionary, which holds all top regions for all elevation data distributions in application.
-    /// It is used by view model for accessing of region view models, which it can then use for showing them to user.
-    /// This dictionary is key component of this model views ability to be used concurrently at multiple elevation data configurations at the same time.
-    /// It ensures, that all elevation data configurations will hve the same information about presence of regions.
+    /// 
+    /// It is used by view model for accessing of region view models, which it can then use for showing them to user.  
+    /// This dictionary is key component of this model views ability to be used concurrently at multiple elevation data configurations at the same time.  
+    /// It ensures, that all elevation data configurations will hve the same information about presence of regions.  
     /// </summary>
     public Dictionary<ElevDataDistributionViewModel, List<TopRegionViewModel>> TopRegionsOfAllDistributions { get; }
     
@@ -48,6 +51,7 @@ public sealed class ElevDataModelView : ModelViewBase
 
     /// <summary>
     /// Method for asynchronous elevation data download for requested region from provided elevation data distribution without requiring credentials for download.
+    /// 
     /// <c>ElevDataManager</c>s appropriate method is called.
     /// </summary>
     /// <param name="elevDataDistributionViewModel">Elevation data distribution from which elevation data of requested region should be downloaded.</param>
@@ -65,6 +69,7 @@ public sealed class ElevDataModelView : ModelViewBase
     
     /// <summary>
     /// Method for asynchronous elevation data download for requested region from provided elevation data distribution with requiring credentials for download.
+    /// 
     /// <c>ElevDataManager</c>s appropriate method is called.
     /// </summary>
     /// <param name="elevDataDistributionViewModel">Elevation data distribution from which elevation data of requested region should be downloaded.</param>
@@ -82,6 +87,7 @@ public sealed class ElevDataModelView : ModelViewBase
     
     /// <summary>
     /// Method for removal of elevation data of requested region which were downloaded form specified elevation data distribution.
+    /// 
     /// <c>ElevDataManager</c>s appropriate method is called.
     /// </summary>
     /// <param name="elevDataDistributionViewModel">Elevation data distribution which downloaded data should be removed.</param>

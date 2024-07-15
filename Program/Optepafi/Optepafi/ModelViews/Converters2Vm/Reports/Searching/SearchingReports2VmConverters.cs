@@ -9,8 +9,9 @@ using Optepafi.ViewModels.Data.Reports.Searching;
 namespace Optepafi.ModelViews.Converters2Vm.Reports.Searching;
 
 /// <summary>
-/// Static class which contains dictionary of searching report to ViewModel converters. It should contain all such converters.
-/// Application logic works directly with this dictionary when it searches for appropriate converter.
+/// Static class which contains dictionary of searching report to ViewModel converters.
+///
+/// It should contain all such converters. Application logic works directly with this dictionary when it searches for appropriate converter.  
 /// </summary>
 public static class SearchingReports2VmConverters
 {
@@ -25,6 +26,7 @@ public static class SearchingReports2VmConverters
 
 /// <summary>
 /// Converter of smiley face path drawing report to ViewModel.
+/// 
 /// It is included in dictionary of searching report to ViewModel converters in <see cref="SearchingReports2VmConverters"/>.
 /// </summary>
 public class SmileyFacePathDrawingReport2VmConverter : ISearchingReport2VmConverter<SmileyFacePathDrawingReport>

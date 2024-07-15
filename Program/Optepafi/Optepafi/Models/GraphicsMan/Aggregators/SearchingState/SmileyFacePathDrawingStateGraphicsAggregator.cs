@@ -10,7 +10,8 @@ namespace Optepafi.Models.GraphicsMan.Aggregators.SearchingState;
 
 /// <summary>
 /// Singleton class representing aggregator of graphic objects for <see cref="SmileyFacePathDrawingState{TVertexAttributes,TEdgeAttributes}"/> searching state type.
-/// For more info on searching state graphics aggregators see <see cref="ISearchingStateGraphicsAggregator{TSearchingState,TVertexAttributes,TEdgeAttributes}"/>.
+/// 
+/// For more info on searching state graphics aggregators see <see cref="ISearchingStateGraphicsAggregator{TSearchingState,TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes which searching state can contain and user model can use for computing.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes which searching state can contain and user model can use for computing.</typeparam>
@@ -23,8 +24,8 @@ public class SmileyFacePathDrawingStateGraphicsAggregator<TVertexAttributes, TEd
     
     /// <inheritdoc cref="ISearchingStateGraphicsAggregator{TSearchingState,TVertexAttributes,TEdgeAttributes}.AggregateGraphics"/>
     /// <remarks>
-    /// <c>SmileyFacePathDrawingState</c> provides information about which parts of drawing were already drawn.
-    /// Aggregator will create graphic object for each such part and submit it into collector. 
+    /// <c>SmileyFacePathDrawingState</c> provides information about which parts of drawing were already drawn.  
+    /// Aggregator will create graphic object for each such part and submit it into collector.   
     /// </remarks>
     public void AggregateGraphics(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)

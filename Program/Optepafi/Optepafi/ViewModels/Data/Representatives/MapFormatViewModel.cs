@@ -5,6 +5,7 @@ namespace Optepafi.ViewModels.Data.Representatives;
 
 /// <summary>
 /// Wrapping ViewModel for <c>IMapFormat{IMap}</c> type.
+/// 
 /// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
 /// </summary>
 /// <param name="mapFormat">Map format instance to which will be this ViewModel coupled.</param>

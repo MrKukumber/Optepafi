@@ -13,14 +13,16 @@ namespace Optepafi.ViewModels.PathFinding;
 
 /// <summary>
 /// ViewModel which is responsible for control over sessions path finding itself.
+/// 
 /// Its tasks include:
+/// 
 /// - overseeing of correctness of user inputs. It secures consistency of path finding process by restricting availability of users actions.
 /// - use of corresponding ModelViews methods for retrieving reports about results of path findings and graphic representations which can be shown to user
 /// - rendering of resulting graphics for user. Includes mechanisms for scaling of graphics rendering.
 /// - proper handling of sessions main windows closing. Informing ModelView about its occurence.
 ///
-/// This ViewModel is activatable. That means when its corresponding View is attached to visual tree of application, function inserted into <c>WhenActivated</c>  method is called and initialize this ViewModel.
-/// For mor information on path finding ViewModels see <see cref="PathFindingViewModelBase"/>
+/// This ViewModel is activatable. That means when its corresponding View is attached to visual tree of application, function inserted into <c>WhenActivated</c>  method is called and initialize this ViewModel.  
+/// For mor information on path finding ViewModels see <see cref="PathFindingViewModelBase"/>.  
 /// </summary>
 public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewModel
 {
@@ -45,8 +47,9 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     private int _acceptedTrackPointsCount;
     /// <summary>
     /// Constructs path finding ViewModel.
-    /// It initialize all reactive constructs and creates various reactions to them.
-    /// It also calls <c>WhenActivated</c> method which calls inserted lambda expression on ViewModels activation. This activation secures load of map graphics.
+    /// 
+    /// It initialize all reactive constructs and creates various reactions to them.  
+    /// It also calls <c>WhenActivated</c> method which calls inserted lambda expression on ViewModels activation. This activation secures load of map graphics.  
     /// </summary>
     /// <param name="pathFindingMv">Corresponding ModelView to this ViewModel</param>
     public PathFindingViewModel(PFPathFindingModelView pathFindingMv)
@@ -171,7 +174,8 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
 
     /// <summary>
     /// Indicator whether path finding process is in state when found paths report is shown.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public bool IsShowingPathReport
     {
@@ -183,7 +187,8 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     
     /// <summary>
     /// Indicator whether path finding process is in state in which accepting of track from user is enabled.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public bool IsAcceptingTrack
     {
@@ -193,8 +198,9 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     private bool _isAcceptingTrack = true;
 
     /// <summary>
-    /// Source of maps graphics. It is used for rendering maps objects on canvas for user. 
-    /// It raises notification about change of its value.
+    /// Source of maps graphics. It is used for rendering maps objects on canvas for user.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public GraphicsSourceViewModel? MapGraphicsSource
     {
@@ -205,7 +211,8 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
 
     /// <summary>
     /// Source of by user selected tracks graphics. It is used for rendering tracks objects for user.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public GraphicsSourceViewModel? TrackGraphicsSource
     {
@@ -216,7 +223,8 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
 
     /// <summary>
     /// Most recent reported searching state or found path.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public GraphicsContainingDataViewModel? LastReport
     {
@@ -227,14 +235,17 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
 
     /// <summary>
     /// Graphics included in most recent report of searching state or found path.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public GraphicsSourceViewModel? LastReportGraphicsSource => _lastReportGraphicsSource.Value;
     private ObservableAsPropertyHelper<GraphicsSourceViewModel?> _lastReportGraphicsSource;
 
     /// <summary>
-    /// Width of maps graphics. Set to be equal to maps graphics source. In the end all graphics sources in this ViewModel should have the same area which respond to area of maps graphics.
-    /// It raises notification about change of its value.
+    /// Width of maps graphics.
+    /// 
+    /// Set to be equal to maps graphics source. In the end all graphics sources in this ViewModel should have the same area which respond to area of maps graphics.  
+    /// It raises notification about change of its value.  
     /// </summary>
     public int GraphicsWidth
     {
@@ -244,8 +255,10 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     private int _graphicsWidth;
 
     /// <summary>
-    /// Height of graphics. Set to be equal to maps graphics source. In the end all graphics sources in this ViewModel should have the same area which respond to area of maps graphics.
-    /// It raises notification about change of its value.
+    /// Height of graphics.
+    ///
+    /// Set to be equal to maps graphics source. In the end all graphics sources in this ViewModel should have the same area which respond to area of maps graphics.  
+    /// It raises notification about change of its value.  
     /// </summary>
     public int GraphicsHeight
     {
@@ -256,7 +269,8 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
 
     /// <summary>
     /// Current scale of rendered graphics.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public float GraphicsScale
     {
@@ -267,21 +281,24 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
 
     /// <summary>
     /// Value of scaled graphics width computed from properties <c>GraphicsWidth</c> and <c>GraphicsScale</c>.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public int ScaledGraphicsWidth => _scaledGraphicsWidth.Value;
     private readonly ObservableAsPropertyHelper<int> _scaledGraphicsWidth;
 
     /// <summary>
     /// Value of scaled graphics height computed from properties <c>GraphicsHeight</c> and <c>GraphicsScale</c>.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public int ScaledGraphicsHeight => _scaledGraphicsHeight.Value;
     private readonly ObservableAsPropertyHelper<int> _scaledGraphicsHeight;
 
     /// <summary>
     /// Property which can include information about any problem with rendering of graphics which can be shown to user.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public string? GraphicsProblemText
     {
@@ -292,59 +309,69 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     
     /// <summary>
     /// Retrieves ground map graphics source from ModelView.
-    /// Graphics source will be returned immediately but in the background can run asynchronous process that will concurrently generate graphic objects and fill the source with them. 
+    /// 
+    /// Graphics source will be returned immediately but in the background can run asynchronous process that will concurrently generate graphic objects and fill the source with them.  
     /// </summary>
     public ReactiveCommand<Unit, GraphicsSourceViewModel> GetMapGraphicsCommand { get; }
     /// <summary>
     /// Reactive command for executing of path finding mechanism.
-    /// It can be executed only when is application in state of accepting track and when more then one track point is selected.
-    /// At first it sets <c>IsAcceptingTrack</c> property to false indicating that user can no longer change input track.
-    /// Then instance of <c>Progress{T}"</c> type is created for handling of searching reports from path finding.
-    /// In the end is path finding ModelView asked for asynchronous execution of path finding itself.
-    /// Result of execution is returned for anyone who would care about it.
-    /// Commands execution will take until cancellation command is executed or when is ViewModel informed that Windows closed event was fired by executing <c>OnClosedCommand</c>.
+    /// 
+    /// It can be executed only when is application in state of accepting track and when more then one track point is selected.  
+    /// At first it sets <c>IsAcceptingTrack</c> property to false indicating that user can no longer change input track.  
+    /// Then instance of <c>Progress{T}"</c> type is created for handling of searching reports from path finding.  
+    /// In the end is path finding ModelView asked for asynchronous execution of path finding itself.  
+    /// Result of execution is returned for anyone who would care about it.  
+    /// Commands execution will take until cancellation command is executed or when is ViewModel informed that Windows closed event was fired by executing <c>OnClosedCommand</c>.  
     /// </summary>
     public ReactiveCommand<Unit, PathReportViewModel?> FindPathCommand { get; }
     /// <summary>
     /// Reactive command for cancelling of path finding.
-    /// Its is enabled only when <c>FindPathCommand</c> is executing.
+    /// 
+    /// Its is enabled only when <c>FindPathCommand</c> is executing.  
     /// </summary>
     public ReactiveCommand<Unit, Unit> CancelSearchCommand { get; }
     /// <summary>
     /// Reactive command which cleans up report of found path.
+    /// 
     /// It is enabled only when application is in state of showing found paths report.  
     /// </summary>
     public ReactiveCommand<Unit, Unit> CleanUpPathReportCommand { get; }
     /// <summary>
     /// Reactive command which adds track point to list of selected track points by user on specified position. If specified position is null, track point is added at the end of list.
-    /// It is enabled only when application is in state of accepting track from user.
+    /// 
+    /// It is enabled only when application is in state of accepting track from user.  
     /// </summary>
     public ReactiveCommand<(CanvasCoordinate, int?), GraphicsSourceViewModel> AddTrackPointCommand { get; }
     /// <summary>
     /// Reactive command which removes track point from list of selected track points at specified position.
-    /// If specified position is null, the most recently added point is removed.
-    /// Command is enabled only when application is in state of accepting track and when at least one point of track is already selected.
+    /// 
+    /// If specified position is null, the most recently added point is removed.  
+    /// Command is enabled only when application is in state of accepting track and when at least one point of track is already selected.  
     /// </summary>
     public ReactiveCommand<int?, GraphicsSourceViewModel> RemoveTrackPointCommand { get; }
     /// <summary>
     /// Reactive command which zooms whole graphics shown to user by adjusting <c>GraphicsScale</c> property.
-    /// Graphics scale is adjusted by inputted value.
+    /// 
+    /// Graphics scale is adjusted by inputted value.  
     /// </summary>
     public ReactiveCommand<float, Unit> ZoomCommand { get; }
     /// <summary>
     /// Reactive command which un-zooms whole graphics shown to user by adjusting <c>GraphicsScale</c> property.
-    /// Graphics scale is adjusted by inputted value.
+    /// 
+    /// Graphics scale is adjusted by inputted value.  
     /// </summary>
     public ReactiveCommand<float, Unit> UnZoomCommand { get; }
     /// <summary>
     /// Reactive command for exiting of path finding session.
-    /// Path finding session ViewModel subscribes on this command and on its execution initiates closing of path finding sessions main Window.
+    /// 
+    /// Path finding session ViewModel subscribes on this command and on its execution initiates closing of path finding sessions main Window.  
     /// </summary>
     public ReactiveCommand<Unit, Unit> ExitCommand { get; }
     /// <summary>
     /// Reactive command for handling of main sessions window closed event.
-    /// It is executed by <c>PathFindingSessionViewModel</c> when such event occurs.
-    /// It informs corresponding ModelView about this fact so it could process it.
+    /// 
+    /// It is executed by <c>PathFindingSessionViewModel</c> when such event occurs.  
+    /// It informs corresponding ModelView about this fact so it could process it.  
     /// </summary>
     public sealed override ReactiveCommand<Unit, Unit> OnClosedCommand { get; }
 }

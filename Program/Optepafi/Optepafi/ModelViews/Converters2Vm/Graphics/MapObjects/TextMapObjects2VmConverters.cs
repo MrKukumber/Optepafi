@@ -10,7 +10,8 @@ namespace Optepafi.ModelViews.Converters2Vm.Graphics.MapObjects;
 
 /// <summary>
 /// Static class which contains dictionary of <c>TextMap</c> graphic object to ViewModel converters.
-/// It should contain all such converters. It is concatenated to dictionary of all other map graphic object converters in <see cref="MapObjects2VmConverters"/>.
+/// 
+/// It should contain all such converters. It is concatenated to dictionary of all other map graphic object converters in <see cref="MapObjects2VmConverters"/>.  
 /// </summary>
 public static class TextMapObjects2VmConverters
 {
@@ -26,7 +27,9 @@ public static class TextMapObjects2VmConverters
 }
 
 /// <summary>
-/// Converter of word graphic object to ViewModel. It is included in dictionary of text map graphic object to ViewModel converters in <see cref="TextMapObjects2VmConverters"/>. 
+/// Converter of word graphic object to ViewModel.
+///
+/// It is included in dictionary of text map graphic object to ViewModel converters in <see cref="TextMapObjects2VmConverters"/>. 
 /// </summary>
 public class WordObject2VmConverter : IGraphicObjects2VmConverter<WordObject>
 {
@@ -42,7 +45,9 @@ public class WordObject2VmConverter : IGraphicObjects2VmConverter<WordObject>
 
 
 /// <summary>
-/// Converter of track point graphic object of <c>TextMap</c> design to ViewModel. It is included in dictionary of text map graphic object to ViewModel converters in <see cref="TextMapObjects2VmConverters"/>. 
+/// Converter of track point graphic object of <c>TextMap</c> design to ViewModel.
+///
+/// It is included in dictionary of text map graphic object to ViewModel converters in <see cref="TextMapObjects2VmConverters"/>. 
 /// </summary>
 public class TrackPointWordObject2VmConverter : IGraphicObjects2VmConverter<TrackPointWordObject>
 {

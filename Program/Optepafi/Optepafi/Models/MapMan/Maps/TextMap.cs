@@ -4,9 +4,10 @@ namespace Optepafi.Models.MapMan.Maps;
 
 /// <summary>
 /// Represents map generated from any text file. It contains text of given text file.
-/// This is just demonstrative class for presenting applications functionality.
-/// For more information about map classes see <see cref="IMap"/>.
-/// For more information on geo-located map classes see <see cref="IGeoLocatedMap"/>. 
+/// 
+/// This is just demonstrative class for presenting applications functionality.  
+/// For more information about map classes see <see cref="IMap"/>.  
+/// For more information on geo-located map classes see <see cref="IGeoLocatedMap"/>.  
 /// </summary>
 public abstract class TextMap : IMostNSWECoordQueryableGeoRefMap
 {

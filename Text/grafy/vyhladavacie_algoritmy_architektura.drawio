@@ -1,0 +1,122 @@
+<mxfile host="Electron" modified="2024-07-14T21:44:19.504Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.4 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="XOEnHpbeGWu0sSf1SeO2" version="24.6.4" type="device">
+  <diagram name="Page-1" id="b6uM2d6UaE7Hx8vD-3jP">
+    <mxGraphModel dx="758" dy="955" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-4" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;ISearchingAlgorithm&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="80" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-5" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-6" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="165" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-7" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-8" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-9" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-10" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-11" value="&lt;i&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;Triedy reprezentujúce&amp;nbsp;&lt;/font&gt;&lt;/i&gt;&lt;div&gt;&lt;i style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;vyhľadávacie algoritmy&lt;/font&gt;&lt;/i&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-12" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;ISearchingAlgorithmImplementation&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="396" y="80" width="258" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-13" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-25" target="LWrQSZwCD86_7BPg8CpF-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="467.5" y="55" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-14" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-25" target="LWrQSZwCD86_7BPg8CpF-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="565" y="30" as="targetPoint" />
+            <mxPoint x="582.5" y="55" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-15" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-25" target="LWrQSZwCD86_7BPg8CpF-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="525" y="55" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-25" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Triedy imlementujúce&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;vyhľadávacie algoritmy&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="200" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-27" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="305" y="230" as="sourcePoint" />
+            <mxPoint x="415" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-28" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="305" y="249.44" as="sourcePoint" />
+            <mxPoint x="415" y="249.44" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-29" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="270" as="sourcePoint" />
+            <mxPoint x="400" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-30" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="300" as="sourcePoint" />
+            <mxPoint x="400" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-33" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="50" as="sourcePoint" />
+            <mxPoint x="280" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-34" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Dedí / Implementuje&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LWrQSZwCD86_7BPg8CpF-33">
+          <mxGeometry x="-0.3827" y="2" relative="1" as="geometry">
+            <mxPoint x="28" y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-35" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-11" target="LWrQSZwCD86_7BPg8CpF-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="285" as="sourcePoint" />
+            <mxPoint x="410" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-36" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=1 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="50" as="sourcePoint" />
+            <mxPoint x="480" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-37" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Drží referenciu&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LWrQSZwCD86_7BPg8CpF-36">
+          <mxGeometry x="-0.2179" y="2" relative="1" as="geometry">
+            <mxPoint x="17" y="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-38" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-25" target="LWrQSZwCD86_7BPg8CpF-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="535" y="180" as="targetPoint" />
+            <mxPoint x="535" y="210" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LWrQSZwCD86_7BPg8CpF-39" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="LWrQSZwCD86_7BPg8CpF-25" target="LWrQSZwCD86_7BPg8CpF-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="190" as="targetPoint" />
+            <mxPoint x="545" y="220" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

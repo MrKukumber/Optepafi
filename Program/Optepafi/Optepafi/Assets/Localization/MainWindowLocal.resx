@@ -49,7 +49,7 @@
         <value>Name</value>
     </data>
     <data name="ElevConfig_PasswordTextBlock_Watermark" xml:space="preserve">
-        <value>Pasword</value>
+        <value>Password</value>
     </data>
     <data name="ElevConfig_DownloadButton" xml:space="preserve">
         <value>Download</value>

@@ -11,13 +11,15 @@ namespace Optepafi.ViewModels.Main;
 
 /// <summary>
 /// ViewModel which is responsible for control over main settings of application.
+/// 
 /// Its tasks include:
+/// 
 /// - overseeing of main parameters setting by user.
 /// - providing interaction with elevation data configuration
 /// - providing collection of all cultures to which is application localized
 /// - provides instance of <c>Provider</c> class which can be offered to sessions for safe accessing of main parameters
 /// 
-/// For more information on ViewModels in general see <see cref="ViewModelBase"/>.
+/// For more information on ViewModels in general see <see cref="ViewModelBase"/>.  
 /// </summary>
 public class MainSettingsViewModel : ViewModelBase
 {
@@ -28,8 +30,9 @@ public class MainSettingsViewModel : ViewModelBase
     
     /// <summary>
     /// Construction of main settings ViewModel instance.
-    /// It initialize all reactive constructs.
-    /// It also initialize main parameters according to saved parameters in previous run of application. It uses ModelViews services for this purpose.
+    /// 
+    /// It initialize all reactive constructs.  
+    /// It also initialize main parameters according to saved parameters in previous run of application. It uses ModelViews services for this purpose.  
     /// </summary>
     /// <param name="mainSettingsMv">Corresponding ModelView to this ViewModel.</param>
     public MainSettingsViewModel(MainSettingsModelView mainSettingsMv)
@@ -64,7 +67,8 @@ public class MainSettingsViewModel : ViewModelBase
     
     /// <summary>
     /// Parameter that indicates currently chosen elevation data distribution that should be used in whole application for elevation data retrieval.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public ElevDataDistributionViewModel? CurrentElevDataDistribution
     {
@@ -99,24 +103,27 @@ public class MainSettingsViewModel : ViewModelBase
     public ReactiveCommand<Unit,Unit> GoToMainMenuCommand { get; }
     /// <summary>
     /// Reactive command for showing elevation data configuration to user so he could manage elevation data download and removal.
-    /// It is also used for setting of currently used elevation data distribution.
-    /// Command calls for handling of elevation data configuration interaction. This interaction is handled by corresponding View. Always new instance of <c>ElevConfigViewModel</c> is passed to interaction.
-    /// After interactions end its returned value is set to currently used data distribution parameter. 
+    /// 
+    /// It is also used for setting of currently used elevation data distribution.  
+    /// Command calls for handling of elevation data configuration interaction. This interaction is handled by corresponding View. Always new instance of <c>ElevConfigViewModel</c> is passed to interaction.  
+    /// After interactions end its returned value is set to currently used data distribution parameter.  
     /// </summary>
     public ReactiveCommand<Unit,Unit> OpenElevConfigCommand { get; }
     /// <summary>
     /// Interaction to be handled when elevation data configuration mechanism should be provided to user.
-    /// Corresponding View should implement handler for this interaction nad secure its correct execution.
-    /// Argument of this interaction is elevation data configuration ViewModel which should be used for control over configuration process.
-    /// The returning value indicates, which elevation data distribution was selected to be currently used default distribution in whole application.
+    /// 
+    /// Corresponding View should implement handler for this interaction nad secure its correct execution.  
+    /// Argument of this interaction is elevation data configuration ViewModel which should be used for control over configuration process.  
+    /// The returning value indicates, which elevation data distribution was selected to be currently used default distribution in whole application.  
     /// </summary>
     public Interaction<ElevConfigViewModel, ElevDataDistributionViewModel?> ElevConfigInteraction { get; }
     
     
     /// <summary>
     /// Provider of main settings parameters.
-    /// Its main task is to safely provide these parameters to outer world such as sessions.
-    /// Its instance is provided by <c>MainSettingsModelView</c> in <c>ProviderOfSettings</c> property.
+    /// 
+    /// Its main task is to safely provide these parameters to outer world such as sessions.  
+    /// Its instance is provided by <c>MainSettingsModelView</c> in <c>ProviderOfSettings</c> property.  
     /// </summary>
     public class Provider : ReactiveObject
     {

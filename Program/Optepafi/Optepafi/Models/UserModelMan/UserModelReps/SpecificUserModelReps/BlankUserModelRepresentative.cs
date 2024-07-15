@@ -9,7 +9,8 @@ namespace Optepafi.Models.UserModelMan.UserModelReps.SpecificUserModelReps;
 
 /// <summary>
 /// Representative of blank user model.
-/// For more information on user model representatives see <see cref="IUserModelRepresentative{TUserModel,TTemplate}"/>, <see cref="IUserModelType{TUserModel,TTemplate}"/> or <see cref="IUserModelTemplateBond{TUserModel,TTemplate}"/>.
+/// 
+/// For more information on user model representatives see <see cref="IUserModelRepresentative{TUserModel,TTemplate}"/>, <see cref="IUserModelType{TUserModel,TTemplate}"/> or <see cref="IUserModelTemplateBond{TUserModel,TTemplate}"/>.  
 /// </summary>
 public class BlankUserModelRepresentative : IUserModelRepresentative<BlankUserModel, BlankTemplate>
 {

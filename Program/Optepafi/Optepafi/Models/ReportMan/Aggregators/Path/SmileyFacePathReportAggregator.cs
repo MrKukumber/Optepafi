@@ -16,6 +16,7 @@ namespace Optepafi.Models.ReportMan.Aggregators.Path;
 
 /// <summary>
 /// Singleton class which aggregates report for <see cref="SmileyFacePath{TVertexAttributes,TEdgeAttributes}"/> path type.
+/// 
 /// For more information on searching report aggregators see <see cref="IPathReportAggregator{TPath,TVertexAttributes,TEdgeAttributes}"/>.
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes which path can contain and user model can use for computing.</typeparam>
@@ -29,9 +30,9 @@ public class SmileyFacePathReportAggregator<TVertexAttributes, TEdgeAttributes> 
     
     /// <inheritdoc cref="IPathReportAggregator{TPath,TVertexAttributes,TEdgeAttributes}.AggregateReport"/>
     /// <remarks>
-    /// Creates collecting graphic source to which collector graphics of provided path will be collected.
-    /// Then it counts number of horizontally, vertically and not at all squished drawings.
-    /// Then it assembles all these objects into resulting report and returns it.
+    /// Creates collecting graphic source to which collector graphics of provided path will be collected.  
+    /// Then it counts number of horizontally, vertically and not at all squished drawings.  
+    /// Then it assembles all these objects into resulting report and returns it.  
     /// </remarks>
     public IPathReport AggregateReport(SmileyFacePath<TVertexAttributes, TEdgeAttributes> path, 
         IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
@@ -61,7 +62,8 @@ public class SmileyFacePathReportAggregator<TVertexAttributes, TEdgeAttributes> 
 
     /// <summary>
     /// Graphic source implementation that is able to provide collector by which its graphic objects are collected.
-    /// For more information on graphics sources see <see cref="IGraphicsSource"/>.
+    /// 
+    /// For more information on graphics sources see <see cref="IGraphicsSource"/>.  
     /// </summary>
     private class CollectingGraphicsSource : IGraphicsSource
     {

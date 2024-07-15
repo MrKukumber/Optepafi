@@ -4,8 +4,9 @@ namespace Optepafi.ViewModels.Data.Reports.Searching;
 
 /// <summary>
 /// ViewModel for <c>SmileyFacePathDrawingReport</c> type.
-/// There should exists appropriate convertor of <c>SmileyFacePathDrawingReport</c> to this ViewModel type.
-/// For more information on searching report ViewModels see <see cref="SearchingReportViewModel"/>.
+/// 
+/// There should exists appropriate convertor of <c>SmileyFacePathDrawingReport</c> to this ViewModel type.  
+/// For more information on searching report ViewModels see <see cref="SearchingReportViewModel"/>.  
 /// </summary>
 /// <param name="drawingStateGraphicsSource">Graphics of drawing state of smiley face drawer.</param>
 /// <param name="lastDrawnSmileyFaceObjectInfo">Textual information about progress of drawing.</param>

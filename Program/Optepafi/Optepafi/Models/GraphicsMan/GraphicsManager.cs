@@ -10,13 +10,15 @@ using Optepafi.Models.MapMan.MapInterfaces;
 namespace Optepafi.Models.GraphicsMan;
 
 /// <summary>
-/// Singleton class used for managing of graphics aggregation. It is main channel between graphics aggregation mechanism and applications logic (ModelViews/ViewModels).
-/// It provides supporting methods for correct calling of graphics aggregators.
-/// Additionally there is also  <see cref="GraphicsSubManager{TVertexAttributes,TEdgeAttributes}"/> singleton which is intended to provide graphics aggregation services for other managers and constructs in Model.
+/// Singleton class used for managing of graphics aggregation.
+/// 
+/// It is main channel between graphics aggregation mechanism and applications logic (ModelViews/ViewModels).  
+/// It provides supporting methods for correct calling of graphics aggregators.  
+/// Additionally there is also  <see cref="GraphicsSubManager{TVertexAttributes,TEdgeAttributes}"/> singleton which is intended to provide graphics aggregation services for other managers and constructs in Model.  
 ///
-/// Map graphics aggregation is done by accepting <see cref="IGraphicObjectCollector"/> instance and filling it with graphic objects by appropriate aggregator.
-/// Reason for this design is possibility for application logic to retrieve graphics asynchronously so aggregated objects could be delivered right after their creation.
-/// Graphic objects are aggregated from provided construct, for which must aggregator exist. Its instance must be added to appropriate collection (either in this class or in sub-manager).
+/// Map graphics aggregation is done by accepting <see cref="IGraphicObjectCollector"/> instance and filling it with graphic objects by appropriate aggregator.  
+/// Reason for this design is possibility for application logic to retrieve graphics asynchronously so aggregated objects could be delivered right after their creation.  
+/// Graphic objects are aggregated from provided construct, for which must aggregator exist. Its instance must be added to appropriate collection (either in this class or in sub-manager).  
 /// </summary>
 public class GraphicsManager :
     IMapGenericVisitor<GraphicsManager.AggregationResult, (IGraphicObjectCollector, CancellationToken?)>,
@@ -36,9 +38,11 @@ public class GraphicsManager :
     public enum AggregationResult {Aggregated, NoUsableAggregatorFound, Cancelled}
 
     /// <summary>
-    /// Method for aggregating of map graphics. It accepts map for aggregation and collector which will be filled with aggregated objects.
-    /// It do it so by use of "generic visitor pattern" on map. After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.
-    /// When such aggregator is found, its aggregating method is called.
+    /// Method for aggregating of map graphics.
+    /// 
+    /// It accepts map for aggregation and collector which will be filled with aggregated objects.  
+    /// It do it so by use of "generic visitor pattern" on map. After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.  
+    /// When such aggregator is found, its aggregating method is called.  
     /// </summary>
     /// <param name="map">Map whose graphics is to be aggregated.</param>
     /// <param name="collectorForAggregatedObjects">Collector for aggregated map graphic objects.</param>
@@ -66,10 +70,12 @@ public class GraphicsManager :
     }
 
     /// <summary>
-    /// Method for retrieving the area of specific map. Area of map is meant to be rectangle which contains whole map. It is defined by its left-bottom and right-top vertices.
-    /// Retrieved area then can be used for creating of <see cref="IGroundGraphicsSource"/> tied to this map.
-    /// It uses "generic visitor pattern" on provided map. After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.
-    /// When such aggregator is found, method for retrieving are of map is called on it. Area is then returned.
+    /// Method for retrieving the area of specific map.
+    /// 
+    /// Area of map is meant to be rectangle which contains whole map. It is defined by its left-bottom and right-top vertices.  
+    /// Retrieved area then can be used for creating of <see cref="IGroundGraphicsSource"/> tied to this map.  
+    /// It uses "generic visitor pattern" on provided map. After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.  
+    /// When such aggregator is found, method for retrieving are of map is called on it. Area is then returned.  
     /// </summary>
     /// <param name="map">Map whose area is requested.</param>
     /// <returns>Area of map.</returns>
@@ -91,9 +97,11 @@ public class GraphicsManager :
     }
 
     /// <summary>
-    /// Method for aggregating graphics of provided track. It accepts track to be aggregated, map for indication of correct aggregator and collector which should be filled with aggregated objects.
-    /// It do it so by use of "generic visitor pattern" on provided map.  After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.
-    /// When it is found, the track coordinates are handed over to it together with graphic objects collector.
+    /// Method for aggregating graphics of provided track.
+    /// 
+    /// It accepts track to be aggregated, map for indication of correct aggregator and collector which should be filled with aggregated objects.  
+    /// It do it so by use of "generic visitor pattern" on provided map.  After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.  
+    /// When it is found, the track coordinates are handed over to it together with graphic objects collector.  
     /// </summary>
     /// <param name="trackCoordinates">Coordinates of track which graphics is to be aggregated.</param>
     /// <param name="map">Map for indication of correct aggregator.</param>

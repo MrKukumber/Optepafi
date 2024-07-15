@@ -5,7 +5,8 @@ using System.Text.Json;
 namespace Optepafi.Models.ParamsMan;
 
 /// <summary>
-/// It is used for serializing of all kinds of data. Mainly is is used by <see cref="ParamsManager"/> for serializing apps parameters.
+/// It is used for serializing of all kinds of data. Mainly it is used by <see cref="ParamsManager"/> for serializing apps parameters.
+/// 
 /// It uses <see cref="JsonSerializer"/> as main serialization technology.
 /// <para>
 /// The directory serialization is saved to can be specified by caller, or it is set by default to defaultSerializationDir directory.
@@ -17,6 +18,7 @@ public static class DataSerializer
     private static readonly string DefaultSerializationsDirRelativePath = "defaultSerializationsDir";
     /// <summary>
     /// Serialize provided object <paramref name="obj"/> to json file named after type put as type parameter <typeparamref name="T"/>.
+    /// 
     /// File is saved to default relative directory "defaultSerializationsDir".
     /// </summary>
     /// <param name="obj">Object to be serialized</param>
@@ -29,6 +31,7 @@ public static class DataSerializer
     
     /// <summary>
     /// Serialize provided object <paramref name="obj"/> to json file named after type put as type parameter <typeparamref name="T"/>.
+    /// 
     /// File is saved to directory specified by <paramref name="dirPath"/> parameter.
     /// </summary>
     /// <param name="obj">Object to be serialized</param>
@@ -54,6 +57,7 @@ public static class DataSerializer
     
     /// <summary>
     /// Tries to deserialize object of type <typeparamref name="T"/> from file named by this type.
+    /// 
     /// Path of directory, where the file is looked for, is set to default relative path "defaultSerializationDir".
     /// </summary>
     /// <typeparam name="T">Defines what type should be returned and what name of file is looked for.</typeparam>
@@ -66,6 +70,7 @@ public static class DataSerializer
     
     /// <summary>
     /// Tries to deserialize object of type <typeparamref name="T"/> from file named by this type.
+    /// 
     /// Parameter <paramref name="dirPath"/> defines directory path, where the file should be looked for.
     /// </summary>
     /// <param name="dirPath">Path to directory, where the file with serialization should be looked for.</param>

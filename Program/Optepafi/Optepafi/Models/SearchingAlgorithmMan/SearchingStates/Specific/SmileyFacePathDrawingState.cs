@@ -5,9 +5,11 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 
 /// <summary>
-/// Represents drawing state of <c>SmileyFaceDrawer</c> algorithm. It indicates which facial objects where most recently drawn by it.
-/// This type (just like associated algorithm) is just demonstrative searching state for presenting application functionality.
-/// For more information on searching states see <see cref="ISearchingState{TVetexAttributes,TEdgeAttributes}"/>.
+/// Represents drawing state of <c>SmileyFaceDrawer</c> algorithm.
+/// 
+/// It indicates which facial objects where most recently drawn by it.  
+/// This type (just like associated algorithm) is just demonstrative searching state for presenting application functionality.  
+/// For more information on searching states see <see cref="ISearchingState{TVetexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes, which can be included for extraction of information in later aggregations.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes, which can be included for extraction of information in later aggregations.</typeparam>
@@ -56,6 +58,7 @@ public class SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> : IS
     
     /// <summary>
     /// Method for adding newly drawn object to current state and updating it by doing so.
+    /// 
     /// This method supports "fluent syntax".
     /// </summary>
     /// <param name="drawnObject">Newly drawn facial object that is added to the drawing state.</param>

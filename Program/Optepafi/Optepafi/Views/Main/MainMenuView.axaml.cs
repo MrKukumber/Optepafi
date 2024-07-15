@@ -10,7 +10,8 @@ namespace Optepafi.Views.Main;
 
 /// <summary>
 /// View of the main menu. It is the first View which is shown to the user after applications start.
-/// For more information on main menus functionality see <see cref="MainMenuViewModel"/>.
+/// 
+/// For more information on main menus functionality see <see cref="MainMenuViewModel"/>.  
 /// </summary>
 public partial class MainMenuView : ReactiveUserControl<MainMenuViewModel>
 {

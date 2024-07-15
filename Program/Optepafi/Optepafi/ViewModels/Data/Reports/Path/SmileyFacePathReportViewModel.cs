@@ -4,8 +4,9 @@ namespace Optepafi.ViewModels.Data.Reports.Path;
 
 /// <summary>
 /// ViewModel for <c>SmileyFacePathReport</c> type.
-/// There should exists appropriate convertor of <c>SmileyFacePathReport</c> to this ViewModel type.
-/// For more information on path report ViewModels see <see cref="PathReportViewModel"/>.
+/// 
+/// There should exists appropriate convertor of <c>SmileyFacePathReport</c> to this ViewModel type.  
+/// For more information on path report ViewModels see <see cref="PathReportViewModel"/>.  
 /// </summary>
 /// <param name="pathGraphicsSouce">Graphics of smiley face path.</param>
 /// <param name="horizontallySquishedFacesCountInfo">Textual information about count of horizontally squished faces.</param>

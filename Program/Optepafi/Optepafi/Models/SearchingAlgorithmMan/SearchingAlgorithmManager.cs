@@ -16,9 +16,11 @@ using Optepafi.Models.UserModelMan.UserModels;
 namespace Optepafi.Models.SearchingAlgorithmMan;
 
 /// <summary>
-/// Singleton class use for managing execution of path finding algorithms. It contains set of all supported searching algorithms. It is main channel between operations with searching algorithms and applications logic (ViewModels/ModelViews).
-/// It implements supporting methods for work with path finding algorithms. All algorithms should be preferably used and managed through this singleton.
-/// All operations provided by this class are thread safe as long as same method arguments are not use concurrently multiple times.
+/// Singleton class use for managing execution of path finding algorithms.
+///
+/// It contains set of all supported searching algorithms. It is main channel between operations with searching algorithms and applications logic (ViewModels/ModelViews).  
+/// It implements supporting methods for work with path finding algorithms. All algorithms should be preferably used and managed through this singleton.  
+/// All operations provided by this class are thread safe as long as same method arguments are not use concurrently multiple times.  
 /// </summary>
 public class SearchingAlgorithmManager : 
     ITemplateGenericVisitor<(SearchingAlgorithmManager.SearchResult[], IPath?[]),(Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>[], IProgress<ISearchingReport>?, CancellationToken?)>,
@@ -40,7 +42,8 @@ public class SearchingAlgorithmManager :
     
     /// <summary>
     /// Returns all algorithms that are able to use both map representation type and user model type represented by provided representatives.
-    /// Map representation type and user model type must both satisfy set of contracts required by some of algorithms implementations so it could work correctly.
+    /// 
+    /// Map representation type and user model type must both satisfy set of contracts required by some of algorithms implementations so it could work correctly.  
     /// </summary>
     /// <param name="mapRepreRep">Representative of tested map representation type.</param>
     /// <param name="userModelType">Representative of tested user model type.</param>
@@ -67,8 +70,9 @@ public class SearchingAlgorithmManager :
 
     
     /// <summary>
-    /// Returns all algorithms that are able to use at least one combination of map representation type and user model type represented by provided collections of representatives.
-    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.MapRepreMan.MapRepres.Representatives.IMapRepreRepresentative{Optepafi.Models.MapRepreMan.MapRepres.IMapRepre},Optepafi.Models.UserModelMan.UserModelReps.IUserModelType{Optepafi.Models.UserModelMan.UserModels.IUserModel{Optepafi.Models.TemplateMan.ITemplate},Optepafi.Models.TemplateMan.ITemplate})"/> for each of provided representative combination and then joins results. 
+    /// Returns all algorithms that are able to use at least one combination of map representation type and user model type represented by provided collections of representatives.  
+    /// 
+    /// It do it so by calling its overload <see cref="GetUsableAlgorithmsFor(Optepafi.Models.MapRepreMan.MapRepres.Representatives.IMapRepreRepresentative{Optepafi.Models.MapRepreMan.MapRepres.IMapRepre},Optepafi.Models.UserModelMan.UserModelReps.IUserModelType{Optepafi.Models.UserModelMan.UserModels.IUserModel{Optepafi.Models.TemplateMan.ITemplate},Optepafi.Models.TemplateMan.ITemplate})"/> for each of provided representative combination and then joins results.  
     /// </summary>
     /// <param name="mapRepreReps">Representatives of tested map representations types.</param>
     /// <param name="userModelTypes">Representatives of tested user model types.</param>
@@ -88,7 +92,8 @@ public class SearchingAlgorithmManager :
 
     /// <summary>
     /// Checks whether map representation - user model types combination represented by provided representatives is usable for provided searching algorithm.
-    /// Represented types must satisfy set of contracts that algorithm requires so it might work correctly.
+    /// 
+    /// Represented types must satisfy set of contracts that algorithm requires so it might work correctly.  
     /// </summary>
     /// <param name="mapRepreRep">Representative of tested map representation type.</param>
     /// <param name="userModelType">Representative of tested user model type.</param>
@@ -111,8 +116,9 @@ public class SearchingAlgorithmManager :
 
     /// <summary>
     /// This method executes searching of provided algorithm on provided map representation for each leg of given track with respect to provided user model.
-    /// This method uses generic visitor pattern on user models associated template in order to gain vertex and edge attribute types which are then used in algorithms execution.
-    /// Provided user models and map representation must be tied to this template and its vertex/edge attribute types. If they are not, the exception is thrown.
+    /// 
+    /// This method uses generic visitor pattern on user models associated template in order to gain vertex and edge attribute types which are then used in algorithms execution.  
+    /// Provided user models and map representation must be tied to this template and its vertex/edge attribute types. If they are not, the exception is thrown.  
     /// </summary>
     /// <param name="track">Collection of legs for which paths should be searched for.</param>
     /// <param name="algorithm">Algorithm to be used for path finding.</param>
@@ -147,14 +153,15 @@ public class SearchingAlgorithmManager :
 
     /// <summary>
     /// This method tries to execute provided searching algorithm on provided map representation for each leg of given track, each time with respect to other provided user model.
-    /// In the first step it tests all user models if they are computing user models.
-    /// Then for those which are computational it sequentially executes search of paths on given map representation respectively to each of them.
-    /// If provided map representation turns out not to be a graph, the proper exception is thrown.
-    /// If provided map representation or any user model turn out to be not usable by searching algorithm, it throws proper exception. The usability of maps representation and user model types should be tested before calling this method.
-    /// In the end are results and found paths returned in order of their corresponding user models.
+    /// 
+    /// In the first step it tests all user models if they are computing user models.  
+    /// Then for those which are computational it sequentially executes search of paths on given map representation respectively to each of them.  
+    /// If provided map representation turns out not to be a graph, the proper exception is thrown.  
+    /// If provided map representation or any user model turn out to be not usable by searching algorithm, it throws proper exception. The usability of maps representation and user model types should be tested before calling this method.  
+    /// In the end are results and found paths returned in order of their corresponding user models.  
     ///
-    /// This method uses generic visitor pattern on template in order to gain vertex and edge attribute types which are then used in algorithms execution.
-    /// Provided user models and map representation must be tied to this template and its vertex/edge attribute types.
+    /// This method uses generic visitor pattern on template in order to gain vertex and edge attribute types which are then used in algorithms execution.  
+    /// Provided user models and map representation must be tied to this template and its vertex/edge attribute types.  
     /// </summary>
     /// <param name="track">Collection of legs for which paths should be searched for.</param>
     /// <param name="algorithm">Algorithm to be used for path finding.</param>
@@ -222,9 +229,10 @@ public class SearchingAlgorithmManager :
     
     /// <summary>
     /// Returns path finding algorithms executor instantiated with provided map representation and user model, both tied to user models associated template.
-    /// This executor will lock provided map representation for itself so it should be disposed immediately after end of its usage.
-    /// This method uses generic visitor pattern on template in order to gain vertex and edge attribute types which are then used in algorithms execution.
-    /// Provided user models and map representation must be tied to this template and its vertex/edge attribute types. If they are not, the exception is thrown.
+    /// 
+    /// This executor will lock provided map representation for itself so it should be disposed immediately after end of its usage.  
+    /// This method uses generic visitor pattern on template in order to gain vertex and edge attribute types which are then used in algorithms execution.  
+    /// Provided user models and map representation must be tied to this template and its vertex/edge attribute types. If they are not, the exception is thrown.  
     /// </summary>
     /// <param name="algorithm">Algorithm whose executor is provided.</param>
     /// <param name="mapRepre">Map representation upon which executor will look for paths.</param>
@@ -252,7 +260,6 @@ public class SearchingAlgorithmManager :
         throw new ArgumentException("Provided user model is not computing one.");
     }
 }
-
 
 
 

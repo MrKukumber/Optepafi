@@ -94,8 +94,8 @@
 
 % Formátování bibliografie (odkazů na literaturu)
 % Detailní nastavení můžete upravit v souboru macros.tex.
-%
-% POZOR: Zvyklosti různých oborů a kateder se liší. Konzultujte se svým
+
+% POZOR Zvyklosti různých oborů a kateder se liší. Konzultujte se svým
 % vedoucím, jaký formát citací je pro vaši práci vhodný!
 %
 % Základní formát podle normy ISO 690 s číslovanými odkazy
@@ -184,9 +184,176 @@
 %%% interaktivní grafy apod.). Elektronické přílohy se nahrávají do SISu.
 %%% Povolené formáty souborů specifikuje opatření rektora č. 72/2017.
 %%% Výjimky schvaluje fakultní koordinátor pro zavěrečné práce.
-\appendix
+% \appendix
 \chapter{Přílohy}
 
-\section{První příloha}
+\section{Užívateľská dokumentácia}\label{uzivatelska_dokumentacia}
+
+\subsection{Popis}
+
+Aplikácia s~grafickým užívateľským rozhraním slúžiaca na~hľadanie ciest v~otvorenom teréne na~základe dodaného mapového súboru.
+
+Skladá sa z~dvoch častí: hlavného okna a session-u pre vyhľadávanie ciest v~mape. Hlavné okno zabezpečuje:
+\begin{itemize}
+    \item spúšťanie jednotlivých session-ov
+    \item nastavenie jazyka aplikácie
+    \item nastavenie implicitnej distribúcie výškových dát a~konfigurácia výškových dát
+    \item ukončenie aplikácie zatvorením okna
+\end{itemize}
+Session vyhľadávajúci cesty v~mapách zabezpečuje:
+\begin{itemize}
+    \item výber parametrov, na základe ktorých sa bude vyhľadávanie uskutočňovať
+    \item vytvorenie mapovej reprezentácie, v~ktorej sa bude hľadať cesta
+    \item interaktívne zadávanie hľadanej trasy v~mape a~vykresľovanie nájdených ciest užívateľovi
+\end{itemize}
+
+\subsection{Zachádzanie s aplikáciou}
+
+\subsubsection{\underline{Spustenie aplikácie}}
+
+Aplikácia sa spúšťa pomocou spustitelného súboru \textit{.exe}. Po spustení sa na~obrazovke objaví hlavé okno s~hlavným menu.
+
+\subsubsection{\underline{Ukončenie behu aplikácie}}
+
+Aplikácia sa ukončuje pomocou zatvorenia hlavného okna. To sa v~prípade otvorených session-ov môže užívateľa dotázať pomocou dialógového okna, či naozaj chce aplikáciu opustiť.
+
+\pagebreak
+
+\subsubsection{\underline{Hlané okno}}
+
+\subsubsection{Hlané menu}
+
+\begin{figure}[h]\centering
+\frame{\includegraphics[width=250px]{usr_img/hlavne_menu}}
+\end{figure}
+
+V hlavnom menu je možné vidieť dve tlačidlá:
+\begin{itemize}
+    \item tlačidlo v~pravom dolnom rohu slúži pre~prechod do~hlavných nastavení aplikácie
+    \item tlačidlo uprostred okna slúži pre~vytváranie inštancií session-u pre~vyhľadávanie ciest v~mapách
+\end{itemize}
+
+\subsubsection{Hlané nastavenia}
+
+\begin{figure}[h]\centering
+\frame{\includegraphics[width=250px]{usr_img/hlavne_nastavenia}}
+\end{figure}
+
+V hlavných nastaveniach môžeme:
+\begin{itemize}
+    \item vybrať jazyk, ktorým chceme aby~na~nás aplikácia rozprávala. Je možné zvoliť buď slovenskú alebo anglickú lokalizáciu aplikácie.
+    \item prejsť stlačením príslušného tlačidla do~konfigurácie výškových dát. Pod týmto tlačidlom môžeme vidieť aktuálne vybranú, implicitne využívanú distribúciu výškových dát.
+    \item stlačením tlačidla v~pravom dolnom rohu sa opäť vrátiť do~hlavného menu aplikácie.
+\end{itemize}
+
+\subsubsection{Konfigurácia výškových dát}
+
+\begin{figure}[h]\centering
+\frame{\includegraphics[width=250px]{usr_img/konfig_vyskovych_dat}}
+\end{figure}
+
+V~konfigurácii výškových dát môžeme sťahovať a~odstraňovať stiahnuté výškové dáta z~rôznych zdrojov. Dáta sú sťahované po~regiónoch. Posledne konfigurovaná distribúcia sa pri~návrate do~hlavných nastavení nastaví ako~implicitne používaná distribúcia v~aplikácii.
+
+Aplikácia farebne indikuje, ktoré regióny sú stiahnuté (zelená), ktoré niesu (biela), ktoré sú aktuálne sťahované (oranžová) a~ktoré odstraňované (červená).
+
+Konfigurácia výškových dát umožňuje:
+\begin{itemize}
+    \item Pomocou vrchného boxu vybrať dátovú distribúciu, s~ktorej~dátami chce užívateľ manipulovať (sťahovať alebo odstraňovať ich).
+    \item Po vybraní distribúcie sa na~obrazovke zobrazia regióny a~ich pod-regióny
+    \item Následne po vybraní regiónu ho môže užívateľ na~základe jeho aktuálneho stavu stiahnuť, odstrániť alebo~prerušiť jeho sťahovanie
+    \item Sťahovanie regiónov sa riadi následujúcimi pravidlami:
+    \begin{itemize}
+        \item Keď sa sťahuje konkrétny región, sťahujú sa aj všetky jeho pod-regióny
+        \item Pokiaľ je región odstraňovaný, odstraňujú sa aj všetky jeho pod-regióny. Zároveň ak niektorí z~jeho nad-regiónov boli doteraz stiahnutí, zmení sa ich stav na~nestiahnuté (nejaká ich časť bola odstránená).
+        \item Kedykoľvek je s regiónom manipulované, či už priamo alebo nepriamo, nie je možné na~ňom v~danej chvíli robiť žiadne operácie. Pokiaľ je región sťahovaný priamo, je možné dané sťahovanie zrušiť.
+    \end{itemize}
+    \item Pokiaľ je ku~stiahnutiu výškových dát vybranej distribúcie potrebná autorizácia užívateľa, je nutné zadať užívateľské meno a~heslo. Pomocou týchto údajov bude možné následne získať výškové dáta z danej distribúcie.
+    \item Po~dokončení konfigurácie je možné sa pomocou stlačenia tlačidla v~pravom dolnom rohu vrátiť naspäť do~hlavných nastavení. Posledne konfigurovaná distribúcia sa nastaví ako aktuálne implicitne používaná.
+\end{itemize}
+Je možné si vybrať z~dvoch ukážkových zdrojov výškových dát:
+\begin{itemize}
+    \item \textit{Simulating elevation data source} - Zdroj simulujúci prácu sťahovania a~odstraňovania výškových dát. Skladá sa z~dvoch dátových distribúcií:
+    \begin{itemize}
+        \item \textit{ Authorization simulating elevation data distribution with~name 'Name' and~password 'Password'} - Simulujúca distribúcia výškových dát, ktorá vyžaduje autorizáciu užívateľa. Užívateľské meno je slovo \textit{Name} a~heslo je slovo \textit{Password}. Obsahuje tri regióny, ktoré~užívateľ môže \uv{sťahovať a~odstraňovať}.
+        \item \textit{No authorization simulating elevation data distribution} - Simulujúca distribúcia výškových dát, ktorá~nevyžaduje autorizáciu užívateľa. Obsahuje tri regióny, ktoré~užívateľ môže \uv{sťahovať a~odstraňovať}.
+    \end{itemize}
+    \item \textit{Not sufficient elevation data source} - Zdroj výškových dát, ktorý~nikdy nedokáže zabezpečiť požadované výškové dáta. Obsahuje jednu dátovú distribúciu:
+    \begin{itemize}
+        \item \textit{Not sufficient elevation data distribution} - Distribúcia výškových dát, ktorá~nikdy nie je schopná dodať potrebné výškové dáta. Nedefinuje žiadny vlastný región.
+    \end{itemize}
+\end{itemize}
+
+\pagebreak
+
+\subsubsection{\underline{Session pre vyhľadávanie ciest}}
+
+Session pre vyhľadávanie ciest je možné vytvoriť v hlavnom menu hlavného okna. Po vytvorení sa zobrazia nastavenia session-ových parametrov. 
+
+\subsubsection{Nastavenia parametrov}
+
+\begin{figure}[h]\centering
+\frame{\includegraphics[width=300px]{usr_img/path_finding_settings}}
+\end{figure}
+
+V nastaveniach parametrov je možné vybrať template, mapový súbor, súbor s~užívateľským modelom a~vyhľadávací algoritmus, ktoré budú použité v procesu vyhľadávania ciest. Na začiatku sú implicitne nastavené parametre posledne použité v~predchádzajúcej inštancii session-u.
+
+Nastavovanie parametrov sa riadi určitými pravidlami:
+\begin{itemize}
+    \item najprv sa vyberá template a~mapový súbor, následne súbor s~užívateľským modelom a~na~koniec vyhľadávací algoritmus
+    \item pre zvolenú kombináciu template-u a~formátu mapového súboru musí platiť:
+    \begin{itemize}
+        \item musí existovať mapová reprezentácia, ktorá~túto kombináciu dokáže spracovať,
+        \item taktiež pre~zvolený template-u musí existovať typ užívateľského modelu, ktorý~dokáže spracovávať atribúty definované týmto template-om,
+        \item nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a~užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácie ľubovoľného vyhľadávacieho algoritmu.
+    \end{itemize}
+    \item keď je vybraný buďto template alebo~mapový súbor a~výber druhej položky by~spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje.
+    \item súbor s~užívateľským modelom môže byť vybraný len takého typu, ktorý dokáže spracovávať atribúty definované zvoleným template-om a~ktorý spolu s~ľubovoľnou mapovou reprezentáciou, ktorá~dokáže spracovať aktuálne zvolenú kombináciu template-u a~mapového formátu, je vhodnou kombináciou pre aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu.
+    \item vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý~podporuje typ vybraného užívateľského modelu a~niektorej mapovej reprezentácie, ktorú~je možné vytvoriť z~vybraného template-u a mapového súboru.
+\end{itemize}
+
+Na obrazovke je ďalej možné pozorovať názvy vybraných súborov, ako aj grafický náhľad vybranej mapy.
+
+Po vybraní všetkých parametrov môže užívateľ pomocou stlačenia tlačidla v~dolnom rohu pokračovať do~ďalšej časti mechanizmu, ktorou je vytváranie mapovej reprezentácie.
+
+Je možné vybrať si z~následujúcich parametrov:
+\begin{itemize}
+    \item \textbf{Template} - na~výber sú dva ukážkové template-y:
+    \begin{itemize}
+        \item \textit{Blank template} - Template, ktorý reprezentuje prázdne vrcholové a~hranové atribúty. Slúži pre~demonštráciu aplikačných mechanizmov.
+        \item \textit{Not usable template} - Demonštračný template, ktorý nie je možné využiť pri tvorbe žiadnej mapovej reprezentácie a~ani preňho neexistuje odpovedajúci typ užívateľského modelu.
+    \end{itemize}
+    \item \textbf{Mapa} - jediný \uv{mapový formát}, ktorý~je možné vybrať je klasický \textit{textový} súbor. Tento \uv{typ mapy} slúži na demonštráciu funkcionality aplikácie. Na obrazovku sú náhodne vypísané všetky slová z~vybraného textového súboru.
+    \item \textbf{Užívateľský model} - súbor s~užívateľským modelom je možné vybrať jedine typu \textit{Blank user model}. Tento užívateľský model je naviazaný na~\textit{blank template} a~taktiež nezabezpečuje žiadnu funkcionalitu. Slúži pre demonštráciu aplikačných mechanizmov.
+    \item \textbf{Vyhľadávací algoritmus} - pre~účely predstavenia aplikácie bol vyvinutý mechanizmus, ktorý nie~je priamo vyhľadávacím algoritmom. Za~to simuluje spôsob, ktorým vyhľadávací algoritmus dodáva nájdené cesty užívateľovi. Tento mechanizmus sa volá \textit{Smiley face drawer} a počas svojho behu postupne vykresluje usmievajúce sa tváre medzi jednotlivými bodmi zadanej trate. Na záver sú všetky tváre vykreslené naraz. 
+\end{itemize}
+
+\subsubsection{Vytváranie mapovej reprezentácie}
+
+\begin{figure}[h]\centering
+\frame{\includegraphics[width=150px]{usr_img/map_repre_creating_dialog}}
+\end{figure}
+
+S~vytváraním mapovej reprezentácie môže užívateľ interagovať pomocou dialógového okna. Vytváranie mapovej reprezentácie sa skladá z~dvoch častí:
+\begin{itemize}
+    \item \textit{kontrola podmienok} - v~tejto časti sa kontrolujú podmienky pre~vytvorenie mapovej reprezentácie. Pokiaľ sa naskytne nejaký problém, užívateľ ho môže riešiť za~pomoci interakcie s~dialógovým oknom.
+    \item \textit{vytváranie reprezentácie} - ak sú všetky podmienky splnené, prichádza na~rad samotné vytváranie mapovej reprezentácie. Tento proces môže byť zdĺhavý a~preto je užívateľovi umožnené sledovať postup vytvárania, ako~aj možnosť vytváranie prerušiť.
+\end{itemize}
+
+Pri akomkoľvek neúspechu vytvárania je užívateľ vrátený do~nastavení parametrov. Pokiaľ vytváranie prebehne úspešne, je užívateľ pustený do~cesty-vyhľadávajúceho okna.
+
+\subsubsection{Vyhľadávanie cesty}
+
+\begin{figure}[h]\centering
+\frame{\includegraphics[width=300px]{usr_img/path_finding}}
+\end{figure}
+
+Vyhľadávanie cesty je cyklus zložený z~troch fáz:
+\begin{enumerate}
+    \item \textbf{zadanie trasy} - V~prvom rade je potrebné zadať trasu, pre~ktorú sa má v~mape vyhľadať najrýchlejšia cesta. Užívateľ zadáva body trasy na~mape, poprípade ich môže mazať od~konca tlačidlom umiestnenýmv pravom dolnom rohu. Keď je s~výberom trasy spokojný, stlačením príslušného tlačidla prejde do~fázy vyhľadávania cesty.
+    \item \textbf{vyhľadávanie cesty} - Po výbere trasy prichádza na~rad samotné vyhľadávanie cesty. Proces vyhľadávania môže byť dynamicky zobrazovaný užívateľovi. Užívateľ taktiež môže prerušiť proces vyhľadávania príslušným tlačidlom. Pokiaľ je vyhľadávanie prerušené, je cyklus vyhľadávania cesty navrátený do~prvej fáze výberu trasy. Pokiaľ sa vyhľadávanie úspešne dokončí, prejde sa ku~fáze zobrazenia nájdenej cesty.
+    \item \textbf{zobrazenie nájdenej cesty} - Po úspešnom dokončení vyhľadávania je užívateľovi zobrazená nájdená cesta a~jej doplňujúce informácie. Po dokončení prezerania výslednej cesty sa užívateľ stlačením príslušného tlačidla môže navrátiť do~prvej fáze vyhľadávacieho cyklu.
+\end{enumerate}
+
+Pokiaľ užívateľ hodlá session pre~vyhľadávanie ciest opustiť, môže tak učiniť kedykoľvek pomocou stlačenia tlačidla v~pravom hornom rohu obrazovky. 
 
 \end{document}

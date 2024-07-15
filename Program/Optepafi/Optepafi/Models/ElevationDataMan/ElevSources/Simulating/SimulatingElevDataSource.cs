@@ -6,8 +6,9 @@ namespace Optepafi.Models.ElevationDataMan.ElevSources.Simulating;
 
 /// <summary>
 /// Elevation data source that simulates work of real data source.
-/// This type is just demonstrative elevation data source for presenting application functionality.
-/// For more information on elevation data sources see <see cref="IElevDataSource"/>.
+/// 
+/// This type is just demonstrative elevation data source for presenting application functionality.  
+/// For more information on elevation data sources see <see cref="IElevDataSource"/>.  
 /// </summary>
 public class SimulatingElevDataSource : IElevDataSource
 {

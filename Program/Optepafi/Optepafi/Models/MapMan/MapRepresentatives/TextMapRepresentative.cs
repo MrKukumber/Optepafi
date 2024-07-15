@@ -5,8 +5,10 @@ using Optepafi.Models.MapMan.Maps;
 namespace Optepafi.Models.MapMan.MapRepresentatives;
 
 /// <summary>
-/// Represents <c>TextMap</c> type in application. It is included in <c>MapManager</c> where indicates usability of this type.
-/// For more information on map representatives see <see cref="IMapRepresentative{TMap}"/>, <see cref="IMapFormat{TMap}"/> or <see cref="IMapIdentifier{TMap}"/> class.
+/// Represents <c>TextMap</c> type in application.
+/// 
+/// It is included in <c>MapManager</c> where indicates usability of this type.  
+/// For more information on map representatives see <see cref="IMapRepresentative{TMap}"/>, <see cref="IMapFormat{TMap}"/> or <see cref="IMapIdentifier{TMap}"/> class.  
 /// </summary>
 public class TextMapRepresentative : IMapRepresentative<TextMap>
 {
@@ -22,7 +24,7 @@ public class TextMapRepresentative : IMapRepresentative<TextMap>
     
     /// <inheritdoc cref="IMapFormat{TMap}.CreateMapFrom"/>
     /// <remarks>
-    /// Reads input text file and saves its text into <c>TextMap</c> instance and returns it.
+    /// Reads input text file and saves its text into <c>TextMap</c> instance and returns it.  
     /// It do it so by creating instance of hidden <c>IntraTextMap</c> class which has public backing field for text.
     /// </remarks>
     public TextMap CreateMapFrom((Stream, string) inputMapStreamWithPath, CancellationToken? cancellationToken,

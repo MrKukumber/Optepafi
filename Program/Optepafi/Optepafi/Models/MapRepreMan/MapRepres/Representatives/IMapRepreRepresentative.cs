@@ -12,16 +12,18 @@ namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 
 /// <summary>
 /// Represents representative of map representation :).
+/// 
 /// It contains:
+/// 
 /// - methods for creating map representations that it represents
 /// - collection of implementation indicators
 /// - reference to the corresponding graph representative
 ///
-/// Implementation indicator collection should contain either <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>. or <see cref="MapRepreManager"/> instances so they could be used for map creation too.
-/// Each implementation representative should occur in this collection for one template-map combination at most once. So there should be at most one elev data dependent and at most one elev data independent implementation for each template-map combination.
-/// Corresponding graph representative provides work with corresponding graph derived from represented map representation by implementation of this interface.
-/// Each map representation should have its own representative, so it could be presented at <see cref="MapRepreManager"/> as viable map representation.
-/// Preferred way to interact with representatives is through <see cref="MapRepreManager"/>.
+/// Implementation indicator collection should contain either <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>. or <see cref="MapRepreManager"/> instances so they could be used for map creation too.  
+/// Each implementation representative should occur in this collection for one template-map combination at most once. So there should be at most one elev data dependent and at most one elev data independent implementation for each template-map combination.  
+/// Corresponding graph representative provides work with corresponding graph derived from represented map representation by implementation of this interface.  
+/// Each map representation should have its own representative, so it could be presented at <see cref="MapRepreManager"/> as viable map representation.  
+/// Preferred way to interact with representatives is through <see cref="MapRepreManager"/>.  
 /// </summary>
 /// <typeparam name="TMapRepre">Type of represented map representation.</typeparam>
 public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRepre
@@ -30,12 +32,14 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
 
     /// <summary>
     /// Indicator collection of all implementations of represented map representation.
+    /// 
     /// These indicators should be of <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> or <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> type so they could be used for map creation too.
     /// </summary>
     IImplementationIndicator<ITemplate, IMap, TMapRepre>[] ImplementationIndicators { get; }
 
     /// <summary>
     /// Returns graph representative which represents corresponding graph derived from represented map representation.
+    /// 
     /// This inheritance is not forced by any type parameter. In runtime there is check in graph construction method of graph representative which "forces" this inheritance between graph type and type of constructed map representation.
     /// </summary>
     /// <typeparam name="TVertexAttributes">Type of vertex attributes of represented graph.</typeparam>
@@ -48,9 +52,10 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
 
     /// <summary>
     /// Method which creates map representation from provided template and map represented by this representative.
-    /// It constructs the map representation without requiring elevation data.
-    /// It calls for graph creation on corresponding graph representative. This created graph inherits from map repre. represented by this representative.
-    /// Before calling this method it should be checked that this representative contains constructor for provided template and map and it does not require elevation data. Construction may throw exception if provided combination id not usable.
+    /// 
+    /// It constructs the map representation without requiring elevation data.  
+    /// It calls for graph creation on corresponding graph representative. This created graph inherits from map repre. represented by this representative.  
+    /// Before calling this method it should be checked that this representative contains constructor for provided template and map and it does not require elevation data. Construction may throw exception if provided combination id not usable.  
     /// </summary>
     /// <param name="template">Used template in map representation creation.</param>
     /// <param name="map">Used map in map representation creation.</param>

@@ -3,13 +3,15 @@ namespace Optepafi.ViewModels.Data.Graphics.MapObjects;
 
 /// <summary>
 /// ViewModel for <c>WordObject</c> graphic object type.
-/// There should exists appropriate convertor of <c>WordObject</c> to this ViewModel type.
-/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.
+/// 
+/// There should exists appropriate convertor of <c>WordObject</c> to this ViewModel type.  
+/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.  
 /// </summary>
 public class WordObjectViewModel : GraphicObjectViewModel
 {
     /// <summary>
     /// Creates an instance of this type from provided parameters.
+    /// 
     /// Text of word should be displayed on provided position.
     /// </summary>
     /// <param name="position">Position where word should be displayed.</param>
@@ -34,15 +36,17 @@ public class WordObjectViewModel : GraphicObjectViewModel
 
 /// <summary>
 /// ViewModel for <c>TrackPointWordObject</c> graphic object type.
-/// There should exists appropriate convertor of <c>TrackPointWordObject</c> to this ViewModel type.
-/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.
+/// 
+/// There should exists appropriate convertor of <c>TrackPointWordObject</c> to this ViewModel type.  
+/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.  
 /// </summary>
 public class TrackPointWordObjectViewModel : GraphicObjectViewModel
 {
     /// <summary>
     /// Creates an instance of this type from provided parameters.
-    /// Track point should be displayed on provided position. Track point should be displayed as lowercase letter 'o' with font size equal to 12.
-    /// Position of track point is therefore adjusted a little so the letter 'o' was centered on the provided position.
+    /// 
+    /// Track point should be displayed on provided position. Track point should be displayed as lowercase letter 'o' with font size equal to 12.  
+    /// Position of track point is therefore adjusted a little so the letter 'o' was centered on the provided position.  
     /// </summary>
     /// <param name="position">Position to which will be graphic object centered.</param>
     public TrackPointWordObjectViewModel(CanvasCoordinate position)

@@ -7,7 +7,8 @@ namespace Optepafi.ModelViews.Converters2Vm.Graphics.MapObjects;
 
 /// <summary>
 /// Static class which contains dictionary of map graphic object to ViewModel converters.
-/// It should contain all such converters. It is directly concatenated to root dictionary in <see cref="GraphicObjects2VmConverters"/> which is used by application logic for appropriate converter search.
+/// 
+/// It should contain all such converters. It is directly concatenated to root dictionary in <see cref="GraphicObjects2VmConverters"/> which is used by application logic for appropriate converter search.  
 /// </summary>
 public static class MapObjects2VmConverters
 {

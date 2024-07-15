@@ -6,10 +6,11 @@ namespace Optepafi.Models.MapMan;
 
 /// <summary>
 /// One of three interfaces whose implementations represent individual map formats.
-/// The other two are <see cref="IMapRepresentative{TMap}"/> and <see cref="IMapIdentifier{TMap}"/>.
-/// This interface provides methods and properties, that are used for specification of map formats and creation of map objects.
-/// It should not be implemented right away. All implementations should implement <c>IMapRepresentative{TMap}</c> instead.
-/// Thanks to covariance of its map type parameter it is useful for transferring of map representatives in non generic way.
+/// 
+/// The other two are <see cref="IMapRepresentative{TMap}"/> and <see cref="IMapIdentifier{TMap}"/>.  
+/// This interface provides methods and properties, that are used for specification of map formats and creation of map objects.  
+/// It should not be implemented right away. All implementations should implement <c>IMapRepresentative{TMap}</c> instead.  
+/// Thanks to covariance of its map type parameter it is useful for transferring of map representatives in non generic way.  
 /// </summary>
 /// <typeparam name="TMap">Type of represented map.</typeparam>
 public interface IMapFormat<out TMap> where TMap : IMap
@@ -23,8 +24,9 @@ public interface IMapFormat<out TMap> where TMap : IMap
     
     /// <summary>
     /// Tries to parse provided stream into the map object.
-    /// This parsing should be done in linear time complexity relatively to size of the map file stream.
-    /// Stream should not be saved. It can be disposed after maps creation.
+    /// 
+    /// This parsing should be done in linear time complexity relatively to size of the map file stream.  
+    /// Stream should not be saved. It can be disposed after maps creation.  
     /// </summary>
     /// <param name="inputMapStreamWithPath">Provided map file stream intended to be parsed. It comes along side with path to the source file</param>
     /// <param name="cancellationToken">Token for cancellation of parsing.</param>

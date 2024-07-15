@@ -4,7 +4,9 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.UserModelMan.UserModels;
 
 /// <summary>
-/// Represents user model that is able to compute A* heuristics for provided vertex attributes. This ability is specific need of A* searching algorithm.
+/// Represents user model that is able to compute A* heuristics for provided vertex attributes.
+///
+/// This ability is specific need of A* searching algorithm.
 /// </summary>
 /// <typeparam name="TTemplate">Associated template type.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes, which is user model able to use for computing of the heuristics.</typeparam>

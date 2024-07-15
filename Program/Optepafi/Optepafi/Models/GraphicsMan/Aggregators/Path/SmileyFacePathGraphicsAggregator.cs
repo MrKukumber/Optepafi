@@ -10,7 +10,8 @@ namespace Optepafi.Models.GraphicsMan.Aggregators.Path;
 
 /// <summary>
 /// Singleton class representing aggregator of graphic objects for <see cref="SmileyFacePath{TVertexAttributes,TEdgeAttributes}"/> path type.
-/// For more info on path graphics aggregators see <see cref="IPathGraphicsAggregator{TPath,TVertexAttributes,TEdgeAttributes}"/>.
+/// 
+/// For more info on path graphics aggregators see <see cref="IPathGraphicsAggregator{TPath,TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes which path can contain and user model can use for computing.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes which path can contain and user model can use for computing.</typeparam>
@@ -22,8 +23,8 @@ public class SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes
     
     /// <inheritdoc cref="IPathGraphicsAggregator{TPath,TVertexAttributes,TEdgeAttributes}.AggregateGraphics"/>
     /// <remarks>
-    /// <c>SmileyFacePath</c> provides set of legs for which smiley face drawing was created.
-    /// Aggregator will create graphic objects for each such leg and submit them into collector.
+    /// <c>SmileyFacePath</c> provides set of legs for which smiley face drawing was created.  
+    /// Aggregator will create graphic objects for each such leg and submit them into collector.  
     /// </remarks>
     public void AggregateGraphics(SmileyFacePath<TVertexAttributes, TEdgeAttributes> path, 
         IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, 

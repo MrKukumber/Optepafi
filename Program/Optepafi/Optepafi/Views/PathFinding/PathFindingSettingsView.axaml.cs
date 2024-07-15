@@ -14,7 +14,8 @@ namespace Optepafi.Views.PathFinding;
 
 /// <summary>
 /// View for parameter setting part of the path finding mechanism.
-/// For more information on this part of mechanism see <see cref="PathFindingSettingsViewModel"/>.
+/// 
+/// For more information on this part of mechanism see <see cref="PathFindingSettingsViewModel"/>.  
 /// </summary>
 public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSettingsViewModel>
 {
@@ -27,14 +28,15 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
 
     /// <summary>
     /// Method for handling of user model selecting buttons <c>OnClick</c> event.
-    /// It opens file picker, so that user could select file with serialized user model.
-    /// It lets user choose format, which is permitted by applications logic.
-    /// After user chooses file, its format is tested again.
-    /// It is tested again because user is able to choose file with not valid format despite previously mentioned restriction on shown files.
-    /// If format of selected file is valid, its stream and name is passed to execution of <c>LoadUserModelCommand</c>.
+    /// 
+    /// It opens file picker, so that user could select file with serialized user model.  
+    /// It lets user choose format, which is permitted by applications logic.  
+    /// After user chooses file, its format is tested again.  
+    /// It is tested again because user is able to choose file with not valid format despite previously mentioned restriction on shown files.  
+    /// If format of selected file is valid, its stream and name is passed to execution of <c>LoadUserModelCommand</c>.  
     /// </summary>
     /// <param name="sender">Sender of <c>OnClick</c> event.</param>
-    /// <param name="e"><c>OnClick</c> events arguemtns.</param>
+    /// <param name="e"><c>OnClick</c> events arguments.</param>
     private async void UserModelSelectingButton_OnClick(object? sender, RoutedEventArgs e)
     {
         TopLevel topLevel = TopLevel.GetTopLevel(this)!;
@@ -74,11 +76,12 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
 
     /// <summary>
     /// Method for handling of map selecting buttons <c>OnClick</c> event.
-    /// It opens file picker, so that user could select file with map.
-    /// It lets user choose only format, which is permitted by applications logic.
-    /// After user chooses file, its format is tested again.
-    /// It is tested again because user is able to choose file with not valid format despite previously mentioned restriction on shown files.
-    /// If format of selected file is valid, its stream and name is passed to execution of <c>LoadMapCommand</c>.
+    /// 
+    /// It opens file picker, so that user could select file with map.  
+    /// It lets user choose only format, which is permitted by applications logic.  
+    /// After user chooses file, its format is tested again.  
+    /// It is tested again because user is able to choose file with not valid format despite previously mentioned restriction on shown files.  
+    /// If format of selected file is valid, its stream and name is passed to execution of <c>LoadMapCommand</c>.  
     /// </summary>
     /// <param name="sender">Sender of <c>OnClick</c> event.</param>
     /// <param name="e"><c>OnClick</c> events arguments.</param>

@@ -9,9 +9,11 @@ using Optepafi.Models.UserModelMan.UserModelAdjustables;
 namespace Optepafi.Models.UserModelMan.UserModels.Specific;
 
 /// <summary>
-/// Blank user model tied to blank template. It does not bear any information besides one <c>VoidAdjust</c> adjustable property.
-/// This type is just demonstrative template for presenting application functionality.
-/// For more information on templates see <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/>.
+/// Blank user model tied to blank template.
+/// 
+/// It does not bear any information besides one <c>VoidAdjust</c> adjustable property.  
+/// This type is just demonstrative template for presenting application functionality.  
+/// For more information on templates see <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 public class BlankUserModel : 
     IWeightComputingUserModel<BlankTemplate, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, 
@@ -61,6 +63,7 @@ public class BlankUserModel :
     
     /// <summary>
     /// Void adjustable. It represents void inside blank user model.
+    /// 
     /// This type is just demonstrative adjustable for presenting application functionality.
     /// </summary>
     public class VoidAdjustable : IValueAdjustable<int>

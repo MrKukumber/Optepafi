@@ -11,9 +11,10 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 
 /// <summary>
 /// Abstract class which represents map representations/graphs implementation for some template and map format.
-/// Its constructive ability is dependent on providing elevation data for map representations/graphs construction.
-/// This class has elevation data independent counterpart. For more information about both of these classes see <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>.
-/// Everything what is stated for <c>ElevDataIndepImplementationRep</c> holds for this class too except the fact that this class needs providing of elevation data for map representations/graphs creation.
+/// 
+/// Its constructive ability is dependent on providing elevation data for map representations/graphs construction.  
+/// This class has elevation data independent counterpart. For more information about both of these classes see <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>.  
+/// Everything what is stated for <c>ElevDataIndepImplementationRep</c> holds for this class too except the fact that this class needs providing of elevation data for map representations/graphs creation.  
 /// </summary>
 public abstract class ElevDataDepImplementationRep<TTemplate, TMap, TUsableSubMap, TGraph, TVertexAttributes, TEdgeAttributes> :
     IImplementationIndicator<TTemplate, TMap, TGraph>, 

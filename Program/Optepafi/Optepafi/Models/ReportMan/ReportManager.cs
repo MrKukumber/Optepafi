@@ -8,14 +8,16 @@ using Optepafi.Models.UserModelMan.UserModels;
 namespace Optepafi.Models.ReportMan;
 
 /// <summary>
-/// Singleton class used for managing of reports aggregation. It is main channel between report aggregation mechanisms and applications logic (ModelView/ViewModel).
-/// It provides supporting methods for correct callings of report aggregators.
-/// Additionally there is also <see cref="ReportSubManager{TVertexAttributes,TEdgeAttributes}"/>  singleton class which is intended to provide report aggregation services for other managers and constructs in Model.
+/// Singleton class used for managing of reports aggregation.
+/// 
+/// It is main channel between report aggregation mechanisms and applications logic (ModelView/ViewModel).  
+/// It provides supporting methods for correct callings of report aggregators.  
+/// Additionally there is also <see cref="ReportSubManager{TVertexAttributes,TEdgeAttributes}"/>  singleton class which is intended to provide report aggregation services for other managers and constructs in Model.  
 ///
-/// Report creation is done by accepting object for which report can and will be created and filling it with information extracted from object. These extraction can include graphics aggregation which is then included in report.
-/// In process of aggregation there is usually need for user models support. Provided objects to be aggregated often bears vertex and edge attributes so it is sometimes necessary for user models to be able to process these attributes and provide usable values.
-/// User models should at leas be ale to retrieve positions from attributes and return them to aggregators, so they could at least provide the basic information in created reports.
-/// Each method is dedicated for aggregation of specific type of objects.
+/// Report creation is done by accepting object for which report can and will be created and filling it with information extracted from object. These extraction can include graphics aggregation which is then included in report.  
+/// In process of aggregation there is usually need for user models support. Provided objects to be aggregated often bears vertex and edge attributes so it is sometimes necessary for user models to be able to process these attributes and provide usable values.  
+/// User models should at leas be ale to retrieve positions from attributes and return them to aggregators, so they could at least provide the basic information in created reports.  
+/// Each method is dedicated for aggregation of specific type of objects.  
 /// </summary>
 public class ReportManager : 
     ITemplateGenericVisitor<(ReportManager.AggregationResult, IPathReport?), (IPath, IUserModel<ITemplate>, CancellationToken?)>,
@@ -32,10 +34,11 @@ public class ReportManager :
     
     /// <summary>
     /// Method for aggregation of paths report. It accepts path which aggregation is based on.
-    /// It also requests user model, that can be used for computing of some values for aggregator.No specific functionality is forced on provided user model. More about usage of user models in <see cref="IPathReportAggregator{TPath,TVertexAttributes,TEdgeAttributes}"/>.
-    /// Implementation of method uses "generic visitor pattern" at first on template associated with provided user model and then on path itself.
-    /// The check of type usability of provided instances is performed along side of visiting.
-    /// When everything is satisfied, path report aggregating method <see cref="ReportSubManager{TVertexAttributes,TEdgeAttributes}.AggregatePathReport{TPath}"/> of report sub-manager is called and it secures all remaining actions.
+    /// 
+    /// It also requests user model, that can be used for computing of some values for aggregator.No specific functionality is forced on provided user model. More about usage of user models in <see cref="IPathReportAggregator{TPath,TVertexAttributes,TEdgeAttributes}"/>.  
+    /// Implementation of method uses "generic visitor pattern" at first on template associated with provided user model and then on path itself.  
+    /// The check of type usability of provided instances is performed along side of visiting.  
+    /// When everything is satisfied, path report aggregating method <see cref="ReportSubManager{TVertexAttributes,TEdgeAttributes}.AggregatePathReport{TPath}"/> of report sub-manager is called and it secures all remaining actions.  
     /// </summary>
     /// <param name="path">Path which report is to be aggregated.</param>
     /// <param name="userModel">User model that can be used for aggregation of report.</param>

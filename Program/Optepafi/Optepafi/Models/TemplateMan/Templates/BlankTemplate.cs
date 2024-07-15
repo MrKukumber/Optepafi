@@ -3,9 +3,10 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.TemplateMan.Templates;
 
 /// <summary>
-/// Template that contains blank vertex and blank edge attributes definitions. These attributes define no information to be beard.
-/// This type is just demonstrative template for presenting application functionality.
-/// For more information on templates see <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/>.
+/// Template that contains blank vertex and blank edge attributes definitions. These attributes define no information to be beard.  
+/// 
+/// This type is just demonstrative template for presenting application functionality.  
+/// For more information on templates see <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 public class BlankTemplate : ITemplate<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {

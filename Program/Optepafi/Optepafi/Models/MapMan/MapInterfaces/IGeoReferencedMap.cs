@@ -1,7 +1,8 @@
 namespace Optepafi.Models.MapMan.MapInterfaces;
 
 /// <summary>
-/// Represent map, which uses its own coordinate system for describing map objects, bu also contains GCS reference of ist coordination systems origin.
+/// Represent map, which uses its own coordinate system for describing map objects, but also contains GCS reference of ist coordination systems origin.
+/// 
 /// This geo-reference is set to be the representative location of <see cref="IGeoLocatedMap"/> of the map.
 /// </summary>
 public interface IGeoReferencedMap : IGeoLocatedMap

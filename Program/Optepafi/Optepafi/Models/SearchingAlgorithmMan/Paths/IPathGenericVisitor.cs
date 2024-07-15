@@ -4,8 +4,10 @@ namespace Optepafi.Models.SearchingAlgorithmMan.Paths;
 
 
 /// <summary>
-/// One of generic visitor interfaces for <see cref="IPath{TVertexAttributes,TEdgeAttributes}"/> implementations. It provides access to modified visitor pattern on paths, where only one generic method is required to be implemented.
-/// It serves mainly for acquiring generic parameter, that represents real type of visited path.
+/// One of generic visitor interfaces for <see cref="IPath{TVertexAttributes,TEdgeAttributes}"/> implementations.
+/// 
+/// It provides access to modified visitor pattern on paths, where only one generic method is required to be implemented.  
+/// It serves mainly for acquiring generic parameter, that represents real type of visited path.  
 /// </summary>
 /// <typeparam name="TOut">Specifies type of returned value by GenericVisit.</typeparam>
 /// <typeparam name="TOtherParams">Specifies types of rest of the parameters carried through visitor pattern.</typeparam>

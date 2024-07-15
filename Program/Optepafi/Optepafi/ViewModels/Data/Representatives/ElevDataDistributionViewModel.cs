@@ -4,7 +4,8 @@ namespace Optepafi.ViewModels.Data.Representatives;
 
 /// <summary>
 /// Wrapping ViewModel for <c>IElevDataDistribution</c> type.
-/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// 
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.  
 /// </summary>
 /// <param name="elevDataDistribution">Elevation data distribution instance to which will be this ViewModel coupled.</param>
 public class ElevDataDistributionViewModel(IElevDataDistribution elevDataDistribution) : WrappingDataViewModel<IElevDataDistribution>
@@ -21,8 +22,9 @@ public class ElevDataDistributionViewModel(IElevDataDistribution elevDataDistrib
 
 /// <summary>
 /// Wrapping ViewModel for <c>ICredentialsNotRequiringElevDataDistribution</c> type.
-/// This type inherits from <c>ElevDataDistributionViewModel</c>. It is mainly used for pattern-matching when requirement of credentials for accessing data is tested. 
-/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// 
+/// This type inherits from <c>ElevDataDistributionViewModel</c>. It is mainly used for pattern-matching when requirement of credentials for accessing data is tested.  
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.  
 /// </summary>
 public class CredentialsNotRequiringElevDataDistributionViewModel : ElevDataDistributionViewModel
 {
@@ -35,8 +37,9 @@ public class CredentialsNotRequiringElevDataDistributionViewModel : ElevDataDist
 
 /// <summary>
 /// Wrapping ViewModel for <c>ICredentialsRequiringElevDataDistribution</c> type.
-/// This type inherits from <c>ElevDataDistributionViewModel</c>. It is mainly used for pattern-matching when requirement of credentials for accessing data is tested. 
-/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// 
+/// This type inherits from <c>ElevDataDistributionViewModel</c>. It is mainly used for pattern-matching when requirement of credentials for accessing data is tested.  
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.  
 /// </summary>
 public class CredentialsRequiringElevDataDistributionViewModel : ElevDataDistributionViewModel
 {

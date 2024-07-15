@@ -3,8 +3,10 @@ using Optepafi.Models.GraphicsMan.Sources;
 namespace Optepafi.Models.ReportMan.Reports.SearchingState;
 
 /// <summary>
-/// Represents report of smiley face drawing algorithms state. It reports which facial object was drawn the most recently and it bears its preview graphics to be shown to user.
-/// For more information on searching reports see <see cref="ISearchingReport"/>.
+/// Represents report of smiley face drawing algorithms state.
+/// 
+/// It reports which facial object was drawn the most recently and it bears its preview graphics to be shown to user.  
+/// For more information on searching reports see <see cref="ISearchingReport"/>.  
 /// </summary>
 /// <param name="DrawingStateGraphics">Graphics of the most recently drawn objects which can be shown to user.</param>
 /// <param name="LastDrawnSmileyFaceObject">Indication of the most recently drawn object.</param>

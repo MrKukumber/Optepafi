@@ -9,7 +9,8 @@ namespace Optepafi.Views.Main;
 
 /// <summary>
 /// View of the main settings.
-/// For more information on main settings functionality see <see cref="MainSettingsViewModel"/>.
+/// 
+/// For more information on main settings functionality see <see cref="MainSettingsViewModel"/>.  
 /// </summary>
 public partial class MainSettingsView : ReactiveUserControl<MainSettingsViewModel>
 {
@@ -21,16 +22,5 @@ public partial class MainSettingsView : ReactiveUserControl<MainSettingsViewMode
         InitializeComponent();
 
         if (Design.IsDesignMode) return;
-        
-        // this.WhenActivated(disposables => ViewModel.WhenAnyValue(x => x.CurrentCulture)
-            // .Subscribe(newCulture =>
-            // {
-                // MainSettingsHeaderTextBlock.Text = Assets.Localization.MainWindowLocal.Settings_MainSettingsHeader;
-                // ElevConfigEntryButton.Content = Assets.Localization.MainWindowLocal.Settings_ElevConfigEntryButton;
-                // MainMenuButton.Content = Assets.Localization.MainWindowLocal.Settings_MainMenuButton;
-                // LocalizationTextBlock.Text = Assets.Localization.MainWindowLocal.Settings_LocalizationTextBlock;
-            // }).DisposeWith(disposables));
-
     }
-
 }

@@ -8,14 +8,16 @@ namespace Optepafi.Views.PathFinding.Windows;
 
 /// <summary>
 /// Dialog window used for showing map representation creation process.
-/// This window is meant to be used as dialog window.
-/// Fo more information on map representation creation process see <see cref="MapRepreCreatingViewModel"/>.
+/// 
+/// This window is meant to be used as dialog window.  
+/// Fo more information on map representation creation process see <see cref="MapRepreCreatingViewModel"/>.  
 /// </summary>
 public partial class MapRepreCreatingDialogWindow : ReactiveWindow<MapRepreCreatingViewModel>
 {
     /// <summary>
     /// On activation of this component it subscribes to bunch of commands which are used for exiting of this dialog window.
-    /// It closes itself upon their execution.
+    /// 
+    /// It closes itself upon their execution.  
     /// </summary>
     public MapRepreCreatingDialogWindow()
     {

@@ -8,7 +8,8 @@ namespace Optepafi.ModelViews.PathFinding.Utils;
 
 /// <summary>
 /// Represents ground graphics source that can be created by deep copy of other ground graphics source.
-/// For more information on ground graphics sources see <see cref="IGroundGraphicsSource"/>.
+/// 
+/// For more information on ground graphics sources see <see cref="IGroundGraphicsSource"/>.  
 /// </summary>
 public class CopyGroundGraphicsSource : IGroundGraphicsSource
 {
@@ -20,7 +21,9 @@ public class CopyGroundGraphicsSource : IGroundGraphicsSource
     }
 
     /// <summary>
-    /// Method for creation of ground graphics source by copying the other one. Graphics objects are copied asynchronously one after another. 
+    /// Method for creation of ground graphics source by copying the other one.
+    ///
+    /// Graphics objects are copied asynchronously one after another.  
     /// </summary>
     /// <param name="groundGraphicsSource">Ground graphics source to be copied.</param>
     /// <returns>New instance of copied graphic source.</returns>

@@ -17,10 +17,12 @@ using Optepafi.Models.UserModelMan.UserModels;
 namespace Optepafi.Models.SearchingAlgorithmMan.Implementations.SmileyFaceDrawer;
 
 /// <summary>
-/// Basic implementation of <c>SmileyFaceDrawer</c> algorithm. It simulates drawing of bunch of smiley faces according to provided track.
-/// It report progress of drawing an in the end returns path which defines positions of "drawn" smiley faces.
-/// This type is just demonstrative algorithm implementation for presenting application functionality.
-/// For more information on implementations of searching algorithms see <see cref="ISearchingAlgoritmImplementation"/>.
+/// Basic implementation of <c>SmileyFaceDrawer</c> algorithm.
+///
+/// It simulates drawing of bunch of smiley faces according to provided track.  
+/// It report progress of drawing an in the end returns path which defines positions of "drawn" smiley faces.  
+/// This type is just demonstrative algorithm implementation for presenting application functionality.  
+/// For more information on implementations of searching algorithms see <see cref="ISearchingAlgoritmImplementation"/>.  
 /// </summary>
 public class SmileyFacesDrawerGeneral : ISearchingAlgoritmImplementation
 {
@@ -76,9 +78,9 @@ public class SmileyFacesDrawerGeneral : ISearchingAlgoritmImplementation
 
     /// <inheritdoc cref="ISearchingAlgoritmImplementation.SearchForPaths{TVertexAttributes,TEdgeAttributes}"/>
     /// <remarks>
-    /// If more then one user model is provided, path is computed only with the first one and resulting path is then returned multiple times according to count of user models.
-    /// It does not matter because drawing of smiley faces does not depend of user model.
-    /// Searching is done using <c>ExecutorSearch</c> method.
+    /// If more then one user model is provided, path is computed only with the first one and resulting path is then returned multiple times according to count of user models.  
+    /// It does not matter because drawing of smiley faces does not depend of user model.  
+    /// Searching is done using <c>ExecutorSearch</c> method.  
     /// </remarks>
     public IPath<TVertexAttributes, TEdgeAttributes>[] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track, IGraph<TVertexAttributes, TEdgeAttributes> graph, IList<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
@@ -90,10 +92,10 @@ public class SmileyFacesDrawerGeneral : ISearchingAlgoritmImplementation
 
     /// <inheritdoc cref="ISearchingAlgoritmImplementation.ExecutorSearch{TVertexAttributes,TEdgeAttributes}"/>
     /// <remarks>
-    /// Drawing is performed by cycle when in each iteration one smiley face is drawn for specified leg.
-    /// Drawing progress is continuously reported so that it could be shown to user.
-    /// By refreshing to new searching state after each iteration we achieve showing only objects of currently drawn smiley face.
-    /// During drawing the path is continuously constructed and in the end it is returned as result.
+    /// Drawing is performed by cycle when in each iteration one smiley face is drawn for specified leg.  
+    /// Drawing progress is continuously reported so that it could be shown to user.  
+    /// By refreshing to new searching state after each iteration we achieve showing only objects of currently drawn smiley face.  
+    /// During drawing the path is continuously constructed and in the end it is returned as result.  
     /// </remarks>
     public IPath<TVertexAttributes, TEdgeAttributes> ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track, IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes

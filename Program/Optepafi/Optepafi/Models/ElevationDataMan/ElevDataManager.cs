@@ -12,9 +12,11 @@ using Optepafi.Models.MapMan.MapInterfaces;
 namespace Optepafi.Models.ElevationDataMan;
 
 /// <summary>
-/// Singleton class used for managing elevation data used as supplementary source for creation of map representations. It contains set of all usable elevation data sources. It represents main channel between operations with elevation data and applications logic (ModelViews/ViewModels).
-/// It implements supporting methods for work with elevation data. Elevation data should be managed preferably through this class.
-/// All operations provided by this class are thread safe as long as same arguments are not used concurrently multiple times. That means elevation data sources provided and used by this class should be prepared for asynchronous usage.
+/// Singleton class used for managing elevation data used as supplementary source for creation of map representations.
+/// 
+/// It contains set of all usable elevation data sources. It represents main channel between operations with elevation data and applications logic (ModelViews/ViewModels).  
+/// It implements supporting methods for work with elevation data. Elevation data should be managed preferably through this class.  
+/// All operations provided by this class are thread safe as long as same arguments are not used concurrently multiple times. That means elevation data sources provided and used by this class should be prepared for asynchronous usage.  
 /// </summary>
 public class ElevDataManager
 {
@@ -69,7 +71,9 @@ public class ElevDataManager
 
     public enum ElevDataObtainability {Obtainable, ElevDataNotPresent, NotSupportedMap, Cancelled}
     /// <summary>
-    /// Method which tests whether elevation data for given geo located map are acquirable. If this method returns positive response, it will be ensured, that elevation data for provided map will be guaranteed.
+    /// Method which tests whether elevation data for given geo located map are acquirable.
+    ///
+    /// If this method returns positive response, it will be ensured, that elevation data for provided map will be guaranteed.  
     /// This test can start asynchronous retrieving and preparing of data so they were ready for their retrieval. 
     /// </summary>
     /// <param name="map">Map for which test for elevation data obtainability is requested.</param>
@@ -83,9 +87,10 @@ public class ElevDataManager
 
     /// <summary>
     /// Method for retrieving of elevation data for provided map of provided elevation data distribution of elevation data source.
-    /// Calling this method should be preceded by calling the <see cref="AreElevDataFromDistObtainableFor"/> method for testing obtainability of required elevation data. 
-    /// In case test has a positive result, it is ensured that required data will be provided. On the other hand call of this method could throw an invalid operation exception.
-    /// Elevation data sources should be prepared to provide data asynchronously, so this method can be called from multiple threads simultaneously.
+    /// 
+    /// Calling this method should be preceded by calling the <see cref="AreElevDataFromDistObtainableFor"/> method for testing obtainability of required elevation data.   
+    /// In case test has a positive result, it is ensured that required data will be provided. On the other hand call of this method could throw an invalid operation exception.  
+    /// Elevation data sources should be prepared to provide data asynchronously, so this method can be called from multiple threads simultaneously.  
     /// </summary>
     /// <param name="map">Map for which which elevation data are requested.</param>
     /// <param name="elevDataDistribution">Elevation data distribution asked for providing elevation data.</param>

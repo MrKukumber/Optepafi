@@ -13,8 +13,10 @@ namespace Optepafi.Models.MapMan;
 
 
 /// <summary>
-/// Generic visitor interfaces for <see cref="IMap"/> implementations. It provides access to modified visitor pattern on maps, where only one generic method is required to be implemented.
-/// It serves mainly for acquiring generic parameter, that represents real type of visited map.
+/// Generic visitor interfaces for <see cref="IMap"/> implementations.
+/// 
+/// It provides access to modified visitor pattern on maps, where only one generic method is required to be implemented.  
+/// It serves mainly for acquiring generic parameter, that represents real type of visited map.  
 /// </summary>
 /// <typeparam name="TOut">Specifies type of returned value of <c>GenericVisit</c>.</typeparam>
 /// <typeparam name="TOtherParams">Specifies types of rest of the parameters carried through visitor pattern.</typeparam>
@@ -30,16 +32,3 @@ public interface IGeoLocatedMapGenericVisitor<TOut, TOtherParams>
     public TOut GenericVisit<TGeoLocatedMap>(TGeoLocatedMap geoLocatedMap, TOtherParams otherParams)
         where TGeoLocatedMap : IGeoLocatedMap;
 }
-
-
-
-
-// public interface IGeoLocatedMapGenericVisitor<TOut>
-// {
-    // public TOut GenericVisit<TMap>(TMap map) where TMap : IGeoReferencedMap;
-// }
-
-// public interface IGeoLocatedMapGenericVisitor
-// {
-    // public void GenericVisit<TMap>(TMap map) where TMap : IGeoReferencedMap;
-// }

@@ -4,6 +4,7 @@ namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
 
 /// <summary>
 /// Basic vertex whose type of hold edges is assign to be of type <see cref="IBasicEdge{TVertex,TEdgeAttributes}"/>.
+/// 
 /// This is just auxiliary, quality of life improving interface. 
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
@@ -26,7 +27,9 @@ public interface IBasicVertex<TEdge, out TVertexAttributes> :
     where TEdge : IEdge;
 
 /// <summary>
-/// Vertex that is able to return references to oriented edges of defined type originating in this vertex. It also provides methods for setting and getting weights of these edges.
+/// Vertex that is able to return references to oriented edges of defined type originating in this vertex.
+///
+/// It also provides methods for setting and getting weights of these edges.
 /// </summary>
 /// <typeparam name="TEdge">Type of hold edges originating in this vertex.</typeparam>
 public interface IEdgesContainingVertex<TEdge> : IVertex

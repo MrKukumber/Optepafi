@@ -18,14 +18,16 @@ namespace Optepafi.ViewModels.PathFinding;
 
 /// <summary>
 /// ViewModel which is responsible for control over parameter setting for path finding session.
+/// 
 /// Its tasks include:
+/// 
 /// - overseeing of parameter selection by user. It secures validity of selected parameters by restricting availability of users actions.
 /// - use of corresponding ModelViews methods for retrieving of needed data and for setting of their inner parameters which will be used further in path finding mechanism
 /// - providing interaction for map representation creation and handling its result
 /// - providing data ViewModels for their displaying to user. 
 /// - initiate save of lastly used parameters after successful creation of map representation, before proceeding further through path finding mechanism
 ///
-/// For mor information on path finding ViewModels see <see cref="PathFindingViewModelBase"/>.
+/// For mor information on path finding ViewModels see <see cref="PathFindingViewModelBase"/>.  
 /// </summary>
 public class PathFindingSettingsViewModel : PathFindingViewModelBase
 {
@@ -40,8 +42,9 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
 
     /// <summary>
     /// Constructs path findings settings ViewModel.
-    /// It initialize all reactive constructs and creates various reactions to them.
-    /// It also includes mechanism for initializing of default parameters based on saved parameters by previously run session.
+    /// 
+    /// It initialize all reactive constructs and creates various reactions to them.  
+    /// It also includes mechanism for initializing of default parameters based on saved parameters by previously run session.  
     /// </summary>
     /// <param name="settingsMv">Corresponding ModelView to this ViewModel.</param>
     /// <param name="mainSettingsProvider">Provider of main settings ModelView. It is used for main parameters retrieval.</param>
@@ -262,7 +265,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
 
     /// <summary>
     /// Helper method for finding and opening of file with provided path.
-    /// Stream gathered from this file is returned if opening of file was successful.
+    /// 
+    /// Stream gathered from this file is returned if opening of file was successful.  
     /// </summary>
     /// <param name="path">Path of file which stream should be opened.</param>
     /// <returns>Stream if opening of file was successful. Null otherwise.</returns>
@@ -286,7 +290,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
 
     /// <summary>
     /// Property which indicates currently selected and used elevation data distribution.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public ElevDataDistributionViewModel? CurrentlySelectedElevDataDistribution 
     { 
@@ -296,9 +301,10 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     private ElevDataDistributionViewModel? _currentlySelectedElevDataDistribution;
 
     /// <summary>
-    /// Property which indicates currently selected template. 
-    /// It raises notification about change of its value.
-    /// It also lets ModelView to set newly selected template.
+    /// Property which indicates currently selected template.
+    /// 
+    /// It raises notification about change of its value.  
+    /// It also lets ModelView to set newly selected template.  
     /// </summary>
     public TemplateViewModel? SelectedTemplate
     {
@@ -313,7 +319,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     private TemplateViewModel? _selectedTemplate;
     /// <summary>
     /// Collection of usable templates in current state of parameter setting.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public IEnumerable<TemplateViewModel> UsableTemplates
     {
@@ -325,8 +332,9 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     
     /// <summary>
     /// Currently selected searching algorithm.
-    /// It raises notification about change of its value.
-    /// It also lets ModelView to set newly selected searching algorithm.
+    /// 
+    /// It raises notification about change of its value.  
+    /// It also lets ModelView to set newly selected searching algorithm.  
     /// </summary>
     public SearchingAlgorithmViewModel? SelectedSearchingAlgorithm
     {
@@ -341,7 +349,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     
     /// <summary>
     /// Collection of usable searching algorithms in current state of parameter setting.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public IReadOnlySet<SearchingAlgorithmViewModel> UsableSearchingAlgorithms
     {
@@ -353,7 +362,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     
     /// <summary>
     /// Map format of currently chosen map.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public MapFormatViewModel? CurrentlyUsedMapFormat
     {
@@ -362,8 +372,9 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     }
     private MapFormatViewModel? _currentlyUsedMapFormat;
     /// <summary>
-    /// Name of currently selected maps file. 
-    /// It raises notification about change of its value.
+    /// Name of currently selected maps file.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public string? SelectedMapFileName
     {
@@ -377,7 +388,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     private string? SelectedMapFilePath { get; set; }
     /// <summary>
     /// Collection of usable map formats in current state of parameter setting.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public IReadOnlyCollection<MapFormatViewModel> UsableMapFormats
     {
@@ -387,7 +399,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     private IReadOnlyCollection<MapFormatViewModel> _usableMapFormats;
     /// <summary>
     /// Graphics source of selected map used for showing its preview.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public GraphicsSourceViewModel? SelectedMapsPreview
     {
@@ -399,7 +412,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     
     /// <summary>
     /// User model type of currently selected user model.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public UserModelTypeViewModel? CurrentlyUsedUserModelType
     {
@@ -408,8 +422,9 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     }
     private UserModelTypeViewModel? _currentlyUsedUserModelType;
     /// <summary>
-    /// Name of currently selected user model file. 
-    /// It raises notification about change of its value.
+    /// Name of currently selected user model file.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public string? SelectedUserModelFileName
     {
@@ -423,7 +438,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     private string? SelectedUserModelFilePath { get; set; }
     /// <summary>
     /// Collection of usable user model types in current state of parameter setting.
-    /// It raises notification about change of its value.
+    /// 
+    /// It raises notification about change of its value.  
     /// </summary>
     public IReadOnlyCollection<UserModelTypeViewModel> UsableUserModelTypes
     {
@@ -440,39 +456,43 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     
     /// <summary>
     /// Reactive command for loading of selected map from the stream.
-    /// On input it gets stream to be parsed and path of file from which stream was generated.
-    /// At first it finds out which map format corresponds to extension of files name. It should be secured by View that only files of usable map formats can be chosen by user.
-    /// Then comes map loading itself. Loaded map will be of detected format and will be parsed from the stream. This process will run asynchronously so the UI stayed responsive.
-    /// After finishing loading map its graphic representation is loaded. Source of map graphics will be returned immediately but in the background can run asynchronous process that will concurrently generate graphic objects and fill the source with them.
-    /// At the end is the stream disposed and result of load is returned for anyone who would care to subscribe on this command.
-    /// Commands execution will take until its next execution takes place. In that case current execution is cancelled. 
+    /// 
+    /// On input it gets stream to be parsed and path of file from which stream was generated.  
+    /// At first it finds out which map format corresponds to extension of files name. It should be secured by View that only files of usable map formats can be chosen by user.  
+    /// Then comes map loading itself. Loaded map will be of detected format and will be parsed from the stream. This process will run asynchronously so the UI stayed responsive.  
+    /// After finishing loading map its graphic representation is loaded. Source of map graphics will be returned immediately but in the background can run asynchronous process that will concurrently generate graphic objects and fill the source with them.  
+    /// At the end is the stream disposed and result of load is returned for anyone who would care to subscribe on this command.  
+    /// Commands execution will take until its next execution takes place. In that case current execution is cancelled.  
     /// </summary>
     public ReactiveCommand<(Stream, string), (MapManager.MapCreationResult, MapFormatViewModel, string, GraphicsSourceViewModel?)> LoadMapCommand { get; }
     /// <summary>
     /// Reactive command for loading of selected user model from the stream.
-    /// On input it gets stream to be parsed and path of file from which stream was generated.
-    /// At first it finds out which user model type corresponds to files name suffix. It should be secured by View that only files of usable user model types can be chosen by user.
-    /// Then comes user model loading itself. Loaded user model will be of detected type and will be deserialized from the stream. This process will run asynchronously so the UI stayed responsive.
-    /// At the end is the stream disposed and result of load is returned for anyone who would care to subscribe on this command.
-    /// Commands execution will take until its next execution takes place. In that case current execution is cancelled. 
+    /// 
+    /// On input it gets stream to be parsed and path of file from which stream was generated.  
+    /// At first it finds out which user model type corresponds to files name suffix. It should be secured by View that only files of usable user model types can be chosen by user.  
+    /// Then comes user model loading itself. Loaded user model will be of detected type and will be deserialized from the stream. This process will run asynchronously so the UI stayed responsive.  
+    /// At the end is the stream disposed and result of load is returned for anyone who would care to subscribe on this command.  
+    /// Commands execution will take until its next execution takes place. In that case current execution is cancelled.  
     /// </summary>
     public ReactiveCommand<(Stream, string), (UserModelManager.UserModelLoadResult, UserModelTypeViewModel, string)> LoadUserModelCommand { get; }
     /// <summary>
     /// Reactive command for proceeding from settings to map representations creation.
-    /// It can be executed only when every necessary parameter is set.
-    /// At the start it sets elevation data distribution to current implicit one and it lets application set some representative of map representation, that corresponds to selected template, map format, user model type and searching algorithm.
-    /// Then it calls for handling map representation creation interaction. This interaction is handled by View preferably by dialog Window.
-    /// After interactions end the indicator of successful map representations creation is returned.
-    /// If creation of map repre. was successful application proceeds.
-    /// If it was not it stays in settings of path finding.
-    /// The path finding session ViewModel subscribes on result of this command and changes current ViewModel according to its result.
+    /// 
+    /// It can be executed only when every necessary parameter is set.  
+    /// At the start it sets elevation data distribution to current implicit one and it lets application set some representative of map representation, that corresponds to selected template, map format, user model type and searching algorithm.  
+    /// Then it calls for handling map representation creation interaction. This interaction is handled by View preferably by dialog Window.  
+    /// After interactions end the indicator of successful map representations creation is returned.  
+    /// If creation of map repre. was successful application proceeds.  
+    /// If it was not it stays in settings of path finding.  
+    /// The path finding session ViewModel subscribes on result of this command and changes current ViewModel according to its result.  
     /// </summary>
     public ReactiveCommand<Unit, WhereToProceed> ProceedTroughMapRepreCreationCommand { get; }
     /// <summary>
     /// Interaction to be handled when map representations creation takes place.
-    /// Corresponding View should implement handler for this interaction nad secure its correct execution, preferably using dialog window.
-    /// Argument of this interaction is map representation creation ModelView which should be used for processing of maps repre. creation.
-    /// Result of interaction states whether creation of map representation was successful.
+    /// 
+    /// Corresponding View should implement handler for this interaction nad secure its correct execution, preferably using dialog window.  
+    /// Argument of this interaction is map representation creation ModelView which should be used for processing of maps repre. creation.  
+    /// Result of interaction states whether creation of map representation was successful.  
     /// </summary>
     public Interaction<MapRepreCreatingViewModel, bool> MapRepreCreationInteraction { get; }
 }

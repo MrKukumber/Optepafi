@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 namespace Optepafi.Models.ParamsMan;
 
 /// <summary>
-/// Manages saving all kinds of application parameters. It provides saved parameters from previous applications runs,
-/// as well as parameters set in current session.
-/// From each type of parameters only one instance can be saved. Saved instances are obtainable by specifying type of requested params.
-/// Setting is done by specified type of inserted params.
-/// Saving of parameters is done by using <see cref="DataSerializer"/> class.
-/// The load of parameters form serializations is lazy. Only when caller asks for specific parameters, they are loaded
-/// from file and cashed.
+/// Manages saving all kinds of application parameters.
+/// 
+/// It provides saved parameters from previous applications runs, as well as parameters set in current session.  
+/// From each type of parameters only one instance can be saved. Saved instances are obtainable by specifying type of requested params.  
+/// Setting is done by specified type of inserted params.  
+/// Saving of parameters is done by using <see cref="DataSerializer"/> class.  
+/// The load of parameters form serializations is lazy. Only when caller asks for specific parameters, they are loaded from file and cashed.  
 /// </summary>
 public sealed class ParamsManager
 {
@@ -24,6 +24,7 @@ public sealed class ParamsManager
     
     /// <summary>
     /// Sets and caches provided pameters in <paramref name="parameters"/>.
+    /// 
     /// The key, by which they are cached is their type specified by type parameter <typeparamref name="TParams"/>.
     /// </summary>
     /// <param name="parameters">Parameters to be cached</param>
@@ -36,9 +37,8 @@ public sealed class ParamsManager
 
     /// <summary>
     /// Provides cached or loaded parameters instance of type <typeparamref name="TParams"/>.
-    /// At first is parameter looked for in dictonary of cached parameters. If it is not found there, it is tried to be loaded from
-    /// serialization. If this try fails, null is returned.
-    /// The result of load is cached in dictonary.
+    /// 
+    /// At first is parameter looked for in dictionary of cached parameters. If it is not found there, it is tried to be loaded from serialization. If this try fails, null is returned. The result of load is cached in dictonary.
     /// </summary>
     /// <typeparam name="TParams">Type of parameters, which should be looked for.</typeparam>
     /// <returns>Cached or loaded parameters instance, if search was successful. Null if it was not.</returns>
@@ -56,6 +56,7 @@ public sealed class ParamsManager
     
     /// <summary>
     /// Saves all cached params by serializing them. It is done in parallel way.
+    /// 
     /// The type set as serialization type parameter is received by use of visitor pattern on parameters instances.
     /// </summary>
     public void SaveAllParams()
@@ -74,5 +75,4 @@ public sealed class ParamsManager
     {
         DataSerializer.Serialize(param, _paramsDirRelativePath);
     }
-    
 }

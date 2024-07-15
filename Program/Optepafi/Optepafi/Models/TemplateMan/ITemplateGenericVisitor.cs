@@ -4,10 +4,12 @@ namespace Optepafi.Models.TemplateMan;
 
 
 /// <summary>
-/// One of generic visitor interfaces for <see cref="ITemplate "/> implementations. It provides access to modified visitor pattern on templates, where only one generic method is required to be implemented.
-/// It serves mainly for acquiring generic parameter, that represents real type of visited template.
-/// It is worth noted, that returning type is constrainted to be of type <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/> so that vertex attribute types and edge attribute types defined by templates could be retrieved as well.
-/// It has 3 other overloads for convenience of use. 
+/// One of generic visitor interfaces for <see cref="ITemplate "/> implementations.
+///
+/// It provides access to modified visitor pattern on templates, where only one generic method is required to be implemented.  
+/// It serves mainly for acquiring generic parameter, that represents real type of visited template.  
+/// It is worth noted, that returning type is constrained to be of type <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/> so that vertex attribute types and edge attribute types defined by templates could be retrieved as well.  
+/// It has 3 other overloads for convenience of use.  
 /// </summary>
 /// <typeparam name="TOut">Specifies type of returned value by GenericVisit.</typeparam>
 /// <typeparam name="TConstraint">Specifies constraint of TGenericParam type parameter.</typeparam>
@@ -34,14 +36,17 @@ public interface ITemplateGenericVisitor<TOut, TConstraint, TOtherParams>
 }
 
 /// <summary>
-/// One of generic visitor interfaces for <see cref="ITemplate "/> implementations. It provides access to modified visitor pattern on templates, where only one generic method is required to be implemented.
-/// For more information see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>
+/// One of generic visitor interfaces for <see cref="ITemplate "/> implementations.
+///
+/// It provides access to modified visitor pattern on templates, where only one generic method is required to be implemented.  
+/// For more information see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>.  
 /// </summary>
 public interface ITemplateGenericVisitor<TOut, TOtherParams>
 {
     /// <summary>
     /// Visiting method to be implemented.
-    /// For more information of this method see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>.
+    /// 
+    /// For more information of this method see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>.  
     /// </summary>
     public TOut GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template,
         TOtherParams otherParams)
@@ -51,13 +56,16 @@ public interface ITemplateGenericVisitor<TOut, TOtherParams>
 }
 
 /// <summary>
-/// One of generic visitor interfaces for <see cref="ITemplate "/> implementations. It provides access to modified visitor pattern on templates, where only one generic method is required to be implemented.
-/// For more information see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>
+/// One of generic visitor interfaces for <see cref="ITemplate "/> implementations.
+/// 
+/// It provides access to modified visitor pattern on templates, where only one generic method is required to be implemented.  
+/// For more information see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>.  
 /// </summary>
 public interface ITemplateGenericVisitor<TOut>
 {
     /// <summary>
     /// Visiting method to be implemented.
+    /// 
     /// For more information of this method see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>.
     /// </summary>
     public TOut GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template) 
@@ -67,14 +75,17 @@ public interface ITemplateGenericVisitor<TOut>
 }
 
 /// <summary>
-/// One of generic visitor interfaces for <see cref="ITemplate "/> implementations. It provides access to modified visitor pattern on templates, where only one generic method is required to be implemented.
-/// For more information see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>
+/// One of generic visitor interfaces for <see cref="ITemplate "/> implementations.
+///
+/// It provides access to modified visitor pattern on templates, where only one generic method is required to be implemented.  
+/// For more information see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>.  
 /// </summary>
 public interface ITemplateGenericVisitor
 {
     /// <summary>
     /// Visiting method to be implemented.
-    /// For more information on this method see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>.
+    /// 
+    /// For more information on this method see <see cref="ITemplateGenericVisitor{TOut,TConstraint,TOtherParams}"/>.  
     /// </summary>
     public void GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>

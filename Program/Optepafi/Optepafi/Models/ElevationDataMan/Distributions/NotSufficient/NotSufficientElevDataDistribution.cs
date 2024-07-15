@@ -8,8 +8,9 @@ namespace Optepafi.Models.ElevationDataMan.Distributions.NotSufficient;
 
 /// <summary>
 /// Elevation data distribution which never contains sufficient elevation data for provided map. It defines no regions what so ever.
-/// This type is just demonstrative elevation data distribution for presenting application functionality.
-/// For more information on elevation data distributions which does not require authorization see <see cref="ICredentialsNotRequiringElevDataDistribution"/>.
+/// 
+/// This type is just demonstrative elevation data distribution for presenting application functionality.  
+/// For more information on elevation data distributions which does not require authorization see <see cref="ICredentialsNotRequiringElevDataDistribution"/>.  
 /// </summary>
 public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDataDistribution
 {
@@ -22,7 +23,7 @@ public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDat
 
     
     /// <inheritdoc cref="IElevDataDistribution.Name"/>
-    public string Name => "Not sufficient elevation data distribution.";
+    public string Name => "Not sufficient elevation data distribution";
     
     /// <inheritdoc cref="IElevDataDistribution.AllTopRegions"/> 
     public IReadOnlySet<TopRegion> AllTopRegions { get; }

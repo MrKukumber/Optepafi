@@ -3,8 +3,10 @@ using Optepafi.Models.GraphicsMan.Sources;
 namespace Optepafi.Models.ReportMan.Reports.Path;
 
 /// <summary>
-/// Represents report of path found by <c>SmileyFaceDrawer</c> algorithm. It reports graphics of drawn smiley faces as well as counts of horizontally, vertically and not at all squished drawings.
-/// For more information on path reports see <see cref="IPathReport"/>.
+/// Represents report of path found by <c>SmileyFaceDrawer</c> algorithm.
+/// 
+/// It reports graphics of drawn smiley faces as well as counts of horizontally, vertically and not at all squished drawings.  
+/// For more information on path reports see <see cref="IPathReport"/>.  
 /// </summary>
 /// <param name="PathGraphics">Graphics of drawn smiley faces that will be shown to the user.</param>
 /// <param name="HorizontallySquishedFacesCount">Count of horizontally squished drawings.</param>

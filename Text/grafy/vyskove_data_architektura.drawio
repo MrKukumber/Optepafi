@@ -1,0 +1,225 @@
+<mxfile host="Electron" modified="2024-07-14T22:04:12.994Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.4 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="l5WSwHShwT4ROvDOlkL_" version="24.6.4" type="device">
+  <diagram name="Page-1" id="BcIwWPxJ6iNlPWSmqYea">
+    <mxGraphModel dx="1219" dy="722" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-4" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;IElevDataSource&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="45" y="70" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-5" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-6" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="145" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-7" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-8" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-9" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-10" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-11" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;i&gt;Triedy implementujúce zdroje výškových dát&lt;/i&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="260" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-12" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;IElevDataDistribution&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="424" y="70" width="162" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-13" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-35" target="KRJGEr1mseS_UtcDF_KX-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-15" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-16" target="KRJGEr1mseS_UtcDF_KX-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-16" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;span&gt;ICredentialsNotRequiring-&lt;/span&gt;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;span&gt;ElevDataDistribution&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=0" vertex="1" parent="1">
+          <mxGeometry x="296.5" y="160" width="197" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-18" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-19" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-20" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-21" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-22" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-23" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-68" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-35">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-69" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-25" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;i&gt;Triedy implementujúce distribúcie výškových dát&lt;/i&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="260" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-27" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285" y="290" as="sourcePoint" />
+            <mxPoint x="395" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-28" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285" y="309.44" as="sourcePoint" />
+            <mxPoint x="395" y="309.44" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-29" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="330" as="sourcePoint" />
+            <mxPoint x="380" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-30" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="360" as="sourcePoint" />
+            <mxPoint x="380" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-33" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="50" as="sourcePoint" />
+            <mxPoint x="280" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-34" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Dedí / Implementuje&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="KRJGEr1mseS_UtcDF_KX-33">
+          <mxGeometry x="-0.3827" y="2" relative="1" as="geometry">
+            <mxPoint x="28" y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-35" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;span&gt;ICredentialsRequiring-&lt;/span&gt;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;span&gt;ElevDataDistribution&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=0" vertex="1" parent="1">
+          <mxGeometry x="516.5" y="160" width="197" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-36" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-11" target="KRJGEr1mseS_UtcDF_KX-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="335" as="sourcePoint" />
+            <mxPoint x="380" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-37" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=1 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="50" as="sourcePoint" />
+            <mxPoint x="480" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-38" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Drží referenciu&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="KRJGEr1mseS_UtcDF_KX-37">
+          <mxGeometry x="-0.2179" y="2" relative="1" as="geometry">
+            <mxPoint x="17" y="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-39" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;span&gt;Region&lt;/span&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0" vertex="1" parent="1">
+          <mxGeometry x="95" y="490" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-45" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-40" target="KRJGEr1mseS_UtcDF_KX-39">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="209.99999999999977" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-40" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;span&gt;SubRegion&lt;/span&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0" vertex="1" parent="1">
+          <mxGeometry x="245" y="560" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-44" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-41" target="KRJGEr1mseS_UtcDF_KX-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-41" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;span&gt;TopRegion&lt;/span&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0" vertex="1" parent="1">
+          <mxGeometry x="245" y="440" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-46" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-42" target="KRJGEr1mseS_UtcDF_KX-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-47" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-42" target="KRJGEr1mseS_UtcDF_KX-41">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="359.9999999999998" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-48" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-42" target="KRJGEr1mseS_UtcDF_KX-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-49" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-42" target="KRJGEr1mseS_UtcDF_KX-41">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="349.9999999999998" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-50" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-42" target="KRJGEr1mseS_UtcDF_KX-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-42" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;i&gt;Triedy reprezentujúce vrcholové regióny&amp;nbsp;&lt;/i&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="410" width="170" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-51" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-43" target="KRJGEr1mseS_UtcDF_KX-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-52" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-43" target="KRJGEr1mseS_UtcDF_KX-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-53" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-43" target="KRJGEr1mseS_UtcDF_KX-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-54" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-43" target="KRJGEr1mseS_UtcDF_KX-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-55" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-43" target="KRJGEr1mseS_UtcDF_KX-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-43" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;i&gt;Triedy reprezentujúce pod-regióny&lt;/i&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="550" width="170" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-56" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="385" as="sourcePoint" />
+            <mxPoint x="570" y="385" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-57" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="385" as="sourcePoint" />
+            <mxPoint x="570" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-58" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="380" as="sourcePoint" />
+            <mxPoint x="570" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-59" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="577" y="370" as="sourcePoint" />
+            <mxPoint x="515" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-60" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="587" y="380" as="sourcePoint" />
+            <mxPoint x="525" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRJGEr1mseS_UtcDF_KX-61" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 4;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="KRJGEr1mseS_UtcDF_KX-25" target="KRJGEr1mseS_UtcDF_KX-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="597" y="390" as="sourcePoint" />
+            <mxPoint x="535" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

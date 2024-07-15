@@ -10,12 +10,14 @@ namespace Optepafi.ModelViews.Main;
 
 /// <summary>
 /// ModelView which is responsible for logic behind management of main settings.
+/// 
 /// Its work load includes:
 /// - managing parameters which are used by whole application
 /// - setting of current culture of application and thus providing its localization
 /// - work with <c>ParamsManager</c> for achieving persistence of applications parameters
 /// - work with <c>ElevDataManager</c> for correct identification of elevation data distributions
-/// For more information on ModelViews see <see cref="ModelViewBase"/>.
+/// 
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.  
 /// </summary>
 public class MainSettingsModelView : ModelViewBase
 {

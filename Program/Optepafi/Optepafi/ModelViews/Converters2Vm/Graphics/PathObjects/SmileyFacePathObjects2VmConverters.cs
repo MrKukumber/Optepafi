@@ -12,7 +12,8 @@ namespace Optepafi.ModelViews.Converters2Vm.Graphics.PathObjects;
 
 /// <summary>
 /// Static class which contains dictionary of <c>SmileyFacePath{TVertexAttributes,TEdgeAttributes}</c> graphic object to ViewModel converters.
-/// It should contain all such converters. It is concatenated to dictionary of all other path graphic object converters in <see cref="PathObjects2VmConverters"/>.
+/// 
+/// It should contain all such converters. It is concatenated to dictionary of all other path graphic object converters in <see cref="PathObjects2VmConverters"/>.  
 /// </summary>
 public static class SmileyFacePathObjects2VmConverters
 {
@@ -29,7 +30,9 @@ public static class SmileyFacePathObjects2VmConverters
 }
 
 /// <summary>
-/// Converter of smiley faces eye graphic object to ViewModel. It is included in dictionary of smiley face path graphic object to ViewModel converters in <see cref="SmileyFacePathObjects2VmConverters"/>. 
+/// Converter of smiley faces eye graphic object to ViewModel.
+///
+/// It is included in dictionary of smiley face path graphic object to ViewModel converters in <see cref="SmileyFacePathObjects2VmConverters"/>.  
 /// </summary>
 public class SmileyFaceEyeObject2VmConverter : IGraphicObjects2VmConverter<SmileyFaceEyeObject>
 {
@@ -44,7 +47,9 @@ public class SmileyFaceEyeObject2VmConverter : IGraphicObjects2VmConverter<Smile
 }
 
 /// <summary>
-/// Converter of smiley faces nose graphic object to ViewModel. It is included in dictionary of smiley face path graphic object to ViewModel converters in <see cref="SmileyFacePathObjects2VmConverters"/>. 
+/// Converter of smiley faces nose graphic object to ViewModel.
+///
+/// It is included in dictionary of smiley face path graphic object to ViewModel converters in <see cref="SmileyFacePathObjects2VmConverters"/>.  
 /// </summary>
 public class SmileyFaceNoseObject2VmConverter : IGraphicObjects2VmConverter<SmileyFaceNoseObject>
 {
@@ -60,7 +65,9 @@ public class SmileyFaceNoseObject2VmConverter : IGraphicObjects2VmConverter<Smil
 }
 
 /// <summary>
-/// Converter of smiley faces mouth graphic object to ViewModel. It is included in dictionary of smiley face path graphic object to ViewModel converters in <see cref="SmileyFacePathObjects2VmConverters"/>. 
+/// Converter of smiley faces mouth graphic object to ViewModel.
+///
+/// It is included in dictionary of smiley face path graphic object to ViewModel converters in <see cref="SmileyFacePathObjects2VmConverters"/>.  
 /// </summary>
 public class SmileyFaceMouthObject2VmConverter : IGraphicObjects2VmConverter<SmileyFaceMouthObject>
 {
@@ -69,7 +76,7 @@ public class SmileyFaceMouthObject2VmConverter : IGraphicObjects2VmConverter<Smi
     
     /// <inheritdoc cref="IGraphicObjects2VmConverter{TGraphicsObject}.ConvertToViewModel"/>.
     /// <remarks>
-    /// Position of created ViewModel is set to be the first coordinate of bezier curve. All coordinates of bezier curve are positioned accordingly to this first coordinate.
+    /// Position of created ViewModel is set to be the first coordinate of bezier curve. All coordinates of bezier curve are positioned accordingly to this first coordinate.  
     /// </remarks>
     public GraphicObjectViewModel ConvertToViewModel(SmileyFaceMouthObject graphicsObject, MapCoordinate mapsLeftBottomVertex)
     {

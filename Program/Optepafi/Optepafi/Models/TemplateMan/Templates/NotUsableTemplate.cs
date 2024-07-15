@@ -3,9 +3,11 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.TemplateMan.Templates;
 
 /// <summary>
-/// Template that contains not usable vertex and blank edge attributes definitions. These attributes can not e used in any map representation.
-/// This type is just demonstrative template for presenting application functionality.
-/// For more information on templates see <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/>.
+/// Template that contains not usable vertex and blank edge attributes definitions.
+///
+/// These attributes can not e used in any map representation.  
+/// This type is just demonstrative template for presenting application functionality.  
+/// For more information on templates see <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 public class NotUsableTemplate : ITemplate<NotUsableTemplate.VertexAttributes, NotUsableTemplate.EdgeAttributes>
 {

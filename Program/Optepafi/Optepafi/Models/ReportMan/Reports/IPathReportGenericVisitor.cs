@@ -1,9 +1,11 @@
 namespace Optepafi.Models.ReportMan.Reports;
 
 /// <summary>
-/// One of generic visitor interfaces for <see cref="IPathReport"/> implementations. It provides access to modified visitor pattern on path reports, where only one generic method is required to be implemented.
-/// It serves mainly for acquiring generic parameter, that represents real type of visited object.
-/// It has one more overload for convenience of use.
+/// One of generic visitor interfaces for <see cref="IPathReport"/> implementations.
+/// 
+/// It provides access to modified visitor pattern on path reports, where only one generic method is required to be implemented.  
+/// It serves mainly for acquiring generic parameter, that represents real type of visited object.  
+/// It has one more overload for convenience of use.  
 /// </summary>
 /// <typeparam name="TOut">Specifies type of returned value of <c>GenericVisit</c>.</typeparam>
 /// <typeparam name="TOtherParams">Specifies types of rest of the parameters carried through visitor pattern.</typeparam>
@@ -20,8 +22,10 @@ public interface IPathReportGenericVisitor<TOut, TOtherParams>
 }
 
 /// <summary>
-/// One of generic visitor interfaces for <see cref="IPathReport"/> implementations. It provides access to modified visitor pattern on path reports.
-/// For more information see <see cref="IPathReportGenericVisitor{TOut,TOtherParams}"/> .
+/// One of generic visitor interfaces for <see cref="IPathReport"/> implementations.
+/// 
+/// It provides access to modified visitor pattern on path reports.  
+/// For more information see <see cref="IPathReportGenericVisitor{TOut,TOtherParams}"/>.  
 /// </summary>
 public interface IPathReportGenericVisitor<TOut>
 {

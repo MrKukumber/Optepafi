@@ -4,7 +4,8 @@ namespace Optepafi.Models.ElevationDataMan.Regions.Simulating;
 
 /// <summary>
 /// Demonstration top region used for presenting application functionalities.
-/// For more information on top regions see <see cref="TopRegion"/>.
+/// 
+/// For more information on top regions see <see cref="TopRegion"/>.  
 /// </summary>
 public class TopRegion0 : TopRegion
 {

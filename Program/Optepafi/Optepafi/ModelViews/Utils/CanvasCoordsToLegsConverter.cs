@@ -6,13 +6,14 @@ using Optepafi.ViewModels.Data;
 namespace Optepafi.ModelViews.Utils;
 
 /// <summary>
-/// Static class which provides static conversion method from list of tracks <c>CanvasCoordinate</c>s to list of corresponding <c>Leg</c>s.
+/// Static class which provides static conversion method from list of tracks <c>CanvasCoordinate</c>s to list of corresponding <c>Leg</c>s.  
 /// </summary>
 public static class CanvasCoordsToLegsConverter
 {
     /// <summary>
     /// Method for conversion of list of tracks <c>CanvasCoordinate</c>s to list of corresponding <c>Leg</c>s.
-    /// <c>CanvasCoordinate</c>s are converted to <c>MapCoordinate</c>s according to provided graphics areas left-bottom vertex.
+    /// 
+    /// <c>CanvasCoordinate</c>s are converted to <c>MapCoordinate</c>s according to provided graphics areas left-bottom vertex.  
     /// </summary>
     /// <param name="track">Coordinates of track to be converted to legs.</param>
     /// <param name="area">Area according to which are canvas coordinates converted to map coordinates</param>

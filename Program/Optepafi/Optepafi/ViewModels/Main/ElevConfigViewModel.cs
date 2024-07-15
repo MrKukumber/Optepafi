@@ -15,23 +15,26 @@ namespace Optepafi.ViewModels.Main;
 
 /// <summary>
 /// ViewModel which is responsible for control over elevation data configuration mechanism.
-/// This is a special type of ViewModel because all instances of this ViewModel use the same one instance of <c>ElevDataModelView</c> singleton.
-/// It also is special in that way it is designed and intended to be used in dialog windows. 
-/// Singleton design of mentioned ModelView is intentional so instance of this ModelView could be used in application on more places at once.
-/// It opens opportunity for having elevation configuration ViewModels opened simultaneously on multiple places. ModelView ensures that this simultaneous opening will run flawlessly.
+/// 
+/// This is a special type of ViewModel because all instances of this ViewModel use the same one instance of <c>ElevDataModelView</c> singleton.  
+/// It also is special in that way it is designed and intended to be used in dialog windows.  
+/// Singleton design of mentioned ModelView is intentional so instance of this ModelView could be used in application on more places at once.  
+/// It opens opportunity for having elevation configuration ViewModels opened simultaneously on multiple places. ModelView ensures that this simultaneous opening will run flawlessly.  
 /// Among tasks of this ViewModel belongs:
+/// 
 /// - overseeing of elevation data configuration. It secures validity of actions done by user. It reacts to results of data machinations by processing and providing meaningful information to be shown to user.
 /// - understanding principles of elevation data retrieval and removal. Understanding hierarchy of regions.
 /// - selection of currently used elevation data distribution.
 /// - letting user to assign its credentials for accessing of elevation data from distributions which demand it.
 ///
-/// For more information on ViewModels in general see <see cref="ViewModelBase"/>.
+/// For more information on ViewModels in general see <see cref="ViewModelBase"/>.  
 /// </summary>
 public class ElevConfigViewModel : ViewModelBase
 {
     /// <summary>
     /// Construction of new elevation configuration ViewModel instance.
-    /// It initialize all reactive constructs and assigns currently used elevation data distribution to value of provided argument.
+    /// 
+    /// It initialize all reactive constructs and assigns currently used elevation data distribution to value of provided argument.  
     /// </summary>
     /// <param name="selectedElevDataDist">Argument according to which is currently used elevation data distribution set.</param>
     public ElevConfigViewModel(ElevDataDistributionViewModel? selectedElevDataDist)
@@ -183,7 +186,8 @@ public class ElevConfigViewModel : ViewModelBase
 
     /// <summary>
     /// Currently selected elevation data distribution which regions and their corresponding elev. data can be managed by user.
-    /// When application is closing this properties value is returned as currently used elevation data distribution.
+    /// 
+    /// When application is closing this properties value is returned as currently used elevation data distribution.  
     /// </summary>
     public ElevDataDistributionViewModel? CurrentElevDataDist
     {
@@ -241,22 +245,24 @@ public class ElevConfigViewModel : ViewModelBase
     
     /// <summary>
     /// Reactive command used for downloading of elevation data for currently selected region.
-    /// Firstly it sets currently selected region to state <c>IsDownloading</c> and its sub-regions presence state to <c>IsDownloadingAsSubregion</c> .
-    /// Then according to distributions requirement for credentials it calls asynchronously correct method on ModelView for downloading of elevation data which correspond to selected region.
-    /// It receives result of this download.
-    /// It the lets selected region and its subregions update their presence status.
-    /// In the end it processes result of download so that user could be informed about it.
-    /// Downloading of elevation data is enabled only in case that selected region is not downloaded yet and current distribution does not requires credentials or if it does, they are set.
+    /// 
+    /// Firstly it sets currently selected region to state <c>IsDownloading</c> and its sub-regions presence state to <c>IsDownloadingAsSubregion</c>.  
+    /// Then according to distributions requirement for credentials it calls asynchronously correct method on ModelView for downloading of elevation data which correspond to selected region.  
+    /// It receives result of this download.  
+    /// It the lets selected region and its subregions update their presence status.  
+    /// In the end it processes result of download so that user could be informed about it.  
+    /// Downloading of elevation data is enabled only in case that selected region is not downloaded yet and current distribution does not requires credentials or if it does, they are set.  
     /// </summary>
     public ReactiveCommand<Unit, Unit> DownloadRegionCommand { get; }
     /// <summary>
     /// Reactive command used for deleting of downloaded elevation data for currently selected region.
-    /// It is simpler than <c>DownloadRegionCommand</c>.
-    /// Firstly currently selected regions and its subregions presence state is set to <c>IsDeleting</c>. The state is set in such way only if given region is not deleted already.
-    /// Also all upper regions of currently selected region states are set in that way.
-    /// Then asynchronous removal of elevation data itself takes place.
-    /// After it finishes, selected regions sub-regions and upper-regions are let to update their presence status.
-    /// Removing of selected regions elevation data is enabled only if they are downloaded already. 
+    /// 
+    /// It is simpler than <c>DownloadRegionCommand</c>.  
+    /// Firstly currently selected regions and its subregions presence state is set to <c>IsDeleting</c>. The state is set in such way only if given region is not deleted already.  
+    /// Also all upper regions of currently selected region states are set in that way.  
+    /// Then asynchronous removal of elevation data itself takes place.  
+    /// After it finishes, selected regions sub-regions and upper-regions are let to update their presence status.  
+    /// Removing of selected regions elevation data is enabled only if they are downloaded already.  
     /// </summary>
     public ReactiveCommand<Unit, Unit> DeleteRegionCommand { get; }
     /// <summary>
@@ -265,7 +271,8 @@ public class ElevConfigViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> CancelDownloadingCommand { get; }
     /// <summary>
     /// Reactive command used for returning form elevation data configuration ViewModel.
-    /// It returns currently selected elevation data distribution which should be used now used in whole application as default one. 
+    /// 
+    /// It returns currently selected elevation data distribution which should be used now used in whole application as default one.  
     /// </summary>
     public ReactiveCommand<Unit, ElevDataDistributionViewModel?> ReturnCommand { get; }
 }

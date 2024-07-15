@@ -7,14 +7,15 @@ namespace Optepafi.Models.ElevationDataMan.Distributions;
 
 /// <summary>
 /// Represents elevation data distribution provided by some source of data. It provides methods for downloading, removal and retrieval of by it represented elevation data.
-/// For accessing downloading of data it is necessary to implement one of its descendant: <see cref="ICredentialsNotRequiringElevDataDistribution"/>  or <see cref="ICredentialsRequiringElevDataDistribution"/>.
+/// 
+/// For accessing downloading of data it is necessary to implement one of its descendant: <see cref="ICredentialsNotRequiringElevDataDistribution"/>  or <see cref="ICredentialsRequiringElevDataDistribution"/>.  
 /// One represents elevation data distributions, for which it is not required to send credentials for accessing data form server. On the contrary, the second one represents those data types, which requires them.
-/// <para>
-/// Downloading and removal of data is done by regions. Each elevation data distribution defines its own set of regions which it supports.
-/// Elevation data are mostly loaded in bigger chunks called cells, so it is responsibility of each elevation data distribution to correctly manage these resources.
+/// 
+/// Downloading and removal of data is done by regions. Each elevation data distribution defines its own set of regions which it supports.  
+/// Elevation data are mostly loaded in bigger chunks called cells, so it is responsibility of each elevation data distribution to correctly manage these resources.  
 /// Before each retrieval of the data it should be checked, if they are obtainable. If check was not done, retrieving of data could result in thrown exceptions. On the other hand, if check had positive result, successful retrieval should be ensured.
-/// </para> 
-/// All operations provided by <c>IElevDataDistribution</c> should be made thread safe, so the retrieval of elevation data could be provided asynchronously.
+/// 
+/// All operations provided by <c>IElevDataDistribution</c> should be made thread safe, so the retrieval of elevation data could be provided asynchronously.  
 /// Preferred way to interact with distributions is through <see cref="ElevDataManager"/>.
 /// </summary>
 public interface IElevDataDistribution
@@ -35,8 +36,9 @@ public interface IElevDataDistribution
     
     /// <summary>
     /// Testing method for receiving of information whether for provided map there are available corresponding elevation data in this data distribution.
-    /// If this method returns positive response, it should be ensured that in the near future will be questioned data ready for delivery.
-    /// Each implementation of methods should support at least maps, which implement interface <see cref="IMostNSWECoordQueryableGeoLocMap"/> or interface <see cref="IMostNSWECoordQueryableGeoRefMap"/>.
+    /// 
+    /// If this method returns positive response, it should be ensured that in the near future will be questioned data ready for delivery.  
+    /// Each implementation of methods should support at least maps, which implement interface <see cref="IMostNSWECoordQueryableGeoLocMap"/> or interface <see cref="IMostNSWECoordQueryableGeoRefMap"/>.  
     /// </summary>
     /// <param name="map">Map for which test for elevation data obtainability is requested.</param>
     /// <param name="cancellationToken">Token for cancellation of testing process.</param>
@@ -45,9 +47,10 @@ public interface IElevDataDistribution
     
     /// <summary>
     /// Method for retrieving of elevation data for provided map.
-    /// Calling ths method should be preceded by calling the <see cref="AreElevDataObtainableFor"/> method for testing obtainability of required elevation data.
-    /// In case test has a positive result, it is ensured that required data will be provided. On the other hand call of this method could throw an invalid operation exception.
-    /// Elevation data distributions should be prepared to provide data asynchronously, so this method can be called from multiple threads simultaneously.
+    /// 
+    /// Calling ths method should be preceded by calling the <see cref="AreElevDataObtainableFor"/> method for testing obtainability of required elevation data.  
+    /// In case test has a positive result, it is ensured that required data will be provided. On the other hand call of this method could throw an invalid operation exception.  
+    /// Elevation data distributions should be prepared to provide data asynchronously, so this method can be called from multiple threads simultaneously.  
     /// </summary>
     /// <param name="map">Map for which elevation data are requested.</param>
     /// <param name="cancellationToken">Token for cancellation of elevation data delivery.</param>

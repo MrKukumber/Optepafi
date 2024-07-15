@@ -7,9 +7,11 @@ using PathFindingSessionModelView = Optepafi.ModelViews.PathFinding.PathFindingS
 namespace Optepafi.ViewModels.PathFinding;
 
 /// <summary>
-/// Path finding sessions ViewModel. It contains all ViewModels which contribute to effort of delivering path finding mechanism to the user.
-/// Additionally it handles closing of path finding sessions main window and therefore closing of session itself.
-/// For more information about session ViewModels see <see cref="SessionViewModel"/>
+/// Path finding sessions ViewModel.
+///
+/// It contains all ViewModels which contribute to effort of delivering path finding mechanism to the user.  
+/// Additionally it handles closing of path finding sessions main window and therefore closing of session itself.  
+/// For more information about session ViewModels see <see cref="SessionViewModel"/>.  
 /// </summary>
 public class PathFindingSessionViewModel : SessionViewModel
 {
@@ -58,6 +60,7 @@ public class PathFindingSessionViewModel : SessionViewModel
 
     /// <summary>
     /// Property which contains currently used ViewModel.
+    /// 
     /// It raises notification about change of its value.
     /// </summary>
     public PathFindingViewModelBase CurrentViewModel

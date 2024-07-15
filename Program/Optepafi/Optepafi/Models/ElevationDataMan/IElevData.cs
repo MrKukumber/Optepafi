@@ -4,8 +4,9 @@ namespace Optepafi.Models.ElevationDataMan;
 
 /// <summary>
 /// Represents object, that can provide required elevation data. It is created by elevation data distribution for some map to measure.
-/// For this purpose it defines two overloads of method <see cref="GetElevation(Optepafi.Models.MapMan.GeoCoordinate)"/> which supports <c>GeoCoordinate</c>s as well as <c>MapCoordinate</c>s with geo referenced origin.
-/// Instance of <c>IElevData</c> is then used in map representation creation as supplementary source of data.
+/// 
+/// For this purpose it defines two overloads of method <see cref="GetElevation(Optepafi.Models.MapMan.GeoCoordinate)"/> which supports <c>GeoCoordinate</c>s as well as <c>MapCoordinate</c>s with geo referenced origin.  
+/// Instance of <c>IElevData</c> is then used in map representation creation as supplementary source of data.  
 /// </summary>
 public interface IElevData
 {

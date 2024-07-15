@@ -7,8 +7,9 @@ namespace Optepafi;
 
 /// <summary>
 /// The View Locator is a mechanism in Avalonia that is used to resolve the view (user interface) that corresponds to a specific ViewModel.
-/// The View Locator uses naming conventions to map ViewModel types to view types.
-/// By default, it replaces every occurrence of the string "ViewModel" within the fully-qualified ViewModel type name with "View".
+/// 
+/// The View Locator uses naming conventions to map ViewModel types to view types.  
+/// By default, it replaces every occurrence of the string "ViewModel" within the fully-qualified ViewModel type name with "View".  
 /// </summary>
 public class ViewLocator : IDataTemplate
 {

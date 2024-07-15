@@ -6,7 +6,8 @@ namespace Optepafi.ViewModels.Data.Representatives;
 
 /// <summary>
 /// Wrapping ViewModel for <c>IUserModelType{TUserModel,TTemplate}</c> type.
-/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// 
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.  
 /// </summary>
 /// <param name="userModelType">User model type instance to which will be this ViewModel coupled.</param>
 public class UserModelTypeViewModel(IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType) : WrappingDataViewModel<IUserModelType<IUserModel<ITemplate>, ITemplate>>
@@ -22,7 +23,8 @@ public class UserModelTypeViewModel(IUserModelType<IUserModel<ITemplate>, ITempl
     public string UserModelTypeName => UserModelType.UserModelTypeName;
     /// <summary>
     /// Represents suffix of file name to which should be eventual serialization saved.
-    /// For more information see <c>UserModelFileNameSuffix</c> documentation in <see cref="IUserModelType{TUserModel,TTemplate}"/>.
+    /// 
+    /// For more information see <c>UserModelFileNameSuffix</c> documentation in <see cref="IUserModelType{TUserModel,TTemplate}"/>.  
     /// </summary>
     public string UserModelFileNameSuffix => UserModelType.UserModelFileNameSuffix;
     /// <summary>

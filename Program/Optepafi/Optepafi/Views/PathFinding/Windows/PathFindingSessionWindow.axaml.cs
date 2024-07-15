@@ -11,15 +11,19 @@ namespace Optepafi.Views.PathFinding.Windows;
 
 
 /// <summary>
-/// Window of the path finding session. Instances of this window are created and shown to the user when on new path finding sessions creation.
-/// This window is bounded to <see cref="PathFindingSessionViewModel"/>. For more information on path finding windows functionality see documentation of this ViewModel.
+/// Window of the path finding session.
+///
+/// Instances of this window are created and shown to the user when on new path finding sessions creation.  
+/// This window is bounded to <see cref="PathFindingSessionViewModel"/>. For more information on path finding windows functionality see documentation of this ViewModel.  
 /// </summary>
 public partial class PathFindingSessionWindow : ReactiveWindow<PathFindingSessionViewModel>
 {
     /// <summary>
-    /// When this component is activated, it registers handler for map representation creation interaction.
-    /// I also subscribes on exit command of the path finding part part of the mechanism. It closes itself when this command executes.
-    /// On initialization of this component it collects all defined data templates by calling method <see cref="RecursiveSearchForDataTemplatesIn"/>.
+    /// Constructor of path finding session window.
+    /// 
+    /// When this component is activated, it registers handler for map representation creation interaction.  
+    /// I also subscribes on exit command of the path finding part part of the mechanism. It closes itself when this command executes.  
+    /// On initialization of this component it collects all defined data templates by calling method <see cref="RecursiveSearchForDataTemplatesIn"/>.  
     /// </summary>
     public PathFindingSessionWindow()
     {
@@ -44,7 +48,8 @@ public partial class PathFindingSessionWindow : ReactiveWindow<PathFindingSessio
     
     /// <summary>
     /// Method for recursive search for data templates that are defined in this windows level resource dictionaries.
-    /// It adds every found data template in these dictionaries into <c>DataTemplates</c> collection of this window.
+    /// 
+    /// It adds every found data template in these dictionaries into <c>DataTemplates</c> collection of this window.  
     /// </summary>
     /// <param name="resourceDictionary">Resource dictionary which should be recursively searched for data templates.</param>
     private void RecursiveSearchForDataTemplatesIn(IResourceDictionary resourceDictionary)
@@ -70,8 +75,9 @@ public partial class PathFindingSessionWindow : ReactiveWindow<PathFindingSessio
     
     /// <summary>
     /// Method for handling <c>MapRepreCreationInteraction</c>.
-    /// It shows <see cref="MapRepreCreatingDialogWindow"/> with appropriate View and awaits the result of map representation creation.
-    /// Result is then set as na output of the interaction.
+    /// 
+    /// It shows <see cref="MapRepreCreatingDialogWindow"/> with appropriate View and awaits the result of map representation creation.  
+    /// Result is then set as na output of the interaction.  
     /// </summary>
     /// <param name="interaction">Interaction to be handled.</param>
     private async Task DoShowMapRepreCreatingDialogAsync(InteractionContext<MapRepreCreatingViewModel, bool> interaction)
@@ -91,7 +97,8 @@ public partial class PathFindingSessionWindow : ReactiveWindow<PathFindingSessio
     private bool _alreadyAsked = false;
     /// <summary>
     /// Method for handling <c>OnClosing</c> event of this window.
-    /// It designed in such way it could be cancelled by asynchronous dialog from user.
+    /// 
+    /// It designed in such way it could be cancelled by asynchronous dialog from user.  
     /// </summary>
     /// <param name="sender">Sender of the <c>OnClosing</c> event.</param>
     /// <param name="e"><c>OnClosing</c> events arguments.</param>

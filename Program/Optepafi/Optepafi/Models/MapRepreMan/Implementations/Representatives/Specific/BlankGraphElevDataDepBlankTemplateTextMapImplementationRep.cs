@@ -11,8 +11,10 @@ using Optepafi.Models.TemplateMan.Templates;
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific;
 
 /// <summary>
-/// Represents implementation of blank map representation/graph for <c>BlankTemplate</c> template type and <c>TextMap</c> map type. Represented implementation needs elevation data for its creation even though it does not use them.
-/// For more information on representatives of elevation data independent implementations see <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>.
+/// Represents implementation of blank map representation/graph for <c>BlankTemplate</c> template type and <c>TextMap</c> map type.
+/// 
+/// Represented implementation needs elevation data for its creation even though it does not use them.  
+/// For more information on representatives of elevation data independent implementations see <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 public class BlankGraphElevDataDepBlankTemplateTextMapImplementationRep :
     ElevDataDepImplementationRep<BlankTemplate, TextMap, TextMap, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>

@@ -5,7 +5,8 @@ namespace Optepafi.ViewModels.Data.Representatives;
 
 /// <summary>
 /// Wrapping ViewModel for <c>ISearchingAlgorithm</c> type.
-/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// 
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.  
 /// </summary>
 /// <param name="searchingAlgorithm">Searching algorithm instance to which will be this ViewModel coupled.</param>
 public class SearchingAlgorithmViewModel(ISearchingAlgorithm searchingAlgorithm) : WrappingDataViewModel<ISearchingAlgorithm>

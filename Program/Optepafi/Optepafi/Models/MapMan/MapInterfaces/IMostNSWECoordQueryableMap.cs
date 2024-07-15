@@ -2,6 +2,7 @@ namespace Optepafi.Models.MapMan.MapInterfaces;
 
 /// <summary>
 /// Represents geo-located maps ability to provide its northernmost, southernmost, westernmost and easternmost coordinate.
+/// 
 /// This locations are provided by <see cref="GeoCoordinate"/>.
 /// </summary>
 public interface IMostNSWECoordQueryableGeoLocMap : IGeoLocatedMap
@@ -15,6 +16,7 @@ public interface IMostNSWECoordQueryableGeoLocMap : IGeoLocatedMap
 
 /// <summary>
 /// Represents geo-referenced maps ability to provide its northernmost, southernmost, westernmost and easternmost coordinate.
+/// 
 /// This locations are provided by <see cref="MapCoordinate"/>.
 /// </summary>
 public interface IMostNSWECoordQueryableGeoRefMap : IGeoReferencedMap

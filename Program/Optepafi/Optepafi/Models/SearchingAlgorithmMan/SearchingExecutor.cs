@@ -11,7 +11,9 @@ using Optepafi.Models.UserModelMan.UserModels;
 namespace Optepafi.Models.SearchingAlgorithmMan;
 
 /// <summary>
-/// Represents searching executor that for provided track returns path found by associated searching algorithm. It executes path searching delegate on map representation by using one user model. These three sources should be provided to executor in its construction.
+/// Represents searching executor that for provided track returns path found by associated searching algorithm.
+///
+/// It executes path searching delegate on map representation by using one user model. These three sources should be provided to executor in its construction.  
 /// Executor provides way for executing searching on sequentially provided tracks whereby the searched graph does not have to be cleaned and returned to consistent state after each search.  
 /// Principle of executor:
 /// - executor is instantiated with graph, user model and delegate of searching algorithm
@@ -24,9 +26,9 @@ namespace Optepafi.Models.SearchingAlgorithmMan;
 /// - at the end of the lifetime of executor it is disposed. That means it will stop the inner loop and by that will release its lock on graph. Before exiting it has to let graph to clean itself to restore its consistency.
 /// - after this point executor can not be used again. Attempts of its use will end in throw of <c>ObjectDisposedException</c>.
 ///
-/// This behaviour can be achieved by use of synchronization primitives.
-/// It should be ensured that when executor is not be needed anymore it is disposed. The graph can then be released for further use. 
-/// For its default implementation see <see cref="SearchingExecutor{TVertexAttributes,TEdgeAttributes}"/>.
+/// This behaviour can be achieved by use of synchronization primitives.  
+/// It should be ensured that when executor is not be needed anymore it is disposed. The graph can then be released for further use.  
+/// For its default implementation see <see cref="SearchingExecutor{TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 public interface ISearchingExecutor : IDisposable
 {
@@ -41,7 +43,9 @@ public interface ISearchingExecutor : IDisposable
 }
 
 /// <summary>
-/// Implementation of <see cref="ISearchingExecutor"/>. It uses Mutex and AutoResetEvents for achieving correct behaviour of executor. 
+/// Implementation of <see cref="ISearchingExecutor"/>.
+///
+/// It uses Mutex and AutoResetEvents for achieving correct behaviour of executor. 
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes used in vertices of a graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes used in edges of a graph.</typeparam>

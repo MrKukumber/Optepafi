@@ -4,9 +4,9 @@ namespace Optepafi.ModelViews.Main;
 
 /// <summary>
 /// ModelView for main window. It is responsible for logic behind main window.
-/// Its only duty for now is to let <c>ParamsManager</c> correctly save parameters when requested and
-/// provide ModelViews associated with main window.
-/// For more information on ModelViews see <see cref="ModelViewBase"/>.
+/// 
+/// Its only duty for now is to let <c>ParamsManager</c> correctly save parameters when requested and provide ModelViews associated with main window.  
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.  
 /// </summary>
 public class MainWindowModelView : ModelViewBase
 {

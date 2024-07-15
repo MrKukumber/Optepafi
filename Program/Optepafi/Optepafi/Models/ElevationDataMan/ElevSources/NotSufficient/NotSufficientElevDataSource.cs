@@ -6,8 +6,9 @@ namespace Optepafi.Models.ElevationDataMan.ElevSources.NotSufficient;
 
 /// <summary>
 /// Source of elevation data, which never contains elevation data for provided map.
-/// This type is just demonstrative data source for presenting application functionality.
-/// For more information on elevation data sources see <see cref="IElevDataSource"/>.
+/// 
+/// This type is just demonstrative data source for presenting application functionality.  
+/// For more information on elevation data sources see <see cref="IElevDataSource"/>.  
 /// </summary>
 public class NotSufficientElevDataSource : IElevDataSource
 {

@@ -5,8 +5,9 @@ namespace Optepafi.ModelViews.PathFinding.Utils;
 
 /// <summary>
 /// Collecting graphics source that is also ground graphics source.
-/// For more information on collecting graphic sources see <see cref="CollectingGraphicsSource"/>.
-/// For more information on ground graphics sources see <see cref="IGroundGraphicsSource"/>.
+/// 
+/// For more information on collecting graphic sources see <see cref="CollectingGraphicsSource"/>.  
+/// For more information on ground graphics sources see <see cref="IGroundGraphicsSource"/>.  
 /// </summary>
 public class CollectingGroundGraphicsSource : CollectingGraphicsSource, IGroundGraphicsSource
 {

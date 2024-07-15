@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  11 JUL 2024 12:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  15 JUL 2024 16:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -954,7 +954,7 @@ Package biblatex Info: Reference segment=0 on input line 123.
 
  (./title.tex
 Package hyperref Info: Option `pageanchor' set `false' on input line 44.
-<img/logo-cs.pdf, id=191, 506.4591pt x 156.49065pt>
+<img/logo-cs.pdf, id=199, 506.4591pt x 156.49065pt>
 File: img/logo-cs.pdf Graphic file (type pdf)
 <use img/logo-cs.pdf>
 Package pdftex.def Info: img/logo-cs.pdf  used on input line 48.
@@ -1034,11 +1034,11 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 {c:/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}] [10] [11]
 
 pdfTeX warning: pdflatex.exe (file ./img/konceptove_zavislosti.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<img/konceptove_zavislosti.pdf, id=307, 309.07468pt x 220.9053pt>
+<img/konceptove_zavislosti.pdf, id=318, 309.0747pt x 220.9053pt>
 File: img/konceptove_zavislosti.pdf Graphic file (type pdf)
 <use img/konceptove_zavislosti.pdf>
 Package pdftex.def Info: img/konceptove_zavislosti.pdf  used on input line 94.
-(pdftex.def)             Requested size: 309.07391pt x 220.90475pt.
+(pdftex.def)             Requested size: 309.07394pt x 220.90475pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -1052,18 +1052,10 @@ Kapitola 2.
 
 
 
-]
-
-LaTeX Warning: Reference `Sessions' on page 17 undefined on input line 37.
-
-[17] [18]
-
-LaTeX Warning: Reference `Sessions' on page 19 undefined on input line 69.
-
-[19] [20]
+] [17] [18] [19] [20]
 
 pdfTeX warning: pdflatex.exe (file ./img/priklad_struktury.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<img/priklad_struktury.pdf, id=382, 407.60278pt x 379.4175pt>
+<img/priklad_struktury.pdf, id=395, 407.60278pt x 379.4175pt>
 File: img/priklad_struktury.pdf Graphic file (type pdf)
 <use img/priklad_struktury.pdf>
 Package pdftex.def Info: img/priklad_struktury.pdf  used on input line 122.
@@ -1081,25 +1073,25 @@ Kapitola 3.
 ] [24]
 
 pdfTeX warning: pdflatex.exe (file ./img/hlavne_okno.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<img/hlavne_okno.pdf, id=417, 367.3725pt x 339.18718pt>
+<img/hlavne_okno.pdf, id=431, 367.3725pt x 339.18721pt>
 File: img/hlavne_okno.pdf Graphic file (type pdf)
 <use img/hlavne_okno.pdf>
 Package pdftex.def Info: img/hlavne_okno.pdf  used on input line 68.
-(pdftex.def)             Requested size: 367.37158pt x 339.18636pt.
+(pdftex.def)             Requested size: 367.37158pt x 339.18639pt.
 [25 <./img/hlavne_okno.pdf>] [26] [27]
 
 pdfTeX warning: pdflatex.exe (file ./img/session_vyhladavania_cesty.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<img/session_vyhladavania_cesty.pdf, id=449, 373.395pt x 411.45718pt>
+<img/session_vyhladavania_cesty.pdf, id=464, 373.395pt x 411.45721pt>
 File: img/session_vyhladavania_cesty.pdf Graphic file (type pdf)
 <use img/session_vyhladavania_cesty.pdf>
 Package pdftex.def Info: img/session_vyhladavania_cesty.pdf  used on input line 155.
-(pdftex.def)             Requested size: 373.39409pt x 411.45616pt.
+(pdftex.def)             Requested size: 373.39409pt x 411.45619pt.
 [28]) [29 <./img/session_vyhladavania_cesty.pdf>]
 \openout2 = `modely_podrobne04.aux'.
 
  (./modely_podrobne04.tex
 Kapitola 4.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 12.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 11.
 (c:/texlive/2023/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -1108,16 +1100,64 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 27.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 29.
  [30
 
 
 
 
-] [31] [32] [33] [34] [35] [36] [37] [38] [39]) [40]
+]
+
+pdfTeX warning: pdflatex.exe (file ./img/templatey_architektura.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/templatey_architektura.pdf, id=497, 192.72pt x 190.7928pt>
+File: img/templatey_architektura.pdf Graphic file (type pdf)
+<use img/templatey_architektura.pdf>
+Package pdftex.def Info: img/templatey_architektura.pdf  used on input line 38.
+(pdftex.def)             Requested size: 192.71951pt x 190.79231pt.
+[31 <./img/templatey_architektura.pdf>]
+
+pdfTeX warning: pdflatex.exe (file ./img/mapy_architektura.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/mapy_architektura.pdf, id=520, 314.13359pt x 194.6472pt>
+File: img/mapy_architektura.pdf Graphic file (type pdf)
+<use img/mapy_architektura.pdf>
+Package pdftex.def Info: img/mapy_architektura.pdf  used on input line 68.
+(pdftex.def)             Requested size: 314.13281pt x 194.64671pt.
+[32 <./img/mapy_architektura.pdf>] [33] [34]
+
+pdfTeX warning: pdflatex.exe (file ./img/mapove_reprezentacie_architektura.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/mapove_reprezentacie_architektura.pdf, id=551, 396.52141pt x 434.58359pt>
+File: img/mapove_reprezentacie_architektura.pdf Graphic file (type pdf)
+<use img/mapove_reprezentacie_architektura.pdf>
+Package pdftex.def Info: img/mapove_reprezentacie_architektura.pdf  used on input line 138.
+(pdftex.def)             Requested size: 396.52043pt x 434.58252pt.
+[35] [36 <./img/mapove_reprezentacie_architektura.pdf>] [37]
+
+pdfTeX warning: pdflatex.exe (file ./img/uzivatelske_modely_architektura.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/uzivatelske_modely_architektura.pdf, id=583, 373.395pt x 252.945pt>
+File: img/uzivatelske_modely_architektura.pdf Graphic file (type pdf)
+<use img/uzivatelske_modely_architektura.pdf>
+Package pdftex.def Info: img/uzivatelske_modely_architektura.pdf  used on input line 184.
+(pdftex.def)             Requested size: 373.39409pt x 252.94438pt.
+[38 <./img/uzivatelske_modely_architektura.pdf>] [39]
+
+pdfTeX warning: pdflatex.exe (file ./img/vyhladavacie_algoritmy_architektura.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/vyhladavacie_algoritmy_architektura.pdf, id=609, 307.1475pt x 140.4447pt>
+File: img/vyhladavacie_algoritmy_architektura.pdf Graphic file (type pdf)
+<use img/vyhladavacie_algoritmy_architektura.pdf>
+Package pdftex.def Info: img/vyhladavacie_algoritmy_architektura.pdf  used on input line 226.
+(pdftex.def)             Requested size: 307.14674pt x 140.44435pt.
+[40 <./img/vyhladavacie_algoritmy_architektura.pdf>] [41]
+
+pdfTeX warning: pdflatex.exe (file ./img/vyskove_data_architektura.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<img/vyskove_data_architektura.pdf, id=635, 344.2461pt x 312.2064pt>
+File: img/vyskove_data_architektura.pdf Graphic file (type pdf)
+<use img/vyskove_data_architektura.pdf>
+Package pdftex.def Info: img/vyskove_data_architektura.pdf  used on input line 261.
+(pdftex.def)             Requested size: 344.24524pt x 312.20564pt.
+[42 <./img/vyskove_data_architektura.pdf>] [43] [44]) [45]
 \openout2 = `zaver.aux'.
 
- (./zaver.tex) [41
+ (./zaver.tex) [46
 
 
 
@@ -1129,13 +1169,53 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/lmr/m/sc/12'.
 (microtype)             Ignoring protrusion settings for this character.
-) [42
+) [47
 
 
 
 
 ]
-P\v {r}\'{\i }loha A.
+Kapitola 5.
+[48
+
+
+
+]
+<usr_img/hlavne_menu.jpg, id=698, 524.55975pt x 398.6895pt>
+File: usr_img/hlavne_menu.jpg Graphic file (type jpg)
+<use usr_img/hlavne_menu.jpg>
+Package pdftex.def Info: usr_img/hlavne_menu.jpg  used on input line 227.
+(pdftex.def)             Requested size: 250.93842pt x 190.72392pt.
+<usr_img/hlavne_nastavenia.jpg, id=699, 525.162pt x 396.2805pt>
+File: usr_img/hlavne_nastavenia.jpg Graphic file (type jpg)
+<use usr_img/hlavne_nastavenia.jpg>
+Package pdftex.def Info: usr_img/hlavne_nastavenia.jpg  used on input line 239.
+(pdftex.def)             Requested size: 250.93842pt x 189.35384pt.
+ [49 <./usr_img/hlavne_menu.jpg> <./usr_img/hlavne_nastavenia.jpg>]
+<usr_img/konfig_vyskovych_dat.jpg, id=710, 526.96875pt x 398.6895pt>
+File: usr_img/konfig_vyskovych_dat.jpg Graphic file (type jpg)
+<use usr_img/konfig_vyskovych_dat.jpg>
+Package pdftex.def Info: usr_img/konfig_vyskovych_dat.jpg  used on input line 252.
+(pdftex.def)             Requested size: 250.93842pt x 189.85399pt.
+ [50 <./usr_img/konfig_vyskovych_dat.jpg>] [51]
+<usr_img/path_finding_settings.jpg, id=721, 752.8125pt x 549.252pt>
+File: usr_img/path_finding_settings.jpg Graphic file (type jpg)
+<use usr_img/path_finding_settings.jpg>
+Package pdftex.def Info: usr_img/path_finding_settings.jpg  used on input line 295.
+(pdftex.def)             Requested size: 301.1261pt x 219.70528pt.
+ [52 <./usr_img/path_finding_settings.jpg>]
+<usr_img/map_repre_creating_dialog.jpg, id=729, 263.18324pt x 134.30174pt>
+File: usr_img/map_repre_creating_dialog.jpg Graphic file (type jpg)
+<use usr_img/map_repre_creating_dialog.jpg>
+Package pdftex.def Info: usr_img/map_repre_creating_dialog.jpg  used on input line 333.
+(pdftex.def)             Requested size: 150.56305pt x 76.83353pt.
+ [53 <./usr_img/map_repre_creating_dialog.jpg>]
+<usr_img/path_finding.jpg, id=736, 751.608pt x 549.252pt>
+File: usr_img/path_finding.jpg Graphic file (type jpg)
+<use usr_img/path_finding.jpg>
+Package pdftex.def Info: usr_img/path_finding.jpg  used on input line 347.
+(pdftex.def)             Requested size: 301.1261pt x 220.05728pt.
+
 
 Package caption Warning: Unused \captionsetup[algorithm] on input line 97.
 See the caption package documentation for explanation.
@@ -1144,38 +1224,30 @@ See the caption package documentation for explanation.
 Package caption Warning: Unused \captionsetup[listing] on input line 98.
 See the caption package documentation for explanation.
 
-[43
-
-
-
-] (tmp/thesis.aux (tmp/title.aux) (tmp/uvod.aux) (tmp/obecne01.aux) (tmp/architektura_ako_celok02.aux) (tmp/sessiony_podrobne03.aux) (tmp/modely_podrobne04.aux) (tmp/zaver.aux) (tmp/literatura.aux))
+[54 <./usr_img/path_finding.jpg>] (tmp/thesis.aux (tmp/title.aux) (tmp/uvod.aux) (tmp/obecne01.aux) (tmp/architektura_ako_celok02.aux) (tmp/sessiony_podrobne03.aux) (tmp/modely_podrobne04.aux) (tmp/zaver.aux) (tmp/literatura.aux))
  ***********
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-10-10>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 1CE2B7CEFC6F8CC80AE62C9016B7E060;7343.
+(rerunfilecheck)             Checksum: 85C3DCA792DDB5493B7151422514D0EF;7571.
 Package logreq Info: Writing requests to 'thesis.run.xml'.
 \openout1 = `thesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 30120 strings out of 474503
- 507786 string characters out of 5756704
+ 30281 strings out of 474503
+ 513370 string characters out of 5756704
  1938043 words of memory out of 5000000
- 51255 multiletter control sequences out of 15000+600000
- 646824 words of font info for 204 fonts, out of 8000000 for 9000
+ 51392 multiletter control sequences out of 15000+600000
+ 637475 words of font info for 196 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 92i,6n,95p,1236b,3583s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on tmp/thesis.pdf (43 pages, 901904 bytes).
+ 92i,9n,95p,1236b,3583s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
+Output written on tmp/thesis.pdf (54 pages, 1388423 bytes).
 PDF statistics:
- 635 PDF objects out of 1000 (max. 8388607)
- 533 compressed objects within 6 object streams
- 102 named destinations out of 1000 (max. 500000)
- 49046 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 827 PDF objects out of 1000 (max. 8388607)
+ 679 compressed objects within 7 object streams
+ 139 named destinations out of 1000 (max. 500000)
+ 45026 words of extra memory for PDF output out of 51595 (max. 10000000)
 

@@ -8,16 +8,18 @@ namespace Optepafi.ViewModels.Data.Reports;
 
 /// <summary>
 /// Predecessor for every searching report ViewModel.
-/// It uses factory design pattern for creation of appropriate ViewModel for inserted searching report.
-/// It contains dictionary of <c>ISearchingReport2VmConverter</c>s which are used for creation of appropriate ViewModel for provided searching report. 
-/// For more information on data view models see <see cref="DataViewModel"/>.
+/// 
+/// It uses factory design pattern for creation of appropriate ViewModel for inserted searching report.  
+/// It contains dictionary of <c>ISearchingReport2VmConverter</c>s which are used for creation of appropriate ViewModel for provided searching report.  
+/// For more information on data view models see <see cref="DataViewModel"/>.  
 /// </summary>
 public abstract class SearchingReportViewModel : GraphicsContainingDataViewModel
 {
     /// <summary>
     /// Static factory method that lets constructor create a appropriate ViewModel for inserted searching report.
-    /// Provided ground graphics is used for correct conversion of potential graphics source in report to its ViewModel.
-    /// Implementation is done by private Constructor class which is able to correctly implement "generic visitor pattern" on provided searching report. 
+    /// 
+    /// Provided ground graphics is used for correct conversion of potential graphics source in report to its ViewModel.  
+    /// Implementation is done by private Constructor class which is able to correctly implement "generic visitor pattern" on provided searching report.  
     /// </summary>
     /// <param name="searchingReport">Searching report for which ViewModel is to be created.</param>
     /// <param name="associatedMapGraphics">Ground graphic source of associated map used for correct conversion of potential graphics source in report.</param>
@@ -42,9 +44,10 @@ public abstract class SearchingReportViewModel : GraphicsContainingDataViewModel
         
         /// <summary>
         /// Method for constructing of ViewModel for provided searching report by using so called "generic visitor pattern" on searching report.
-        /// The generic visitor pattern will reveal real type of searching report so then appropriate converter can be chosen to handle reports conversion to ViewModel.
-        /// For more information on generic visitor pattern see <see cref="ISearchingReportGenericVisitor{TOut,TOtherParams}"/>.
-        /// Provided ground graphics is used for correct conversion of potential graphics source in report to its ViewModel.
+        /// 
+        /// The generic visitor pattern will reveal real type of searching report so then appropriate converter can be chosen to handle reports conversion to ViewModel.  
+        /// For more information on generic visitor pattern see <see cref="ISearchingReportGenericVisitor{TOut,TOtherParams}"/>.  
+        /// Provided ground graphics is used for correct conversion of potential graphics source in report to its ViewModel.  
         /// </summary>
         /// <param name="searchingReport">Searching report to be converted to its ViewModel.</param>
         /// <param name="associatedMapGraphics">Ground graphic source of associated map used for correct conversion of potential graphics source in report.</param>

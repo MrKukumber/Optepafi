@@ -5,7 +5,9 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 
 /// <summary>
-/// Represents searchable graph whose vertices has ability to remember one other vertex. This reference can be used for remembering predecessor vertex during path finding.
+/// Represents searchable graph whose vertices has ability to remember one other vertex.
+/// 
+/// This reference can be used for remembering predecessor vertex during path finding.
 /// </summary>
 /// <typeparam name="TVertex">Type of vertices used by graph which have ability to remember one other vertex.</typeparam>
 /// <typeparam name="TEdge">Type of edges used by graph.</typeparam>

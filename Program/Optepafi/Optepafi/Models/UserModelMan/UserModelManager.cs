@@ -11,9 +11,11 @@ using Optepafi.Models.UserModelMan.UserModels;
 namespace Optepafi.Models.UserModelMan;
 
 /// <summary>
-/// Singleton class used for managing user models and provides all usable user model types. It is main channel between operations on user models and applications logic (ModelViews/ViewModels).
-/// It implements supporting methods for work with user models. User models should be worked with preferably by use of methods implemented by this class.
-/// All operations provided by this class are thread safe as long as same arguments are not used concurrently multiple times.
+/// Singleton class used for managing user models and provides all usable user model types.
+///
+/// It is main channel between operations on user models and applications logic (ModelViews/ViewModels).  
+/// It implements supporting methods for work with user models. User models should be worked with preferably by use of methods implemented by this class.  
+/// All operations provided by this class are thread safe as long as same arguments are not used concurrently multiple times.  
 /// </summary>
 public class UserModelManager : 
     ITemplateGenericVisitor<HashSet<IUserModelType<IUserModel<ITemplate>, ITemplate>>>
@@ -28,8 +30,9 @@ public class UserModelManager :
 
     /// <summary>
     /// Returns corresponding user model types to provided template by using generic visitor pattern on it.
-    /// It runs trough <c>UserModelTypes</c> set and looks for modelTypes that are of type <c>IUserModelTemplateBond{TTemplate}</c>, where TTemplate is type of visited template.
-    /// It uses generic visitor pattern on template in order to gain its real type in form of generic parameter.
+    /// 
+    /// It runs trough <c>UserModelTypes</c> set and looks for modelTypes that are of type <c>IUserModelTemplateBond{TTemplate}</c>, where TTemplate is type of visited template.  
+    /// It uses generic visitor pattern on template in order to gain its real type in form of generic parameter.  
     /// </summary>
     /// <param name="template">Template to which corresponding user model types should be returned.</param>
     /// <returns>Corresponding user model types to inserted template.</returns>
@@ -52,7 +55,8 @@ public class UserModelManager :
 
     /// <summary>
     /// Returns user model type, whose name suffix and file extension matches with the provided file`s name.
-    /// It uses generic visitor pattern on template in order to gain its real type in form of generic parameter.
+    /// 
+    /// It uses generic visitor pattern on template in order to gain its real type in form of generic parameter.  
     /// </summary>
     /// <param name="userModelFileName">Name of file for which corresponding user model type should be returned.</param>
     /// <returns>Corresponding user model type to provided file name. If there is no matching user model type, it returns null.</returns>
@@ -100,6 +104,7 @@ public class UserModelManager :
     
     /// <summary>
     /// Tries to deserialize user model from provided stream.
+    /// 
     /// User model type instance dictates, what user model should be result of this deserialization.
     /// </summary>
     /// <param name="userModelStreamWithPath">Provided stream from which user model should be deserialized alongside with path to the serialization file.</param>

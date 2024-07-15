@@ -11,8 +11,10 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives.Specific;
 
 /// <summary>
-/// Represents blank representation of map. It is included in <c>MapRepreManager</c> where indicates representations usability.
-/// For more information about map representations representatives see <see cref="IMapRepreRepresentative{TMapRepre}"/>.
+/// Represents blank representation of map.
+/// 
+/// It is included in <c>MapRepreManager</c> where indicates representations usability.  
+/// For more information about map representations representatives see <see cref="IMapRepreRepresentative{TMapRepre}"/>.  
 /// </summary>
 public class BlankRepreRep : IMapRepreRepresentative<IBlankRepre>
 {

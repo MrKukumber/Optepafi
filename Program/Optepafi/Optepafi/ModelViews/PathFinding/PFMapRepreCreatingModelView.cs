@@ -16,11 +16,14 @@ namespace Optepafi.ModelViews.PathFinding;
 
 /// <summary>
 /// ModelView which is responsible for logic of map representations creation in path finding session.
+/// 
 /// It uses <c>MapRepreManager</c> for:
+/// 
 /// - checking requirements for map representations creation
 /// - the creation of maps representation itself
-/// This is an abstract class. The path finding session ModelView will creates its successor which will then be able to implement methods of this class by using data hidden from the outside world.
-/// For more information on ModelViews see <see cref="ModelViewBase"/>.
+/// 
+/// This is an abstract class. The path finding session ModelView will creates its successor which will then be able to implement methods of this class by using data hidden from the outside world.  
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.  
 /// </summary>
 public abstract class PFMapRepreCreatingModelView : ModelViewBase
 {
@@ -30,14 +33,17 @@ public abstract class PFMapRepreCreatingModelView : ModelViewBase
     public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, Cancelled}
     /// <summary>
     /// Method for elevation data requirements check.
-    /// It contains logic of this check and resolves multiple circumstances that can occur.
+    /// 
+    /// It contains logic of this check and resolves multiple circumstances that can occur.  
     /// </summary>
     /// <param name="ct">Cancellation token for cancelling the check.</param>
     /// <returns>Result of elevation data requirements check.</returns>
     public abstract ElevDataPrerequisiteCheckResult CheckMapRequirementsForElevData(CancellationToken ct);
     /// <summary>
-    /// Method for creating map representation asynchronously. Check of map representations creation prerequisites should take place before calling this method.
-    /// In other way there could be risk of thrown exceptions for invalidity of operations. Also these checks can assign some configuration that is needed for correct map creation execution. 
+    /// Method for creating map representation asynchronously.
+    ///
+    /// Check of map representations creation prerequisites should take place before calling this method.  
+    /// In other way there could be risk of thrown exceptions for invalidity of operations. Also these checks can assign some configuration that is needed for correct map creation execution.  
     /// </summary>
     /// <param name="progressInfo">Instance for reporting information about maps creation progress. This is just textual information about progress. It is not meant to be propagated any further to Model.</param>
     /// <param name="mapRepreCreationProgress">Instance reporting progress of maps creation. This progress instance is meant for propagation to <c>MapRepreManager</c> so the maps creation can be shown. </param>
@@ -59,6 +65,7 @@ public partial class PathFindingSessionModelView
 
         /// <summary>
         /// Indicator whether map representation should be created by use of elevation data.
+        /// 
         /// This indicator is set in <c>CheckMapRequirementsForElevData</c> method.
         /// </summary>
         private bool _useElevData;

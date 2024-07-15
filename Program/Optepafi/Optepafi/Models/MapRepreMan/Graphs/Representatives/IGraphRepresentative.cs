@@ -11,10 +11,11 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Representatives;
 
 /// <summary>
 /// Represents representative of graph that is tied to some map representation.
-/// It contains method for creating graph with and without use of elevation data.
-/// Each graph representative should correspond to some map representation representative which will then hold reference on it. They together then represent couple of map representation and its graph.
-/// Each graph should have its representative so it could presented as corresponding graph of some map representation.
-/// Preferred way to interact with representatives is through <see cref="MapRepreManager"/>.
+/// 
+/// It contains method for creating graph with and without use of elevation data.  
+/// Each graph representative should correspond to some map representation representative which will then hold reference on it. They together then represent couple of map representation and its graph.  
+/// Each graph should have its representative so it could presented as corresponding graph of some map representation.  
+/// Preferred way to interact with representatives is through <see cref="MapRepreManager"/>.  
 /// </summary>
 /// <typeparam name="TGraph">Type of represented graph.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes used in represented graph.</typeparam>
@@ -27,8 +28,9 @@ public interface IGraphRepresentative<out TGraph, TVertexAttributes, TEdgeAttrib
     
     /// <summary>
     /// Method which creates graph from provided template and map represented by th representative by using one of provided implementation indicator (constructor).
-    /// It constructs the graph without requiring elevation data.
-    /// Before calling this method it should be checked that provided collection of indicators contains constructor for provided template and map which does not require elevation data. Graph construction will throw exception if no such constructor is provided.
+    /// 
+    /// It constructs the graph without requiring elevation data.  
+    /// Before calling this method it should be checked that provided collection of indicators contains constructor for provided template and map which does not require elevation data. Graph construction will throw exception if no such constructor is provided.  
     /// </summary>
     /// <param name="template">Used template in graphs creation.</param>
     /// <param name="map">Used map in graphs creation.</param>

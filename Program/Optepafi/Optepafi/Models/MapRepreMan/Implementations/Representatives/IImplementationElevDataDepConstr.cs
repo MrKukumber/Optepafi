@@ -9,9 +9,11 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 
 /// <summary>
-/// Represents constructor of graphs implementation which uses defined template and map types for its construction and needs elevation data for it. It is used by graph representative for construction of specific implementation of graph.
-/// This interface should not be implemented right away. Preferred way is to derive either from <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> class or from <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> class.
-/// Thanks to contravariant type parameters for template and map it is suitable for pattern matching and identifying correct template and map types combinations. 
+/// Represents constructor of graphs implementation which uses defined template and map types for its construction and needs elevation data for it.
+/// 
+/// It is used by graph representative for construction of specific implementation of graph.  
+/// This interface should not be implemented right away. Preferred way is to derive either from <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> class or from <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> class.  
+/// Thanks to contravariant type parameters for template and map it is suitable for pattern matching and identifying correct template and map types combinations.  
 /// </summary>
 /// <typeparam name="TTemplate">Type of template used in implementation and its construction.</typeparam>
 /// <typeparam name="TMap">Type of map used in implementation and its construction.</typeparam>

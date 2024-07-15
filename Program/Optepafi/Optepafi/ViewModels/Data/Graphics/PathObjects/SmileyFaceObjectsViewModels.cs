@@ -2,15 +2,17 @@ namespace Optepafi.ViewModels.Data.Graphics.PathObjects;
 
 /// <summary>
 /// ViewModel for <c>SmileyFaceEyeObject</c> graphic object type.
-/// There should exists appropriate convertor of <c>SmileyFaceEyeObject</c> to this ViewModel type.
-/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.
+/// 
+/// There should exists appropriate convertor of <c>SmileyFaceEyeObject</c> to this ViewModel type.  
+/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.  
 /// </summary>
 public class SmileyFaceEyeObjectViewModel : GraphicObjectViewModel
 {
     /// <summary>
     /// Creates instance of this type from provided parameters.
+    /// 
     /// Position of eye object is adjusted little bit so it was centered on the provided position.  
-    /// Priority is chosen very specifically for smiley face path objects.
+    /// Priority is chosen very specifically for smiley face path objects.  
     /// </summary>
     /// <param name="position">Position of eye object.</param>
     /// <param name="width">Width of eye object.</param>
@@ -38,15 +40,17 @@ public class SmileyFaceEyeObjectViewModel : GraphicObjectViewModel
 
 /// <summary>
 /// ViewModel for <c>SmileyFaceNoseObject</c> graphic object type.
-/// There should exists appropriate convertor of <c>SmileyFaceNoseObject</c> to this ViewModel type.
-/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.
+/// 
+/// There should exists appropriate convertor of <c>SmileyFaceNoseObject</c> to this ViewModel type.  
+/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.  
 /// </summary>
 public class SmileyFaceNoseObjectViewModel : GraphicObjectViewModel
 {
     /// <summary>
     /// Creates instance of this type from provided parameters.
+    /// 
     /// Position of nose object is adjusted little bit so it was centered on the provided position.  
-    /// Priority is chosen very specifically for smiley face path objects.
+    /// Priority is chosen very specifically for smiley face path objects.  
     /// </summary>
     /// <param name="position">Position of nose object.</param>
     /// <param name="width">Width of nose object.</param>
@@ -75,16 +79,18 @@ public class SmileyFaceNoseObjectViewModel : GraphicObjectViewModel
 
 /// <summary>
 /// ViewModel for <c>SmileyFaceMouthObject</c> graphic object type.
-/// There should exists appropriate convertor of <c>SmileyFaceMouthObject</c> to this ViewModel type.
-/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.
+/// 
+/// There should exists appropriate convertor of <c>SmileyFaceMouthObject</c> to this ViewModel type.  
+/// For more information on graphic object ViewModels see <see cref="GraphicObjectViewModel"/>.  
 /// </summary>
 public class SmileyFaceMouthObjectViewModel : GraphicObjectViewModel
 {
     
     /// <summary>
     /// Creates an instance of this type from provided parameters.
-    /// Priority is chosen very specifically for smiley face path objects.
-    /// Bezier curve data are positioned relatively to provided position.
+    /// 
+    /// Priority is chosen very specifically for smiley face path objects.  
+    /// Bezier curve data are positioned relatively to provided position.  
     /// </summary>
     /// <param name="position">Position of mouth object.</param>
     /// <param name="bezierCurveData">Positions of points which define bezier curve which draw the mouth.</param>

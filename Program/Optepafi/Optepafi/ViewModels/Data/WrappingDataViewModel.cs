@@ -2,12 +2,13 @@ namespace Optepafi.ViewModels.Data;
 
 
 /// <summary>
-/// Abstract class which represents wrapping <c>DataViewModel</c>. That means it is very closely coupled with some data instance of specific type.
-/// This data can be retrieved backwardly. Additionally equality operators are overriden in such way that two instances of
-/// <c>WrappingDataViewModel</c> are equal when their coupled data are equal.
+/// Abstract class which represents wrapping <c>DataViewModel</c>.
+///
+/// That means it is very closely coupled with some data instance of specific type.  
+/// This data can be retrieved backwardly. Additionally equality operators are overriden in such way that two instances of <c>WrappingDataViewModel</c> are equal when their coupled data are equal.  
 /// 
-/// For these reasons this class is suitable to be implemented by view models of data by which ViewModel communicates backwardly with ModelView.
-/// It is enough for data which need to be only displayed in View to have ViewModel which implements only <see cref="DataViewModel"/>.
+/// For these reasons this class is suitable to be implemented by view models of data by which ViewModel communicates backwardly with ModelView.  
+/// It is enough for data which need to be only displayed in View to have ViewModel which implements only <see cref="DataViewModel"/>.  
 /// </summary>
 /// <typeparam name="TData">Type of coupled data. Provided data cant be nullable.</typeparam>
 public abstract class WrappingDataViewModel<TData> : DataViewModel

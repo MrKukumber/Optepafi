@@ -24,33 +24,39 @@ namespace Optepafi.ModelViews.PathFinding;
 
 /// <summary>
 /// ModelView which is responsible for logic of path finding mechanism in path finding session.
+/// 
 /// Its duties include:
+/// 
 /// - managing execution of searching algorithm upon created map representation by using selected user model
 /// - providing in settings ModelView aggregated map graphics
 /// - aggregate graphics for selected tracks
 /// - aggregate reports for founded paths by searching algorithm
-/// This is an abstract class. The path finding session ModelView will create its successor which will then be able to implement methods of this class by using data hidden from the outside world.
-/// For more information on ModelViews see <see cref="ModelViewBase"/>.
+/// 
+/// This is an abstract class. The path finding session ModelView will create its successor which will then be able to implement methods of this class by using data hidden from the outside world.  
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.  
 /// </summary>
 public abstract class PFPathFindingModelView : ModelViewBase
 {
     /// <summary>
     /// Asynchronously returns graphics source of provided track defined by its coordinates.
-    /// Graphic source is returned after collecting of tracks graphic objects is finished for better visual properties.
+    /// 
+    /// Graphic source is returned after collecting of tracks graphic objects is finished for better visual properties.  
     /// </summary>
     /// <param name="trackCoords">Canvas coordinates representing selected track.</param>
     /// <returns>Task with tracks graphics source.</returns>
     public abstract Task<GraphicsSourceViewModel> GetTrackGraphicsAsync(IEnumerable<CanvasCoordinate> trackCoords);
     /// <summary>
     /// Method providing maps graphics generated in settings ModelView.
-    /// The copy of original ground graphics source is returned due rendering performance issues linked with returning o original instance.
-    /// This method should be called on corresponding ViewModels activation.
+    /// 
+    /// The copy of original ground graphics source is returned due rendering performance issues linked with returning o original instance.  
+    /// This method should be called on corresponding ViewModels activation.  
     /// </summary>
     /// <returns>Maps ground graphic source.</returns>
     public abstract GraphicsSourceViewModel GetGroundMapGraphics();
     /// <summary>
     /// Asynchronous execution of path finding algorithm on provided track.
-    /// Algorithm returns resulting path and then its report is aggregated and returned.
+    /// 
+    /// Algorithm returns resulting path and then its report is aggregated and returned.  
     /// </summary>
     /// <param name="trackPoints">Canvas coordinates of track for which path should be found.</param>
     /// <param name="searchingProgress">Instance which reports progress of searching. This instance is propagated to searching algorithm, so it could report its state.</param>
@@ -90,6 +96,7 @@ public partial class PathFindingSessionModelView
         /// <inheritdoc cref="PFPathFindingModelView.FindPathAsync"/>
         /// <remarks>
         /// Executes search of path by using appropriately created <see cref="ISearchingExecutor"/> filled with created map representation and selected user model.
+        /// 
         /// Executor is retrieved at first call of this method.
         /// </remarks>
         public override async Task<PathReportViewModel?> FindPathAsync(List<CanvasCoordinate> trackCanvasCoords, IProgress<SearchingReportViewModel> searchingViewModelProgress, CancellationToken cancellationToken)

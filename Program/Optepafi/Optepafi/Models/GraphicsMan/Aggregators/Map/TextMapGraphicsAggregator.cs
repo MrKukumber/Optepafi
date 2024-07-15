@@ -9,6 +9,7 @@ namespace Optepafi.Models.GraphicsMan.Aggregators.Map;
 
 /// <summary>
 /// Singleton class representing aggregator of graphic objects for <see cref="TextMap"/> map type.
+/// 
 /// For more information on map graphics aggregators see <see cref="IMapGraphicsAggregator{TMap}"/>.
 /// </summary>
 public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
@@ -18,7 +19,7 @@ public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
     
     /// <inheritdoc cref="IMapGraphicsAggregator{TMap}.AggregateGraphics"/>
     /// <remarks>
-    /// <c>TextMap</c> contains text of some text file.
+    /// <c>TextMap</c> contains text of some text file.  
     /// This text is split into words and then each word is assignet to <c>WordObject</c> with random position in range -50000 to 50000 micrometers.
     /// </remarks>
     public void AggregateGraphics(TextMap map, IGraphicObjectCollector collectorForAggregatedObjects,

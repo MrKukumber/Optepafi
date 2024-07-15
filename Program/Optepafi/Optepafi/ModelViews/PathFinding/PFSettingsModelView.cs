@@ -27,20 +27,24 @@ namespace Optepafi.ModelViews.PathFinding;
 
 /// <summary>
 /// ModelView which is responsible for logic of parameters setting for path finding session.
+/// 
 /// It uses all sort of managers for:
+/// 
 /// - retrieving usable templates, map formats, user model types, algorithms and map representation representatives
 /// - checking dependencies of individual data types and applying applications logic to provide only consistent options for selection
 /// - aggregating map graphics
 /// - saving parameter selection for future use
-/// This is an abstract class. The path finding session ModelView will create its successor which will then be able to implement methods of this class by using data hidden from the outside world. 
-/// For more information on ModelViews see <see cref="ModelViewBase"/>.
+/// 
+/// This is an abstract class. The path finding session ModelView will create its successor which will then be able to implement methods of this class by using data hidden from the outside world.  
+/// For more information on ModelViews see <see cref="ModelViewBase"/>.  
 /// </summary>
 public abstract class PFSettingsModelView : ModelViewBase
 {
     
     /// <summary>
     /// Upon creation it loads (by previous path finding session) saved parameters and sets them to "default" properties.
-    /// Corresponding ViewModel can then take these unchecked "default" parameters and execute mechanism for their correctness testing and assign them as default parameters of current session.
+    /// 
+    /// Corresponding ViewModel can then take these unchecked "default" parameters and execute mechanism for their correctness testing and assign them as default parameters of current session.  
     /// </summary>
     protected PFSettingsModelView()
     {
@@ -56,7 +60,8 @@ public abstract class PFSettingsModelView : ModelViewBase
 
     /// <summary>
     /// Method for getting <c>ITemplate</c> instance which corresponds to provided type name.
-    /// It runs through all template instances collected in <c>TemplateManager</c> and returns the corresponding one.
+    /// 
+    /// It runs through all template instances collected in <c>TemplateManager</c> and returns the corresponding one.  
     /// </summary>
     /// <param name="templateTypeName">Name of templates type.</param>
     /// <returns>Corresponding template if exists. Otherwise null.</returns>
@@ -72,7 +77,8 @@ public abstract class PFSettingsModelView : ModelViewBase
 
     /// <summary>
     /// Method for getting <c>ISearchingAlgorithm</c> instance which corresponds to provided type name.
-    /// It runs through all searching algorithm instances collected in <c>SearchingAlgorithmManager</c> and returns the corresponding one.
+    /// 
+    /// It runs through all searching algorithm instances collected in <c>SearchingAlgorithmManager</c> and returns the corresponding one.  
     /// </summary>
     /// <param name="searchingAlgorithmTypeName">Name of searching algorithms type.</param>
     /// <returns>Corresponding searching algorithm if exists. Otherwise null.</returns>
@@ -151,8 +157,9 @@ public abstract class PFSettingsModelView : ModelViewBase
 
     /// <summary>
     /// Method for checking whether provided template and map format are usable combination.
-    /// That means checking whether there exists some map representation type which corresponds to this combination together with user model type which corresponds to template.
-    /// If there are such map representation and user model types, there must exist at least one searching algorithm that is able to use at least one combination of these types.
+    /// 
+    /// That means checking whether there exists some map representation type which corresponds to this combination together with user model type which corresponds to template.  
+    /// If there are such map representation and user model types, there must exist at least one searching algorithm that is able to use at least one combination of these types.  
     /// </summary>
     /// <param name="templateViewModel">ViewModel of template whose usability is checked.</param>
     /// <param name="mapFormatViewModel">ViewModel of map format whose usability is checked.</param>
@@ -166,7 +173,8 @@ public abstract class PFSettingsModelView : ModelViewBase
     
     /// <summary>
     /// Returns all user model types which are tied to provided template and are able to be used in some searching algorithm together with specific map representation created according to provided template and map format.
-    /// If provided template or map is null, returns blank collection.
+    /// 
+    /// If provided template or map is null, returns blank collection.  
     /// </summary>
     /// <param name="templateViewModel">ViewModel of template to which user model must be tied.</param>
     /// <param name="mapFormatViewModel">ViewModel of map format which is used together with provided template in map representation that can be used with tested user model in some searching algorithm.</param>
@@ -230,7 +238,8 @@ public abstract class PFSettingsModelView : ModelViewBase
     
     /// <summary>
     /// Method for asynchronous loading and setting of map from provided stream. Map will be created by using of provided format.
-    /// <c>MapManager</c> is used for this time. It lets parse the stream into map object that will then wait for its further use.
+    /// 
+    /// <c>MapManager</c> is used for this time. It lets parse the stream into map object that will then wait for its further use.  
     /// </summary>
     /// <param name="streamWithPath">Stream from which map should be loaded. It comes together with path to map file from which stream was gathered.</param>
     /// <param name="mapFormatViewModel">Map format by which map should be parsed and created.</param>
@@ -240,8 +249,9 @@ public abstract class PFSettingsModelView : ModelViewBase
         MapFormatViewModel mapFormatViewModel, CancellationToken cancellationToken);
     
     /// <summary>
-    /// Method for asynchronous loading and setting of user model from provided serialization stream. User model will be deserialized by provided user model type.
-    /// <c>UserModelManager</c> is used for this time. It lets deserialize the stream into user model object that will then wait for its further use.
+    /// Method for asynchronous loading and setting of user model from provided serialization stream.
+    ///
+    /// User model will be deserialized by provided user model type. <c>UserModelManager</c> is used for this time. It lets deserialize the stream into user model object that will then wait for its further use.
     /// </summary>
     /// <param name="streamWithPath">Stream from which user model should be deserialized. It comes together with path to user models serialization file from which stream was gathered.</param>
     /// <param name="userModelTypeViewModel">User model type by which user model should be deserialized.</param>
@@ -262,14 +272,15 @@ public abstract class PFSettingsModelView : ModelViewBase
     
     /// <summary>
     /// Method for retrieving maps graphics so its preview could be displayed to user.
-    /// It should create <c>GraphicSource</c> whose ViewModel is sent to be displayed for user while it is filled by map graphic objects in parallel. 
+    /// 
+    /// It should create <c>GraphicSource</c> whose ViewModel is sent to be displayed for user while it is filled by map graphic objects in parallel.  
     /// </summary>
     /// <returns>Graphics source view model which will be continuously filled by maps graphics.</returns>
     public abstract GraphicsSourceViewModel? GetAndSetLoadedMapGraphics(MapManager.MapCreationResult mapCreationResult);
     
     /// <summary>
-    /// It was meant to release map after map representation creation completes and maps graphics is gathered.
-    /// For this time being it does not serve for any purpose and maybe it will be removed in future. 
+    /// It was meant to release map after map representation creation completes and maps graphics is gathered.  
+    /// For this time being it does not serve for any purpose and maybe it will be removed in future.  
     /// </summary>
     public abstract void ReleaseMap();
 

@@ -10,9 +10,11 @@ using Optepafi.Models.MapMan.MapRepresentatives;
 namespace Optepafi.Models.MapMan;
 
 /// <summary>
-/// Singleton class used for managing maps that are used in creation of map representations. It contains set of all supported map formats. It is main channel between operations on maps and applications logic (ModelViews/ViewModels). 
-/// It implements supporting methods for operating with maps. They should be managed preferably trough this class.
-/// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.
+/// Singleton class used for managing maps that are used in creation of map representations.
+/// 
+/// It contains set of all supported map formats. It is main channel between operations on maps and applications logic (ModelViews/ViewModels).  
+/// It implements supporting methods for operating with maps. They should be managed preferably trough this class.  
+/// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.  
 /// </summary>
 public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
 {
@@ -26,8 +28,9 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
 
     /// <summary>
     /// Returns map format for a specified map. It do it so by use of "generic visitor pattern" on map.
-    /// After visiting of map it runs trough all usable map formats and pattern-matches them to map identifier with desired map type parameter.
-    /// If none map format matches to provided map, exception is thrown. It namely means that map was not created by any of those map formats that is against principle of usage of these constructs.
+    /// 
+    /// After visiting of map it runs trough all usable map formats and pattern-matches them to map identifier with desired map type parameter.  
+    /// If none map format matches to provided map, exception is thrown. It namely means that map was not created by any of those map formats that is against principle of usage of these constructs.  
     /// </summary>
     /// <param name="map">Map which format is looked for.</param>
     /// <returns>Format of provided map.</returns>
@@ -61,6 +64,7 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
     public enum MapCreationResult{Ok, Incomplete, UnableToParse, Cancelled}
     /// <summary>
     /// Used for calling map format parser on a provided map stream and returning corresponding map object.
+    /// 
     /// Parsing of map should be done swiftly in linear time complexity given by size of file.
     /// </summary>
     /// <param name="mapStreamWithPath">Provided stream from which map should be parsed. It comes with pat to the source file of the stream.</param>
@@ -75,6 +79,4 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
             return MapCreationResult.Cancelled;
         return creationResult;
     }
-
-
 }

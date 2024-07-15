@@ -4,8 +4,10 @@ using Optepafi.Models.GraphicsMan.Objects;
 namespace Optepafi.Models.GraphicsMan;
 
 /// <summary>
-/// Represents collector for graphic objects. It is used in graphics aggregators for collecting of aggregated graphic objects.
-/// Its implementations can contain inner logic that enables processing of these objects right after their addition to collector.
+/// Represents collector for graphic objects.
+/// 
+/// It is used in graphics aggregators for collecting of aggregated graphic objects.  
+/// Its implementations can contain inner logic that enables processing of these objects right after their addition to collector.  
 /// </summary>
 public interface IGraphicObjectCollector
 {

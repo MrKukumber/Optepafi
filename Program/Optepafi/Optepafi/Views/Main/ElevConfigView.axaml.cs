@@ -8,7 +8,8 @@ namespace Optepafi.Views.Main;
 
 /// <summary>
 /// View of the elevation data configuration mechanism.
-/// For more information on this mechanism see <see cref="ElevConfigViewModel"/>. 
+/// 
+/// For more information on this mechanism see <see cref="ElevConfigViewModel"/>.  
 /// </summary>
 public partial class ElevConfigView : UserControl
 {
@@ -21,7 +22,8 @@ public partial class ElevConfigView : UserControl
     
     /// <summary>
     /// Convertor of regions presence to corresponding color.
-    /// It is used for painting a region for indication of its presence state.
+    /// 
+    /// It is used for painting a region for indication of its presence state.  
     /// </summary>
     public static FuncValueConverter<RegionViewModel.PresenceState, IBrush> PresenceToColorConverter { get; } =
         new(presence => presence switch

@@ -11,6 +11,7 @@ namespace Optepafi.ModelViews.Converters2Vm.Reports.Path;
 
 /// <summary>
 /// Static class which contains dictionary of path report to ViewModel converters. It should contain all such converters.
+/// 
 /// Application logic works directly with this dictionary when it searches for appropriate converter.
 /// </summary>
 public static class PathReports2VmConverters
@@ -27,6 +28,7 @@ public static class PathReports2VmConverters
 
 /// <summary>
 /// Converter of smiley face path report to ViewModel.
+/// 
 /// It is included in dictionary of path report to ViewModel converters in <see cref="PathReports2VmConverters"/>.
 /// </summary>
 public class SmileyFacePathReport2VmConverter : IPathReport2VmConverter<SmileyFacePathReport>

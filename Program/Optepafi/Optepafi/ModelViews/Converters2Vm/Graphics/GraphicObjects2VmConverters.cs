@@ -9,7 +9,8 @@ namespace Optepafi.ModelViews.Converters2Vm.Graphics;
 
 /// <summary>
 /// Static class that contains root dictionary of tree hierarchy of dictionaries that contains converters of graphic objects to VieModels.
-/// Application logic works directly with this dictionary when it searches for appropriate converter.
+/// 
+/// Application logic works directly with this dictionary when it searches for appropriate converter.  
 /// </summary>
 public static class GraphicObjects2VmConverters
 {

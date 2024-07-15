@@ -8,8 +8,9 @@ namespace Optepafi.ModelViews.PathFinding.Utils;
 
 /// <summary>
 /// Graphics source that is able to provide collector by which its graphic objects are collected.
-/// Collected objects are directly appended into <c>GraphicObject</c> source list, so they can be immediately displayed to user.
-/// For more information on graphics sources see <see cref="IGraphicsSource"/>.
+/// 
+/// Collected objects are directly appended into <c>GraphicObject</c> source list, so they can be immediately displayed to user.  
+/// For more information on graphics sources see <see cref="IGraphicsSource"/>.  
 /// </summary>
 public class CollectingGraphicsSource : IGraphicsSource
 {
@@ -28,7 +29,7 @@ public class CollectingGraphicsSource : IGraphicsSource
     {
         
         /// <summary>
-        /// Graphics sources source list to which added objects shall be appended.
+        /// Graphics sources source list to which added objects shall be appended.  
         /// </summary>
         private SourceList<IGraphicObject> _graphicObjectSource;
 
@@ -39,7 +40,7 @@ public class CollectingGraphicsSource : IGraphicsSource
         
         /// <inheritdoc cref="IGraphicObjectCollector.Add"/>
         /// <remarks>
-        /// Appends added objects directly to provided source list.
+        /// Appends added objects directly to provided source list.  
         /// </remarks>
         public void Add(IGraphicObject graphicObject)
         {
@@ -47,7 +48,7 @@ public class CollectingGraphicsSource : IGraphicsSource
         }
         /// <inheritdoc cref="IGraphicObjectCollector.AddRange"/>
         /// <remarks>
-        /// Appends added object ranges directly to provided source list.
+        /// Appends added object ranges directly to provided source list.  
         /// </remarks>
         public void AddRange(IEnumerable<IGraphicObject> graphicObjects)
         {

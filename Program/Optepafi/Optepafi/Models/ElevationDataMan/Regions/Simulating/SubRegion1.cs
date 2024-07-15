@@ -4,7 +4,8 @@ namespace Optepafi.Models.ElevationDataMan.Regions.Simulating;
 
 /// <summary>
 /// Demonstrating subregion used for presenting application functionalities.
-/// For more information on subregions see <see cref="SubRegion"/>.
+/// 
+/// For more information on subregions see <see cref="SubRegion"/>.  
 /// </summary>
 public class SubRegion1 : SubRegion
 {

@@ -6,7 +6,8 @@ namespace Optepafi.ModelViews.Converters2Vm.Graphics.SearchingStateObjects;
 
 /// <summary>
 /// Static class which contains dictionary of searching state graphic object to ViewModel converters.
-/// It should contain all such converters. It is directly concatenated to root dictionary in <see cref="GraphicObjects2VmConverters"/> which is used by application logic for appropriate converter search.
+/// 
+/// It should contain all such converters. It is directly concatenated to root dictionary in <see cref="GraphicObjects2VmConverters"/> which is used by application logic for appropriate converter search.  
 /// </summary>
 public static class SearchingStateObjects2VmConverters
 {

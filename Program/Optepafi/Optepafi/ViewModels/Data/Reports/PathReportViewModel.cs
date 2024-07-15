@@ -8,8 +8,9 @@ namespace Optepafi.ViewModels.Data.Reports;
 
 /// <summary>
 /// Predecessor for every path report ViewModel.
-/// It uses factory design pattern for creation of appropriate ViewModel for inserted path report.
-/// It contains dictionary of <c>IPathReport2VmConverter</c>s which are used for creation of appropriate ViewModel for provided path report. 
+/// 
+/// It uses factory design pattern for creation of appropriate ViewModel for inserted path report.  
+/// It contains dictionary of <c>IPathReport2VmConverter</c>s which are used for creation of appropriate ViewModel for provided path report.  
 /// For more information on data view models see <see cref="DataViewModel"/>.
 /// </summary>
 public abstract class PathReportViewModel : GraphicsContainingDataViewModel
@@ -17,8 +18,9 @@ public abstract class PathReportViewModel : GraphicsContainingDataViewModel
     
     /// <summary>
     /// Static factory method that lets constructor create a appropriate ViewModel for inserted path report.
-    /// Provided ground graphics is used for correct conversion of potential graphics source in report to its ViewModel.
-    /// Implementation is done by private Constructor class which is able to correctly implement "generic visitor pattern" on provided path report. 
+    /// 
+    /// Provided ground graphics is used for correct conversion of potential graphics source in report to its ViewModel.  
+    /// Implementation is done by private Constructor class which is able to correctly implement "generic visitor pattern" on provided path report.  
     /// </summary>
     /// <param name="pathReport">Path report for which ViewModel is to be created.</param>
     /// <param name="associatedMapGraphics">Ground graphic source of associated map used for correct conversion of potential graphics source in report.</param>
@@ -44,9 +46,10 @@ public abstract class PathReportViewModel : GraphicsContainingDataViewModel
         
         /// <summary>
         /// Method for constructing of ViewModel for provided path report by using so called "generic visitor pattern" on path report.
-        /// The generic visitor pattern will reveal real type of report so then appropriate converter can be chosen to handle reports conversion to ViewModel.
-        /// For more information on generic visitor pattern see <see cref="IPathReportGenericVisitor{TOut,TOtherParams}"/>.
-        /// Provided ground graphics is used for correct conversion of potential graphics source in report to its ViewModel.
+        /// 
+        /// The generic visitor pattern will reveal real type of report so then appropriate converter can be chosen to handle reports conversion to ViewModel.  
+        /// For more information on generic visitor pattern see <see cref="IPathReportGenericVisitor{TOut,TOtherParams}"/>.  
+        /// Provided ground graphics is used for correct conversion of potential graphics source in report to its ViewModel.  
         /// </summary>
         /// <param name="pathReport">Path report to be converted to its ViewModel.</param>
         /// <param name="associatedMapGraphics">Ground graphic source of associated map used for correct conversion of potential graphics source in report.</param>

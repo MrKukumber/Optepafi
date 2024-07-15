@@ -10,7 +10,8 @@ public static class CoordinatesConversionExtension
 {
     /// <summary>
     /// Extension method for converting <c>CanvasCoordinate</c> to <c>MapCoordinate</c> according to provided maps left-bottom vertex position.
-    /// Canvas coordinates are by default shifted so they correspond with axis of canvases. Therefore they have to be shifted back. 
+    /// 
+    /// Canvas coordinates are by default shifted so they correspond with axis of canvases. Therefore they have to be shifted back.  
     /// </summary>
     /// <param name="canvasCoordinate">Coordinates to be converted to map coordinates.</param>
     /// <param name="mapLeftBottomVertex">Coordinate of left-bottom vertex of corresponding GraphicsArea.</param>
@@ -24,7 +25,8 @@ public static class CoordinatesConversionExtension
 
     /// <summary>
     /// Extension method for converting <c>MapCoordinate</c> to <c>CanvasCoordinate</c> according to provided maps left-bottom vertex position.
-    /// Canvas coordinates are by default shifted so they correspond with axis of canvases. This shift is defined by the area of corresponding graphics, namely by its lef-bottom vertex.
+    /// 
+    /// Canvas coordinates are by default shifted so they correspond with axis of canvases. This shift is defined by the area of corresponding graphics, namely by its lef-bottom vertex.  
     /// </summary>
     /// <param name="mapCoordinate">Coordinates to be converted to canvas coordinates.</param>
     /// <param name="mapLeftBottomVertex">Coordinate of left-bottom vertex of corresponding GraphicsArea.</param>

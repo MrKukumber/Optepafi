@@ -16,9 +16,11 @@ using Optepafi.Models.UserModelMan.UserModels;
 namespace Optepafi.Models.MapRepreMan;
 
 /// <summary>
-/// Singleton class used for managing creation of map representations from provided template and map. It contains set of all supported map representation representatives. It is main channel between operation on map representations and applications logic (ViewModels/ModelViews).
-/// It implements supporting methods for work with map representations. All map representations should be preferably managed through this singleton.
-/// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.
+/// Singleton class used for managing creation of map representations from provided template and map.
+/// 
+/// It contains set of all supported map representation representatives. It is main channel between operation on map representations and applications logic (ViewModels/ModelViews).  
+/// It implements supporting methods for work with map representations. All map representations should be preferably managed through this singleton.  
+/// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.  
 /// </summary>
 public class MapRepreManager : 
     ITemplateGenericVisitor<HashSet<IMapRepreRepresentative<IMapRepre>>, (ISearchingAlgorithm, IUserModelType<IUserModel<ITemplate>, ITemplate>)>,
@@ -41,6 +43,7 @@ public class MapRepreManager :
     
     /// <summary>
     /// Method for testing necessity of elevation data for creation of map representation dependent on specific template and map format represented by specific representative.
+    /// 
     /// This method should be called before each creation of map representation. Method <c>CreateMapRepre</c> could throw exception, if the wrong overload is called.
     /// </summary>
     /// <param name="template">Template dependency of map representation.</param>
@@ -78,6 +81,7 @@ public class MapRepreManager :
 
     /// <summary>
     /// This method asks particular representatives of map representation for all of their implementation identifiers and returns their used template and map format combinations.
+    /// 
     /// The returned combinations represent usable template and map format combinations for creation of map representations represented by provided representatives. 
     /// </summary>
     /// <param name="mapRepreReps">Provided m.r. representatives whose implementations identifiers are searched.</param>
@@ -98,8 +102,9 @@ public class MapRepreManager :
 
     /// <summary>
     /// Calls <see cref="GetUsableTemplateMapFormatCombinationsFor"/> method for all viable map representation representatives.
-    /// Useful for discovery of all usable template-map format combinations in application.
-    /// For more information on this method see its documentation.
+    /// 
+    /// Useful for discovery of all usable template-map format combinations in application.  
+    /// For more information on this method see its documentation.  
     /// </summary>
     /// <returns>Set of template-map format usable combinations.</returns>
     public HashSet<(ITemplate, IMapFormat<IMap>)> GetAllUsableTemplateMapFormatCombinations()
@@ -163,9 +168,10 @@ public class MapRepreManager :
 
     /// <summary>
     /// Method which creates for specified representative map representation from provided template and map. This is core method of this manager.
-    /// It constructs the map representation without requiring elevation data.
-    /// It uses generic visitor pattern on template and map in order to gain their real types as generic parameters.
-    /// Before calling this method it should be checked that given representative contains constructor for provided template and map and it does not require elevation data. Construction may throw exception if provided combination is not usable.
+    /// 
+    /// It constructs the map representation without requiring elevation data.  
+    /// It uses generic visitor pattern on template and map in order to gain their real types as generic parameters.  
+    /// Before calling this method it should be checked that given representative contains constructor for provided template and map and it does not require elevation data. Construction may throw exception if provided combination is not usable.  
     /// </summary>
     /// <param name="template">Used template in creation of map representation.</param>
     /// <param name="map">Used map in creation of map representation.</param>
@@ -199,9 +205,10 @@ public class MapRepreManager :
 
     /// <summary>
     /// Method which creates for specified representative map representation from provided template and map. This is core method of this manager.
-    /// For construction of this map representation are required elevation data for provided maps area.
-    /// It uses generic visitor pattern on template and map in order to gain their real types as generic parameters.
-    /// Before calling this method it should be checked that given representative contains constructor for provided template and map and that it requires elevation data. Construction may throw exception if provided combination is not usable.
+    /// 
+    /// For construction of this map representation are required elevation data for provided maps area.  
+    /// It uses generic visitor pattern on template and map in order to gain their real types as generic parameters.  
+    /// Before calling this method it should be checked that given representative contains constructor for provided template and map and that it requires elevation data. Construction may throw exception if provided combination is not usable.  
     /// </summary>
     /// <param name="template">Used template in creation of map representation.</param>
     /// <param name="map">Used map in creation of map representation.</param>

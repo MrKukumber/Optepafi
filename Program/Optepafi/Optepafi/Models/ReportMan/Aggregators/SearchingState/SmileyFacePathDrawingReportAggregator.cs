@@ -16,6 +16,7 @@ namespace Optepafi.Models.ReportMan.Aggregators.SearchingState;
 
 /// <summary>
 /// Singleton class which aggregates report for <see cref="SmileyFacePathDrawingState{TVertexAttributes,TEdgeAttributes}"/> searching state type.
+/// 
 /// For more information on searching report aggregators see <see cref="ISearchingReportAggregator{TSearchingState,TVertexAttributes,TEdgeAttributes}"/>.
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes which searching state can contain and user model can use for computing.</typeparam>
@@ -52,6 +53,7 @@ public class SmileyFacePathDrawingReportAggregator<TVertexAttributes, TEdgeAttri
     
     /// <summary>
     /// Graphic source implementation that is able to provide collector by which its graphic objects are collected.
+    /// 
     /// For more information on graphics sources see <see cref="IGraphicsSource"/>.
     /// </summary>
     private class CollectingGraphicsSource : IGraphicsSource

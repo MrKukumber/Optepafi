@@ -11,7 +11,8 @@ namespace Optepafi.Views.PathFinding;
 
 /// <summary>
 /// View of path finding part of path finding mechanism.
-/// For more information on path finding parts functionalities see <see cref="PathFindingViewModel"/>.
+/// 
+/// For more information on path finding parts functionalities see <see cref="PathFindingViewModel"/>.  
 /// </summary>
 public partial class PathFindingView : ReactiveUserControl<PathFindingViewModel>
 {
@@ -24,8 +25,9 @@ public partial class PathFindingView : ReactiveUserControl<PathFindingViewModel>
 
     /// <summary>
     /// Handles <c>OnPointerPressed</c> event of map graphics showing canvas.
-    /// It aggregates coordinates of pressed pointer and converts them to unit usable in applications logic.
-    /// Resulting coordinates are sent to <c>AddTrackPointCommand</c>s execution. 
+    /// 
+    /// It aggregates coordinates of pressed pointer and converts them to unit usable in applications logic.  
+    /// Resulting coordinates are sent to <c>AddTrackPointCommand</c>s execution.  
     /// </summary>
     /// <param name="sender">Sender of <c>OnClick</c> event.</param>
     /// <param name="e"><c>OnClick</c> events arguments.</param>

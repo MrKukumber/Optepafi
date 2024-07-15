@@ -9,6 +9,7 @@ namespace Optepafi.ViewModels.Data.Representatives;
 
 /// <summary>
 /// Wrapping ViewModel for <c>Region</c> type.
+/// 
 /// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
 /// </summary>
 public abstract class RegionViewModel : WrappingDataViewModel<Region>
@@ -23,6 +24,7 @@ public abstract class RegionViewModel : WrappingDataViewModel<Region>
 
     /// <summary>
     /// Construction of new region ViewModel.
+    /// 
     /// It is fine, that it does not initialize <c>SubRegions</c> property, because it is initialized in constructors of all successors of this type.
     /// </summary>
     /// <param name="region">Region to which will be coupled new ViewModel.</param>
@@ -37,6 +39,7 @@ public abstract class RegionViewModel : WrappingDataViewModel<Region>
     public string Name => Region.Name;
     /// <summary>
     /// Array of sub-region ViewModels of this region.
+    /// 
     /// For more information on subregions see <c>SubRegions</c> property of <see cref="Region"/>
     /// </summary>
     public SubRegionViewModel[] SubRegions { get; protected set; }
@@ -63,8 +66,9 @@ public abstract class RegionViewModel : WrappingDataViewModel<Region>
     
     /// <summary>
     /// Cancellation token source used for cancelling of elevation data download.
-    /// Each region has its own variable for this source. When user does want to cancel elev. data download, this source fires request for cancellation.
-    /// It should be reassigned every time when download of data is initiated so it could be correctly used for firing cancellation request.
+    /// 
+    /// Each region has its own variable for this source. When user does want to cancel elev. data download, this source fires request for cancellation.  
+    /// It should be reassigned every time when download of data is initiated so it could be correctly used for firing cancellation request.  
     /// </summary>
     public CancellationTokenSource DownloadingCancellationTokenSource { get; set; }
 
@@ -74,14 +78,16 @@ public abstract class RegionViewModel : WrappingDataViewModel<Region>
 
 /// <summary>
 /// Wrapping ViewModel for <c>SuRegion</c> type.
-/// It inherits from RegionViewModel.
-/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// 
+/// It inherits from RegionViewModel.  
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.  
 /// </summary>
 public class SubRegionViewModel : RegionViewModel
 {
     /// <summary>
     /// Construction of new sub-region ViewModel.
-    /// It prevents infinite loop caused by cyclical reference of sub-regions. 
+    /// 
+    /// It prevents infinite loop caused by cyclical reference of sub-regions.  
     /// </summary>
     /// <param name="upperRegionViewModel">View model of the upper region of sub-region coupled to this ViewModel.</param>
     /// <param name="subRegion">Region to which will be coupled new ViewModel .</param>
@@ -108,8 +114,9 @@ public class SubRegionViewModel : RegionViewModel
 
 /// <summary>
 /// Wrapping ViewModel for <c>TopRegion</c> type.
-/// It inherits from RegionViewModel.
-/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
+/// 
+/// It inherits from RegionViewModel.  
+/// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.  
 /// </summary>
 public class TopRegionViewModel : RegionViewModel
 {

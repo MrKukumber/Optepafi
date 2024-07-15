@@ -12,8 +12,9 @@ namespace Optepafi.Models.ElevationDataMan.Distributions.Simulating;
 
 /// <summary>
 /// Elevation data source which simulates work of authorization requiring elevation data distribution.
-/// This type is just demonstrative data source for presenting application functionality.
-/// For more information on elevation data sources which requires authorization for accessing data see <see cref="ICredentialsRequiringElevDataDistribution"/>.
+/// 
+/// This type is just demonstrative data source for presenting application functionality.  
+/// For more information on elevation data sources which requires authorization for accessing data see <see cref="ICredentialsRequiringElevDataDistribution"/>.  
 /// </summary>
 public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiringElevDataDistribution
 {
@@ -38,7 +39,7 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
         AllTopRegions = new HashSet<TopRegion>{ notRealRegion };
     }
     /// <inheritdoc cref="IElevDataDistribution.Name"/>
-    public string Name => "Authorisation simulating elevation data distribution with name \"Name\" and password \"Password\"";
+    public string Name => "Authorization simulating elevation data distribution with name \"Name\" and password \"Password\"";
     /// <inheritdoc cref="IElevDataDistribution.AllTopRegions"/>
     public IReadOnlySet<TopRegion> AllTopRegions { get; }
     /// <inheritdoc cref="IElevDataDistribution.Remove"/>

@@ -10,8 +10,9 @@ namespace Optepafi.ModelViews.PathFinding;
 
 /// <summary>
 /// ModelView which is responsible for logic of relevance feedback mechanism.
-/// In current state of application it does not contain any functionality because relevance feeback mechanism was not added to application yet.
-/// It is an abstract class. The path finding session ModelView will creates its successor which wil be for this time used only as connecting inner class in path finding ModelView architecture.
+/// 
+/// In current state of application it does not contain any functionality because relevance feedback mechanism was not added to application yet.  
+/// It is an abstract class. The path finding session ModelView will creates its successor which wil be for this time used only as connecting inner class in path finding ModelView architecture.  
 /// </summary>
 public abstract class PFRelevanceFeedbackModelView : ModelViewBase;
 
@@ -19,8 +20,9 @@ public partial class PathFindingSessionModelView
 {
     /// <summary>
     /// Successor of <see cref="PFRelevanceFeedbackModelView"/> created by this session ModelView so some of its methods could be implemented by using data hidden from the outside world.
-    /// For this time it just deliver hidden data from previous path finding ModelViews in hierarchy to following ones.
-    /// For more information on ModelViews see <see cref="ModelViewBase"/>.
+    /// 
+    /// For this time it just deliver hidden data from previous path finding ModelViews in hierarchy to following ones.  
+    /// For more information on ModelViews see <see cref="ModelViewBase"/>.  
     /// </summary>
     private class PFRelevanceFeedbackIntraModelView(PFSettingsIntraModelView settings, PFMapRepreCreatingIntraModelView mapRepreCreating) : PFRelevanceFeedbackModelView
     {
