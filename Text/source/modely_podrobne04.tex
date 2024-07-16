@@ -4,11 +4,11 @@ Model vrstva je štvrtou vrstvou MVVM(MV) architektúry. Táto vrstva je pre~zvy
 
 Implementáciu Model vrstvy z~veľkej časti poznačila už spomínaná strata typovej informácie pri~komunikácii s~Model view vrstvou. Väčšina oblastí sa s~touto stratou vysporadúva podobným spôsobom:
 \begin{itemize}
-    \item \textbf{Komunikácia smerujúca z~vrstvy Model} - Pre~všetky dátové štruktúry, ktoré~sa využívajú mimo vrstvy Model, sú vytvorení predkovia, ktorí sú buďto negenerickí alebo~obsahujú kovariantné generické parametre. Tým pádom vedia byť prenášaní negenerickým spôsobom mimo vrstvy Model.
+    \item \textbf{Komunikácia smerujúca z~vrstvy Model} - Pre~všetky dátové štruktúry, ktoré~sa využívajú mimo vrstvy Model, sú vytvorení predkovia, ktorí sú buď negenerickí alebo~obsahujú kovariantné generické parametre. Tým pádom vedia byť prenášaní negenerickým spôsobom mimo vrstvy Model.
     \item \textbf{Komunikácia smerujúca do~vrstvy Model} - Pre~dátové štruktúry, ktorých typovú informáciu je potrebné v~Model vrstve opäť nadobudnúť, bol vytvorený tzv. \textit{Generic visitor pattern}. V~prípadoch, kedy nie je potrebné poznať ich presný typ, sa využíva klasické typové testovanie cez operátor \textit{is}.
 \end{itemize} 
 
-\textbf{Generic visitor pattern} je obdoba klasického návrhového vzoru \emph{Visitor pattern}. Pracuje na~podobnom princípe, kedy na~navštevovanej inštancii je volaná metóda \texttt{Visit} ktorej sa predá inštancia volajúcej triedy. Následne navštívená inštancia odpovie zavolaním metódy \texttt{Accept} na~dodanej volajúcej inštancii a~predaním samej seba v~argumente indikuje, ktorý~overload metódy \texttt{Accept} sa má zavolať.
+\textbf{Generic visitor pattern} je obdoba klasického návrhového vzoru \emph{Visitor pattern}. Pracuje na~podobnom princípe, kedy je na~navštevovanej inštancii volaná metóda \texttt{Visit} ktorej sa predá inštancia volajúcej triedy. Následne navštívená inštancia odpovie zavolaním metódy \texttt{Accept} na~dodanej volajúcej inštancii a~predaním samej seba v~argumente indikuje, ktorý~overload metódy \texttt{Accept} sa má zavolať.
 
 V~prípade generic visitor pattern-u však volajúca trieda neimplementuje overload metódy \texttt{Accept} pre~každý možný typ navštevovanej inštancie ale~len jednu generickú metódu \texttt{Accept<T>}. V~typovom parametri \texttt{T} je následne predaná informácia o~type navštívenej inštancie.
 
@@ -18,11 +18,11 @@ V~následujúcich sekciách sa pozrieme detailnejšie na~aktuálne existujúce o
 
 \section{Template-y}
 
-Táto oblasť sa stará o~správu atribútových template-ov (len \textit{template-ov} pre~jednoduchosť). Viac informácií o~myšlienke a~funkcii template-ov je možné nájsť v~Podsekcii~\ref{templatey}. Čo do~obsahu je to jedna z~najmenších oblastí.  
+Táto oblasť sa stará o~správu atribútových template-ov (len \textit{template-ov} pre~jednoduchosť). Viac informácií o~myšlienke a~funkcii template-ov je možné nájsť v~Podsekcii~\ref{templatey}. Čo sa obsahu týka, je to jedna z~najmenších oblastí.  
 
 Hlavným uzlom pre~komunikáciu z~Model view vrstvy je singleton trieda \texttt{TemplateManager}. Ten ponúka kolekciu všetkých template-ov, ktoré~je možné v~aplikácii použiť. 
 
-V~následujúcich odsekoch popíšeme objektovú štruktúru template-ov. Jednoduché grafické znázornenie tejto architektúry je možné nahliadnuť v~Diagrame~\ref{obr05:templatey_architektura}.   
+V~následujúcich odsekoch popíšeme objektovú štruktúru template-ov. Jednoduché grafické znázornenie tejto architektúry je dostupné k nahliadnutiu v~Diagrame~\ref{obr05:templatey_architektura}.   
 
 \bigskip
 
@@ -52,15 +52,16 @@ V~následujúcich odsekoch popíšeme objektovú štruktúru máp a~ich~zástupc
 
 Mapy sú reprezentované pomocou tried, ktoré~implementujú rozhranie \textbf{\texttt{IMap}}. Toto rozhranie nedefinuje žiadnu zaujímavú funkcionalitu. Obsahuje pár vlastností využívaných mimo vrstvy Model pre~identifikáciu mapy.
 
-Triedy máp následne môžu implementovať niektoré z~ďalších definovaných rozhraní, ktoré~pridávajú svoje kontrakty. Tieto kontrakty sú zamerané na~geografické lokalizovanie a~rozlohu máp. Sú využívané predovšetkým pri~získavaní dodatočných výškových dát odpovedajúcich konkrétnej mape. Ak si je mapový typ vedomí toho, že~na~vytvorenie jeho mapovej reprezentácie bude potrebná výpomoc výškových dát, mal by implementovať aspoň jeden z~interface-ov, ktorý~definuje informácie o~geo-lokalite a~rozlohe mapy.
+Triedy máp následne môžu implementovať niektoré z~ďalších definovaných rozhraní, ktoré~pridávajú svoje kontrakty. Tieto kontrakty sú zamerané na~geografické lokalizovanie a~rozlohu máp. Sú využívané predovšetkým pri~získavaní dodatočných výškových dát zodpovedajúcich konkrétnej mape. Ak si je mapový typ vedomý toho, že~na~vytvorenie jeho mapovej reprezentácie bude potrebná výpomoc výškových dát, mal by implementovať aspoň jeden z~interface-ov, ktorý~definuje informácie o~geo-lokalite a~rozlohe mapy.
 
 Ako už bolo naznačené, pri~mapách je potrebné, aby~v~aplikácii niekto zastupoval ich formáty. K~tomuto slúžia triedy implementujúce trojicu rozhraní:
 \begin{itemize}
     \item \textbf{\texttt{IMapFormat<out TMap>}} - Je určený pre~komunikáciu mimo vrstvy Model. Definuje vlastnosti, ktoré~sú potrebné pri~práci s~mapovým zástupcom vo~vonkajšom prostredí a~metódu na~vytváranie mapy zastupovaného typu. Tento interface by nemal byť priamo implementovaný.
-    \item \textbf{\texttt{IMapIdentifier<in TMap>}} - Slúži na~identifikáciu odpovedajúceho mapového formátu pre~konkrétny typ mapy. Vďaka kontravariantnej povahe jeho typového parametru bude táto identifikácia fungovať správne aj~pre~potomkov typu \texttt{TMap}. Tento interface by nemal byť priamo implementovaný.
+    \item \textbf{\texttt{IMapIdentifier<in TMap>}} - Slúži na~identifikáciu zodpovedajúceho mapového formátu pre~konkrétny typ mapy. Vďaka kontravariantnej povahe jeho typového parametru bude táto identifikácia fungovať správne aj~pre~potomkov typu \texttt{TMap}. Tento interface by nemal byť priamo implementovaný.
     \item \textbf{\texttt{IMapRepresentative<TMap>}} - Zastupuje jeden konkrétny typ/formát mapy. Je potomkom predošlých dvoch interface-ov - spája ich funkcionality. Tento interface je určený k~tomu, aby~bol priamo implementovaný mapovými zástupcami.   
 \end{itemize}
-Na to, aby~bolo možné mapový typ využiť v~aplikácii, musí byť jeho zástupca zahrnutý v~príslušnej kolekcii v~triede \texttt{MapManager}. Z~tohto dôvodu je na~mieste, aby~títo zástupcovia boli implementovaný ako singleton triedy.
+
+Na to, aby~bolo možné mapový typ využiť v~aplikácii, musí byť jeho zástupca zahrnutý v~príslušnej kolekcii v~triede \texttt{MapManager}. Z~tohto dôvodu je na~mieste, aby~boli títo zástupcovia implementovaní ako singleton triedy.
 
 Mapy podporujú návrhový vzor \textit{Generic visitor pattern}. Ten je definovaný ako pre~rozhranie \texttt{IMap}, tak aj~pre~rozhranie \texttt{IGeoLocatedMap} (pridáva kontrakt o~geografickej lokalite mapy).
 
@@ -72,7 +73,7 @@ Mapy podporujú návrhový vzor \textit{Generic visitor pattern}. Ten je definov
 
 \section{Mapové reprezentácie}
 
-Ďalšia z~oblastí sa stará o~vytváranie a~spravovanie mapových reprezentácii/grafov. Čo do~obsahu aj~komplexnosti sa jedná o~jednu z~najväčších oblastí. Viac informácií o~koncepte mapových reprezentácií je možné nájsť v~Podsekcii~\ref{mapove_reprezentacie}.
+Ďalšia z~oblastí sa stará o~vytváranie a~spravovanie mapových reprezentácii, resp. grafov. Čo do~obsahu aj~komplexnosti sa jedná o~jednu z~najväčších oblastí. Viac informácií o~koncepte mapových reprezentácií je možné nájsť v~Podsekcii~\ref{mapove_reprezentacie}.
 
 Hlavným uzlom pre~prácu s~touto oblasťou z~vonkajšieho prostredia je singleton trieda \texttt{MapRepreManager}. Ten ponúka kolekciu obsahujúcu zástupcov všetkých typov mapových reprezentácií, ktoré~je možné v~aplikácii využiť. Popri tom obsahuje metódy určené na~
 \begin{itemize}
@@ -81,13 +82,13 @@ Hlavným uzlom pre~prácu s~touto oblasťou z~vonkajšieho prostredia je singlet
     \item detekciu potreby výškových dát pri~konštrukcii mapovej reprezentácie.
 \end{itemize}
 
-V~následujúcich odsekoch popíšeme objektovú štruktúru mapových reprezentácií/grafov, ich implementácií a~zástupcov. Pre~jednoduchšie porozumenie je možné v~Diagrame~\ref{obr07:mapove_reprezentacie_architektura} nahliadnuť grafické znázornenie tejto architektúry. 
+V~nasledujúcich odsekoch popíšeme objektovú štruktúru mapových reprezentácií/grafov, ich implementácií a~zástupcov. Pre~jednoduchšie porozumenie je možné v~Diagrame~\ref{obr07:mapove_reprezentacie_architektura} nahliadnuť grafické znázornenie tejto architektúry. 
 
 \bigskip
 
-Štruktúra dát, ktoré~súvisia s~mapovými reprezentáciami odzrkadluje dvojakosť významov mapovej reprezentácie a~grafu ako bolo popísané v~Podsekcii~\ref{mapove_reprezentacie}. Každému typu mapovej reprezentácie je prisúdený konkrétny typ grafu.
+Štruktúra dát, ktoré~súvisia s~mapovými reprezentáciami odzrkadľuje dvojakosť významov mapovej reprezentácie a~grafu ako bolo popísané v~Podsekcii~\ref{mapove_reprezentacie}. Každému typu mapovej reprezentácie je prisúdený konkrétny typ grafu.
 
-Mapové reprezentácie/grafy sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IGraph<TVertexAttributes, TEdgeAttributes>}}. Toto rozhranie reprezentuje myšlienku grafu, ktorý~zastupuje konkrétnu mapovú reprezentáciu. Jeho typové parametre definujú atribúty, ktoré~sú používané v~jeho vrcholoch a~hranách. Obsahuje kontrakty, ktoré~musia grafy všetkých typov naplňovať. Aktuálne je to len jedna metóda vracajúca graf do~jeho základného stavu.
+Mapové reprezentácie/grafy sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IGraph<TVertexAttributes, TEdgeAttributes>}}. Toto rozhranie reprezentuje myšlienku grafu, ktorý~zastupuje konkrétnu mapovú reprezentáciu. Jeho typové parametre definujú atribúty, ktoré~sú používané v~jeho vrcholoch a~hranách. Obsahuje kontrakty, ktoré~musia grafy všetkých typov napĺňať. Aktuálne je to len jedna metóda vracajúca graf do~jeho základného stavu.
 
 \texttt{IGraph<TVertexAttributes, TEdgeAttributes>} má za~predchodcu rozhranie \textbf{\texttt{IMapRepre}} reprezentujúce myšlienku samotnej mapovej reprezentácie. Cez toto rozhranie sú mapové reprezentácie/grafy distribuované vonkajšiemu svetu. K~tomuto účelu rozhranie definuje vlastnosti využívané mimo vrstvy Model. Grafová podstata mapových reprezentácií je tým vonkajšiemu svetu ukrytá a~len špecifické oblasti Model vrstvy ju znova nadobúdajú a~využívajú.
 
@@ -120,9 +121,9 @@ Na to aby~mohla byť mapová reprezentácia, graf či~implementácia v~aplikáci
     \end{itemize}
     Taktiež disponujú množinou typových parametrov, z~ktorých každý má svoj špecifický význam:
     \begin{itemize}
-        \item \texttt{TTemplate} - definuje typ template-u, pre~ktorý je zastupovaná implementácia vytvorená
+        \item \texttt{TTemplate} - definuje typ template-u, pre~ktorý je zastupovaná implementácia vytvorená,
         \item \texttt{TGraph} - definuje typ mapovej reprezentácie/grafu, pre~ktorý je zastupovaná implementácia vytvorená,
-        \item \texttt{TVertexAttributes, TEdgeAttributes} - definujú typy atribútov použitých v~implementovanom grafe
+        \item \texttt{TVertexAttributes, TEdgeAttributes} - definujú typy atribútov použitých v~implementovanom grafe,
         \item \texttt{TMap, TUsableSubMap} - tieto parametre sú jemne zavádzajúce. Prvý z~nich hovorí o~tom, aký typ mapy je navonok indikovaný pomocou vlastnosti mapového formátu. Druhý hovorí o~tom, ktorý~typ potomok typu \texttt{TMap} je v~skutočnosti potrebný na~vytvorenie mapovej reprezentácie. Malo by byť zaručené okolitým prostredím, že~pokiaľ je nejaká mapa správneho formátu, tak je určite možné ju použiť pre~vytvorenie mapovej reprezentácie. 
     \end{itemize}
     
@@ -148,12 +149,12 @@ V~tejto oblasti sú vytvárané a~spravované užívateľské modely. Viac infor
 
 Hlavným komunikačným uzlom s~touto oblasťou pre~Model view vrstvu je singleton trieda \texttt{UserModelManager}. Ten ponúka kolekciu všetkých typov užívateľských modelov, ktoré~je možné v~aplikácii využiť. Mimo to implementuje metódy pre:
 \begin{itemize}
-    \item Serializáciu a~deserializáciu užívateľských modelov do/z súborov.
-    \item Vytváranie nových inštancií užívateľských modelov.
+    \item Serializáciu a~deserializáciu užívateľských modelov do/z súborov,
+    \item Vytváranie nových inštancií užívateľských modelov,
     \item Všeobecnú identifikáciu typov užívateľských modelov na~základe rôznych typov argumentov.
 \end{itemize}
 
-V~následujúcich odsekoch popíšeme objektovú štruktúru užívateľských modelov a~ich~zástupcov. Grafické znázornenie tejto architektúry je možné nahliadnuť v~Diagrame~\ref{obr08:uzivatelske_modely_architektura}.   
+V~následujúcich odsekoch popíšeme objektovú štruktúru užívateľských modelov a~ich~zástupcov. Grafické znázornenie tejto architektúry je dostupné k nahliadnutiu v~Diagrame~\ref{obr08:uzivatelske_modely_architektura}.   
 
 \bigskip
 
@@ -161,7 +162,7 @@ Užívateľské modely sú v~aplikácii reprezentované triedami, ktoré~impleme
 
 Na to aby~bol užívateľský model použiteľný vo~vyhľadávacích algoritmoch, nestačí aby~implementoval predchádzajúce základné rozhranie. Je potrebné aby~implementoval následnícke rozhranie \textbf{\texttt{IComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes>}}. Tento interface sám o~sebe nedefinuje žiadny kontrakt. Až jeho následníci definujú výpočtovú funkcionalitu, ktorú implementujúci užívateľský model vie ponúknuť napríklad vyhľadávaciemu algoritmu. 
 
-Jedným z~týchto následníkov je interface \textbf{\texttt{IWeightComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes>}}. Toto rozhranie zaisťuje schopnosť užívateľského modelu, na~základe dodaných vrcholových a~hranových atribútov, vypočítať váhu odpovedajúcej hrany. Túto funkcionalitu by mali spĺňať všetky užívateľské modely, nakoľko veľká časť vyhľadávacích algoritmov potrebuje poznať váhu jednotlivých hrán pre~správny výber postupu.
+Jedným z~týchto následníkov je interface \textbf{\texttt{IWeightComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes>}}. Toto rozhranie zaisťuje schopnosť užívateľského modelu, na~základe dodaných vrcholových a~hranových atribútov, vypočítať váhu zodpovedajúcej hrany. Túto funkcionalitu by mali spĺňať všetky užívateľské modely, nakoľko veľká časť vyhľadávacích algoritmov potrebuje poznať váhu jednotlivých hrán pre~správny výber postupu.
 
 Oproti výpočtovým rozhraniam existuje v~tejto oblasti aj~špecifické rozhranie \textbf{\texttt{ISettableUserModel}}. Toto rozhranie musia implementovať všetky typy užívateľských modelov, ktoré~sú určené na~to, aby~v~nich užívateľ mohol konfigurovať nastaviteľné hodnoty (tzv.\textit{Adjustables}) vzhľadom na~svoje preferencie. Kontrakt ktorý~definuje zaručuje dodanie kolekcie týchto nastaviteľných hodnôt, aby~mohli byť dodané užívateľovi a~ten s~nimi mohol pracovať. Mechanizmus vytvárania a~nastavovania užívateľských modelov zatiaľ v~aplikácii nie je implementovaný, a~teda toto rozhranie aktuálne čaká na~svoje využitie.  
 
@@ -188,7 +189,7 @@ Na to, aby~bolo možné typ užívateľského modelu využiť v~aplikácii, mus�
 
 \section{Vyhľadávacie algoritmy}
 
-Táto oblasť zahrnuje mechanizmy spravujúce algoritmy pre~vyhľadávanie ciest v~mapových reprezentáciách. Viac informácií o~vyhľadávacích algoritmoch samotných je možné nájsť v~Podsekcii~\ref{vyhladavacie_algoritmy}. 
+Táto oblasť zahŕňa mechanizmy spravujúce algoritmy pre~vyhľadávanie ciest v~mapových reprezentáciách. Viac informácií o~vyhľadávacích algoritmoch samotných je možné nájsť v~Podsekcii~\ref{vyhladavacie_algoritmy}. 
 
 Hlavným komunikačným uzlom s~touto oblasťou pre~Model view vrstvu je singleton trieda \texttt{SearchingAlgorithmMan}. Táto trieda zverejňuje v~kolekcii všetky použiteľné vyhľadávacie algoritmy aplikácie. Popri tom obsahuje metódy zabezpečujúce: 
 \begin{itemize}
@@ -197,7 +198,7 @@ Hlavným komunikačným uzlom s~touto oblasťou pre~Model view vrstvu je singlet
     \item identifikáciu vyhľadávacích algoritmov spustiteľných pre~konkrétne kombinácie mapových reprezentácií a~užívateľských modelov 
 \end{itemize}
 
-V~následujúcich odsekoch popíšeme objektovú štruktúru vyhľadávacích algoritmov a~ich~implementácií. Jednoduché grafické znázornenie tejto architektúry je možné nahliadnuť v~Diagrame~\ref{obr09:vyhladavacie_algoritmy_architektura}.   
+V~následujúcich odsekoch popíšeme objektovú štruktúru vyhľadávacích algoritmov a~ich~implementácií. Jednoduché grafické znázornenie tejto architektúry je dostupné k nahliadnutiu v~Diagrame~\ref{obr09:vyhladavacie_algoritmy_architektura}.   
 
 \bigskip
 
@@ -209,7 +210,7 @@ Vyhľadávacie algoritmy sú v~aplikácii reprezentované pomocou tried, ktoré~
 \end{itemize}
 Inštancia každého použiteľného vyhľadávacieho algoritmu musí byť obsiahnutá v~kolekcii vyhľadávacích algoritmov v~príslušnom manažérovi. Inak nebude aplikácia daný vyhľadávací algoritmus registrovať. 
 
-Implementácie vyhľadávacích algoritmov sú reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{ISearchingAlgorithmImplementation}}. Toto rozhranie definuje podobné myšlienky funkcionalít tým z~rozhrania \texttt{ISearchingAlgorithm}: testovanie typov vstupných mapových reprezentácií a~užívateľských modelov, spúšťanie vyhľadávacieho procesu a~vytváranie svojich executor-ov. V~tomto prípade však nie je táto funkcionalita implementovaná rozhraním a~je potrebné aby~ju implementácie algoritmov doplnili sami. Na~to aby~implementácia algoritmu mohla byť použitá, musí byť obsiahnutá v~kolekcii implementácií odpovedajúceho vyhľadávacieho algoritmu. 
+Implementácie vyhľadávacích algoritmov sú reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{ISearchingAlgorithmImplementation}}. Toto rozhranie definuje myšlienky funkcionalít podobné tým z~rozhrania \texttt{ISearchingAlgorithm}: testovanie typov vstupných mapových reprezentácií a~užívateľských modelov, spúšťanie vyhľadávacieho procesu a~vytváranie svojich executor-ov. V~tomto prípade však nie je táto funkcionalita implementovaná rozhraním a~je potrebné aby~ju implementácie algoritmov doplnili sami. Na~to aby~implementácia algoritmu mohla byť použitá, musí byť obsiahnutá v~kolekcii implementácií zodpovedajúceho vyhľadávacieho algoritmu. 
 
 Výsledkom vyhľadávania je inštancia triedy, ktorá implementuje rozhranie \textbf{\texttt{IPath<out TVertexAttributes, out TEdgeAttributes>}}. Toto rozhranie reprezentuje nájdenú cestu algoritmom pričom môže v~sebe niesť atribúty typov \texttt{TVertexAttributes} a~\texttt{TEdgeAttributes}. Neskôr v~Model view vrstve je z~tejto cesty vytvorený report, ktorý~je následne vyššími vrstvami spracovaný a~predvedený užívateľovi. Pre~komunikáciu mimo Model vrstvy sa využíva jeho predchodca \texttt{IPath}. Toto rozhranie by nemalo byť nikdy priamo implementované. 
 
@@ -234,25 +235,25 @@ Všetky triedy reprezentujúce vyhľadávacie algoritmy a~ich implementácie by 
 
 Oblasť pre~správu a~manipuláciu s~výškovými dátami. Viac informácií o~funkcii výškových dát v~aplikácii je možné nájsť v~Podsekcii~\ref{vyskove_data}. 
 
-Hlavným komunikačným uzlom s~touto oblasťou z~vrstvy Model view je singleton trieda \texttt{ElevDataManager}. Tá ponúka kolekciu všetkých použiteľných zdrojov výškových dát v~aplikácii. Popri tom doručuje metódy pre~manipuláciu s~výškovými dátami (sťahovanie a~odstraňovanie) a~taktiež metódy, ktoré~testujú prítomnosť a~vracajú prítomné výškové dáta odpovedajúce rozlohe konkrétnej mapy.
+Hlavným komunikačným uzlom s~touto oblasťou z~vrstvy Model view je singleton trieda \texttt{ElevDataManager}. Tá ponúka kolekciu všetkých použiteľných zdrojov výškových dát v~aplikácii. Popri tom doručuje metódy pre~manipuláciu s~výškovými dátami (sťahovanie a~odstraňovanie) a~taktiež metódy, ktoré~testujú prítomnosť a~vracajú prítomné výškové dáta zodpovedajúce rozlohe konkrétnej mapy.
 
-V~následujúcich odsekoch popíšeme objektovú štruktúru výškových dát, ich zdrojov, distribúcií a~regiónov. Pre lepšie porozumenie je možné v~Diagrame~\ref{obr10:vyskove_data_architektura} nahliadnuť grafické znázornenie architektúry týchto štruktúr.   
+V~následujúcich odsekoch popíšeme objektovú štruktúru výškových dát, ich zdrojov, distribúcií a~regiónov. Pre lepšie porozumenie je v~Diagrame~\ref{obr10:vyskove_data_architektura} dostupný náhľad  grafického znázornenia architektúry týchto dátových štruktúr.   
 
 \bigskip
 
-Výškové dáta sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IElevData}}. Toto jednoduché rozhranie definuje metódy, ktoré~dokážu k~zadanej geografickej polohe vrátiť jej nadmorskú výšku. Inštancie týchto tried su na~mieru vytvárané tak, aby~dokázali dodať výškové dáta odpovedajúce polohe a~rozlohe konkrétnej mapy. 
+Výškové dáta sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IElevData}}. Toto jednoduché rozhranie definuje metódy, ktoré~dokážu k~zadanej geografickej polohe vrátiť jej nadmorskú výšku. Inštancie týchto tried su na~mieru vytvárané tak, aby~dokázali dodať výškové dáta primerané polohe a~rozlohe konkrétnej mapy. 
 
 Výškové dáta sú dodávané jednotlivými zdrojmi. Tie sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IElevDataSource}}. Zdroje výškových dát sú zložené z~viacerých distribúcií, ktoré~následne už dodávajú potrebnú funkcionalitu pre~prácu s~nimi spravovanými, výškovými dátami. Preto rozhranie \texttt{IElevDataSource} definuje kolekciu, v~ktorej by mali byť uložené všetky distribúcie daného zdroja na~to, aby~mohli byť v~aplikácii použité. Popri tom definuje ďalších pár vlastností, ktoré~sú využívané mimo vrstvy Model (napr. meno daného zdroja).
 
-Jednotlivé distribúcie výškových dát sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IElevDataDistribution}}. Každá z~týchto tried je zodpovedné za~prácu s~konkrétnou distribúciou výškových dát. Zabezpečujú sťahovanie, odstraňovanie a~informovanie o~ich prítomnosti. Je ponechané na~zodpovednosti implementácií, akým spôsobom budú dáta ukladané, načítané do~pamäte a~spracovávané do~inštancií implementácií rozhrania \texttt{IElevData}.
+Jednotlivé distribúcie výškových dát sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IElevDataDistribution}}. Každá z~týchto tried je zodpovedná za~prácu s~konkrétnou distribúciou výškových dát. Zabezpečujú sťahovanie, odstraňovanie a~informovanie o~ich prítomnosti. Je ponechané na~zodpovednosti implementácií, akým spôsobom budú dáta ukladané, načítané do~pamäte a~spracovávané do~inštancií implementácií rozhrania \texttt{IElevData}.
 
 Rozhranie \texttt{IElevDataDistribution} by nemalo byť implementované priamo. Namiesto toho by mali byť implementované rozširujúce rozhrania \textbf{\texttt{ICredentials-} \texttt{NotRequiringElevDataDistribution}} a~\textbf{\texttt{ ICredentialsRequiringElevData- } \texttt{Distribution}},  ktoré~pridávajú samotnú metódu umožňujúcu sťahovanie výškových dát. Tieto metódy, resp. rozhrania, sa líšia v~potrebe autorizácie pri~získavaní výškových dát zo~vzdialených zdrojov.  
 
 Manipulovanie s~výškovými dátami prebieha po~takzvaných \textit{regiónoch}. Každá distribúcia si tvar a~veľkosť svojich regiónov určuje sama. Následne tieto regióny sprostredkováva v~kolekcii \texttt{AllTopRegions}, ktorá je definovaná rozhraním \texttt{IElevDataDistribution}.
 
-Regióny sú reprezentované triedami, ktoré~dedia od abstraktnej triedy \textbf{\texttt{Region}} a~jej potomkov \textbf{\texttt{TopRegion}} a~\textbf{\texttt{SubRegion}}. Región ako taký definuje svoje meno, svoj tvar za~pomoci reťazca geografických súradníc a~množinu svojich pod-regiónov. Taktiež definuje identifikátor svojej prítomnosti. Teda toho, čí sú jemu odpovedajúce výškové dáta stiahnuté v~počítači a~pripravené na~použitie alebo~nie.
+Regióny sú reprezentované triedami, ktoré~dedia od abstraktnej triedy \textbf{\texttt{Region}} a~jej potomkov \textbf{\texttt{TopRegion}} a~\textbf{\texttt{SubRegion}}. Región ako taký definuje svoje meno, svoj tvar za~pomoci reťazca geografických súradníc a~množinu svojich pod-regiónov. Taktiež definuje identifikátor svojej prítomnosti. Teda toho, čí sú jemu zodpovedajúce výškové dáta stiahnuté v~počítači a~pripravené na~použitie alebo~nie.
 
-Tento indikátor by mal byť aktualizovaný vždy keď sa prítomnosť dát regiónu zmení. Dôležité však je, že~táto informácia by mala byť zachovaná naprieč behmi aplikácie. Teda ak sú v~jednom behu aplikácie stiahnuté výškové dáta pre~konkrétny región, v~následujúcom behu by mal región indikovať, že~sú jemu zodpovedajúce dáta stále k~dispozícii.
+Tento indikátor by mal byť aktualizovaný vždy keď sa prítomnosť dát regiónu zmení. Dôležité však je, že~táto informácia by mala byť zachovaná naprieč behmi aplikácie. Teda ak sú v~jednom behu aplikácie stiahnuté výškové dáta pre~konkrétny región, v~následujúcom behu by mal región indikovať, že~sú jemu prislúchajúce dáta stále k~dispozícii.
 
 Regióny sú naďalej delené na~\textit{vrcholové regióny} a~\textit{pod-regióny}. Pod-regióny sú vždy viazané na~nejaký vyšší región a~reprezentujú nejakú jeho časť. Vrcholový región potom jednoducho nie je nikoho pod-regiónom. Spomínaná kolekcia \texttt{AllTopRegions} obsahuje práve vrcholové regióny definované danou distribúciou.    
 
@@ -313,13 +314,13 @@ Podobne ako v~oblasti spravujúcej grafiku, na~to, aby~pre~konkrétny typ dátov
 
 \section{Parametre}
 
-Posledná, jednoduchšia ale~o~to dôležitejšia oblasť je využívaná na~spravovanie a~ukladanie všemožných parametrov aplikácie. Hlavným uzlom pre~komunikáciu s~touto oblasťou je singleton trieda \texttt{ParamsManager}. V~tejto triede je možné uložiť od každého typu parametrov práve jednu inštanciu. Táto inštancia môže byť počas behu algoritmu rôzne upravovaná. Inštancie parametrov sú uložené v~slovníku pod kľúčom reprezentujúcom ich vlastný typ.  
+Posledná, jednoduchšia, ale~o~to dôležitejšia, oblasť je využívaná na~spravovanie a~ukladanie všemožných parametrov aplikácie. Hlavným uzlom pre~komunikáciu s~touto oblasťou je singleton trieda \texttt{ParamsManager}. V~tejto triede je možné uložiť od každého typu parametrov práve jednu inštanciu. Táto inštancia môže byť počas behu algoritmu rôzne upravovaná. Inštancie parametrov sú uložené v~slovníku pod kľúčom reprezentujúcom ich vlastný typ.  
 
 Keď je zavolaná metóda \texttt{SaveAllParams}, tak sa trieda \texttt{ParamsManager} pokúsi všetky uložené parametre v~slovníku serializovať do~súborov pre~možnosť ich použitia v~budúcich behoch aplikácie.
 
-Pri následnom behu aplikácie sú parametre deserializované zo~súborov tzv. \uv{lenivým} spôsobom. Keď je požiadané o~parametre typu, ktorý~v~slovníku nie je zastúpený, trieda sa pokúsi najprv zistiť, či~preňho neexistuje odpovedajúca serializácia. Ak áno, deserializuje sa inštancia odpovedajúcich parametrov, vloží sa do~slovníku a~vráti užívateľovi. Pokiaľ nie, poznačí sa do~slovníku neexistencia parametru daného typu a~navráti sa hodnota \texttt{null}.  
+Pri následnom behu aplikácie sú parametre deserializované zo~súborov tzv. \uv{lenivým} spôsobom. Keď je požiadané o~parametre typu, ktorý~v~slovníku nie je zastúpený, trieda sa pokúsi najprv zistiť, či~preňho neexistuje zodpovedajúca serializácia. Ak áno, deserializuje sa inštancia zodpovedajúcich parametrov, vloží sa do~slovníku a~vráti užívateľovi. Pokiaľ nie, poznačí sa do~slovníku neexistencia parametru daného typu a~navráti sa hodnota \texttt{null}.  
 
-Serializácia a~deserializácia parametrov do~súborov, v~ktorých prežívajú beh aplikácie, prebieha za~pomoci singleton triedy \textbf{\texttt{DataSerializer}}. Táto trieda serializuje objekty do~súborov pomocou systémovej triedy \textit{\texttt{JsonSerializer}}. Súbory sú pomenované podľa typu daného serializovaného objektu. To znamená, že~v~jednu chvíli pre~každý dátový typ dokáže táto trieda serializovať jednu jedinú inštanciu. Pri~deserializácii, na~základe vstupného generického typového parametru nájde súbor s~odpovedajúcim menom a~pokúsi sa ho deserializovať do~inštancie daného typu.
+Serializácia a~deserializácia parametrov do~súborov, v~ktorých prežívajú beh aplikácie, prebieha za~pomoci singleton triedy \textbf{\texttt{DataSerializer}}. Táto trieda serializuje objekty do~súborov pomocou systémovej triedy \textit{\texttt{JsonSerializer}}. Súbory sú pomenované podľa typu daného serializovaného objektu. To znamená, že~v~jednu chvíli pre~každý dátový typ dokáže táto trieda serializovať jednu jedinú inštanciu. Pri~deserializácii, na~základe vstupného generického typového parametru nájde súbor so~zodpovedajúcim menom a~pokúsi sa ho deserializovať do~inštancie daného typu.
 
 
   

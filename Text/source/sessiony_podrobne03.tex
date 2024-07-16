@@ -50,14 +50,14 @@ Sťahovanie a~mazanie dát prebieha asynchrónne. Užívateľ je informovaný o~
 
 Špecifickou vlastnosťou konfigurácie výškových dát je možnosť ju používať súčasne z~viacerých miest v~aplikácii. Je navrhnutá tak, aby~zvládala korektne akceptovať pokyny z~mnohých interakcií naraz. Vďačí za~to návrhu model view-u, ktorý~poskytuje informácie o~tom, v~akom štádiu sťahovania sú jednotlivé regióny. Vďaka tomu všetky naviazané view model-y získajú aktuálne informácie a~môžu správne korigovať manipuláciu s~výškovými dátami.
 
-Spôsob používania konfigurácie výškových dát je následovný:
+Spôsob používania konfigurácie výškových dát je nasledovný:
 \begin{itemize}
     \item Pri~inicializácii interakcie je novo vytvorenému view model-u(následne použitému v~interakcii) predaná aktuálne využívaná distribúcia výškových dát.
     \item Tá je v~konfigurácii nastavená ako aktuálne konfigurovaná a~ukázaná pomocou view-u užívateľovi.
     \item Následne prichádza fáza samotného konfigurovania výškových dát. Užívateľ môže:
     \begin{itemize}
         \item Zmeniť aktuálne konfigurovanú distribúciu výškových dát.
-        \item Sťahovať a~odstraňovať výškové dáta aktuálne vybranej distribúcie. Tieto úkony sú uskutočňované na~základe regiónov, definovaných konfigurovanou distribúciou.
+        \item Sťahovať a~odstraňovať výškové dáta aktuálne vybranej distribúcie. Tieto úkony sú uskutočňované na~základe regiónov definovaných konfigurovanou distribúciou.
         \item Zadať autorizačné údaje pre~možnosť využitia dát zo~špecifických distribúcií, ktoré~autorizáciu vyžadujú. 
         \item Ukončiť konfiguračnú interakciu.
     \end{itemize} 
@@ -89,7 +89,7 @@ V~aktuálnej podobe sa mechanizmus vyhľadávania cesty skladá z~troch častí:
     \item Spúšťanie zvoleného vyhľadávacieho algoritmu na~vytvorenej mapovej reprezentácii za~využitia výpočtov vybraného užívateľského modelu. Zahrňuje prijímanie trate od užívateľa a~vykreslovanie nájdenej cesty.
 \end{itemize} 
 
-Časť, ktorá sa z~časových dôvodov nedostala do~mechanizmu hľadania cesty je tzv. \textit{relevance-feedback} mechanizmus. Ten by slúžil pre~užívateľa na~dodatočné nastavenie hodnôt vybraného užívateľského modelu na~základe jeho preferencií vzhľadom k~aktuálne vybranej mape. Z~tejto časti zostal v~aplikácii len odpovedajúci model view, ktorý~v~tejto chvíli nenesie žiadnu užitočnú funkcionalitu. Slúži iba pre~prenos dát v~Model view vrstve. Bol v~aplikácii ponechaný z~dôvodu plánovaného budúceho rozšírenia aplikácie o~relevance-feedback mechanizmus.
+Časť, ktorá sa z~časových dôvodov nedostala do~mechanizmu hľadania cesty je tzv. \textit{relevance-feedback} mechanizmus. Ten by slúžil pre~užívateľa na~dodatočné nastavenie hodnôt vybraného užívateľského modelu na~základe jeho preferencií vzhľadom k~aktuálne vybranej mape. Z~tejto časti zostal v~aplikácii len zodpovedajúci model view, ktorý~v~tejto chvíli nenesie žiadnu užitočnú funkcionalitu. Slúži iba pre~prenos dát v~Model view vrstve. Bol v~aplikácii ponechaný z~dôvodu plánovaného budúceho rozšírenia aplikácie o~relevance-feedback mechanizmus.
 
 V~následujúcich podsekciách popíšeme časti, z~ktorých je aktuálne session tvorený. Na~konci tejto sekcie je zobrazený Diagram~\ref{obr04:session_vyhladavania_cesty} reprezentujúci jeho architektúru.
 
@@ -109,18 +109,18 @@ Na začiatku sa predvolia parametre na~tie, ktoré~boli použité v~predchádzaj
 Vyberanie parametrov sa musí riadiť istými pravidlami z~dôvodu závislostí jednotlivých typov objektov, popísaných v~podsekciách Sekcie~\ref{Aspekty_hladania}. Danými pravidlami sú:
 \begin{itemize}
     \item Jednotlivé parametre sa nastavujú postupne. Najprv je nutné, aby~bol vybraný mapový súbor a~template. Následne môže byť vybraný aj~súbor s~užívateľským modelom. Keď sú všetky tri predchádzajúce položky vybrané, je možné vybrať vyhľadávací algoritmus. 
-    \item Pre~zvolenú kombináciu template-u a~formátu mapového súboru musí existovať mapová reprezentácia, ktorá túto kombináciu dokáže spracovať. Taktiež pre~zvolený template-u musí existovať typ užívateľského modelu, ktorý~dokáže spracovávať atribúty definované týmto template-om. Nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a~užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácie ľubovoľného vyhľadávacieho algoritmu.   
+    \item Pre~zvolenú kombináciu template-u a~formátu mapového súboru musí existovať mapová reprezentácia, ktorá túto kombináciu dokáže spracovať. Taktiež pre~zvolený template musí existovať typ užívateľského modelu, ktorý~dokáže spracovávať atribúty definované týmto template-om. Nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a~užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácia ľubovoľného vyhľadávacieho algoritmu.   
     
-    Keď je vybraný buďto template alebo~mapový súbor a~výber druhej položky by spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje. Možným vylepšením by bolo zabezpečenie indikácie platných kombinácií template-ov a~formátov mapových súborov.
+    Keď je vybraný buď template alebo~mapový súbor a~výber druhej položky by spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje. Možným vylepšením by bolo zabezpečenie indikácie platných kombinácií template-ov a~formátov mapových súborov.
     \item Súbor s~užívateľským modelom môže byť vybraný len takého typu, ktorý~dokáže spracovávať atribúty definované zvoleným template-om a~ktorý spolu s~ľubovoľnou mapovou reprezentáciou, ktorá dokáže spracovať aktuálne zvolenú kombináciu template-u a~mapového formátu, je použiteľnou kombináciou pre~aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu. 
     \item Vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý~dokáže využiť vybraný užívateľský model a~niektorú mapovú reprezentáciu, ktorú je možné vytvoriť z~vybraného template-u a~mapového súboru.
 \end{itemize}    
 
 Po výbere mapového súboru sa ihneď z~agregovanej mapy vytvorí jej grafická reprezentácia a~jej náhľad sa zobrazí užívateľovi.
 
-Po dosadení všetkých parametrov môže užívateľ pokračovať do~ďalšej časti mechanizmu, ktorou je vytváranie mapovej reprezentácie. V~okamžiku prechodu do~tejto časti sa taktiež uložia aktuálne nastavené parametre, aby~mohli byť znovu použité ako predvolené v~následujúcich inštanciách session-u. 
+Po dosadení všetkých parametrov môže užívateľ pokračovať do~ďalšej časti mechanizmu, ktorou je vytváranie mapovej reprezentácie. V~okamihu prechodu do~tejto časti sa taktiež uložia aktuálne nastavené parametre, aby~mohli byť znovu použité ako predvolené v~následujúcich inštanciách session-u. 
 
-Proces vytvárania mapovej reprezentácie je vykonaný za~pomoci interakcie z~parametre-nastavovacej časti. Na~základe jej výsledku sa následne buď presunieme v~mechanizme ďalej do~cestu-vyhľadávacej časti (úspešné vytvorenie) alebo~zostaneme v~nastaveniach.(neúspešné vytvorenie).  
+Proces vytvárania mapovej reprezentácie je vykonaný za~pomoci interakcie z~parametre-nastavovacej časti. Na~základe jej výsledku sa následne buď presunieme v~mechanizme ďalej do~cestu-vyhľadávacej časti (úspešné vytvorenie) alebo~zostaneme v~nastaveniach (neúspešné vytvorenie).  
 
 \subsection{Vytváranie mapovej reprezentácie}
 
@@ -128,9 +128,9 @@ Vytváranie mapovej reprezentácie je akási prechodová časť medzi nastavenia
 
 Priebeh tvorby mapovej reprezentácie je nasledovný:
 \begin{itemize}
-    \item Ihneď po~inicializácii tejto časti sa spustí proces kontroly podmienok tvorby mapovej reprezentácie. Aktuálne je využívaná iba kontrola prítomnosti potrebných výškových dát pri~procese tvorenia mapovej reprezentácie. (Táto kontrola zahrňuje aj~schopnosť mapy dodať informácie o~svojej pozícii a~rozlohe, ktoré~sú nevyhnutné pre~získanie odpovedajúcich výškových dát).
+    \item Ihneď po~inicializácii tejto časti sa spustí proces kontroly podmienok tvorby mapovej reprezentácie. Aktuálne je využívaná iba kontrola prítomnosti potrebných výškových dát pri~procese tvorenia mapovej reprezentácie. (Táto kontrola zahŕňa aj~schopnosť mapy dodať informácie o~svojej pozícii a~rozlohe, ktoré~sú nevyhnutné pre~získanie zodpovedajúcich výškových dát).
     
-    Pokiaľ tvorená mapová reprezentácia indikuje potrebu výškových dát, skontroluje sa, či~sú odpovedajúce dáta prítomné. Pokiaľ dáta prítomné niesu alebo~mapa nie je schopná definovať svoju geografickú polohu/rozlohu, vytváranie mapovej reprezentácie zlyhá a~užívateľ sa môže vrátiť do~nastavení. 
+    Pokiaľ tvorená mapová reprezentácia indikuje potrebu výškových dát, skontroluje sa, či~sú zodpovedajúce dáta prítomné. Pokiaľ dáta prítomné niesu alebo~mapa nie je schopná definovať svoju geografickú polohu/rozlohu, vytváranie mapovej reprezentácie zlyhá a~užívateľ sa môže vrátiť do~nastavení. 
     
     Do~budúcna je v~pláne umožniť užívateľovi riešenie problému nedostatku výškových dát za~pomoci interakcie s~konfiguráciou výškových dát. Viac informácii o~konfigurácii výškových dát je možné nájsť v~Podsekcii~\ref{konfiguracia_vyskovych_dat}.
     \item Pokiaľ kontrola podmienok dobehne úspešne, je automaticky spustený proces vytvárania mapovej reprezentácie. Tento proces môže trvať dlhšiu dobu a~teda je užívateľovi umožnené sledovať jeho vývoj alebo~ho dokonca prerušiť. Po~prerušení je užívateľ vrátený naspäť do~nastavení parametrov.

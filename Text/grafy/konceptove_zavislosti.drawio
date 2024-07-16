@@ -1,65 +1,65 @@
-<mxfile host="Electron" modified="2024-06-30T08:01:34.141Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="LgoaRoY-AYIwlABCcaH0" version="24.4.0" type="device">
+<mxfile host="Electron" modified="2024-07-16T15:11:39.693Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.4 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="OzAIKfK62sMl28LJsX6b" version="24.6.4" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="913" dy="547" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1036" dy="614" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-2" target="OYl4-w0uEld-pfzQaUZ1-5">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-2" target="OYl4-w0uEld-pfzQaUZ1-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-2" target="OYl4-w0uEld-pfzQaUZ1-7">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-2" target="OYl4-w0uEld-pfzQaUZ1-7" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-2" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Template&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-2" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Template&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="370" y="10" width="130" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-4" target="OYl4-w0uEld-pfzQaUZ1-5">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-4" target="OYl4-w0uEld-pfzQaUZ1-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-4" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;Mapa&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-4" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;Mapa&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="150" y="10" width="130" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-5" target="OYl4-w0uEld-pfzQaUZ1-8">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-5" target="OYl4-w0uEld-pfzQaUZ1-8" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="350" y="500" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-5" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Mapová reprezentácia&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-5" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Mapová reprezentácia&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="180" y="170" width="210" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-17" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;- vytvárame pre konkrétny mapový formát&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="OYl4-w0uEld-pfzQaUZ1-5">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-17" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;- vytvárame pre konkrétny mapový formát&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="OYl4-w0uEld-pfzQaUZ1-5" vertex="1">
           <mxGeometry y="30" width="210" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-18" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;- graf bude obsahovať atribúty definované&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;konkrétnym template-om&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="OYl4-w0uEld-pfzQaUZ1-5">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-18" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;- graf bude obsahovať atribúty definované&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;konkrétnym template-om&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="OYl4-w0uEld-pfzQaUZ1-5" vertex="1">
           <mxGeometry y="50" width="210" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-19" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;- občas bude zapotrebie dodatočných&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;výškových dát&amp;nbsp;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="OYl4-w0uEld-pfzQaUZ1-5">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-19" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;- občas bude zapotrebie dodatočných&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;výškových dát&amp;nbsp;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="OYl4-w0uEld-pfzQaUZ1-5" vertex="1">
           <mxGeometry x="10" y="80" width="190" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;dashed=1;dashPattern=8 8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-6" target="OYl4-w0uEld-pfzQaUZ1-5">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;dashed=1;dashPattern=8 8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-6" target="OYl4-w0uEld-pfzQaUZ1-5" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="200" y="330" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-6" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Výškové dáta&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-6" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Výškové dáta&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="10" y="170" width="130" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-7" target="OYl4-w0uEld-pfzQaUZ1-8">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;dashed=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="OYl4-w0uEld-pfzQaUZ1-7" target="OYl4-w0uEld-pfzQaUZ1-8" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-7" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Užívateľský model&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-7" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Užívateľský model&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="430" y="170" width="210" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-21" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;- vytvárame pre konkrétny template,&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp;ktorého definované atribúty&amp;nbsp;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;bude vediť spracovať&amp;nbsp;&amp;nbsp;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="OYl4-w0uEld-pfzQaUZ1-7">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-21" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;- vytvárame pre konkrétny template,&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp;ktorého definované atribúty&amp;nbsp;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;bude vedieť spracovať&amp;nbsp;&amp;nbsp;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="OYl4-w0uEld-pfzQaUZ1-7" vertex="1">
           <mxGeometry x="15" y="40" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-8" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Vyhľadávací algoritmus&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-8" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Vyhľadávací algoritmus&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=30;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="260" y="340" width="240" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-22" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;- dodaný užívateľský model musí vedieť&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;poskytúť&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;určité služby definované&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;konkrétnou implementáciou&amp;nbsp;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="OYl4-w0uEld-pfzQaUZ1-8">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-22" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;- dodaný užívateľský model musí vedieť&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;poskytúť&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;určité služby definované&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;konkrétnou implementáciou&amp;nbsp;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="OYl4-w0uEld-pfzQaUZ1-8" vertex="1">
           <mxGeometry x="-10" y="30" width="260" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="OYl4-w0uEld-pfzQaUZ1-23" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;- dodaná mapová reprezentácia musí zaručiť&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;vlastnosti&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;definované konkrétnou implementáciou&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="OYl4-w0uEld-pfzQaUZ1-8">
+        <mxCell id="OYl4-w0uEld-pfzQaUZ1-23" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;- dodaná mapová reprezentácia musí zaručiť&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;vlastnosti&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;definované konkrétnou implementáciou&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="OYl4-w0uEld-pfzQaUZ1-8" vertex="1">
           <mxGeometry y="70" width="240" height="40" as="geometry" />
         </mxCell>
       </root>
