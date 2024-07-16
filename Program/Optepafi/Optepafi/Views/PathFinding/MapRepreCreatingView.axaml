@@ -19,7 +19,10 @@
             <Button Grid.Row="0" Name="ReturnDueElevDataAbsenceButton" Content="{x:Static local:PathFindingLocal.MapRepCreat_ReturnDueElevDataAbsenceButton}" Command="{Binding ReturnCommand}"></Button>
         </Grid>
         <Grid Grid.Row="3" Name="MapNotSupportedByElevDataTypeResolutionGrid" IsVisible="{Binding IsAwaitingMapNotSupportedByElevDataDistributionResolution}">
-            <Button Grid.Row="0" Name="ReturnDueMapNotSupportedByElevDataType" Content="{x:Static local:PathFindingLocal.MapRepCreat_ReturnDueMapNotSupportedByElevDataType}" Command="{Binding ReturnCommand}"/>   
+            <Button Grid.Row="0" Name="ReturnDueMapNotSupportedByElevDataTypeButton" Content="{x:Static local:PathFindingLocal.MapRepCreat_ReturnDueMapNotSupportedByElevDataTypeButton}" Command="{Binding ReturnCommand}"/>   
+        </Grid>
+        <Grid Grid.Row="3" Name="ElevDataDistributionAbsenceResolutionGrid" IsVisible="{Binding IsAwaitingElevDataDistributionAbsenceResolution}">
+            <Button Grid.Row="0" Name="ReturnDueElevDataDistributionAbsnceButton" Content="{x:Static local:PathFindingLocal.MapRepCreat_ReturnDueElevDataDistributionAbsenceButton}" Command="{Binding ReturnCommand}"/>   
         </Grid>
     </Grid>
 </UserControl>

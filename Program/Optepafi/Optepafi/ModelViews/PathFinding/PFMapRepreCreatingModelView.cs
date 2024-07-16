@@ -30,7 +30,7 @@ public abstract class PFMapRepreCreatingModelView : ModelViewBase
     /// <summary>
     /// Enumeration of elevation data check results. It contains result for every circumstance that can occur during check.
     /// </summary>
-    public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, Cancelled}
+    public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, ElevDataDistributionNotSet, Cancelled}
     /// <summary>
     /// Method for elevation data requirements check.
     /// 
@@ -81,6 +81,7 @@ public partial class PathFindingSessionModelView
                     return ElevDataPrerequisiteCheckResult.InOrder;
                 case MapRepreManager.NeedsElevDataIndic.Yes:
                     if (ct.IsCancellationRequested) return ElevDataPrerequisiteCheckResult.Cancelled;
+                    if (ElevDataDistribution is null) return ElevDataPrerequisiteCheckResult.ElevDataDistributionNotSet;
                     if (Map is IGeoLocatedMap geoLocatedMap)
                         switch (ElevDataManager.Instance.AreElevDataFromDistObtainableFor(geoLocatedMap, ElevDataDistribution, ct))
                         {
@@ -99,7 +100,7 @@ public partial class PathFindingSessionModelView
                     else return ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataDistribution;
                 case MapRepreManager.NeedsElevDataIndic.NotNecessary:
                     if (ct.IsCancellationRequested) return ElevDataPrerequisiteCheckResult.Cancelled;
-                    if (Map is IGeoLocatedMap glm)
+                    if (Map is IGeoLocatedMap glm && ElevDataDistribution is not null)
                         _useElevData = (ElevDataManager.Instance.AreElevDataFromDistObtainableFor(glm, ElevDataDistribution, ct)) switch
                         {
                             ElevDataManager.ElevDataObtainability.Obtainable => true,
@@ -165,11 +166,11 @@ public partial class PathFindingSessionModelView
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when representative in settings is not set. When map creating ModelView is used it should be set already.</exception>
         private IMapRepreRepresentative<IMapRepre> MapRepreRepresentative => Settings.MapRepreRepresentative ?? throw new ArgumentNullException( nameof(Settings .MapRepreRepresentative), "Map representation representative should be set before using PFMapRepreCreatingModelView");
+
         /// <summary>
         /// Elevation data distribution retrieved from settings ModelView. This distribution is eventually used in map representations creation.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown when elevation data distribution in settings is not set. When map creating ModelView is used it should be set already.</exception>
-        private IElevDataDistribution ElevDataDistribution => Settings.ElevDataDistribution ?? throw new ArgumentNullException( nameof(Settings.ElevDataDistribution), "Elevation data distribution should be set before using PFMapRepreCreatingModelView");
+        private IElevDataDistribution? ElevDataDistribution => Settings.ElevDataDistribution; 
         /// <summary>
         /// Reference to created map representation. Main result of this ModelView mechanism. Other ModelViews may use it for further work.
         /// </summary>

@@ -24,7 +24,10 @@
     <data name="MapRepCreat_ReturnDueElevDataAbsenceButton" xml:space="preserve">
         <value>Return</value>
     </data>
-    <data name="MapRepCreat_ReturnDueMapNotSupportedByElevDataType" xml:space="preserve">
+    <data name="MapRepCreat_ReturnDueElevDataDistributionAbsenceButton" xml:space="preserve">
+        <value>Return</value>
+    </data>
+    <data name="MapRepCreat_ReturnDueMapNotSupportedByElevDataTypeButton" xml:space="preserve">
         <value>Return</value>
     </data>
     <data name="PathFinding_CancelSearchButton" xml:space="preserve">

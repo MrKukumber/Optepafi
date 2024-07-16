@@ -48,7 +48,8 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
         IObservable<bool> isAwaitingResolution = this.WhenAnyValue(
             x => x.IsAwaitingElevDataAbsenceResolution,
             x => x.IsAwaitingMapNotSupportedByElevDataDistributionResolution,
-            (a,b) => a || b);
+            x => x.IsAwaitingElevDataDistributionAbsenceResolution,
+            (a,b,c) => a || b || c);
         
         CheckPrerequisitesCommand = ReactiveCommand.CreateFromTask(async ct =>
         {
@@ -62,6 +63,8 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                     return PrerequisitiesCheckResult.ElevDataAbsent;
                 case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataDistribution:
                     return PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution;
+                case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.ElevDataDistributionNotSet:
+                    return PrerequisitiesCheckResult.ElevDataDistributionNotSet;
                 case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.Cancelled:
                     return PrerequisitiesCheckResult.Canceled;
             }
@@ -95,9 +98,9 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                     break;
                 case PrerequisitiesCheckResult.ElevDataAbsent:
                     CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
-                    DialogText = "Elevation data for given map are not awailable.\n " +
+                    DialogText = "Elevation data for given map are not available.\n " +
                                  "Return to elevation data settings and download \n" +
-                                 "corresponing data for chosen map \n" +
+                                 "corresponding data for chosen map \n" +
                                  "or use another elevation data source."; //TODO: localize
                     break;
                 case PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution:
@@ -105,6 +108,14 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                     DialogText = "Elevation data can not be retrieved for given map.\n" +
                                  "Please, choose different map or elevation data \n" +
                                  "source and try again."; //TODO: localize
+                    break;
+                case PrerequisitiesCheckResult.ElevDataDistributionNotSet:
+                    CurrentProcedureInfoText = "Elevation data problem";
+                    DialogText = "Elevation data are needed but elevation data \n" +
+                                 "distribution is not set. \n" +
+                                 "Return to the elevation data configuration in \n" +
+                                 "Main window and set appropriate distribution \n" +
+                                 "which can provide necessary elevation data.";
                     break;
             }
         });
@@ -116,8 +127,7 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                 x => x.CreateMapRepreCommand.IsExecuting,
                 x => x.CheckPrerequisitesCommand.IsExecuting,
                 x => x.CheckPrerequisitesCommand,
-                (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => 
-                    !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.ElevDataAbsent)
+                (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.ElevDataAbsent)
             .ToProperty(this, nameof(IsAwaitingElevDataAbsenceResolution));
         _isAwaitingMapNotSupportedByElevDataDistributionResolution = this.WhenAnyObservable(
                 x => x.CheckPrerequisitesCommand.IsExecuting,
@@ -125,7 +135,12 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                 x => x.CheckPrerequisitesCommand,
                 (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution)
             .ToProperty(this, nameof(IsAwaitingMapNotSupportedByElevDataDistributionResolution));
-        
+        _isAwaitingElevDataDistributionAbsenceResolution = this.WhenAnyObservable(
+                x => x.CheckPrerequisitesCommand.IsExecuting,
+                x => x.CreateMapRepreCommand.IsExecuting,
+                x => x.CheckPrerequisitesCommand,
+                (isMapRepreCreating, isPrereqChecking, prereqCheckResult) => !isMapRepreCreating && !isPrereqChecking && prereqCheckResult is PrerequisitiesCheckResult .ElevDataDistributionNotSet)
+            .ToProperty(this, nameof(IsAwaitingElevDataDistributionAbsenceResolution));
         ReturnCommand = ReactiveCommand.Create(() => false, isAwaitingResolution);
         
         this.WhenActivated(disposalbes =>
@@ -190,6 +205,15 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
     /// </summary>
     public bool IsAwaitingMapNotSupportedByElevDataDistributionResolution => _isAwaitingMapNotSupportedByElevDataDistributionResolution.Value;
     private ObservableAsPropertyHelper<bool> _isAwaitingMapNotSupportedByElevDataDistributionResolution;
+
+    /// <summary>
+    /// Indicates state of map repre. creation process when elevation data distribution absence should be resolved.
+    ///
+    /// In this state application waits for input from user.  
+    /// It raises notification about change of its value.  
+    /// </summary>
+    public bool IsAwaitingElevDataDistributionAbsenceResolution => _isAwaitingElevDataDistributionAbsenceResolution.Value;
+    private ObservableAsPropertyHelper<bool> _isAwaitingElevDataDistributionAbsenceResolution; 
     /// <summary>
     /// Indicates that map representation creation takes place.
     /// 
@@ -201,7 +225,7 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
     /// <summary>
     /// Enumeration of every prerequisite check results.
     /// </summary>
-    public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataDistribution, Canceled}
+    public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataDistribution, ElevDataDistributionNotSet, Canceled}
     
     /// <summary>
     /// Reactive command whether all prerequisites for map representation creation are satisfied.
