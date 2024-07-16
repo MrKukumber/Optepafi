@@ -125,7 +125,7 @@ public partial class PathFindingSessionModelView
         /// </remarks>
         public override void OnClosed()
         {
-            _searchingExecutor?.Dispose();
+            Task.Run(() => _searchingExecutor?.Dispose());
         }
 
         /// <summary>

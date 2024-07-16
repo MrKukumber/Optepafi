@@ -81,7 +81,6 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
                     return await _pathFindingMv.FindPathAsync(_acceptedTrackPointList, searchingProgress, cancellationToken);
                 })
                 .TakeUntil(CancelSearchCommand)
-                .TakeUntil(OnClosedCommand)
             , isAcceptingTrack.CombineLatest(isMoreThanOnePointAccepted, (x,y) => x && y)); 
         
         CancelSearchCommand = ReactiveCommand.Create(() => { }, FindPathCommand.IsExecuting);
@@ -120,6 +119,7 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
         
         OnClosedCommand = ReactiveCommand.Create(() =>
         {
+            CancelSearchCommand.Execute().Subscribe();
             pathFindingMv.OnClosed();
         });
         
