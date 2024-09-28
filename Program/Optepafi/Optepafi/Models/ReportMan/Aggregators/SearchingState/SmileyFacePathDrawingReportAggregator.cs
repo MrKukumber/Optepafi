@@ -11,6 +11,7 @@ using Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.ReportMan.Aggregators.SearchingState;
 
@@ -31,7 +32,7 @@ public class SmileyFacePathDrawingReportAggregator<TVertexAttributes, TEdgeAttri
     /// <remarks>
     /// Creates collecting graphic source to which collector graphics of searching state will be collected. Returns report which includes created graphics and indication of most recently drawn object.
     /// </remarks>
-    public ISearchingReport AggregateReport(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken = null)
+    public ISearchingReport AggregateReport(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken = null)
     {
         CollectingGraphicsSource collectingGraphicsSource = new();
         _ = GraphicsSubManager<TVertexAttributes, TEdgeAttributes>.Instance.AggregateSearchingStateGraphics(searchingState,

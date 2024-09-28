@@ -34,7 +34,7 @@ public interface IUserModelType<out TUserModel, out TTemplate>
     string UserModelFileExtension { get; }
     
     /// <summary>
-    /// Template to which is represented user model tied to.
+    /// Template to which represented user model is tied to.
     /// </summary>
     TTemplate AssociatedTemplate { get; }
     

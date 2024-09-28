@@ -11,6 +11,7 @@ using Optepafi.Models.SearchingAlgorithmMan.Paths.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.ReportMan.Aggregators.Path;
 
@@ -35,7 +36,7 @@ public class SmileyFacePathReportAggregator<TVertexAttributes, TEdgeAttributes> 
     /// Then it assembles all these objects into resulting report and returns it.  
     /// </remarks>
     public IPathReport AggregateReport(SmileyFacePath<TVertexAttributes, TEdgeAttributes> path, 
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         CancellationToken? cancellationToken = null)
     {
         CollectingGraphicsSource collectingGraphicsSource = new();

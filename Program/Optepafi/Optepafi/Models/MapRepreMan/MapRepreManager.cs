@@ -12,6 +12,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.MapRepreMan;
 
@@ -128,7 +129,7 @@ public class MapRepreManager :
         (ISearchingAlgorithm, IUserModelType<IUserModel<ITemplate>, ITemplate>) otherParams) where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         var (algorithm, userModelType) = otherParams;
-        if (userModelType is IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> comptuingUserModelType)
+        if (userModelType is IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> comptuingUserModelType)
         {
             HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = new();
             foreach (var mapRepreRep in MapRepreReps)

@@ -12,6 +12,7 @@ using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.SearchingAlgorithmMan;
 
@@ -57,7 +58,7 @@ public class SearchingAlgorithmManager :
     {
         var (mapRepreRep, userModelType) = otherParams;
         HashSet<ISearchingAlgorithm> usableAlgorithms = new();
-        if (userModelType is IUserModelType< IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
+        if (userModelType is IUserModelType< IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
         {
             foreach (var searchingAlgorithm in SearchingAlgorithms)
             {
@@ -106,7 +107,7 @@ public class SearchingAlgorithmManager :
     bool ITemplateGenericVisitor<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm) otherParams)
     {
         var (mapRepreRep, userModelType, algorithm) = otherParams;
-        if (userModelType is IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
+        if (userModelType is IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
             return algorithm.DoesRepresentUsableMapRepreUserModelCombination(mapRepreRep, computingUserModelType);
         return false;
     }
@@ -140,7 +141,7 @@ public class SearchingAlgorithmManager :
     {
         
         var (track, algorithm, mapRepre, userModel, progress, cancellationToken) = otherParams;
-        if (userModel is IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
+        if (userModel is IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
         {
             if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> graph)
             {
@@ -189,10 +190,10 @@ public class SearchingAlgorithmManager :
         var (track, algorithm, mapRepre, userModels, progress, cancellationToken) = otherParams;
         
         SearchResult[] results = new SearchResult[userModels.Length];
-        List<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> usableUserModels = new();
+        List<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> usableUserModels = new();
         for(int i = 0; i < userModels.Length; ++i)
         {
-            if (userModels[i] is IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
+            if (userModels[i] is IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
             {
                 usableUserModels.Add(computingUserModel);
             }
@@ -248,7 +249,7 @@ public class SearchingAlgorithmManager :
         GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>) otherParams)
     {
         var (algorithm, mapRepre, userModel) = otherParams;
-        if (userModel is IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
+        if (userModel is IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
         {
             if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> definedFunctionalityMapRepre)
             {

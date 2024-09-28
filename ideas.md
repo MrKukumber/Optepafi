@@ -138,7 +138,7 @@
 - instalacny balicek
 - lokalizacia
 
-## Co budem ukaldat
+## Co budem ukladat
 
 - vyskove data (pre kazdy zdroj zvlast)
 - uzivatelske modely
@@ -149,36 +149,15 @@
 
 ## TODO do buducna:
 
-- nech kazda mapa moze po svojom znazornovat trat zadanu uzivatelom...nejako tak ze sa grapfickemu managerovi predaju pozicie trate a mapa pre ktoru ma byt grafika vytvorena a on to za pomocou aggregatoru vytvori...v podstate vsetky graficke objekty budu dost podobne...az potom datatemplate vo view-u podla typu objektu urci jak sa to nakresli
+- nech kazda mapa moze po svojom znazornovat trat zadanu uzivatelom...nejako tak ze sa grafickemu managerovi predaju pozicie trate a mapa pre ktoru ma byt grafika vytvorena a on to za pomocou aggregatoru vytvori...v podstate vsetky graficke objekty budu dost podobne...az potom datatemplate vo view-u podla typu objektu urci jak sa to nakresli
+- spracovanie trate zo vstupneho suboru
 - nechat nech view vykresluje iba objekty ktore sa v danej chvili su vidiet na obrazovke...neviemsice uplne teraz preco ale proste mohlo by to pomoct nejakym sposobom mozno ku zlepseniu vykonu
 - vacsiu custom-izaciu toho, ktora implementacia sa kedy pouzije, moznost viacerych implementacii algoritmov pre rovnake kombinacie mapovych reprezentacii s uzivatelskymi modelmi a uzivatel bude moct vybrat nejakym sposobom preferovanu implementaciu...to iste pre mapove reprezentacie a ich implementacie
 - poriadne spravit lokalizaciu
-
-## toto si tu odlozim
-
-dovody, preco C#:
-
-- Nástroj bude vytvárať reprezentáciu mapy a následne na nej hľadať optimálnu cestu. Takáto funkcionalita vyžaduje vyšiu výpočetnú rýchlosť a preto je lepšou voľbou ako napríklad jazyk typu python.
-- Pre efektívnejšie výpočty by sa taktiež dal použiť jazyk c++ alebo jazyk c, ale v týchto jazykoch nemám dostatočné skúsenosti a efektivita jazyku c# nieje o mnoho horšia ako efektivita spomenutých nízko-úrovňových jazykov
-- Taktiež nakoľko sa nechystám využívať metódy hlbokého strojového učenia, nebudú potrebné python-ovské vysokovýkonné knižnice strojového učenia
-  - TODO: (prípadná možnosť využitia takýchto metód následne bude volaním externého kódu) ???
-- Zároveň c# obsahuje vstavanú knižnicu *win-forms* pre vytváranie uživatelského rozhrania s ktorou som dobre oboznámený
-- Ďalším možným jazykom je jazyk Java ale ako som zmienil vyššie, rád by som využil knižnicu *win-forms* a taktiež niesom s jazykom Java dostatočne oboznámený
-- V neposlednom rade je programovanie v jazyku c# veľmi pohodlné a bezpečné
-
----
-
-preco WPF:
-
-- modernejsi nastroj nez winforms
-- vektorova grafika
-- modernejsi vzhlad
-
-nevyhody:
-
-- musim sa naucit, neovladam tolko ako winfomrs
-
----
+- zlepsit graficku stranku aplikacie
+- podpora pluginov
+- implementovat orientacke spracovanie map a algoritmy
+- zlepsit uzivatelsku privetivost
 
 ## Stare myslienky
 
@@ -188,7 +167,6 @@ nevyhody:
 - alebo vazne to robit nejak iterativne s tym ze vstup bude len porovnanie tych typov porastu a terenu
 
 Předpokládá se možnost parametrizace vyhledávácích algoritmů např. údaji o rychlosti postupu v různých typech terénu spolu s interaktívnym donastavením parametrov, ako aj možnost porovnání nalezených tras pro různé přístupy k vyhledávání (různé algoritmy, parametry pro rychlosti, uvažování výškových dat apod.)
-
 
 - reprezentovat mapu sietovym grafom (napriklad trojuholnikovim alebo akymkolvek inym druhom) a nechat ho ako tak pruzny v tom smere, ze ked pridam nejaky mapovy objekt, tak sa mi na jeho hrany pritiahnu najblizsie body k tymto hranam
 - zaroven sa mi zmenia indikatory hran v bodoch siete na take aby zodpovedali danemu pridanemu mapovemu objektu

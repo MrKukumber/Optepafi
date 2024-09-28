@@ -1,4 +1,4 @@
-\chapter{Vertikálna štruktúra aplikácie}
+\chaper{Vertikálna štruktúra aplikácie}
 
 V~tejto kapitole uvádzame bližší pohľad na~súčasnú podobu hlavného okna a~session-ov aplikácie. Aktuálne aplikácia disponuje len jedným typom session-u určeným pre~samotné vyhľadávanie ciest v~mapách (\textit{Path finding session}). Viac informácií o~vertikálnej štruktúre aplikácie je možné nájsť v~Sekcii~\ref{sessions_hlavne_okno}.
 
@@ -220,7 +220,7 @@ Počas ktorejkoľvek fázy je užívateľ schopný približovať, odďalovať a~
 % v~tejto podsekcii vymenujeme pár zaujímavých postupov využitých pri~implementácii \textit{session-u pre~vyhľadávanie ciest v~mapách}.  
 % 
 % \begin{itemize}
-    % \item \textbf{Spôsob zabezpečenia vnútornej komunikácie model view-ov} - Jednou z~náplní Model view vrstvy je zabezpečovať vnútro-session-ovú komunikáciu. Nikto okrem samotných model view-ov by nemal mať k~tejto komunikácii prístup. Okolie by mal mať možnosť vidieť iba metódy, ktorými Model view vrstva sprístupňuje svoje služby. 
+        % \item \textbf{Spôsob zabezpečenia vnútornej komunikácie model view-ov} - Jednou z~náplní Model view vrstvy je zabezpečovať vnútro-session-ovú komunikáciu. Nikto okrem samotných model view-ov by nemal mať k~tejto komunikácii prístup. Okolie by mal mať možnosť vidieť iba metódy, ktorými Model view vrstva sprístupňuje svoje služby. 
     % 
     % Následujúca implementácia zaručuje ukrytie vnútornej komunikácie model view-ov cesty-vyhľadávacieho session-u. Môže slúžiť ako príklad pre~implementáciu Model view vrstvy ostatných session-ov. 
 % 

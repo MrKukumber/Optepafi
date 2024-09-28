@@ -10,6 +10,7 @@ using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.ReportMan;
 
@@ -58,7 +59,7 @@ public class ReportSubManager<TVertexAttributes, TEdgeAttributes>
     /// <typeparam name="TPath">Type of path which report is to be aggregated. It is used for finding appropriate aggregator.</typeparam>
     /// <returns>Aggregated path report. Null, if no suitable aggregator is found.</returns>
     public IPathReport? AggregatePathReport<TPath>(
-        TPath path, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken)
+        TPath path, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken)
         where TPath : IPath<TVertexAttributes, TEdgeAttributes> 
     {
         foreach (var pathReportAggregator in PathReportAggregators)
@@ -84,7 +85,7 @@ public class ReportSubManager<TVertexAttributes, TEdgeAttributes>
     /// <typeparam name="TSearchingState">Type of searching state which report is to be aggregated. It is used for finding appropriate aggregator.</typeparam>
     /// <returns>Aggregated searching state report. Null, if no suitable aggregator is found.</returns>
     public ISearchingReport? AggregateSearchingReport<TSearchingState>(
-        TSearchingState searchingState, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
+        TSearchingState searchingState, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TSearchingState : ISearchingState<TVertexAttributes, TEdgeAttributes> 
     {
         foreach (var searchingReportAggregator in SearchingReportAggregators)

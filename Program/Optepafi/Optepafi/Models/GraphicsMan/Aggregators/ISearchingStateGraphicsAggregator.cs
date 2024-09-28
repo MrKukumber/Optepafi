@@ -3,6 +3,7 @@ using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.GraphicsMan.Aggregators;
 
@@ -33,6 +34,6 @@ public interface ISearchingStateGraphicsAggregator<in TSearchingState, TVertexAt
     /// <param name="collectorForAggregatedObjects">Collector for aggregated graphic objects.</param>
     /// <param name="cancellationToken">Cancellation token for cancelling aggregation.</param>
     public void AggregateGraphics(TSearchingState searchingState,
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken);
 }

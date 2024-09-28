@@ -18,5 +18,5 @@ public class SmileyFacesDrawer : ISearchingAlgorithm
     public string Name { get; } = "Smiley face drawer";
     
     /// <inheritdoc cref="ISearchingAlgorithm.Implementations"/>
-    public ISearchingAlgoritmImplementation[] Implementations { get; } = [SmileyFacesDrawerGeneral.Instance];
+    public ISearchingAlgorithmImplementation[] Implementations { get; } = [SmileyFacesDrawerGeneral.Instance];
 }

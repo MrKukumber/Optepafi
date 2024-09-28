@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModelAdjustables;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.UserModelMan.UserModels.Specific;
 
@@ -16,8 +17,8 @@ namespace Optepafi.Models.UserModelMan.UserModels.Specific;
 /// For more information on templates see <see cref="ITemplate{TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 public class BlankUserModel : 
-    IWeightComputingUserModel<BlankTemplate, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, 
-    ISettableUserModel
+    IWeightComputing<BlankTemplate, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, 
+    ISettable
 {
     
     /// <inheritdoc cref="IUserModel{TTemplate}.FilePath"/>
@@ -43,13 +44,13 @@ public class BlankUserModel :
         JsonSerializer.Serialize(stream, this);
     }
 
-    /// <inheritdoc cref="IWeightComputingUserModel{TTemplate,TVertexAttributes,TEdgeAttributes}.ComputeWeight"/>
+    /// <inheritdoc cref="IWeightComputing{TTemplate,TVertexAttributes,TEdgeAttributes}.ComputeWeight"/>
     public int ComputeWeight(BlankTemplate.VertexAttributes from, BlankTemplate.EdgeAttributes through, BlankTemplate.VertexAttributes to)
     {
         return VoidAdjust.Value * 13;
     }
 
-    /// <inheritdoc cref="ISettableUserModel.GetAdjustables"/>
+    /// <inheritdoc cref="ISettable.GetAdjustables"/>
     public IReadOnlySet<IUserModelAdjustable> GetAdjustables()
     {
         return new HashSet<IUserModelAdjustable> {VoidAdjust};

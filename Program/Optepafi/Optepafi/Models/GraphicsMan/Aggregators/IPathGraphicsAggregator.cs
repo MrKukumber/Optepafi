@@ -3,6 +3,7 @@ using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.GraphicsMan.Aggregators;
 
@@ -31,5 +32,5 @@ public interface IPathGraphicsAggregator<in TPath, TVertexAttributes, TEdgeAttri
     /// <param name="userModel">User model which can be asked for some information extraction.</param>
     /// <param name="collectorForAggregatedObjects">Collector for aggregated graphic objects.</param>
     /// <param name="cancellationToken">Cancellation token for cancelling aggregation.</param>
-    public void AggregateGraphics(TPath path, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken);
+    public void AggregateGraphics(TPath path, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken);
 }

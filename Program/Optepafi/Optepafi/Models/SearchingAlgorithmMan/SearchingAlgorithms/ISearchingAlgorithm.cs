@@ -11,6 +11,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 
@@ -39,7 +40,7 @@ public interface ISearchingAlgorithm
     /// <summary>
     /// Collection of usable implementations of the algorithm.
     /// </summary>
-    protected ISearchingAlgoritmImplementation[] Implementations { get; }
+    protected ISearchingAlgorithmImplementation[] Implementations { get; }
 
     /// <summary>
     /// Method that checks whether there is some implementation of algorithm that can use both map representation type and user model type represented by provided representatives.
@@ -51,7 +52,7 @@ public interface ISearchingAlgorithm
     /// <typeparam name="TVertexAttributes">Type of vertex attributes bounded to tested user model type.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes bounded to tested user model type.</typeparam>
     /// <returns>True if any of implementations can use both represented map representation type and user model type. False otherwise</returns>
-    sealed bool DoesRepresentUsableMapRepreUserModelCombination<TVertexAttributes, TEdgeAttributes>(IMapRepreRepresentative<IMapRepre> mapRepreRep, IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) 
+    sealed bool DoesRepresentUsableMapRepreUserModelCombination<TVertexAttributes, TEdgeAttributes>(IMapRepreRepresentative<IMapRepre> mapRepreRep, IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) 
         where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         var graphRepresentative = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
@@ -81,7 +82,7 @@ public interface ISearchingAlgorithm
     /// <exception cref="ArgumentException">When no implementation is able to use provided graph or any of provided user models.</exception>
     sealed IPath<TVertexAttributes, TEdgeAttributes>[] ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IList<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>> userModels,
+        IList<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>> userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
@@ -112,7 +113,7 @@ public interface ISearchingAlgorithm
     /// <exception cref="ArgumentException">When no implementation is able to use provided graph or user model.</exception>
     sealed ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
+        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {

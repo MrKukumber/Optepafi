@@ -4,6 +4,7 @@ using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.ReportMan;
 
@@ -68,7 +69,7 @@ public class ReportManager :
         (IUserModel<ITemplate>, CancellationToken?) otherParams)
     {
         var (userModel, cancellationToken) = otherParams;
-        if (userModel is IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> usableUserModel)
+        if (userModel is IComputing<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> usableUserModel)
         {
             var pathReport = ReportSubManager<TVertexAttributes, TEdgeAttributes>.Instance.AggregatePathReport(path, usableUserModel, cancellationToken);
             if (pathReport is not null) return (AggregationResult.Aggregated, pathReport);

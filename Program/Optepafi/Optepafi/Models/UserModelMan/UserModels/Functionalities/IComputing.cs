@@ -1,7 +1,7 @@
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.UserModelMan.UserModels;
+namespace Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 /// <summary>
 /// Represents user model that can provide services for computing and aggregating properties bounded to some vertex/edge attributes.
@@ -13,7 +13,7 @@ namespace Optepafi.Models.UserModelMan.UserModels;
 /// <typeparam name="TTemplate">Associated template type.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes, which is user model able to use for delivering services.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes, which is user model able to use for delivering services.</typeparam>
-public interface IComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes> : IUserModel<TTemplate>
+public interface IComputing<out TTemplate, in TVertexAttributes, in TEdgeAttributes> : IUserModel<TTemplate>
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes

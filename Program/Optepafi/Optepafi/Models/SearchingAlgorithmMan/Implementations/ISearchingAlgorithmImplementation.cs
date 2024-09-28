@@ -10,6 +10,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.Implementations;
 
@@ -20,7 +21,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan.Implementations;
 /// Every implementation defines its requirements for used map representations functionality in process of searching. This requirements can be tested by <see cref="IsUsableGraph{TVertexAttributes,TEdgeAttributes}"/> and <see cref="DoesRepresentUsableGraph"/> methods.  
 /// For more information about searching algorithms see <see cref="ISearchingAlgorithm"/>.  
 /// </summary>
-public interface ISearchingAlgoritmImplementation
+public interface ISearchingAlgorithmImplementation
 {
     /// <summary>
     /// For provided graph representative resolves whether represented graph type satisfies implementations functionality requirements.
@@ -43,7 +44,7 @@ public interface ISearchingAlgoritmImplementation
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in represented user model type.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in represented user model type.</typeparam>
     /// <returns>True, if all requirements are satisfied. False otherwise.</returns>
-    bool DoesRepresentUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes;
+    bool DoesRepresentUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes;
 
     /// <summary>
     /// Checks whether provided graphs functionality satisfies implementations requirements.
@@ -69,7 +70,7 @@ public interface ISearchingAlgoritmImplementation
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used by user model.</typeparam>
     /// <returns>True, if all requirements are satisfied. False otherwise.</returns>
     bool IsUsableUserModel<TVertexAttributes, TEdgeAttributes>(
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
+        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
@@ -83,7 +84,7 @@ public interface ISearchingAlgoritmImplementation
     /// <typeparam name="TEdgeAttributes"></typeparam>
     /// <returns></returns>
     bool AreUsableUserModels<TVertexAttributes, TEdgeAttributes>(
-        IEnumerable<IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> userModels)
+        IEnumerable<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> userModels)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
@@ -96,7 +97,8 @@ public interface ISearchingAlgoritmImplementation
 
     /// <summary>
     /// Searches for paths on provided map representation for each leg of given track each time with respect to one of provided user models.
-    /// 
+    ///
+    /// Functionalities of user models and graph should be tested before calling of this method. 
     /// It should be secured by caller that this will be the only progress which uses provided graph instance.  
     /// </summary>
     /// <param name="track">Collection of legs for which paths should be searched for.</param>
@@ -109,14 +111,14 @@ public interface ISearchingAlgoritmImplementation
     /// <returns>Collection of resulting found paths. Merged paths for legs of track are returned in order of corresponding user models.</returns>
     IPath<TVertexAttributes, TEdgeAttributes>[] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IList<IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> userModels,
+        IList<IComputing<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> userModels,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
     /// <summary>
     /// Method for retrieving searching algorithm executor of this implementation.
-    /// 
+    ///
     /// This executor will lock provided graph for itself so it should be disposed immediately after end of its usage.  
     /// </summary>
     /// <param name="graph">Graph upon which will executor look for paths</param>
@@ -126,7 +128,7 @@ public interface ISearchingAlgoritmImplementation
     /// <returns>Executor of this implementation.</returns>
     ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IComputingUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
+        IComputing<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
@@ -150,7 +152,7 @@ public interface ISearchingAlgoritmImplementation
     /// <returns>Merged paths for legs of track.</returns>
     protected IPath<TVertexAttributes, TEdgeAttributes> ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;

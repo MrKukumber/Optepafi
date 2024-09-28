@@ -593,10 +593,25 @@ opozdely log z programovania projetku
 - sice to niektore casti kodu jemne zneprehladnilo, myslim si ale ze myslienkou to ale tento nedostatok prebije
 - taktiez som ako do IUserModelType, tak do IUserModel pridal novu vlastnost ktora vracia bidnuty template - ulahci to pracu v tom, ze uz nebude potrebne predavat zbitocne naviac template aby sa zistilo, ake typy atributov su pouzite v uzivatelskom modelu
 
-## 19.6
+## 19.6.2024
 
 Dokoncene ukazkove smiley face cesty, reporty ciest, kresliaci algoritmus smiley face-ov, stavy kreslenia tohto algoritmu, ich reporty, view modely, konvertory agregatory a dataTemplate-y zodpovedajuce vytvorenym reportom. Konecne debugnutie path findingoveho sessionu.
 
 Vzhladom na cas asi uz nebudem dorabat session pre vytvaranie uzivatelskych modelov. Este spravime nejaky ukazkov, simulujuci zdroj vyskovych dat aby sa dalo ukazat ziskavanie a ukaldanie vyskovych dat a to bude asi vsetko‾\(*_*)/‾.
 
 Zajtra sa ale vlozim do pisania komentarov, aby som si to este nechal prejst hlavou.
+
+## 28.6.2024
+
+Co treba spravit:
+
+- ! pridat vyber mapovej reprezentacie do path finding sessionu
+- ! spravit parser pre omap
+- ! spravit orienteering template
+- ! vytvorit mapovu reprezentaciu pre orienteering template a omap mapy + constructor 
+- ! spravit A* algoritmus
+- ! spravit uzivatelske modely pre orientak, nastavovatelne
+- ! zrobit stahovanie vyskovych dat 
+- ! spravit session pre vytvaranie uzivatelskych modelov
+- modfikovat model, tak aby mohli jednotlive polozky definovat svoje vnutorne nastavitelne vlastonsti
+  - umoznit nastavovat tieto vlastnosti v hlavnych nastaveniach

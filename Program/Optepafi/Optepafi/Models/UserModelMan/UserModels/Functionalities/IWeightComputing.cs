@@ -1,7 +1,7 @@
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.UserModelMan.UserModels;
+namespace Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 /// <summary>
 /// Represents ability to compute weights from provided edge and vertex attributes.
@@ -12,7 +12,7 @@ namespace Optepafi.Models.UserModelMan.UserModels;
 /// <typeparam name="TTemplate">Associated template type.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes, which is user model able to use for computing weights.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes, which is user model able to use for computing weights.</typeparam>
-public interface IWeightComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes> : IComputingUserModel<TTemplate, TVertexAttributes, TEdgeAttributes>
+public interface IWeightComputing<out TTemplate, in TVertexAttributes, in TEdgeAttributes> : IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes

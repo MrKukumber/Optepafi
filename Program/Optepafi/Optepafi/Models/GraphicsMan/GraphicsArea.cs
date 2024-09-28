@@ -3,7 +3,7 @@ using Optepafi.Models.MapMan;
 namespace Optepafi.Models.GraphicsMan;
 
 /// <summary>
-/// Struct representing area of map, therefore are of its graphics.
+/// Struct representing area of map, therefore area of its graphics.
 /// 
 /// It defines rectangle that encapsulates whole map. This rectangle is defined by its lef-bottom and top-right vertex coordinates.  
 /// </summary>

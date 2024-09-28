@@ -5,6 +5,7 @@ using Optepafi.Models.SearchingAlgorithmMan.Paths.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.GraphicsMan.Aggregators.Path;
 
@@ -27,7 +28,7 @@ public class SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes
     /// Aggregator will create graphic objects for each such leg and submit them into collector.  
     /// </remarks>
     public void AggregateGraphics(SmileyFacePath<TVertexAttributes, TEdgeAttributes> path, 
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, 
+        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, 
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
         foreach (var (legStart, legFinish) in path.PathSegments)

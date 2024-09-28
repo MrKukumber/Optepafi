@@ -5,6 +5,7 @@ using Optepafi.Models.SearchingAlgorithmMan.SearchingStates.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.GraphicsMan.Aggregators.SearchingState;
 
@@ -27,7 +28,7 @@ public class SmileyFacePathDrawingStateGraphicsAggregator<TVertexAttributes, TEd
     /// <c>SmileyFacePathDrawingState</c> provides information about which parts of drawing were already drawn.  
     /// Aggregator will create graphic object for each such part and submit it into collector.   
     /// </remarks>
-    public void AggregateGraphics(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+    public void AggregateGraphics(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
         foreach (var ((legStart, legFinish), smileyFaceObjects) in searchingState.DrawnObjects)

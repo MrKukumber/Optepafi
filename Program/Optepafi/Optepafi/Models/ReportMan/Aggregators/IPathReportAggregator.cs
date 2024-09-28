@@ -5,6 +5,7 @@ using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.ReportMan.Aggregators;
 
@@ -33,5 +34,5 @@ public interface IPathReportAggregator<in TPath, TVertexAttributes, TEdgeAttribu
     /// <param name="userModel">User model which can be asked for some information extraction.</param>
     /// <param name="cancellationToken">Cancellation token for cancelling of aggregation.</param>
     /// <returns></returns>
-    IPathReport AggregateReport(TPath path, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken = null);
+    IPathReport AggregateReport(TPath path, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken = null);
 }

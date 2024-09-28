@@ -11,7 +11,7 @@ namespace Optepafi.Models.TemplateMan;
 
 
 /// <summary>
-/// Represents templates of attributes used in graph's verteces and edges for describing their position and properties.
+/// Represents templates of attributes used in graph's vertices and edges for describing their position and properties.
 /// 
 /// It represents not so much a contract as a identifier declaring what vertex and edge attributes are used in its name.  
 /// Its predecessor <see cref="ITemplate"/> should not be directly implemented. Its only implementation should be this interface.  

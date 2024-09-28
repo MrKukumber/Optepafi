@@ -7,6 +7,7 @@ using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.SearchingAlgorithmMan;
 
@@ -57,7 +58,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     public delegate IPath AlgorithmSearchingDelegate(
         Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
-        IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
     
     private readonly Mutex _searchMutex = new();
@@ -71,11 +72,11 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     private bool _disposed;
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
-    private readonly IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
+    private readonly IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
     private readonly IGraph<TVertexAttributes, TEdgeAttributes> _graph;
     
 
-    public SearchingExecutor(IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputingUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, AlgorithmSearchingDelegate algorithmSearchingDelegate )
+    public SearchingExecutor(IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, AlgorithmSearchingDelegate algorithmSearchingDelegate )
     {
         _graph = graph;
         _userModel = userModel;
