@@ -7,6 +7,7 @@ using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.Graphs.Specific;
 using Optepafi.Models.MapRepreMan.Implementations.Specific;
 using Optepafi.Models.TemplateMan.Templates;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific;
 
@@ -17,7 +18,7 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific;
 /// For more information on representatives of elevation data independent implementations see <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 public class BlankGraphElevDataDepBlankTemplateTextMapImplementationRep :
-    ElevDataDepImplementationRep<BlankTemplate, TextMap, TextMap, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
+    ElevDataDepImplementationRep<BlankTemplate, TextMap, TextMap, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, NullConfiguration, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
     public static BlankGraphElevDataDepBlankTemplateTextMapImplementationRep Instance { get; } = new();
     private BlankGraphElevDataDepBlankTemplateTextMapImplementationRep() { }
@@ -34,7 +35,7 @@ public class BlankGraphElevDataDepBlankTemplateTextMapImplementationRep :
     /// It simulates implementations creation with reporting state of simulated process.
     /// </remarks>
     public override IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes> ConstructMapRepre
-    (BlankTemplate template, TextMap map, IElevData elevData, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
+    (BlankTemplate template, TextMap map, IElevData elevData, NullConfiguration configuration, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
     {
         for (int i = 1; i <= 100; i++)
         {

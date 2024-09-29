@@ -7,6 +7,7 @@ using Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific;
 using Optepafi.Models.MapRepreMan.MapRepres.Specific;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives.Specific;
 
@@ -28,7 +29,7 @@ public class BlankRepreRep : IMapRepreRepresentative<IBlankRepre>
     public IImplementationIndicator<ITemplate, IMap, IBlankRepre>[] ImplementationIndicators { get; } = [BlankGraphElevDataDepBlankTemplateTextMapImplementationRep.Instance];
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.GetCorrespondingGraphRepresentative{TVertexAttributes, TEdgeAttributes}"/>
-    public IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>() where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+    public IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, IConfiguration, TVertexAttributes, TEdgeAttributes> GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>() where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         return BlankGraphRep<TVertexAttributes, TEdgeAttributes>.Instance;
     }

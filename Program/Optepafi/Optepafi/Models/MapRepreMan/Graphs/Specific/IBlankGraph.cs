@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Optepafi.Models.MapRepreMan.MapRepres.Specific;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 
@@ -17,5 +19,8 @@ public interface IBlankGraph<TVertexAttributes, TEdgeAttributes> :
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    
+    public class Configuration : IConfiguration
+    {
+        public List<ConfigItem> ConfigItems { get; } = new();
+    }
 }

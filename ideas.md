@@ -149,7 +149,6 @@
 
 ## TODO do buducna:
 
-- nech kazda mapa moze po svojom znazornovat trat zadanu uzivatelom...nejako tak ze sa grafickemu managerovi predaju pozicie trate a mapa pre ktoru ma byt grafika vytvorena a on to za pomocou aggregatoru vytvori...v podstate vsetky graficke objekty budu dost podobne...az potom datatemplate vo view-u podla typu objektu urci jak sa to nakresli
 - spracovanie trate zo vstupneho suboru
 - nechat nech view vykresluje iba objekty ktore sa v danej chvili su vidiet na obrazovke...neviemsice uplne teraz preco ale proste mohlo by to pomoct nejakym sposobom mozno ku zlepseniu vykonu
 - vacsiu custom-izaciu toho, ktora implementacia sa kedy pouzije, moznost viacerych implementacii algoritmov pre rovnake kombinacie mapovych reprezentacii s uzivatelskymi modelmi a uzivatel bude moct vybrat nejakym sposobom preferovanu implementaciu...to iste pre mapove reprezentacie a ich implementacie
@@ -158,6 +157,10 @@
 - podpora pluginov
 - implementovat orientacke spracovanie map a algoritmy
 - zlepsit uzivatelsku privetivost
+
+## DONE
+
+- nech kazda mapa moze po svojom znazornovat trat zadanu uzivatelom...nejako tak ze sa grafickemu managerovi predaju pozicie trate a mapa pre ktoru ma byt grafika vytvorena a on to za pomocou aggregatoru vytvori...v podstate vsetky graficke objekty budu dost podobne...az potom datatemplate vo view-u podla typu objektu urci jak sa to nakresli
 
 ## Stare myslienky
 
@@ -192,3 +195,10 @@ Předpokládá se možnost parametrizace vyhledávácích algoritmů např. úda
 - reprezentacia RE si ak potrebuje postupne dovytvara zo seba graf, ktory vracia algoritmu, ktory na nom nasledne hlada danu cestu
 
 
+- Mapy su jedny konkretne - kazda spracovava jeden konkretny format, dedenie mozne jedine ak by jeden format bol "podformatom" druheho
+- Template-ty mozu mat potomkov
+- mapove reprezentacie/grafy sa budu dat konfigurovat, pre jednu mapu a template len jedna implementacia mapovej repre
+- uzivatelskych modelov moze byt pre template viac druhov a bude mozne je konfigurovat
+- vyhladavacie algoritmy konfigurovatelne, pre kazdu map. repre a uzivatelsky model jedna implementacia
+
+- mpaove reprezentacia a uzivatelske modely mozu mat aj potomkov i guess, ale zretel sa na to prilis brat nebude...mozno v buducnosti aj v gui bude stromova struktura pre tieto dedicne hierarchie

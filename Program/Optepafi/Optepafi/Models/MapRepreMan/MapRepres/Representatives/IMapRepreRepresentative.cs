@@ -7,6 +7,7 @@ using Optepafi.Models.MapRepreMan.Graphs.Representatives;
 using Optepafi.Models.MapRepreMan.Implementations.Representatives;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 
@@ -19,7 +20,7 @@ namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 /// - collection of implementation indicators
 /// - reference to the corresponding graph representative
 ///
-/// Implementation indicator collection should contain either <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>. or <see cref="MapRepreManager"/> instances so they could be used for map creation too.  
+/// Implementation indicator collection should contain either <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/>. or <see cref="MapRepreManager"/> instances so they could be used for map creation too.  
 /// Each implementation representative should occur in this collection for one template-map combination at most once. So there should be at most one elev data dependent and at most one elev data independent implementation for each template-map combination.  
 /// Corresponding graph representative provides work with corresponding graph derived from represented map representation by implementation of this interface.  
 /// Each map representation should have its own representative, so it could be presented at <see cref="MapRepreManager"/> as viable map representation.  
@@ -33,10 +34,11 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <summary>
     /// Indicator collection of all implementations of represented map representation.
     /// 
-    /// These indicators should be of <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> or <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/> type so they could be used for map creation too.
+    /// These indicators should be of <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/> or <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/> type so they could be used for map creation too.
     /// </summary>
     IImplementationIndicator<ITemplate, IMap, TMapRepre>[] ImplementationIndicators { get; }
-
+    
+    
     /// <summary>
     /// Returns graph representative which represents corresponding graph derived from represented map representation.
     /// 
@@ -45,11 +47,12 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <typeparam name="TVertexAttributes">Type of vertex attributes of represented graph.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes of represented graph.</typeparam>
     /// <returns>Representative of corresponding graph to the map representation.</returns>
-    IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
+    IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, IConfiguration, TVertexAttributes, TEdgeAttributes>
         GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>()
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
+    sealed IConfiguration DefaultConfiguration { get => GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>().DefaultConfiguration; } 
     /// <summary>
     /// Method which creates map representation from provided template and map represented by this representative.
     /// 
@@ -59,6 +62,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// </summary>
     /// <param name="template">Used template in map representation creation.</param>
     /// <param name="map">Used map in map representation creation.</param>
+    /// <param name="configuration">Configuration of created map representation. Type of configuration must match with <c>TConfiguration</c> type parameter of corresponding graph representative.</param>
     /// <param name="progress">Object by which can be progress of construction subscribed .</param>
     /// <param name="cancellationToken">Token for cancelling construction.</param>
     /// <typeparam name="TTemplate">Type of provided template. Used for finding of corresponding constructor.</typeparam>
@@ -66,7 +70,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <typeparam name="TVertexAttributes">Type of vertex attributes represented by provided template.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes represented by provided template.</typeparam>
     /// <returns>Created map representation.</returns>
-    sealed IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map,
+    sealed IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
         where TMap : IMap 
@@ -74,7 +78,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
         where TEdgeAttributes : IEdgeAttributes
     {
         return GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>()
-            .CreateGraph(template, map, progress, cancellationToken, ImplementationIndicators);
+            .CreateGraph(template, map, configuration, progress, cancellationToken, ImplementationIndicators);
     }
 
     /// <summary>
@@ -86,6 +90,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <param name="template">Used template in map representation creation.</param>
     /// <param name="map">Used map in map representation creation.</param>
     /// <param name="elevData">Elevation data corresponding to map area used in map representation creation.</param>
+    /// <param name="configuration">Configuration of created map representation. Type of configuration must match with <c>TConfiguration</c> type parameter of corresponding graph representative.</param>
     /// <param name="progress">Object by which can be progress of construction subscribed .</param>
     /// <param name="cancellationToken">Token for cancelling construction.</param>
     /// <typeparam name="TTemplate">Type of provided template. Used for finding of corresponding constructor.</typeparam>
@@ -93,7 +98,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <typeparam name="TVertexAttributes">Type of vertex attributes represented by provided template.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes represented by provided template.</typeparam>
     /// <returns>Created map representation.</returns>
-    sealed IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData,
+    sealed IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData, IConfiguration configuration, 
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
         where TMap : IGeoLocatedMap 
@@ -101,6 +106,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
         where TEdgeAttributes : IEdgeAttributes
     {
         return GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>()
-            .CreateGraph(template, map, elevData, progress, cancellationToken, ImplementationIndicators);
+            .CreateGraph(template, map, elevData, configuration, progress, cancellationToken, ImplementationIndicators);
     }
+    
 }

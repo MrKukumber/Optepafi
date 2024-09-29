@@ -14,6 +14,7 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.Implementations.SmileyFaceDrawer;
 
@@ -34,9 +35,9 @@ public class SmileyFacesDrawerGeneral : ISearchingAlgorithmImplementation
     /// <remarks>
     /// Used graph does not have to provide no special functionality.
     /// </remarks>
-    public bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes> graphRepresentative)
+    public bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IConfiguration, IVertexAttributes, IEdgeAttributes> graphRepresentative)
     {
-        if (graphRepresentative is IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>) 
+        if (graphRepresentative is IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IConfiguration, IVertexAttributes, IEdgeAttributes>) 
             return true;
         return false;
     }

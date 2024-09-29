@@ -11,6 +11,7 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.Implementations;
 
@@ -31,7 +32,7 @@ public interface ISearchingAlgorithmImplementation
     /// </summary>
     /// <param name="graphRepresentative">Representative of graph type whose functionalities are tested.</param>
     /// <returns>True if all requirements are satisfied. Otherwise false.</returns>
-    bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>
+    bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IConfiguration, IVertexAttributes, IEdgeAttributes>
             graphRepresentative);
 
     /// <summary>
