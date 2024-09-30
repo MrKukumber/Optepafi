@@ -8,6 +8,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.SearchingAlgorithmMan;
 
@@ -48,17 +49,20 @@ public interface ISearchingExecutor : IDisposable
 ///
 /// It uses Mutex and AutoResetEvents for achieving correct behaviour of executor. 
 /// </summary>
+/// <typeparam name="TConfiguration">Type of executed algorithms configuration.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes used in vertices of a graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes used in edges of a graph.</typeparam>
-public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
+public class SearchingExecutor<TConfiguration, TVertexAttributes, TEdgeAttributes> :
     ISearchingExecutor
+    where TConfiguration : IConfiguration
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    public delegate IPath AlgorithmSearchingDelegate(
+    public delegate IPath? AlgorithmSearchingDelegate(
         Leg[] track,
         IGraph<TVertexAttributes, TEdgeAttributes> graph,
         IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        TConfiguration configuration,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
     
     private readonly Mutex _searchMutex = new();
@@ -74,13 +78,15 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
     private readonly IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
     private readonly IGraph<TVertexAttributes, TEdgeAttributes> _graph;
+    private readonly TConfiguration _configuration;
     
 
-    public SearchingExecutor(IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, AlgorithmSearchingDelegate algorithmSearchingDelegate )
+    public SearchingExecutor(IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, AlgorithmSearchingDelegate algorithmSearchingDelegate, TConfiguration configuration)
     {
         _graph = graph;
         _userModel = userModel;
         _algorithmSearchingDelegate = algorithmSearchingDelegate;
+        _configuration = configuration;
         Task.Run(ExecuteSearchingLoopAsync);
         _constructionResetEvent.WaitOne();
     }
@@ -123,7 +129,7 @@ public class SearchingExecutor<TVertexAttributes, TEdgeAttributes> :
             _searchLoopResetEvent.WaitOne();
             while (!_disposed)
             {
-                _outputPath = _algorithmSearchingDelegate(_inputTrack, _graph, _userModel, _inputProgress, _inputCancellationToken);
+                _outputPath = _algorithmSearchingDelegate(_inputTrack, _graph, _userModel, _configuration,_inputProgress, _inputCancellationToken);
                 _searchMethodResetEvent.Set();
                 _searchLoopResetEvent.WaitOne();
             }

@@ -59,8 +59,8 @@ public interface IGraphRepresentative<out TGraph, out TConfiguration, TVertexAtt
             {
                 if (configuration is TConfiguration config)
                     return constructor.ConstructMapRepre(template, map, config, progress, cancellationToken);
-                else
-                    return constructor.ConstructMapRepre(template, map, DefaultConfiguration, progress, cancellationToken);
+                //TODO: log wrong type of retrieved configuration
+                return constructor.ConstructMapRepre(template, map, DefaultConfiguration, progress, cancellationToken);
             }
         }
 
