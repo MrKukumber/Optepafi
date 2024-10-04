@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -7,6 +8,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModelReps.SpecificUserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.UserModelMan;
 
@@ -18,7 +20,8 @@ namespace Optepafi.Models.UserModelMan;
 /// All operations provided by this class are thread safe as long as same arguments are not used concurrently multiple times.  
 /// </summary>
 public class UserModelManager : 
-    ITemplateGenericVisitor<HashSet<IUserModelType<IUserModel<ITemplate>, ITemplate>>>
+    ITemplateGenericVisitor<HashSet<IUserModelType<IUserModel<ITemplate>, ITemplate>>>,
+    IUserModelGenericVisitor<bool, IConfiguration>
 {
     public static UserModelManager Instance { get; } = new();
     private UserModelManager() { }
@@ -47,7 +50,7 @@ public class UserModelManager :
         HashSet<IUserModelType<IUserModel<ITemplate>,ITemplate>> correspondingUserModelTypes = new();
         foreach (var userModelType in UserModelTypes)
         {
-            if (userModelType is IUserModelTemplateBond<IUserModel<TTemplate>, TTemplate>)
+            if (userModelType is IUserModelTemplateBond<TTemplate>)
                 correspondingUserModelTypes.Add(userModelType);
         }
         return correspondingUserModelTypes;
@@ -94,10 +97,11 @@ public class UserModelManager :
     /// Returns new instance of user model of provided type.
     /// </summary>
     /// <param name="userModelType">User model type of which new user model is requested.</param>
+    /// <param name="configuration">Configuration used in newly created user model.</param>
     /// <returns>New instance of user model.</returns>
-    public IUserModel<ITemplate> GetNewUserModel(IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
+    public IUserModel<ITemplate> GetNewUserModel(IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType, IConfiguration? configuration)
     {
-        return userModelType.GetNewUserModel();
+        return userModelType.GetNewUserModel(configuration);
     }
 
     public enum UserModelLoadResult{Ok, UnableToReadFromFile, UnableToDeserialize, Canceled}
@@ -109,15 +113,42 @@ public class UserModelManager :
     /// </summary>
     /// <param name="userModelStreamWithPath">Provided stream from which user model should be deserialized alongside with path to the serialization file.</param>
     /// <param name="userModelType">User model type defining what user model should be deserialized.</param>
+    /// <param name="configuration">Configuration which should be used in deserialized user model.</param>
     /// <param name="cancellationToken">Token for cancellation of deserialization.</param>
     /// <param name="userModel">Out parameter for resulting deserialized user model.</param>
     /// <returns>Result of deserialization.</returns>
-    public UserModelLoadResult TryDeserializeUserModelOfTypeFrom((Stream,string) userModelStreamWithPath, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType, CancellationToken? cancellationToken, out IUserModel<ITemplate>? userModel)
+    public UserModelLoadResult TryDeserializeUserModelOfTypeFrom((Stream,string) userModelStreamWithPath, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType, IConfiguration? configuration,CancellationToken? cancellationToken, out IUserModel<ITemplate>? userModel)
     {
-        userModel = userModelType.DeserializeUserModel(userModelStreamWithPath, cancellationToken, out UserModelLoadResult result);
+        userModel = userModelType.DeserializeUserModel(userModelStreamWithPath, configuration, cancellationToken, out UserModelLoadResult result);
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested)
             return UserModelLoadResult.Canceled;
         return result;
+    }
+
+    /// <summary>
+    /// Method for changing configuration of existing user model instance.
+    /// 
+    /// This method uses generic visitor pattern on provided user model so that correct user model representative could be chosen to correctly change user model configuration.
+    /// </summary>
+    /// <param name="userModel">User model which configuration should be changed.</param>
+    /// <param name="newConfiguration">New configuration for the user model.</param>
+    /// <returns></returns>
+    public bool ChangeUserModelConfiguration(IUserModel<ITemplate> userModel, IConfiguration newConfiguration)
+    {
+        return userModel.AcceptGeneric(this, newConfiguration);
+    }
+
+    bool IUserModelGenericVisitor<bool, IConfiguration>.GenericVisit<TUserModel, TTemplate>(TUserModel userModel, IConfiguration newConfiguration)
+    {
+        foreach (var userModelType in UserModelTypes)
+        {
+            if (userModelType is IUserModelIdentifier<TUserModel> userModelIdentifier)
+            {
+                userModelIdentifier.ChangeConfiguration(userModel, newConfiguration);
+                return true;
+            }
+        }
+        return false;
     }
 }
 

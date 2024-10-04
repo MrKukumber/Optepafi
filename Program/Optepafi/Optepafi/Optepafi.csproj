@@ -87,7 +87,6 @@
         <DependentUpon>MainWindowLocal.sk-SK.resx</DependentUpon>
       </Compile>
       <Compile Remove="Localization\**" />
-      <Compile Remove="Models\UserModelMan\IUserModelGenericVisitor.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataIndependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataDependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\IMapRepreConstructor.cs" />

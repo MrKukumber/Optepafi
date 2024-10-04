@@ -4,38 +4,44 @@ using System.Text.Json;
 using System.Threading;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModels.Specific;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.UserModelMan.UserModelReps.SpecificUserModelReps;
 
 /// <summary>
 /// Representative of blank user model.
 /// 
-/// For more information on user model representatives see <see cref="IUserModelRepresentative{TUserModel,TTemplate}"/>, <see cref="IUserModelType{TUserModel,TTemplate}"/> or <see cref="IUserModelTemplateBond{TUserModel,TTemplate}"/>.  
+/// For more information on user model representatives see <see cref="UserModelRepresentative{TUserModel,TTemplate,TConfiguration}"/>, <see cref="IUserModelType{TUserModel,TTemplate}"/> or <see cref="IUserModelTemplateBond{TUserModel,TTemplate}"/>.  
 /// </summary>
-public class BlankUserModelRepresentative : IUserModelRepresentative<BlankUserModel, BlankTemplate>
+public class BlankUserModelRepresentative : UserModelRepresentative<BlankUserModel,BlankTemplate,NullConfiguration>
 {
     public static BlankUserModelRepresentative Instance { get; } = new();
     private BlankUserModelRepresentative() { }
     
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.AssociatedTemplate"/>
-    public BlankTemplate AssociatedTemplate  => BlankTemplate.Instance;
-    
+    public override BlankTemplate AssociatedTemplate  => BlankTemplate.Instance;
+
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.DefaultConfiguration"/>
+    protected override NullConfiguration DefaultConfiguration => new();
     
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.UserModelTypeName"/>
-    public string UserModelTypeName  => "Blank user model";
+    public override string UserModelTypeName  => "Blank user model";
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.UserModelFileNameSuffix"/>
-    public string UserModelFileNameSuffix  => "blankUM";
+    public override string UserModelFileNameSuffix  => "blankUM";
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.UserModelFileExtension"/>
-    public string UserModelFileExtension  => "json";
+    public override string UserModelFileExtension  => "json";
     
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.GetNewUserModel"/>
-    public BlankUserModel GetNewUserModel()
+    protected override BlankUserModel GetNewUserModel(NullConfiguration configuration)
     {
         return new BlankUserModel();
     }
 
+    /// <inheritdoc cref="UserModelRepresentative{TUserModel,TTemplate,TConfiguration}.ChangeConfiguration(TUserModel,TConfiguration)"/>
+    protected override void ChangeConfiguration(BlankUserModel userModel, NullConfiguration configuration) { }
+
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.DeserializeUserModel"/>
-    public BlankUserModel? DeserializeUserModel((Stream, string) serializationWithPath, CancellationToken? cancellationToken,
+    protected override BlankUserModel? DeserializeUserModel((Stream, string) serializationWithPath, NullConfiguration configuration, CancellationToken? cancellationToken,
         out UserModelManager.UserModelLoadResult result)
     {
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) { result = UserModelManager.UserModelLoadResult.Canceled; return null; }

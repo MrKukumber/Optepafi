@@ -56,6 +56,24 @@ public class BlankUserModel :
         return new HashSet<IUserModelAdjustable> {VoidAdjust};
     }
 
+    /// <inheritdoc cref="IUserModel{TTemplate}.AcceptGeneric{TOut,TOtherParams}"/>
+    public TOut AcceptGeneric<TOut, TOtherParams>(IUserModelGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams)
+    {
+        return genericVisitor.GenericVisit<BlankUserModel, BlankTemplate>(this, otherParams);
+    }
+
+    /// <inheritdoc cref="IUserModel{TTemplate}.AcceptGeneric{TOut}"/>
+    public TOut AcceptGeneric<TOut>(IUserModelGenericVisitor<TOut> genericVisitor)
+    {
+        return genericVisitor.GenericVisit<BlankUserModel, BlankTemplate>(this);
+    }
+
+    /// <inheritdoc cref="IUserModel{TTemplate}.AcceptGeneric"/>
+    public void AcceptGeneric(IUserModelGenericVisitor genericVisitor)
+    {
+        genericVisitor.GenericVisit<BlankUserModel, BlankTemplate>(this);
+    }
+
     /// <summary>
     /// Void adjustable that represents void inside this template.
     /// </summary>

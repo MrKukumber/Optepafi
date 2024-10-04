@@ -16,7 +16,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan.Implementations;
 /// Implementation of an algorithm.
 ///
 /// Each implementation is tied to some particular searching algorithm and it should obey its principles. All algorithm implementations are collected and presented in searching algorithm singleton.  
-/// For more information about searching algorithms see <see cref="ISearchingAlgorithm{TConfiguration}"/>.  
+/// For more information about searching algorithms see <see cref="SearchingAlgorithm{TConfiguration}"/>.  
 /// </summary>
 public interface ISearchingAlgorithmImplementation<in TConfiguration> : ISearchingAlgorithmImplementationRequirementsIndicator where TConfiguration : IConfiguration
 {

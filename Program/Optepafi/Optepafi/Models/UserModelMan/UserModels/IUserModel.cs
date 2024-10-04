@@ -31,4 +31,10 @@ public interface IUserModel<out TTemplate> where TTemplate : ITemplate
     public string FilePath { get; }
     public string Serialize();
     public void SerializeTo(Stream stream);
+
+    public TOut AcceptGeneric<TOut, TOtherParams>(IUserModelGenericVisitor<TOut, TOtherParams> genericVisitor,
+        TOtherParams otherParams);
+
+    public TOut AcceptGeneric<TOut>(IUserModelGenericVisitor<TOut> genericVisitor);
+    public void AcceptGeneric(IUserModelGenericVisitor genericVisitor);
 }

@@ -2,15 +2,16 @@ using System.IO;
 using System.Threading;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.UserModelMan.UserModelReps;
 
 /// <summary>
-/// One of three interfaces whose implementations represent individual user model types that are tied to specific template type.
+/// One of three interfaces whose implementations represent properties of individual user model types that is tied to specific template type.
 /// 
-/// The other two are <see cref="IUserModelRepresentative{TTemplate,TUserModel}"/> and <see cref="IUserModelTemplateBond{TUserModel,TTemplate}"/>.  
+/// The other two are <see cref="IUserModelIdentifier{TUserModel}"/> and <see cref="IUserModelTemplateBond{TTemplate}"/>.  
 /// This interface provides methods and properties, that are used for creating and deserializing user models. It also contains referenced to template to which is represented user model tied.  
-/// It should not be implemented right away. All implementations should implement <c>IUserModelRepresentative{TTemplate, TUserModel}</c> instead.  
+/// It should not be implemented right away. All implementations should derive from <see cref="UserModelRepresentative{TUserModel,TTemplate,TConfiguration}"/> instead.  
 /// Thanks to covariance of its type parameters it is useful for transferring of user model representatives in non generic way.  
 /// </summary>
 /// <typeparam name="TTemplate">Template type to which represented user model is tied.</typeparam>
@@ -39,17 +40,24 @@ public interface IUserModelType<out TUserModel, out TTemplate>
     TTemplate AssociatedTemplate { get; }
     
     /// <summary>
+    /// Provides default configuration for represented model.
+    /// </summary>
+    IConfiguration DefaultConfiguration { get; }
+    
+    /// <summary>
     /// Returns new instance of user model represented by this user model type.
     /// </summary>
+    /// <param name="configuration">Configuration used in newly created user model.</param>
     /// <returns>New instance of user model.</returns>
-    TUserModel GetNewUserModel();
+    TUserModel GetNewUserModel(IConfiguration? configuration);
     
     /// <summary>
     /// Tries to deserialize user model from provided stream.
     /// </summary>
     /// <param name="serializationWithPath">Provided stream from which user model should be deserialized alongside with path to the serialization file.</param>
+    /// <param name="configuration">Configuration which should be used in deserialized user model.</param>
     /// <param name="cancellationToken">Token for cancellation of deserialization. Provided, when the deserialization is not needed anymore.</param>
     /// <param name="result">Out parameter for result of deserialization.</param>
     /// <returns>Resulting deserialized user model.</returns>
-    TUserModel? DeserializeUserModel((Stream,string) serializationWithPath, CancellationToken? cancellationToken, out UserModelManager.UserModelLoadResult result);
+    TUserModel? DeserializeUserModel((Stream,string) serializationWithPath, IConfiguration? configuration, CancellationToken? cancellationToken, out UserModelManager.UserModelLoadResult result);
 }

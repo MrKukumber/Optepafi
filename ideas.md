@@ -195,10 +195,10 @@ Předpokládá se možnost parametrizace vyhledávácích algoritmů např. úda
 - reprezentacia RE si ak potrebuje postupne dovytvara zo seba graf, ktory vracia algoritmu, ktory na nom nasledne hlada danu cestu
 
 
-- Mapy su jedny konkretne - kazda spracovava jeden konkretny format, dedenie mozne jedine ak by jeden format bol "podformatom" druheho
+- Mapy su jedny konkretne - kazda spracovava jeden konkretny format, dedenie mozne jedine ak by jeden format bol "podformatom" druheho, proste aby to davalo zmysel
 - Template-ty mozu mat potomkov
 - mapove reprezentacie/grafy sa budu dat konfigurovat, pre jednu mapu a template len jedna implementacia mapovej repre
 - uzivatelskych modelov moze byt pre template viac druhov a bude mozne je konfigurovat
 - vyhladavacie algoritmy konfigurovatelne, pre kazdu map. repre a uzivatelsky model jedna implementacia
 
-- mpaove reprezentacia a uzivatelske modely mozu mat aj potomkov i guess, ale zretel sa na to prilis brat nebude...mozno v buducnosti aj v gui bude stromova struktura pre tieto dedicne hierarchie
+- mapove reprezentacie a uzivatelske modely mozu mat aj potomkov i guess, ale zretel sa na to prilis brat nebude...mozno v buducnosti aj v gui bude stromova struktura pre tieto dedicne hierarchie

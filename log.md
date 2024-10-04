@@ -619,4 +619,9 @@ Co treba spravit:
 
 - poriadne spravit lokalizaciu
 - zlepsit vizual
+
 - podpora pluginov v modelu a v sessionoch
+
+## 30.9.2024 
+
+Upravene casti vrstvy Model(vyhladavacie algoritmy a mapove reprezentacie) tak aby mohli prijimat konfiguracie ich behu/vytvarania.
