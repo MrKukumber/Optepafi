@@ -2,9 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:Optepafi.Assets.Localization"
              xmlns:pfVm="using:Optepafi.ViewModels.PathFinding"
              xmlns:pfV="using:Optepafi.Views.PathFinding"
+             xmlns:local="clr-namespace:Optepafi.Assets.Localization"
              mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
              x:Class="Optepafi.Views.PathFinding.PathFindingSettingsView"
              x:DataType="pfVm:PathFindingSettingsViewModel">
@@ -13,61 +13,78 @@
         <Grid ColumnDefinitions="* *" DockPanel.Dock="Bottom" Margin="20">
             <Button Name="ProceedingToMapRepreCreation" Content="{x:Static local:PathFindingLocal.Settings_ProceedingToMapRepreCreation}" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding ProceedTroughMapRepreCreationCommand}"/>
         </Grid>
-        <Grid ColumnDefinitions="* *" RowDefinitions="* *">
-            <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Name="TemplateSelectingTextBlock" Text="{x:Static local:PathFindingLocal.Settings_TemplateSelectingTextBlock}"></TextBlock>
-                <ComboBox Name="TemplateSelectingComboBox" ItemsSource="{Binding UsableTemplates}" SelectedItem="{Binding SelectedTemplate}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"></TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button Name="UserModelSelectingButton" Content="{x:Static local:PathFindingLocal.Settings_UserModelSelectingButton}" Click="UserModelSelectingButton_OnClick">
-                    <Button.IsEnabled>
-                        <MultiBinding Converter="{x:Static BoolConverters.And}">
-                            <Binding Path="SelectedTemplate" 
-                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
-                            <Binding Path="CurrentlyUsedMapFormat"
-                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
-                            <Binding Path="UsableUserModelTypes"
-                                     Converter="{x:Static pfV:PathFindingSettingsView.IsNotEmptyNorNull}"/>
-                        </MultiBinding>
-                    </Button.IsEnabled>
-                </Button>
-                <TextBlock Name="SelectedUserModelFileNameTextBlock" Text="{Binding SelectedUserModelFileName}"></TextBlock>
-            </StackPanel>
-            <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button Name="MapSelectingButton" Content="{x:Static local:PathFindingLocal.Settings_MapSelectingButton}" Click="MapSelectingButton_OnClick" IsEnabled="{Binding UsableMapFormats, Converter={x:Static pfV:PathFindingSettingsView.IsNotEmptyNorNull}}"></Button>
-                <TextBlock Name="SelectedMapFileNameTextBlock" Text="{Binding SelectedMapFileName}"></TextBlock>
-                <Border Width="300" Height="300" BorderThickness="2" BorderBrush="Black">
-                    <Viewbox>
-                        <ContentControl Content="{Binding SelectedMapsPreview}"/>
-                    </Viewbox>
-                </Border>
-            </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Name="AlgorithmSelectingTextBlock" Text="{x:Static local:PathFindingLocal.Settings_AlgorithmSelectingTextBlock}"></TextBlock>
-                <ComboBox Name="AlgorithmSelectingComboBox" ItemsSource="{Binding UsableSearchingAlgorithms}" SelectedItem="{Binding SelectedSearchingAlgorithm}">
-                    <ComboBox.IsEnabled>
-                        <MultiBinding Converter="{x:Static BoolConverters.And}">
-                            <Binding Path="SelectedTemplate"
-                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
-                            <Binding Path="CurrentlyUsedMapFormat"
-                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
-                            <Binding Path="CurrentlyUsedUserModelType"
-                                     Converter="{x:Static ObjectConverters.IsNotNull}"/>
-                        </MultiBinding>
-                    </ComboBox.IsEnabled>
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"></TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </StackPanel>
+        <Grid  RowDefinitions="* *">
+            <Grid Grid.Row="0" ColumnDefinitions="* * *">
+                <StackPanel Grid.Column="0"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Name="TemplateSelectingTextBlock" Text="{x:Static local:PathFindingLocal.Settings_TemplateSelectingTextBlock}"></TextBlock>
+                    <ComboBox Name="TemplateSelectingComboBox" ItemsSource="{Binding UsableTemplates}" SelectedItem="{Binding SelectedTemplate}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>    
+                <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Name="MapRepreSelectingTextBlock" Text="{x:Static local:PathFindingLocal.Settings_MapRepreSelectingTextBlock}"/>
+                    <ComboBox Name="MapRepreSelectingComboBox" ItemsSource="{Binding UsableMapRepresentations}" SelectedIndex="{Binding SelectedMapRepresentation}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding MapRepreName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Name="UserModelSelectingButton" Content="{x:Static local:PathFindingLocal.Settings_UserModelSelectingButton}" Click="UserModelSelectingButton_OnClick">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="SelectedTemplate" 
+                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="CurrentlyUsedMapFormat"
+                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="UsableUserModelTypes"
+                                         Converter="{x:Static pfV:PathFindingSettingsView.IsNotEmptyNorNull}"/>
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                    <TextBlock Name="SelectedUserModelFileNameTextBlock" Text="{Binding SelectedUserModelFileName}"></TextBlock>
+                </StackPanel>    
+            </Grid>
+            <Grid Grid.Row="1" ColumnDefinitions="* *">
+                <StackPanel Grid.Column="0"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Name="MapSelectingButton" Content="{x:Static local:PathFindingLocal.Settings_MapSelectingButton}" Click="MapSelectingButton_OnClick" IsEnabled="{Binding UsableMapFormats, Converter={x:Static pfV:PathFindingSettingsView.IsNotEmptyNorNull}}"></Button>
+                    <TextBlock Name="SelectedMapFileNameTextBlock" Text="{Binding SelectedMapFileName}"></TextBlock>
+                    <Border Width="300" Height="300" BorderThickness="2" BorderBrush="Black">
+                        <Viewbox>
+                            <ContentControl Content="{Binding SelectedMapsPreview}"/>
+                        </Viewbox>
+                    </Border>
+                </StackPanel>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Name="AlgorithmSelectingTextBlock" Text="{x:Static local:PathFindingLocal.Settings_AlgorithmSelectingTextBlock}"></TextBlock>
+                    <ComboBox Name="AlgorithmSelectingComboBox" ItemsSource="{Binding UsableSearchingAlgorithms}" SelectedItem="{Binding SelectedSearchingAlgorithm}">
+                        <ComboBox.IsEnabled>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="SelectedTemplate"
+                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="CurrentlyUsedMapFormat"
+                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="CurrentlyUsedUserModelType"
+                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                            </MultiBinding>
+                        </ComboBox.IsEnabled>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>    
+            </Grid>
+            
+            
+            
         </Grid>
     </DockPanel>
 </UserControl>

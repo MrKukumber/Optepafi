@@ -21,7 +21,7 @@ public class BlankUserModelRepresentative : UserModelRepresentative<BlankUserMod
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.AssociatedTemplate"/>
     public override BlankTemplate AssociatedTemplate  => BlankTemplate.Instance;
 
-    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.DefaultConfiguration"/>
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.DefaultConfigurationDeepCopy"/>
     protected override NullConfiguration DefaultConfiguration => new();
     
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.UserModelTypeName"/>

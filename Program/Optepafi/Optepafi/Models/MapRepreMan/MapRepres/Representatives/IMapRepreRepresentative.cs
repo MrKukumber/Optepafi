@@ -52,7 +52,11 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
-    sealed IConfiguration DefaultConfiguration { get => GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>().DefaultConfiguration; } 
+    /// <summary>
+    /// Default configuration of represented map representation.
+    /// </summary>
+    sealed IConfiguration DefaultConfigurationDeepCopy => GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>().DefaultConfiguration.DeepCopy();
+    
     /// <summary>
     /// Method which creates map representation from provided template and map represented by this representative.
     /// 

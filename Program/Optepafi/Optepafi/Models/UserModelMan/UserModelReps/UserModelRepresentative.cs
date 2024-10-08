@@ -29,8 +29,8 @@ public abstract class UserModelRepresentative<TUserModel, TTemplate, TConfigurat
     /// Provides default configuration for represented model.
     /// </summary>
     protected abstract TConfiguration DefaultConfiguration { get; }
-    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.DefaultConfiguration"/>
-    IConfiguration IUserModelType<TUserModel, TTemplate>.DefaultConfiguration => DefaultConfiguration;
+    /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.DefaultConfigurationDeepCopy"/>
+    IConfiguration IUserModelType<TUserModel, TTemplate>.DefaultConfigurationDeepCopy => DefaultConfiguration.DeepCopy();
     
     /// <inheritdoc cref="IUserModelType{TUserModel,TTemplate}.UserModelTypeName"/>
     public abstract string UserModelTypeName { get; }

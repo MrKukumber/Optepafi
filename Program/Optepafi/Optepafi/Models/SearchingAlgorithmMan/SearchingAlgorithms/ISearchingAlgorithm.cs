@@ -44,7 +44,7 @@ public interface ISearchingAlgorithm
     /// <summary>
     /// Default configuration to be used in execution of searching algorithm.
     /// </summary>
-    public IConfiguration DefaultConfiguration { get; }
+    public IConfiguration DefaultConfigurationDeepCopy { get; }
 
     /// <summary>
     /// Method that checks whether there is some implementation of algorithm that can use both map representation type and user model type represented by provided representatives. /// 

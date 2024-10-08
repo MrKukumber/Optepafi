@@ -43,8 +43,8 @@ public abstract class SearchingAlgorithm<TConfiguration> : ISearchingAlgorithm w
     /// </summary>
     public abstract TConfiguration DefaultConfiguration { get; }
 
-    /// <inheritdoc cref="ISearchingAlgorithm.DefaultConfiguration"/>
-    IConfiguration ISearchingAlgorithm.DefaultConfiguration => DefaultConfiguration;
+    /// <inheritdoc cref="ISearchingAlgorithm.DefaultConfigurationDeepCopy"/>
+    IConfiguration ISearchingAlgorithm.DefaultConfigurationDeepCopy => DefaultConfiguration.DeepCopy();
     
     /// <inheritdoc cref="ISearchingAlgorithm.DoesRepresentUsableMapRepreUserModelCombination{TVertexAttributes,TEdgeAttributes}"/>
     public bool DoesRepresentUsableMapRepreUserModelCombination<TVertexAttributes, TEdgeAttributes>(IMapRepreRepresentative<IMapRepre> mapRepreRep, IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) 

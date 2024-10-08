@@ -21,13 +21,28 @@
           <Generator>PublicResXFileCodeGenerator</Generator>
           <LastGenOutput>PathFindingLocal.Designer.cs</LastGenOutput>
         </EmbeddedResource>
-        <EmbeddedResource Update="Assets\Localization\PathFindingLocal.sk-SK.resx">
+        <EmbeddedResource Update="Assets\Localization\MainWindowLocal.en-GB.resx">
           <Generator>PublicResXFileCodeGenerator</Generator>
-          <LastGenOutput>PathFindingLocal.sk-SK.Designer.cs</LastGenOutput>
+          <LastGenOutput>MainWindowLocal.en-GB.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Assets\Localization\MainWindowLocal.sk-SK.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <LastGenOutput>MainWindowLocal.sk-SK.Designer.cs</LastGenOutput>
         </EmbeddedResource>
         <EmbeddedResource Update="Assets\Localization\PathFindingLocal.en-GB.resx">
           <Generator>PublicResXFileCodeGenerator</Generator>
           <LastGenOutput>PathFindingLocal.en-GB.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Assets\Localization\PathFindingLocal.sk-SK.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <LastGenOutput>PathFindingLocal.sk-SK.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <AvaloniaResource Include="Assets\Localization\MainWindowLocal.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <LastGenOutput>MainWindowLocal.Designer.cs</LastGenOutput>
+        </AvaloniaResource>
+        <EmbeddedResource Update="Assets\Localization\MainWindowLocal.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
         </EmbeddedResource>
     </ItemGroup>
 
@@ -71,21 +86,6 @@
       <Compile Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
       <Compile Remove="Models\MapRepreMan\MapRepreConstrs\IMapRepreConstructor.cs" />
       <Compile Remove="Localization\LocalizedBindingExtension.cs" />
-      <Compile Update="Assets\Localization\MainWindowLocal.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>MainWindowLocal.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Assets\Localization\MainWindowLocal.en-GB.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>MainWindowLocal.en-GB.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Assets\Localization\MainWindowLocal.sk-SK.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>MainWindowLocal.sk-SK.resx</DependentUpon>
-      </Compile>
       <Compile Remove="Localization\**" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataIndependentConstr.cs" />
       <Compile Remove="Models\MapRepreMan\GraphConstrs\ElevDataDependentConstr.cs" />
@@ -160,33 +160,36 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>PathFindingLocal.resx</DependentUpon>
       </Compile>
-      <Compile Update="Assets\Localization\PathFindingLocal.sk-SK.Designer.cs">
+      <Compile Update="Assets\Localization\MainWindowLocal.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
-        <DependentUpon>PathFindingLocal.sk-SK.resx</DependentUpon>
+        <DependentUpon>MainWindowLocal.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Assets\Localization\MainWindowLocal.en-GB.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MainWindowLocal.en-GB.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Assets\Localization\MainWindowLocal.sk-SK.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MainWindowLocal.sk-SK.resx</DependentUpon>
       </Compile>
       <Compile Update="Assets\Localization\PathFindingLocal.en-GB.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>PathFindingLocal.en-GB.resx</DependentUpon>
       </Compile>
+      <Compile Update="Assets\Localization\PathFindingLocal.sk-SK.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>PathFindingLocal.sk-SK.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 
     <ItemGroup>
       <EmbeddedResource Remove="Models\MapRepreMan\MapRepres\ConstructableInterfaces\**" />
-      <EmbeddedResource Update="Assets\Localization\MainWindowLocal.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Local.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Assets\Localization\MainWindowLocal.en-GB.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Local.en-GB.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Assets\Localization\MainWindowLocal.sk-SK.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Local.sk-SK.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
       <EmbeddedResource Remove="Localization\**" />
       <EmbeddedResource Remove="Utils\**" />
       <EmbeddedResource Remove="ModelViews\ModelCreating\**" />
@@ -233,5 +236,24 @@
       <None Remove="ModelViews\ModelCreating\**" />
       <None Remove="ViewModels\ModelCreating\**" />
       <None Remove="Views\ModelCreating\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <AvaloniaResource Remove="Assets\Localization\MainWindowLocal.en-GB.resx" />
+      <AvaloniaResource Remove="Assets\Localization\MainWindowLocal.resx" />
+      <AvaloniaResource Remove="Assets\Localization\MainWindowLocal.sk-SK.resx" />
+      <AvaloniaResource Remove="Assets\Localization\PathFindingLocal.en-GB.resx" />
+      <AvaloniaResource Remove="Assets\Localization\PathFindingLocal.resx" />
+      <AvaloniaResource Remove="Assets\Localization\PathFindingLocal.sk-SK.resx" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <AvaloniaResource Update="Assets\Localization\MainWindowLocal.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MainWindowLocal.resx</DependentUpon>
+      </AvaloniaResource>
     </ItemGroup>
 </Project>

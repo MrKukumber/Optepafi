@@ -1,9 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using Avalonia.Controls;
+using DynamicData;
 using Optepafi.ModelViews.Main;
+using Optepafi.ViewModels.Data.Configuration;
 using Optepafi.ViewModels.Data.Representatives;
 using ReactiveUI;
 
@@ -49,8 +54,15 @@ public class MainSettingsViewModel : ViewModelBase
         this.WhenAnyValue(x => x.CurrentCulture)
             .Subscribe(currentCulture => _mainSettingsMv.CurrentCulture = currentCulture);
         this.WhenAnyValue(x => x.CurrentElevDataDistribution)
-            .Subscribe(currentElevDataDistribution => _mainSettingsMv.CurrentElevDataDistribution = currentElevDataDistribution); 
-        
+            .Subscribe(currentElevDataDistribution => _mainSettingsMv.CurrentElevDataDistribution = currentElevDataDistribution);
+
+        Nodes = new List<Node>
+        {
+            new InnerNode("Searching algorithms", mainSettingsMv.SearchingAlgorithmsConfigurations.Select(kv => new SearchingAlgorithmConfigNode(kv.Key))),
+            new InnerNode("Map representations", mainSettingsMv.MapRepresentationsConfigurations.Select(kv => new MapRepreConfigNode(kv.Key))),
+            new InnerNode("User models", mainSettingsMv.UserModelsConfigurations.Select(kv => new UserModelConfigNode(kv.Key)))
+        };
+        SelectedNode = null;
         
         ElevConfigInteraction = new Interaction<ElevConfigViewModel, ElevDataDistributionViewModel?>();
         OpenElevConfigCommand = ReactiveCommand.CreateFromTask(async () =>
@@ -96,6 +108,15 @@ public class MainSettingsViewModel : ViewModelBase
     }
 
     private CultureInfo _currentCulture;
+    
+    public IEnumerable<Node> Nodes { get; }
+
+    private Node? _selectedNode;
+    public Node? SelectedNode
+    {
+        get => _selectedNode; 
+        set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
+    }
     
     /// <summary>
     /// Reactive command which initiate change of currently used ViewModel in <c>MainWindowViewModel</c> to manin menu ViewModel.
@@ -149,5 +170,67 @@ public class MainSettingsViewModel : ViewModelBase
         /// Currently chosen elevation data distribution.
         /// </summary>
         public ElevDataDistributionViewModel? CurrentElevDataDistribution => _providedMainSettingsVm.CurrentElevDataDistribution;
+
+        public Dictionary<SearchingAlgorithmViewModel, ConfigurationViewModel> SearchingAlgorithmsConfigurations =>
+            _providedMainSettingsVm._mainSettingsMv.SearchingAlgorithmsConfigurations;
+        public Dictionary<MapRepreRepresentativeViewModel, ConfigurationViewModel> MapRepreConfigurations =>
+            _providedMainSettingsVm._mainSettingsMv.MapRepresentationsConfigurations;
+        public Dictionary<UserModelTypeViewModel, ConfigurationViewModel> UserModelsConfigurations =>
+            _providedMainSettingsVm._mainSettingsMv.UserModelsConfigurations;
+
+    } 
+    public abstract class Node
+    {
+        public virtual IEnumerable<Node>? SubNodes { get; } = null;
+        public virtual ConfigurationViewModel? Configuration { get; } = null;
+        public abstract string Title { get; }
+    }
+
+    public class InnerNode : Node
+    {
+        public override IEnumerable<Node>? SubNodes { get; }
+        public override string Title { get; }
+
+        public InnerNode(string title, IEnumerable<Node>? subNodes)
+        {
+            Title = title;
+            SubNodes = subNodes;
+        }
+    }
+
+    public class MapRepreConfigNode : Node
+    {
+        public override string Title { get; }
+        public MapRepreRepresentativeViewModel MapRepreRepresentative { get; }
+
+        public MapRepreConfigNode(MapRepreRepresentativeViewModel mapRepreRepresentative)
+        {
+            MapRepreRepresentative = mapRepreRepresentative;
+            Title = MapRepreRepresentative.MapRepreName;
+        }
+    }
+
+    public class SearchingAlgorithmConfigNode : Node
+    {
+        public override string Title { get; }
+        public SearchingAlgorithmViewModel SearchingAlgorithm { get; }
+
+        public SearchingAlgorithmConfigNode(SearchingAlgorithmViewModel searchingAlgorithm)
+        {
+            SearchingAlgorithm = searchingAlgorithm;
+            Title = SearchingAlgorithm.Name;
+        }
+    }
+
+    public class UserModelConfigNode : Node
+    {
+        public override string Title { get; }
+        public UserModelTypeViewModel UserModelType { get; }
+
+        public UserModelConfigNode(UserModelTypeViewModel userModelType)
+        {
+            UserModelType = userModelType;
+            Title = UserModelType.UserModelTypeName;
+        }
     }
 }

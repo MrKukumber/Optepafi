@@ -7,6 +7,8 @@
         <entry key="Optepafi/Views/DataTemplateCollections/GraphicObjects/PathFindingObjectTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplateResDicts/MapObjectTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/AllDataTemplates.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/DataTemplates/Configuration/ConfigItems/ConfigItemsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/DataTemplates/Configuration/ConfigurationTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/GraphicObjects/GraphicObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/GraphicObjects/Map/MapObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/GraphicObjects/MapObjectTemplates.axaml" value="Optepafi/Optepafi.csproj" />

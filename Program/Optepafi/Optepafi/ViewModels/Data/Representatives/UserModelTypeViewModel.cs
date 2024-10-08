@@ -1,6 +1,7 @@
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 
@@ -31,4 +32,9 @@ public class UserModelTypeViewModel(IUserModelType<IUserModel<ITemplate>, ITempl
     /// Extension of file format, which is user model serialized to.
     /// </summary>
     public string UserModelFileExtension => UserModelType.UserModelFileExtension;
+
+    /// <summary>
+    /// Default configuration of represented user model.
+    /// </summary>
+    public IConfiguration DefaultConfigurationCopy => UserModelType.DefaultConfigurationDeepCopy;
 }

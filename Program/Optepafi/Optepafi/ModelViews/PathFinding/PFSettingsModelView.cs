@@ -19,7 +19,9 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.Utils;
 using Optepafi.ModelViews.PathFinding.Utils;
+using Optepafi.ViewModels.Data.Configuration;
 using Optepafi.ViewModels.Data.Graphics;
 using Optepafi.ViewModels.Data.Representatives;
 
@@ -304,10 +306,10 @@ public partial class PathFindingSessionModelView
             Template = templateViewModel?.Template;
         }
         /// <inheritdoc cref="PFSettingsModelView.SetSearchingAlgorithm"/> 
-        public override void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel)
+        public override void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel, ConfigurationViewModel searchingAlgorithmConfigurationViewModel)
         {
             SearchingAlgorithm = searchingAlgorithmViewModel?.SearchingAlgorithm;
-
+            SearchingAlgorithmConfiguration = searchingAlgorithmConfigurationViewModel.Configuration.DeepCopy();
         }
         /// <inheritdoc cref="PFSettingsModelView.LoadAndSetMapAsync"/> 
         public override async Task<MapManager.MapCreationResult> LoadAndSetMapAsync((Stream,string) streamWithPath, 
@@ -332,11 +334,12 @@ public partial class PathFindingSessionModelView
         
         /// <inheritdoc cref="PFSettingsModelView.LoadAndSetUserModelAsync"/> 
         public override async Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync((Stream,string) streamWithPath, 
-            UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken)
+            UserModelTypeViewModel userModelTypeViewModel, ConfigurationViewModel configurationViewModel, CancellationToken cancellationToken)
         {
+            var configurationCopy = configurationViewModel.Configuration.DeepCopy();
             var (userModelCreationResult, userModel) = await Task.Run(() =>
             {
-                var result = UserModelManager.Instance.TryDeserializeUserModelOfTypeFrom(streamWithPath, userModelTypeViewModel.UserModelType, cancellationToken, out IUserModel<ITemplate>? userModel);
+                var result = UserModelManager.Instance.TryDeserializeUserModelOfTypeFrom(streamWithPath, userModelTypeViewModel.UserModelType, configurationCopy, cancellationToken, out IUserModel<ITemplate>? userModel);
                 return (result, userModel);
             });
             switch (userModelCreationResult)
@@ -344,6 +347,7 @@ public partial class PathFindingSessionModelView
                 case UserModelManager.UserModelLoadResult.Ok:
                     UserModel = userModel;
                     UserModelType = userModelTypeViewModel.UserModelType;
+                    UserModelConfiguration = configurationCopy;
                     break;
             }
             return userModelCreationResult;
@@ -396,7 +400,6 @@ public partial class PathFindingSessionModelView
             return graphicsSourceViewModel;
         }
         
-        
         /// <summary>
         /// Selected elevation data distribution. Other ModelViews may use it for further work.
         /// </summary>
@@ -433,5 +436,9 @@ public partial class PathFindingSessionModelView
         /// Chosen searching algorithm. Other ModelViews may use it for further work.
         /// </summary>
         public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
+        
+        public IConfiguration SearchingAlgorithmConfiguration { get; private set; }
+        public IConfiguration MapRepresentationConfiguration { get; private set; }
+        public IConfiguration UserModelConfiguration { get; private set; }
     }
 }

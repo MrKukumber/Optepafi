@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Optepafi.Models.Utils;
 
@@ -11,7 +12,9 @@ namespace Optepafi.Models.Utils;
 /// </summary>
 public interface IConfiguration
 {
-    List<ConfigItem> ConfigItems { get; }
+    ImmutableList<IConfigItem> ConfigItems { get; }
+
+    IConfiguration DeepCopy();
 }
 
 /// <summary>
@@ -19,5 +22,6 @@ public interface IConfiguration
 /// </summary>
 public sealed class NullConfiguration : IConfiguration
 {
-    public List<ConfigItem> ConfigItems { get; } = new();
+    public ImmutableList<IConfigItem> ConfigItems { get; } = ImmutableList<IConfigItem>.Empty;
+    public IConfiguration DeepCopy() => new NullConfiguration();
 }

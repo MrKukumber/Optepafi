@@ -42,7 +42,7 @@ public interface IUserModelType<out TUserModel, out TTemplate>
     /// <summary>
     /// Provides default configuration for represented model.
     /// </summary>
-    IConfiguration DefaultConfiguration { get; }
+    IConfiguration DefaultConfigurationDeepCopy { get; }
     
     /// <summary>
     /// Returns new instance of user model represented by this user model type.

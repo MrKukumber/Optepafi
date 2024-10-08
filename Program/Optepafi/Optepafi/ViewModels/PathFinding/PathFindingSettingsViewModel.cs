@@ -358,6 +358,26 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         set => this.RaiseAndSetIfChanged(ref _usableSearchingAlgorithms, value);
     }
     private IReadOnlySet<SearchingAlgorithmViewModel> _usableSearchingAlgorithms;
+
+    public MapRepreRepresentativeViewModel? SelectedMapRepresentation
+    {
+        get => _selectedMapRepresentation;
+        set
+        {
+            _settingsMv.SetMapRepresentation(value);
+            this.RaiseAndSetIfChanged(ref _selectedMapRepresentation, value);
+        }
+    }
+
+    private MapRepreRepresentativeViewModel? _selectedMapRepresentation;
+
+    public IReadOnlySet<MapRepreRepresentativeViewModel> UsableMapRepresentations
+    {
+        get => _usableMapRepresentations;
+        set => this.RaiseAndSetIfChanged(ref _usableMapRepresentations, value);
+    }
+
+    private IReadOnlySet<MapRepreRepresentativeViewModel> _usableMapRepresentations;
     
     
     /// <summary>

@@ -1,8 +1,21 @@
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Distributions;
+using Optepafi.Models.MapRepreMan;
+using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.ParamsMan;
 using Optepafi.Models.ParamsMan.Params;
+using Optepafi.Models.SearchingAlgorithmMan;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
+using Optepafi.Models.TemplateMan;
+using Optepafi.Models.UserModelMan;
+using Optepafi.Models.UserModelMan.UserModelReps;
+using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.Utils;
+using Optepafi.ViewModels.Data.Configuration;
 using Optepafi.ViewModels.Data.Representatives;
 using ReactiveUI;
 
@@ -25,6 +38,8 @@ public class MainSettingsModelView : ModelViewBase
     /// Instance of <c>MainSettingsParams</c> which is used for changing and following saving of main parameters. 
     /// </summary>
     private MainSettingsParams _mainSettingsParams;
+
+    private ConfigurationsParams _configurationsParams;
     
     /// <summary>
     /// When new instance is created, main parameters are initialized from saved parameters.
@@ -37,6 +52,37 @@ public class MainSettingsModelView : ModelViewBase
         
         _currentCulture = CultureInfo.GetCultureInfo(_mainSettingsParams.CultureName);
         _currentElevDataDistribution = GetElevDataDistributionByTypeName(_mainSettingsParams.ElevDataTypeViewModelTypeName);
+
+        _configurationsParams = ParamsManager.Instance.GetParams<ConfigurationsParams>() ?? new ConfigurationsParams();
+        SearchingAlgorithmsConfigurations = SearchingAlgorithmManager.Instance.SearchingAlgorithms
+            .Select(searchingAlgorithm =>
+            {
+                if (_configurationsParams.Configurations.TryGetValue(searchingAlgorithm.DefaultConfigurationDeepCopy.GetType(), out var configuration))
+                    return (searchingAlgorithm, configuration);
+                var defaultConfigurationCopy = searchingAlgorithm.DefaultConfigurationDeepCopy;
+                _configurationsParams.Configurations[searchingAlgorithm.DefaultConfigurationDeepCopy.GetType()] = defaultConfigurationCopy;
+                return (searchingAlgorithm, defaultConfigurationCopy);
+
+            }).ToDictionary(x => new SearchingAlgorithmViewModel(x.Item1), x => new ConfigurationViewModel(x.Item2));
+        MapRepresentationsConfigurations = MapRepreManager.Instance.MapRepreReps
+            .Select(mapRepreRepresentative =>
+            {
+                if (_configurationsParams.Configurations.TryGetValue(mapRepreRepresentative.DefaultConfigurationDeepCopy.GetType(), out var configuration))
+                    return (mapRepreRepresentative, configuration);
+                var defaultConfigurationCopy = mapRepreRepresentative.DefaultConfigurationDeepCopy;
+                _configurationsParams.Configurations[mapRepreRepresentative.DefaultConfigurationDeepCopy.GetType()] = defaultConfigurationCopy;
+                return (mapRepreRepresentative, defaultConfigurationCopy);
+            }).ToDictionary(x => new MapRepreRepresentativeViewModel(x.Item1) , x => new ConfigurationViewModel(x.Item2) );
+        UserModelsConfigurations = UserModelManager.Instance.UserModelTypes
+            .Select(userModelType =>
+            {
+                if (_configurationsParams.Configurations.TryGetValue(userModelType.DefaultConfigurationDeepCopy.GetType(), out var configuration)) 
+                    return (userModelType, configuration);
+                var defaultConfigurationCopy = userModelType.DefaultConfigurationDeepCopy;
+                _configurationsParams.Configurations[userModelType.DefaultConfigurationDeepCopy.GetType()] = defaultConfigurationCopy;
+                return (userModelType, defaultConfigurationCopy);
+
+            }).ToDictionary(x => new UserModelTypeViewModel(x.Item1) , x => new ConfigurationViewModel(x.Item2));
     }
     /// <summary>
     /// Method for identifying elevation data distribution whose type corresponds to provided type name.
@@ -104,5 +150,9 @@ public class MainSettingsModelView : ModelViewBase
             _mainSettingsParams.ElevDataTypeViewModelTypeName = value?.ElevDataDistribution.GetType().Name;
         }
     }
+
+    public Dictionary<SearchingAlgorithmViewModel, ConfigurationViewModel> SearchingAlgorithmsConfigurations { get; }
+    public Dictionary<MapRepreRepresentativeViewModel, ConfigurationViewModel> MapRepresentationsConfigurations { get; }
+    public Dictionary<UserModelTypeViewModel, ConfigurationViewModel> UserModelsConfigurations { get; }
 
 }

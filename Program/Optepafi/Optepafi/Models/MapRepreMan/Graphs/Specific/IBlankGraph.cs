@@ -19,8 +19,5 @@ public interface IBlankGraph<TVertexAttributes, TEdgeAttributes> :
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    public class Configuration : IConfiguration
-    {
-        public List<ConfigItem> ConfigItems { get; } = new();
-    }
+    
 }
