@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="MapRepCreat_CancelButton" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="MapRepCreat_ReturnDueElevDataAbsenceButton" xml:space="preserve">
+        <value>Return</value>
+    </data>
+    <data name="MapRepCreat_ReturnDueElevDataDistributionAbsenceButton" xml:space="preserve">
+        <value>Return</value>
+    </data>
+    <data name="MapRepCreat_ReturnDueMapNotSupportedByElevDataTypeButton" xml:space="preserve">
+        <value>Return</value>
+    </data>
+    <data name="PathFinding_CancelSearchButton" xml:space="preserve">
+        <value>Cancel search</value>
+    </data>
+    <data name="PathFinding_CleanUpButton" xml:space="preserve">
+        <value>Clean up</value>
+    </data>
+    <data name="PathFinding_ExitButton" xml:space="preserve">
+        <value>Exit</value>
+    </data>
+    <data name="PathFinding_FindPathButton" xml:space="preserve">
+        <value>Find path</value>
+    </data>
+    <data name="PathFinding_PathFindingHeaderTextBlock" xml:space="preserve">
+        <value>Path finding</value>
+    </data>
+    <data name="PathFinding_RemoveLastTrackPoint" xml:space="preserve">
+        <value>Remove last track point</value>
+    </data>
+    <data name="Settings_AlgorithmSelectingTextBlock" xml:space="preserve">
+        <value>Select searching algorithm</value>
+    </data>
+    <data name="Settings_MapSelectingButton" xml:space="preserve">
+        <value>Choose map file</value>
+    </data>
+    <data name="Settings_PathFindingSettingsHeaderTextBlock" xml:space="preserve">
+        <value>Path finding settings</value>
+    </data>
+    <data name="Settings_ProceedingToMapRepreCreation" xml:space="preserve">
+        <value>Proceed</value>
+    </data>
+    <data name="Settings_TemplateSelectingTextBlock" xml:space="preserve">
+        <value>Selecet template</value>
+    </data>
+    <data name="Settings_UserModelSelectingButton" xml:space="preserve">
+        <value>Choose user model file</value>
+    </data>
+    <data name="Settings_MapRepreSelectingTextBlock" xml:space="preserve">
+        <value>Select map representation type</value>
+    </data>
+</root>

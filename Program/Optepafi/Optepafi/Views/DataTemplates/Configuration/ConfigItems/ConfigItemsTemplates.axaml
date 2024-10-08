@@ -1,0 +1,73 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cVm="clr-namespace:Optepafi.ViewModels.Data.Configuration">
+    <DataTemplates x:Key="ConfigItemsTemplates">
+        <DataTemplate DataType="cVm:CategoricalConfigItemViewModel">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"/>
+                <ComboBox ItemsSource="{Binding AllValues}" SelectedIndex="{Binding IndexOfSelectedValue}"></ComboBox>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="cVm:IntValueConfigItemViewModel">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"/>
+                <StackPanel Orientation="Horizontal">
+                    <NumericUpDown Value="{Binding Value}" Increment="1"/>
+                    <TextBlock Text="{Binding Unit}"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="cVm:FloatValueConfigItemViewModel">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"/>
+                <StackPanel Orientation="Horizontal">
+                    <NumericUpDown Value="{Binding Value}" Increment="0.05" FormatString="0.00"/>
+                    <TextBlock Text="{Binding Unit}"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="cVm:ColorConfigItemViewModel">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBox Text="{Binding Name}"/>
+                <ColorPicker Color="{Binding Value}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="cVm:BoundedIntValueConfigItemViewModel">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"/>
+                <StackPanel Orientation="Horizontal">
+                    <NumericUpDown Value="{Binding Value}" 
+                                   Increment="1"
+                                   Maximum="{Binding Max}"
+                                   Minimum="{Binding Min}"/>
+                    <TextBlock Text="{Binding Unit}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Max: "></TextBlock>
+                    <TextBlock Text="{Binding Max}"></TextBlock>
+                    <TextBlock Text=" Min: "></TextBlock>
+                    <TextBlock Text="{Binding Min}"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="cVm:BoundedFloatValueConfigItemViewModel">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}"/>
+                <StackPanel Orientation="Horizontal">
+                    <NumericUpDown Value="{Binding Value}" 
+                                   Increment="0.01" 
+                                   FormatString="0.00"
+                                   Maximum="{Binding Max}"
+                                   Minimum="{Binding Min}"/>
+                    <TextBlock Text="{Binding Unit}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Max: "></TextBlock>
+                    <TextBlock Text="{Binding Max}"></TextBlock>
+                    <TextBlock Text=" Min: "></TextBlock>
+                    <TextBlock Text="{Binding Min}"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </DataTemplates>
+</ResourceDictionary>
