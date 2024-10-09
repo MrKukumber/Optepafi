@@ -10,6 +10,7 @@ using Optepafi.Models.MapRepreMan;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.TemplateMan;
+using Optepafi.Models.Utils;
 using Optepafi.ViewModels.Data.Reports;
 
 namespace Optepafi.ModelViews.PathFinding;
@@ -132,7 +133,7 @@ public partial class PathFindingSessionModelView
                     
                     progressInfo.Report("Creating map representation"); //TODO: localize
                     MapRepresentation = await Task.Run(() => 
-                        MapRepreManager.Instance.CreateMapRepre(Template, geoLocatedMap, MapRepreRepresentative, elevData, mrcProgress, cancellationToken));
+                        MapRepreManager.Instance.CreateMapRepre(Template, geoLocatedMap, MapRepreRepresentative, elevData, MapRepresentationConfiguration, mrcProgress, cancellationToken));
                     if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
                 }
                 else throw new InvalidOperationException("There is some error in prerequisites check method, that allows _useElevData to be set to true, when map is not even IGeoLocatedMap.");
@@ -141,7 +142,7 @@ public partial class PathFindingSessionModelView
             {
                 progressInfo.Report("Creating map representation"); //TODO: localize
                 MapRepresentation = await Task.Run(() =>
-                    MapRepreManager.Instance.CreateMapRepre(Template, Map, MapRepreRepresentative, mrcProgress, cancellationToken));
+                    MapRepreManager.Instance.CreateMapRepre(Template, Map, MapRepreRepresentative, MapRepresentationConfiguration, mrcProgress, cancellationToken));
                 if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
             }
         }
@@ -165,8 +166,8 @@ public partial class PathFindingSessionModelView
         /// Map representation representative retrieved from settings ModelView. Represents map representation which should be created.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when representative in settings is not set. When map creating ModelView is used it should be set already.</exception>
-        private IMapRepreRepresentative<IMapRepre> MapRepreRepresentative => Settings.MapRepreRepresentative ?? throw new ArgumentNullException( nameof(Settings .MapRepreRepresentative), "Map representation representative should be set before using PFMapRepreCreatingModelView");
-
+        private IMapRepreRepresentative<IMapRepre> MapRepreRepresentative => Settings.MapRepreRepresentative ?? throw new ArgumentNullException( nameof(Settings.MapRepreRepresentative), "Map representation representative should be set before using PFMapRepreCreatingModelView");
+        private IConfiguration MapRepresentationConfiguration => Settings.MapRepresentationConfiguration ?? throw new ArgumentNullException( nameof(Settings.MapRepresentationConfiguration), "Map representation configuration should be set before using PFMapRepreCreatingModelView");
         /// <summary>
         /// Elevation data distribution retrieved from settings ModelView. This distribution is eventually used in map representations creation.
         /// </summary>
@@ -175,6 +176,6 @@ public partial class PathFindingSessionModelView
         /// Reference to created map representation. Main result of this ModelView mechanism. Other ModelViews may use it for further work.
         /// </summary>
         public IMapRepre? MapRepresentation { get; private set; }
-
+        
     }
 }

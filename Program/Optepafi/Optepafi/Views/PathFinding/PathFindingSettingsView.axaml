@@ -27,7 +27,15 @@
                 </StackPanel>    
                 <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Name="MapRepreSelectingTextBlock" Text="{x:Static local:PathFindingLocal.Settings_MapRepreSelectingTextBlock}"/>
-                    <ComboBox Name="MapRepreSelectingComboBox" ItemsSource="{Binding UsableMapRepresentations}" SelectedIndex="{Binding SelectedMapRepresentation}">
+                    <ComboBox Name="MapRepreSelectingComboBox" ItemsSource="{Binding UsableMapRepreRepresentatives}" SelectedItem="{Binding SelectedMapRepreRepresentative}">
+                        <ComboBox.IsEnabled>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="SelectedTemplate"
+                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="CurrentlyUsedMapFormat"
+                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                            </MultiBinding>
+                        </ComboBox.IsEnabled>
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding MapRepreName}"/>
@@ -41,8 +49,8 @@
                             <MultiBinding Converter="{x:Static BoolConverters.And}">
                                 <Binding Path="SelectedTemplate" 
                                          Converter="{x:Static ObjectConverters.IsNotNull}"/>
-                                <Binding Path="CurrentlyUsedMapFormat"
-                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <!-- <Binding Path="CurrentlyUsedMapFormat" -->
+                                         <!-- Converter="{x:Static ObjectConverters.IsNotNull}"/> -->
                                 <Binding Path="UsableUserModelTypes"
                                          Converter="{x:Static pfV:PathFindingSettingsView.IsNotEmptyNorNull}"/>
                             </MultiBinding>
@@ -66,9 +74,7 @@
                     <ComboBox Name="AlgorithmSelectingComboBox" ItemsSource="{Binding UsableSearchingAlgorithms}" SelectedItem="{Binding SelectedSearchingAlgorithm}">
                         <ComboBox.IsEnabled>
                             <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                <Binding Path="SelectedTemplate"
-                                         Converter="{x:Static ObjectConverters.IsNotNull}"/>
-                                <Binding Path="CurrentlyUsedMapFormat"
+                                <Binding Path="SelectedMapRepreRepresentative"
                                          Converter="{x:Static ObjectConverters.IsNotNull}"/>
                                 <Binding Path="CurrentlyUsedUserModelType"
                                          Converter="{x:Static ObjectConverters.IsNotNull}"/>

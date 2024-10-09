@@ -54,6 +54,7 @@ public abstract class PFSettingsModelView : ModelViewBase
         if ((pathFindingParams = ParamsManager.Instance.GetParams<PathFindingParams>()) is not null)
         {
             _defaultTemplate = GetTemplateByTypeName(pathFindingParams.TemplateTypeName);
+            _defaultMapRepreRepresentative = GetMapRepreRepresentativeByTypeName(pathFindingParams.MapRepreRepresentativeTypeName);
             _defaultSearchingAlgorithm = GetSearchingAlgorithmByTypeName(pathFindingParams.SearchingAlgorithmTypeName);
             DefaultMapFilePath = pathFindingParams.MapFilePath;
             DefaultUserModelFilePath = pathFindingParams.UserModelFilePath;
@@ -73,6 +74,16 @@ public abstract class PFSettingsModelView : ModelViewBase
         {
             if (template.GetType().Name == templateTypeName)
                 return template;
+        }
+        return null;
+    }
+
+    private IMapRepreRepresentative<IMapRepre>? GetMapRepreRepresentativeByTypeName( string mapRepreRepTypeName)
+    {
+        foreach (var mapRepreRep in MapRepreManager.Instance.MapRepreReps)
+        {
+            if (mapRepreRep.GetType().Name == mapRepreRepTypeName)
+                return mapRepreRep;
         }
         return null;
     }
@@ -102,6 +113,10 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// ViewModel for default not checked template retrieved from saved parameters.
     /// </summary>
     public TemplateViewModel? DefaultTemplate => _defaultTemplate is null ? null : new TemplateViewModel(_defaultTemplate);
+
+    private IMapRepreRepresentative<IMapRepre>? _defaultMapRepreRepresentative;
+    public MapRepreRepresentativeViewModel? DefaultMapRepreRepresentative => _defaultMapRepreRepresentative is null ? null : new MapRepreRepresentativeViewModel(_defaultMapRepreRepresentative);
+    
     /// <summary>
     /// Default not checked searching algorithm retrieved from saved parameters.
     /// </summary>
@@ -120,19 +135,17 @@ public abstract class PFSettingsModelView : ModelViewBase
     public string? DefaultUserModelFilePath { get; }
 
     /// <summary>
-    /// Returns all usable searching algorithms that are able to ensure their service accordingly to provided template, map format and user model type. 
+    /// Returns all usable searching algorithms that are able to ensure their service accordingly to provided map representation representative and user model type. 
     /// </summary>
-    /// <param name="templateViewModel">ViewModel of template according to which are searching algorithms looked for.</param>
-    /// <param name="mapFormatViewModel">ViewModel of map format according to which are searching algorithms looked for.</param>
+    /// <param name="mapRepreRepViewModel">ViewModel of map representation representative according to which are searching algorithms looked for.</param>
     /// <param name="userModelTypeViewModel">ViewModel of user model type according to which are searching algorithms looked for.</param>
     /// <returns>Usable searching algorithm collection. If some of provided ViewModels is null, returns blank collection.</returns>
     public HashSet<SearchingAlgorithmViewModel> GetUsableAlgorithms(
-        TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel, UserModelTypeViewModel? userModelTypeViewModel)
+        MapRepreRepresentativeViewModel? mapRepreRepViewModel, UserModelTypeViewModel? userModelTypeViewModel)
     {
-        if (templateViewModel is not null && mapFormatViewModel is not null && userModelTypeViewModel is not null)
+        if (mapRepreRepViewModel is not null && userModelTypeViewModel is not null)
         {
-            HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
-            return SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, [userModelTypeViewModel.UserModelType])
+            return SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor([mapRepreRepViewModel.MapRepreRepresentative], [userModelTypeViewModel.UserModelType])
                 .Select(searchingAlgorithm => new SearchingAlgorithmViewModel(searchingAlgorithm))
                 .ToHashSet();
         }
@@ -172,6 +185,23 @@ public abstract class PFSettingsModelView : ModelViewBase
         var usableUserModelTypes = UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template);
         return (SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, usableUserModelTypes) .Count > 0);
     }
+
+    public bool AreTheyUsableCombination(MapRepreRepresentativeViewModel mapRepreRepresentativeViewModel, UserModelTypeViewModel userModelTypeViewModel)
+    {
+        return SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor([mapRepreRepresentativeViewModel.MapRepreRepresentative], [userModelTypeViewModel.UserModelType]).Count > 0;
+    }
+
+    public IReadOnlyCollection<MapRepreRepresentativeViewModel> GetUsableMapRepreRepresentatives(TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel)
+    {
+        if (templateViewModel is not null && mapFormatViewModel is not null)
+        {
+            return MapRepreManager.Instance
+                .GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat)
+                .Select(usableMapRepreRepresentative => new MapRepreRepresentativeViewModel(usableMapRepreRepresentative))
+                .ToHashSet();
+        }
+        return [];
+    }
     
     /// <summary>
     /// Returns all user model types which are tied to provided template and are able to be used in some searching algorithm together with specific map representation created according to provided template and map format.
@@ -179,17 +209,14 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// If provided template or map is null, returns blank collection.  
     /// </summary>
     /// <param name="templateViewModel">ViewModel of template to which user model must be tied.</param>
-    /// <param name="mapFormatViewModel">ViewModel of map format which is used together with provided template in map representation that can be used with tested user model in some searching algorithm.</param>
     /// <returns>Collection of user model types which are valid according to provided template and map format.</returns>
-    public IReadOnlyCollection<UserModelTypeViewModel> GetUsableUserModelTypes(
-        TemplateViewModel? templateViewModel, MapFormatViewModel? mapFormatViewModel)
+    public IReadOnlyCollection<UserModelTypeViewModel> GetUsableUserModelTypes(TemplateViewModel? templateViewModel)
     {
-        if (templateViewModel is null || mapFormatViewModel is null) return [];
-        var usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
-        return UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
-            .Where(userModelType => SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, [userModelType]).Count > 0)
-            .Select(usableUserModelType => new UserModelTypeViewModel(usableUserModelType))
-            .ToHashSet();
+        if (templateViewModel is not null) 
+            return UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template)
+                .Select(usableUserModelType => new UserModelTypeViewModel(usableUserModelType))
+                .ToHashSet();
+        return [];
     }
 
 
@@ -231,12 +258,14 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// </summary>
     /// <param name="templateViewModel">ViewModel of chosen template.</param>
     public abstract void SetTemplate(TemplateViewModel? templateViewModel);
+
+    public abstract void SetMapRepreRep(MapRepreRepresentativeViewModel? mapRepreRepViewModel, ConfigurationViewModel? configurationViewModel);
     
     /// <summary>
     /// Method for setting chosen searching algorithm. It also chooses one of suitable map representation representative.
     /// </summary>
     /// <param name="searchingAlgorithmViewModel">ViewModel of chosen searching algorithm.</param>
-    public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel);
+    public abstract void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel, ConfigurationViewModel? configurationViewModel);
     
     /// <summary>
     /// Method for asynchronous loading and setting of map from provided stream. Map will be created by using of provided format.
@@ -248,7 +277,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// <param name="cancellationToken">Cancellation token for cancelling maps loading.</param>
     /// <returns>Task with result of maps creation.</returns>
     public abstract Task<MapManager.MapCreationResult> LoadAndSetMapAsync((Stream,string) streamWithPath, 
-        MapFormatViewModel mapFormatViewModel, CancellationToken cancellationToken);
+        MapFormatViewModel mapFormatViewModel,  CancellationToken cancellationToken);
     
     /// <summary>
     /// Method for asynchronous loading and setting of user model from provided serialization stream.
@@ -260,17 +289,8 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// <param name="cancellationToken">Cancellation token for cancelling user models loading.</param>
     /// <returns>Task with result of user models load.</returns>
     public abstract Task<UserModelManager.UserModelLoadResult> LoadAndSetUserModelAsync((Stream,string) streamWithPath,
-        UserModelTypeViewModel userModelTypeViewModel, CancellationToken cancellationToken);
+        UserModelTypeViewModel userModelTypeViewModel, ConfigurationViewModel configurationViewModel, CancellationToken cancellationToken);
     
-    
-    /// <summary>
-    /// Method which sets first found usable map representation representative so that map representation was usable with provided arguments.
-    /// </summary>
-    /// <param name="templateViewModel">Represents template, which map representation must use.</param>
-    /// <param name="mapFormatViewModel">Represents map format, which map representation must use.</param>
-    /// <param name="userModelTypeViewModel"></param>
-    /// <param name="searchingAlgorithmViewModel"></param>
-    public abstract void SetSomeSuitableMapRepreRepresentative(TemplateViewModel templateViewModel, MapFormatViewModel mapFormatViewModel, UserModelTypeViewModel userModelTypeViewModel, SearchingAlgorithmViewModel searchingAlgorithmViewModel);
     
     /// <summary>
     /// Method for retrieving maps graphics so its preview could be displayed to user.
@@ -306,11 +326,18 @@ public partial class PathFindingSessionModelView
             Template = templateViewModel?.Template;
         }
         /// <inheritdoc cref="PFSettingsModelView.SetSearchingAlgorithm"/> 
-        public override void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel, ConfigurationViewModel searchingAlgorithmConfigurationViewModel)
+        public override void SetSearchingAlgorithm(SearchingAlgorithmViewModel? searchingAlgorithmViewModel, ConfigurationViewModel? searchingAlgorithmConfigurationViewModel)
         {
             SearchingAlgorithm = searchingAlgorithmViewModel?.SearchingAlgorithm;
-            SearchingAlgorithmConfiguration = searchingAlgorithmConfigurationViewModel.Configuration.DeepCopy();
+            SearchingAlgorithmConfiguration = searchingAlgorithmConfigurationViewModel?.Configuration.DeepCopy();
         }
+
+        public override void SetMapRepreRep(MapRepreRepresentativeViewModel? mapRepreRepViewModel, ConfigurationViewModel? configurationViewModel)
+        {
+            MapRepreRepresentative = mapRepreRepViewModel?.MapRepreRepresentative;
+            MapRepresentationConfiguration = configurationViewModel?.Configuration.DeepCopy();
+        }
+
         /// <inheritdoc cref="PFSettingsModelView.LoadAndSetMapAsync"/> 
         public override async Task<MapManager.MapCreationResult> LoadAndSetMapAsync((Stream,string) streamWithPath, 
             MapFormatViewModel mapFormatViewModel, CancellationToken cancellationToken)
@@ -353,22 +380,13 @@ public partial class PathFindingSessionModelView
             return userModelCreationResult;
         }
 
-
-        /// <inheritdoc cref="PFSettingsModelView.SetSomeSuitableMapRepreRepresentative"/> 
-        public override void SetSomeSuitableMapRepreRepresentative(TemplateViewModel templateViewModel, MapFormatViewModel mapFormatViewModel, UserModelTypeViewModel userModelTypeViewModel, SearchingAlgorithmViewModel searchingAlgorithmViewModel)
-        {
-            var mapRepresImplementedForTemplateMapFormatCombination = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
-            var mapRepresUsableWithUserModelTypeInSearchingAlgorithm = MapRepreManager.Instance.GetUsableMapRepreRepsFor(searchingAlgorithmViewModel.SearchingAlgorithm, userModelTypeViewModel.UserModelType);
-            mapRepresImplementedForTemplateMapFormatCombination.IntersectWith(mapRepresUsableWithUserModelTypeInSearchingAlgorithm);
-            MapRepreRepresentative = mapRepresImplementedForTemplateMapFormatCombination.First();
-        }
-
         /// <inheritdoc cref="PFSettingsModelView.SaveParameters"/> 
         public override void SaveParameters()
         {
             ParamsManager.Instance.SetParams(new PathFindingParams
             {
                 TemplateTypeName = Template!.GetType().Name,
+                MapRepreRepresentativeTypeName = MapRepreRepresentative!.GetType().Name,
                 SearchingAlgorithmTypeName = SearchingAlgorithm!.GetType().Name,
                 MapFilePath = Map!.FilePath,
                 UserModelFilePath = UserModel!.FilePath 
@@ -437,8 +455,8 @@ public partial class PathFindingSessionModelView
         /// </summary>
         public ISearchingAlgorithm? SearchingAlgorithm { get; private set; }
         
-        public IConfiguration SearchingAlgorithmConfiguration { get; private set; }
-        public IConfiguration MapRepresentationConfiguration { get; private set; }
-        public IConfiguration UserModelConfiguration { get; private set; }
+        public IConfiguration? SearchingAlgorithmConfiguration { get; private set; }
+        public IConfiguration? MapRepresentationConfiguration { get; private set; }
+        public IConfiguration? UserModelConfiguration { get; private set; }
     }
 }

@@ -47,7 +47,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <typeparam name="TVertexAttributes">Type of vertex attributes of represented graph.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes of represented graph.</typeparam>
     /// <returns>Representative of corresponding graph to the map representation.</returns>
-    IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, IConfiguration, TVertexAttributes, TEdgeAttributes>
+    IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
         GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>()
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
@@ -55,8 +55,8 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <summary>
     /// Default configuration of represented map representation.
     /// </summary>
-    sealed IConfiguration DefaultConfigurationDeepCopy => GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>().DefaultConfiguration.DeepCopy();
-    
+    IConfiguration DefaultConfigurationDeepCopy { get; }
+
     /// <summary>
     /// Method which creates map representation from provided template and map represented by this representative.
     /// 
@@ -74,16 +74,12 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <typeparam name="TVertexAttributes">Type of vertex attributes represented by provided template.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes represented by provided template.</typeparam>
     /// <returns>Created map representation.</returns>
-    sealed IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IConfiguration configuration,
+    IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
-        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
-        where TMap : IMap 
-        where TVertexAttributes : IVertexAttributes 
-        where TEdgeAttributes : IEdgeAttributes
-    {
-        return GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>()
-            .CreateGraph(template, map, configuration, progress, cancellationToken, ImplementationIndicators);
-    }
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
+        where TMap : IMap
+        where TVertexAttributes : IVertexAttributes
+        where TEdgeAttributes : IEdgeAttributes;
 
     /// <summary>
     /// Method which creates map representation from provided template and map represented by this representative.
@@ -102,15 +98,10 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <typeparam name="TVertexAttributes">Type of vertex attributes represented by provided template.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes represented by provided template.</typeparam>
     /// <returns>Created map representation.</returns>
-    sealed IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData, IConfiguration configuration, 
+    IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData, IConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
-        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
-        where TMap : IGeoLocatedMap 
-        where TVertexAttributes : IVertexAttributes 
-        where TEdgeAttributes : IEdgeAttributes
-    {
-        return GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>()
-            .CreateGraph(template, map, elevData, configuration, progress, cancellationToken, ImplementationIndicators);
-    }
-    
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
+        where TMap : IGeoLocatedMap
+        where TVertexAttributes : IVertexAttributes
+        where TEdgeAttributes : IEdgeAttributes;
 }

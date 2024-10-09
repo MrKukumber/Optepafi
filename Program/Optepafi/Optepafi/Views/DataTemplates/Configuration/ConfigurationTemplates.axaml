@@ -7,11 +7,11 @@
     <DataTemplates x:Key="ConfigurationTemplate">
         <DataTemplate DataType="cVm:ConfigurationViewModel">
             <ItemsControl ItemsSource="{Binding ConfigurationItems}">
-                <ListBox.ItemsPanel>
+                <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>
                     </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
+                </ItemsControl.ItemsPanel>
             </ItemsControl>
         </DataTemplate>
     </DataTemplates>

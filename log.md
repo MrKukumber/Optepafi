@@ -625,3 +625,13 @@ Co treba spravit:
 ## 30.9.2024 
 
 Upravene casti vrstvy Model(vyhladavacie algoritmy a mapove reprezentacie) tak aby mohli prijimat konfiguracie ich behu/vytvarania.
+
+## 9.10.2024
+
+Spravena implementacia konfiguracii mapovych reprezentacii, uzivatelskych modelov a vyhladavacich algoritmov vo view, view modele a model viewe.
+
+Jemne pozmenena struktura reprezentatov mapovych reprezentacii, grafov a z minula aj vyhladavacich algoritmov. V tejto chvili je potrebne namiesto interfaceov implementova/dedit od rovnomenych abstraktnych tried.  Typ konfiguracie a defaultna konfiguracia mapovych reprezentacii je plne v rezii reprezentanta mapovej reprezentacie, grafovy reprezentant sa o nic nestara. 
+
+Este potrebne opravit komentare. Mozno by bolo fajn v nastaveniach path finding session-u, aby sa farebne odlisili mozne templaty pre vybrany mapovy format / mozne mapove reprezentacie pre dany uzivatelsky model.
+
+Zistil som, ze ak je implementovana defaultna metoda na interface, ktory definuje genericky paramter out TParam where IParam, tak pri volani takejto metody je TParam nastaveny na IParam a nie na typ vlozeny implementujucou triedou :o. I guess to dava zmysel a aj preto som vytvoril abstraktnu triedu pre grafovych reprezentantov, kde TGraph uz nieje konvariantny a teda v jeho implementacii metody createGraph sa uz za TGraph dosadi spravne typ implementujucej triedy.

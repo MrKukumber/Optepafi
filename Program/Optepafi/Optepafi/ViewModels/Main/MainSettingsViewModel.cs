@@ -56,6 +56,10 @@ public class MainSettingsViewModel : ViewModelBase
         this.WhenAnyValue(x => x.CurrentElevDataDistribution)
             .Subscribe(currentElevDataDistribution => _mainSettingsMv.CurrentElevDataDistribution = currentElevDataDistribution);
 
+        _selectedConfigurationTitle = this.WhenAnyValue(x => x.SelectedNode,
+                selectedNode => selectedNode is not InnerNode ? selectedNode?.Title : null)
+            .ToProperty(this, nameof(SelectedConfigurationTitle));
+
         Nodes = new List<Node>
         {
             new InnerNode("Searching algorithms", mainSettingsMv.SearchingAlgorithmsConfigurations.Select(kv => new SearchingAlgorithmConfigNode(kv.Key))),
@@ -117,6 +121,9 @@ public class MainSettingsViewModel : ViewModelBase
         get => _selectedNode; 
         set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
     }
+
+    private ObservableAsPropertyHelper<string?> _selectedConfigurationTitle;
+    public string? SelectedConfigurationTitle => _selectedConfigurationTitle.Value;
     
     /// <summary>
     /// Reactive command which initiate change of currently used ViewModel in <c>MainWindowViewModel</c> to manin menu ViewModel.

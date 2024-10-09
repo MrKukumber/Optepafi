@@ -14,6 +14,7 @@ using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.Utils;
 using Optepafi.ModelViews.PathFinding.Utils;
 using Optepafi.ModelViews.Utils;
 using Optepafi.ViewModels.Data;
@@ -101,7 +102,7 @@ public partial class PathFindingSessionModelView
         /// </remarks>
         public override async Task<PathReportViewModel?> FindPathAsync(List<CanvasCoordinate> trackCanvasCoords, IProgress<SearchingReportViewModel> searchingViewModelProgress, CancellationToken cancellationToken)
         {
-             _searchingExecutor ??= SearchingAlgorithmManager.Instance.GetExecutorOf(SearchingAlgorithm, MapRepresentation, UserModel);
+             _searchingExecutor ??= SearchingAlgorithmManager.Instance.GetExecutorOf(SearchingAlgorithm, MapRepresentation, UserModel, SearchingAlgorithmConfiguration);
              
             List<Leg> track = CanvasCoordsToLegsConverter.ConvertAccordingTo(trackCanvasCoords, MapGraphics.GraphicsArea);
             IProgress<ISearchingReport> searchingProgress = new Progress<ISearchingReport>(report =>
@@ -131,22 +132,24 @@ public partial class PathFindingSessionModelView
         /// <summary>
         /// Map created in settings ModelView.
         /// </summary>
-        public IMap Map => RelevanceFeedback.Map;
+        private IMap Map => RelevanceFeedback.Map;
         /// <summary>
         /// Map graphics created in settings ModelView. 
         /// </summary>
-        public IGroundGraphicsSource MapGraphics => RelevanceFeedback.MapGraphics;
+        private IGroundGraphicsSource MapGraphics => RelevanceFeedback.MapGraphics;
         /// <summary>
         /// Map representation created by map repre. creating ModelView.
         /// </summary>
-        public IMapRepre MapRepresentation => RelevanceFeedback.MapRepresentation;
+        private IMapRepre MapRepresentation => RelevanceFeedback.MapRepresentation;
         /// <summary>
         /// User model loaded in settings ModelView and eventually adjusted by relevance feedback ModelView.
         /// </summary>
-        public IUserModel<ITemplate> UserModel => RelevanceFeedback.UserModel;
+        private IUserModel<ITemplate> UserModel => RelevanceFeedback.UserModel;
+        private IConfiguration UserModelConfiguration => RelevanceFeedback.UserModelConfiguration;
         /// <summary>
         /// Chosen searching algorithm which should be executed for path finding.
         /// </summary>
-        public ISearchingAlgorithm SearchingAlgorithm => RelevanceFeedback.SearchingAlgorithm;
+        private ISearchingAlgorithm SearchingAlgorithm => RelevanceFeedback.SearchingAlgorithm;
+        private IConfiguration SearchingAlgorithmConfiguration => RelevanceFeedback.SearchingAlorithmCofniguration;
     }
 }

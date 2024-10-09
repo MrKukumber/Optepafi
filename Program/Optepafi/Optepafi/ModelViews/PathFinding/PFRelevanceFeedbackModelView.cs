@@ -5,6 +5,7 @@ using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.ModelViews.PathFinding;
 
@@ -54,10 +55,12 @@ public partial class PathFindingSessionModelView
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when user model in settings is not set. When relevance feedback ModelView is used it should be set already.</exception>
         public IUserModel<ITemplate> UserModel => Settings.UserModel ?? throw new ArgumentNullException(nameof(Settings.UserModel), "User model should be chosen before using of PFRelevanceFeedbackModelView");
+        public IConfiguration UserModelConfiguration => Settings.UserModelConfiguration ?? throw new ArgumentNullException( nameof(Settings.UserModelConfiguration), "User model configuration should be chosen before using of PFRelevanceFeedbackModelView");
         /// <summary>
         /// Searching algorithm retrieved from settings ModelView.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when searching algorithm in settings is not set. When relevance feedback ModelView is used it should be set already.</exception>
         public ISearchingAlgorithm SearchingAlgorithm => Settings.SearchingAlgorithm ?? throw new ArgumentNullException( nameof(Settings.SearchingAlgorithm), "Searching algorithm should be chosen before using of PFRelevanceFeedbackModelView");
+        public IConfiguration SearchingAlorithmCofniguration => Settings.SearchingAlgorithmConfiguration ?? throw new ArgumentNullException( nameof(Settings.SearchingAlgorithmConfiguration), "Searching algorithm configuration should be chosen before using of PFRelevanceFeedbackModelView"); 
     }
 }

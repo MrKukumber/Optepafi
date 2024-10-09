@@ -11,8 +11,8 @@
         <TextBlock Name="MainSettingsHeaderTextBlock" Text="{x:Static local:MainWindowLocal.Settings_MainSettingsHeader}"
                    DockPanel.Dock="Top" HorizontalAlignment="Center"></TextBlock>
         <Button Name="MainMenuButton" Content="{x:Static local:MainWindowLocal.Settings_MainMenuButton}" Command="{Binding GoToMainMenuCommand}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="20"/>
-        <Grid RowDefinitions="* *">
-            <Grid Grid.Row="0" ColumnDefinitions="* *" >
+        <Grid RowDefinitions="2* *">
+            <Grid Grid.Row="0" ColumnDefinitions="2* 3*" >
                 <Grid Grid.Column="1"  RowDefinitions="* *">
                     <StackPanel  Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <TextBlock Name="LocalizationTextBlock" Text="{x:Static local:MainWindowLocal.Settings_LocalizationTextBlock}"/>
@@ -40,8 +40,8 @@
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Row="1">
-                <TextBlock Text="{Binding SelectedNode.Title, FallbackValue=null}"></TextBlock>
-                <ContentControl Content="{Binding SelectedNode.Configuration, FallbackValue=null}"></ContentControl>
+                <TextBlock Text="{Binding SelectedConfigurationTitle}"></TextBlock>
+                <ContentControl Content="{Binding SelectedNode.Configuration}"></ContentControl>
             </StackPanel>
         </Grid>
         

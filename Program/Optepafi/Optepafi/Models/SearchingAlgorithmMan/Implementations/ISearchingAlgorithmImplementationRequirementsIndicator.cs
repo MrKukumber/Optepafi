@@ -26,7 +26,7 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// </summary>
         /// <param name="graphRepresentative">Representative of graph type whose functionalities are tested.</param>
         /// <returns>True if all requirements are satisfied. Otherwise false.</returns>
-        bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IConfiguration, IVertexAttributes, IEdgeAttributes>
+        bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>
                 graphRepresentative);
     
         /// <summary>

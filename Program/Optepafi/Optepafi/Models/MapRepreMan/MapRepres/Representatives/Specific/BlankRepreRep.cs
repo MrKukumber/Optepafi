@@ -17,19 +17,21 @@ namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives.Specific;
 /// It is included in <c>MapRepreManager</c> where indicates representations usability.  
 /// For more information about map representations representatives see <see cref="IMapRepreRepresentative{TMapRepre}"/>.  
 /// </summary>
-public class BlankRepreRep : IMapRepreRepresentative<IBlankRepre>
+public class BlankRepreRep : MapRepreRepresentative<IBlankRepre, NullConfiguration>
 {
     public static BlankRepreRep Instance { get; } = new();
     private BlankRepreRep(){}
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.MapRepreName"/>
-    public string MapRepreName { get; } = "Blank representation.";
+    public override string MapRepreName { get; } = "Blank representation.";
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.ImplementationIndicators"/>
-    public IImplementationIndicator<ITemplate, IMap, IBlankRepre>[] ImplementationIndicators { get; } = [BlankGraphElevDataDepBlankTemplateTextMapImplementationRep.Instance];
-    
+    public override IImplementationIndicator<ITemplate, IMap, IBlankRepre>[] ImplementationIndicators { get; } = [BlankGraphElevDataDepBlankTemplateTextMapImplementationRep.Instance];
+
+    protected override NullConfiguration DefaultConfiguration { get; } = new(); 
+
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.GetCorrespondingGraphRepresentative{TVertexAttributes, TEdgeAttributes}"/>
-    public IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, IConfiguration, TVertexAttributes, TEdgeAttributes> GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>() where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+    public override IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>() 
     {
         return BlankGraphRep<TVertexAttributes, TEdgeAttributes>.Instance;
     }

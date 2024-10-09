@@ -34,9 +34,9 @@ public class SmileyFacesDrawerGeneral : ISearchingAlgorithmImplementation<NullCo
     /// <remarks>
     /// Used graph does not have to provide no special functionality.
     /// </remarks>
-    public bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IConfiguration, IVertexAttributes, IEdgeAttributes> graphRepresentative)
+    public bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes> graphRepresentative)
     {
-        if (graphRepresentative is IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IConfiguration, IVertexAttributes, IEdgeAttributes>) 
+        if (graphRepresentative is IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>) 
             return true;
         return false;
     }

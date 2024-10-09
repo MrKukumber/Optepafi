@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Security;
 using System.Threading.Tasks;
+using Avalonia.Markup.Xaml.Templates;
 using Optepafi.Models.MapMan;
+using Optepafi.Models.ParamsMan.Params;
 using Optepafi.Models.UserModelMan;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data.Graphics;
@@ -40,6 +43,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// </summary>
     private PFMapRepreCreatingModelView _mapRepreCreatingMv;
 
+    private MainSettingsViewModel.Provider _mainSettingsProvider;
+
     /// <summary>
     /// Constructs path findings settings ViewModel.
     /// 
@@ -53,11 +58,13 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     {
         _settingsMv = settingsMv;
         _mapRepreCreatingMv = mapRepreCreatingMv;
+        _mainSettingsProvider = mainSettingsProvider;
 
         UsableTemplates = _settingsMv.GetAllTemplates();
         UsableMapFormats = _settingsMv.GetAllMapFormats(); 
-        UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate, CurrentlyUsedMapFormat);
-        UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
+        UsableMapRepreRepresentatives = _settingsMv.GetUsableMapRepreRepresentatives(SelectedTemplate, CurrentlyUsedMapFormat);
+        UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(SelectedTemplate);
+        UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(SelectedMapRepreRepresentative, CurrentlyUsedUserModelType);
 
         this.WhenAnyValue(x => x.CurrentlySelectedElevDataDistribution)
             .Subscribe(currentlySelectedElevDataDistribution =>
@@ -65,60 +72,108 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
                 _settingsMv.SetElevDataDistribution(currentlySelectedElevDataDistribution);
             });
         
-        this.WhenAnyValue(x => x.SelectedTemplate, 
-                x => x.CurrentlyUsedMapFormat,
-                x => x.CurrentlyUsedUserModelType)
-            .Subscribe(tuple =>
+        this.WhenAnyValue(x => x.CurrentlyUsedMapFormat)
+           .Subscribe(currentlyUsedMapFormat =>
+           {
+               if (SelectedTemplate is not null && currentlyUsedMapFormat is not null)
+                   if (!_settingsMv.AreTheyUsableCombination(SelectedTemplate, currentlyUsedMapFormat))
+                       SelectedTemplate = null;
+           }); 
+        
+        this.WhenAnyValue(x => x.SelectedTemplate)
+            .Subscribe(selectedTemplate =>
             {
-                var (template, mapFormat, userModelType) = tuple;
-                UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(template, mapFormat, userModelType);
+                if (selectedTemplate is not null )
+                {
+                    if (CurrentlyUsedMapFormat is not null)
+                        if (!_settingsMv.AreTheyUsableCombination(selectedTemplate, CurrentlyUsedMapFormat))
+                        { 
+                            SelectedMapFileName = null;
+                            SelectedMapFilePath = null;
+                            SelectedMapsPreview = null;
+                            CurrentlyUsedMapFormat = null;
+                        }
+                    
+                    UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(selectedTemplate);
+                }
             });
+        
         this.WhenAnyValue(x => x.SelectedTemplate,
                 x => x.CurrentlyUsedMapFormat)
             .Subscribe(tuple =>
             {
                 var (template, mapFormat) = tuple;
-                UsableUserModelTypes = _settingsMv.GetUsableUserModelTypes(template, mapFormat);
-                if (!UsableUserModelTypes.Contains(CurrentlyUsedUserModelType))
+                UsableMapRepreRepresentatives = _settingsMv.GetUsableMapRepreRepresentatives(template, mapFormat);
+            });
+
+        this.WhenAnyValue(x => x.CurrentlyUsedUserModelType)
+            .Subscribe(currentlyUsedUserModelType =>
+            {
+                if(SelectedMapRepreRepresentative is not null && currentlyUsedUserModelType is not null)
+                    if (!_settingsMv.AreTheyUsableCombination(SelectedMapRepreRepresentative, currentlyUsedUserModelType))
+                        SelectedMapRepreRepresentative = null;
+            });
+        this.WhenAnyValue(x => x.SelectedMapRepreRepresentative)
+            .Subscribe(selectedMapRepreRepresentative =>
+            {
+                if(selectedMapRepreRepresentative is not null && CurrentlyUsedUserModelType is not null)
+                    if (!_settingsMv.AreTheyUsableCombination(selectedMapRepreRepresentative, CurrentlyUsedUserModelType))
+                    {
+                        SelectedUserModelFileName = null;
+                        SelectedUserModelFilePath = null;
+                        CurrentlyUsedUserModelType = null;
+                    }
+            });
+
+        this.WhenAnyValue(x => x.SelectedMapRepreRepresentative,
+                x => x.CurrentlyUsedUserModelType)
+            .Subscribe(tuple =>
+            {
+                var (mapRepreRepresentative, userModelType) = tuple;
+                UsableSearchingAlgorithms = _settingsMv.GetUsableAlgorithms(mapRepreRepresentative, userModelType);
+            });
+        
+
+       
+
+        this.WhenAnyValue(x => x.UsableTemplates)
+            .Subscribe(usableTemplates =>
+            {
+                if (SelectedTemplate is not null && !usableTemplates.Contains(SelectedTemplate))
+                    SelectedTemplate = null;
+            });
+        this.WhenAnyValue(x => x.UsableMapFormats)
+            .Subscribe(usableMapFormats =>
+            {
+                if (CurrentlyUsedMapFormat is not null && !usableMapFormats.Contains(CurrentlyUsedMapFormat))
+                {
+                    SelectedMapFileName = null;
+                    SelectedMapFilePath = null;
+                    SelectedMapsPreview = null;
+                    CurrentlyUsedMapFormat = null;
+                }
+            });
+        this.WhenAnyValue(x => x.UsableMapRepreRepresentatives)
+            .Subscribe(usableMapRepreRepresentatives =>
+            {
+                if (SelectedMapRepreRepresentative is not null && !usableMapRepreRepresentatives.Contains(SelectedMapRepreRepresentative))
+                    SelectedMapRepreRepresentative = null;
+            });
+        this.WhenAnyValue(x => x.UsableUserModelTypes)
+            .Subscribe(usableUserModelTypes =>
+            {
+                if (CurrentlyUsedUserModelType is not null && !usableUserModelTypes.Contains(CurrentlyUsedUserModelType))
                 {
                     SelectedUserModelFileName = null;
                     SelectedUserModelFilePath = null;
                     CurrentlyUsedUserModelType = null;
                 }
             });
-
-        this.WhenAnyValue(x => x.SelectedTemplate)
-            .Subscribe(selectedTemplate =>
-            {
-                if (selectedTemplate is not null && CurrentlyUsedMapFormat is not null)
-                    if(!_settingsMv.AreTheyUsableCombination(selectedTemplate, CurrentlyUsedMapFormat))
-                    {
-                        SelectedMapFileName = null;
-                        SelectedMapFilePath = null;
-                        SelectedMapsPreview = null;
-                        CurrentlyUsedMapFormat = null;
-                    }
-            });
-
-        this.WhenAnyValue(x => x.CurrentlyUsedMapFormat)
-            .Subscribe(currentlyUsedMapFormat =>
-            {
-                if (SelectedTemplate is not null && currentlyUsedMapFormat is not null)
-                    if (!_settingsMv.AreTheyUsableCombination(SelectedTemplate, currentlyUsedMapFormat))
-                        SelectedTemplate = null;
-            });
-
         this.WhenAnyValue(x => x.UsableSearchingAlgorithms)
             .Subscribe(usableSearchingAlgorithms =>
             {
                 if (SelectedSearchingAlgorithm is not null && !usableSearchingAlgorithms.Contains( SelectedSearchingAlgorithm))
                     SelectedSearchingAlgorithm = null;
-            });
-        this.WhenAnyValue(x => x.UsableTemplates)
-            .Subscribe(usableTemplates =>
-            {
-                if (SelectedTemplate is not null && !usableTemplates.Contains(SelectedTemplate))
-                    SelectedTemplate = null;
             });
         
         LoadMapCommand = ReactiveCommand.CreateFromObservable(((Stream, string) mapFileStreamAndPath) => Observable
@@ -141,7 +196,8 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
             string userModelFileName = Path.GetFileName(userModelFilePath);
             UserModelTypeViewModel? userModelType = _settingsMv.GetCorrespondingUserModelType(userModelFileName);
             if (userModelType is null) throw new NullReferenceException(" User model type should be returned, because chosen file was filtered to be correct.");
-            var loadResult = await _settingsMv.LoadAndSetUserModelAsync(userModelFileStreamAndPath, userModelType, cancellationToken);
+            var loadResult = await _settingsMv.LoadAndSetUserModelAsync(userModelFileStreamAndPath, userModelType, 
+                _mainSettingsProvider.UserModelsConfigurations[userModelType],cancellationToken);
             userModelFileStream.Dispose();
             return (loadResult, userModelType, userModelFilePath);
         }).TakeUntil(LoadUserModelCommand) );
@@ -190,16 +246,16 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
 
         IObservable<bool> isEverythingSet = this.WhenAnyValue(x => x.SelectedTemplate,
             x => x.CurrentlyUsedMapFormat,
-            x => x.SelectedSearchingAlgorithm,
+            x => x.SelectedMapRepreRepresentative,
             x => x.CurrentlyUsedUserModelType,
-            (template, mapFormat, searchingAlgorithm, userModel) => template is not null && mapFormat is not null && searchingAlgorithm is not null && userModel is not null);
+            x => x.SelectedSearchingAlgorithm,
+            (template, mapFormat, selectedMapRepreRepresentative, userModel, searchingAlgorithm ) => template is not null && mapFormat is not null && selectedMapRepreRepresentative is not null && userModel is not null && searchingAlgorithm is not null);
 
         MapRepreCreationInteraction = new Interaction<MapRepreCreatingViewModel, bool>();
         ProceedTroughMapRepreCreationCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            CurrentlySelectedElevDataDistribution = mainSettingsProvider.CurrentElevDataDistribution;
-            _settingsMv.SetSomeSuitableMapRepreRepresentative(SelectedTemplate!, CurrentlyUsedMapFormat!, CurrentlyUsedUserModelType!, SelectedSearchingAlgorithm!);
-            bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingViewModel(_mapRepreCreatingMv, mainSettingsProvider));
+            CurrentlySelectedElevDataDistribution = _mainSettingsProvider.CurrentElevDataDistribution;
+            bool successfulCreation = await MapRepreCreationInteraction.Handle(new MapRepreCreatingViewModel(_mapRepreCreatingMv, _mainSettingsProvider));
             if (successfulCreation)
             {
                 _settingsMv.SaveParameters();
@@ -213,13 +269,25 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
 
         SelectedTemplate = settingsMv.DefaultTemplate;
 
-        if (settingsMv.DefaultMapFilePath is not null && settingsMv.DefaultUserModelFilePath is not null)
+        if (settingsMv.DefaultMapFilePath is not null)
         {
-            CurrentlyUsedMapFormat = settingsMv.GetCorrespondingMapFormat(Path.GetFileName(settingsMv.DefaultMapFilePath));
+            MapFormatViewModel? mapFormat  = settingsMv.GetCorrespondingMapFormat(Path.GetFileName(settingsMv.DefaultMapFilePath));
+            CurrentlyUsedMapFormat = mapFormat is not null && UsableMapFormats.Contains(mapFormat) ? mapFormat : CurrentlyUsedMapFormat;
+            
+            UsableMapRepreRepresentatives =  settingsMv.GetUsableMapRepreRepresentatives(SelectedTemplate, CurrentlyUsedMapFormat);
+            MapRepreRepresentativeViewModel? mapRepreRepresentative = settingsMv.DefaultMapRepreRepresentative;
+            if (mapRepreRepresentative is not null && UsableMapRepreRepresentatives.Contains(mapRepreRepresentative))
+            {
+                SelectedMapRepreRepresentative = mapRepreRepresentative;
+            }
+        }
+
+        if (settingsMv.DefaultUserModelFilePath is not null)
+        {
             var userModelType = settingsMv.GetCorrespondingUserModelType(Path.GetFileName(settingsMv.DefaultUserModelFilePath));
             CurrentlyUsedUserModelType = userModelType is not null && UsableUserModelTypes.Contains(userModelType) ? userModelType : CurrentlyUsedUserModelType; 
             
-            UsableSearchingAlgorithms = settingsMv.GetUsableAlgorithms(SelectedTemplate, CurrentlyUsedMapFormat, CurrentlyUsedUserModelType);
+            UsableSearchingAlgorithms = settingsMv.GetUsableAlgorithms(SelectedMapRepreRepresentative, CurrentlyUsedUserModelType);
             SearchingAlgorithmViewModel? searchingAlgorithm = settingsMv.DefaultSearchingAlgorithm;
             if (searchingAlgorithm is not null && UsableSearchingAlgorithms.Contains(searchingAlgorithm))
             {
@@ -341,7 +409,7 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
         get => _selectedSearchingAlgorithm;
         set
         {
-            _settingsMv.SetSearchingAlgorithm(value);
+            _settingsMv.SetSearchingAlgorithm(value, value is not null ?_mainSettingsProvider.SearchingAlgorithmsConfigurations[value] : null);
             this.RaiseAndSetIfChanged(ref _selectedSearchingAlgorithm, value);
         }
     }
@@ -352,32 +420,32 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// 
     /// It raises notification about change of its value.  
     /// </summary>
-    public IReadOnlySet<SearchingAlgorithmViewModel> UsableSearchingAlgorithms
+    public IReadOnlyCollection<SearchingAlgorithmViewModel> UsableSearchingAlgorithms
     {
         get => _usableSearchingAlgorithms;
         set => this.RaiseAndSetIfChanged(ref _usableSearchingAlgorithms, value);
     }
-    private IReadOnlySet<SearchingAlgorithmViewModel> _usableSearchingAlgorithms;
+    private IReadOnlyCollection<SearchingAlgorithmViewModel> _usableSearchingAlgorithms;
 
-    public MapRepreRepresentativeViewModel? SelectedMapRepresentation
+    public MapRepreRepresentativeViewModel? SelectedMapRepreRepresentative
     {
-        get => _selectedMapRepresentation;
+        get => _selectedMapRepreRepresentative;
         set
         {
-            _settingsMv.SetMapRepresentation(value);
-            this.RaiseAndSetIfChanged(ref _selectedMapRepresentation, value);
+            _settingsMv.SetMapRepreRep(value, value is not null ? _mainSettingsProvider.MapRepreConfigurations[value] : null);
+            this.RaiseAndSetIfChanged(ref _selectedMapRepreRepresentative, value);
         }
     }
 
-    private MapRepreRepresentativeViewModel? _selectedMapRepresentation;
+    private MapRepreRepresentativeViewModel? _selectedMapRepreRepresentative;
 
-    public IReadOnlySet<MapRepreRepresentativeViewModel> UsableMapRepresentations
+    public IReadOnlyCollection<MapRepreRepresentativeViewModel> UsableMapRepreRepresentatives
     {
-        get => _usableMapRepresentations;
-        set => this.RaiseAndSetIfChanged(ref _usableMapRepresentations, value);
+        get => _usableMapRepreRepresentatives;
+        set => this.RaiseAndSetIfChanged(ref _usableMapRepreRepresentatives, value);
     }
 
-    private IReadOnlySet<MapRepreRepresentativeViewModel> _usableMapRepresentations;
+    private IReadOnlyCollection<MapRepreRepresentativeViewModel> _usableMapRepreRepresentatives;
     
     
     /// <summary>

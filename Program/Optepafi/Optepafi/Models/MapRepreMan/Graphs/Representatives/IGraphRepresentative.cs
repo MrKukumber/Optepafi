@@ -10,6 +10,7 @@ using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapRepreMan.Graphs.Representatives;
 
+
 /// <summary>
 /// Represents representative of graph that is tied to some map representation.
 /// 
@@ -22,14 +23,11 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Representatives;
 /// <typeparam name="TConfiguration">Type of configuration used in graph construction process.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes used in represented graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes used in represented graph.</typeparam>
-public interface IGraphRepresentative<out TGraph, out TConfiguration, TVertexAttributes, TEdgeAttributes>
+public interface IGraphRepresentative<out TGraph, TVertexAttributes, TEdgeAttributes>
     where TGraph : IGraph<TVertexAttributes, TEdgeAttributes>
-    where TConfiguration : IConfiguration
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    TConfiguration DefaultConfiguration { get; }
-    
     /// <summary>
     /// Method which creates graph from provided template and map represented by the representative by using one of provided implementation indicator (constructor).
     /// 
@@ -47,27 +45,13 @@ public interface IGraphRepresentative<out TGraph, out TConfiguration, TVertexAtt
     /// <typeparam name="TMapRepre">Type of map representation whose implementations indicators are provided for constructing the graph.</typeparam>
     /// <returns>Created graph tide to some map representation.</returns>
     /// <exception cref="ArgumentException">When none of provided indicators is usable implementation constructor.</exception>
-    sealed TGraph CreateGraph<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map, IConfiguration configuration,
+    TGraph CreateGraph<TTemplate, TMap, TMapRepre, TConfiguration>(TTemplate template, TMap map, TConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IImplementationIndicator<ITemplate, IMap, TMapRepre>[] indicators)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TMapRepre : IMapRepre
-    {
-        foreach (var indicator in indicators)
-        {
-            if (indicator is IImplementationElevDataIndepConstr<TTemplate, TMap, TGraph, TConfiguration, TVertexAttributes, TEdgeAttributes> constructor)
-            {
-                if (configuration is TConfiguration config)
-                    return constructor.ConstructMapRepre(template, map, config, progress, cancellationToken);
-                //TODO: log wrong type of retrieved configuration
-                return constructor.ConstructMapRepre(template, map, DefaultConfiguration, progress, cancellationToken);
-            }
-        }
+        where TConfiguration : IConfiguration;
 
-        throw new ArgumentException(
-            "There is no constructor for given template and map which does not require elevation data. Existence of constructor should be checked before creation.");
-    }
-    
     /// <summary>
     /// Method which creates graph from provided template and map represented by th representative by using one of provided implementation indicator (constructor).
     /// For construction of this graph are required elevation data for provided maps area.
@@ -85,25 +69,13 @@ public interface IGraphRepresentative<out TGraph, out TConfiguration, TVertexAtt
     /// <typeparam name="TMapRepre">Type of map representation whose implementations indicators are provided for constructing the graph.</typeparam>
     /// <returns>Created graph tide to some map representation.</returns>
     /// <exception cref="ArgumentException">When none of provided indicators is usable implementation constructor.</exception>
-    sealed TGraph CreateGraph<TTemplate, TMap, TMapRepre>(TTemplate template, TMap map, IElevData elevData, IConfiguration configuration,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken, IImplementationIndicator<ITemplate, IMap, TMapRepre>[] indicators)
+    TGraph CreateGraph<TTemplate, TMap, TMapRepre, TConfiguration>(TTemplate template, TMap map, IElevData elevData,
+        TConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
+        CancellationToken? cancellationToken,
+        IImplementationIndicator<ITemplate, IMap, TMapRepre>[] indicators)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IGeoLocatedMap
         where TMapRepre : IMapRepre
-    {
-        foreach (var indicator in indicators)
-        {
-            if (indicator is IImplementationElevDataDepConstr<TTemplate,TMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes> constructor)
-            {
-                if (configuration is TConfiguration config)
-                    return constructor.ConstructMapRepre(template, map, elevData, config, progress, cancellationToken);
-                
-                //TODO: log wrong type of retrieved configuration
-                return constructor.ConstructMapRepre(template, map, elevData, DefaultConfiguration, progress, cancellationToken);
-            }
-        }
-        throw new ArgumentException(
-            "There is no constructor for given template and map which requires elevation data.");
-    }
+        where TConfiguration : IConfiguration;
 
 }
