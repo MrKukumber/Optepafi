@@ -80,13 +80,13 @@ public class ElevDataManager
     /// <param name="elevDataDistribution">Elevation data distribution asked for its ability to deliver requested data.</param>
     /// <param name="cancellationToken">Token for cancellation of process.</param>
     /// <returns></returns>
-    public ElevDataObtainability AreElevDataFromDistObtainableFor(IGeoLocatedMap map, IElevDataDistribution elevDataDistribution, CancellationToken? cancellationToken = null)
+    public ElevDataObtainability AreElevDataFromDistObtainableFor(IAreaQueryableMap map, IElevDataDistribution elevDataDistribution, CancellationToken? cancellationToken = null)
     {
         return elevDataDistribution.AreElevDataObtainableFor(map, cancellationToken);
     }
 
     /// <summary>
-    /// Method for retrieving of elevation data for provided map of provided elevation data distribution of elevation data source.
+    /// Method for retrieving of elevation data for provided map of provided elevation data distribution.
     /// 
     /// Calling this method should be preceded by calling the <see cref="AreElevDataFromDistObtainableFor"/> method for testing obtainability of required elevation data.   
     /// In case test has a positive result, it is ensured that required data will be provided. On the other hand call of this method could throw an invalid operation exception.  
@@ -96,7 +96,7 @@ public class ElevDataManager
     /// <param name="elevDataDistribution">Elevation data distribution asked for providing elevation data.</param>
     /// <param name="cancellationToken">Token for cancellation of elevation data delivery.</param>
     /// <returns>Elevation data object which is able to provide required data.</returns>
-    public IElevData GetElevDataFromDistFor(IGeoLocatedMap map, IElevDataDistribution elevDataDistribution, CancellationToken? cancellationToken = null)
+    public IElevData GetElevDataFromDistFor(IAreaQueryableMap map, IElevDataDistribution elevDataDistribution, CancellationToken? cancellationToken = null)
     {
         return elevDataDistribution.GetElevDataFor(map, cancellationToken);
     }

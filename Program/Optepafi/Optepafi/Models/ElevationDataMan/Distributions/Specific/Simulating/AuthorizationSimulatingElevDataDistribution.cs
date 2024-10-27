@@ -1,51 +1,47 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.ElevationDataMan.Regions.Simulating;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 
-namespace Optepafi.Models.ElevationDataMan.Distributions.Simulating;
+namespace Optepafi.Models.ElevationDataMan.Distributions.Specific.Simulating;
 
 /// <summary>
-/// Elevation data source which simulates work of authorization not requiring elevation data distribution.
+/// Elevation data source which simulates work of authorization requiring elevation data distribution.
 /// 
 /// This type is just demonstrative data source for presenting application functionality.  
-/// For more information on elevation data sources which does not require authorization for accessing data see <see cref="ICredentialsNotRequiringElevDataDistribution"/>.  
+/// For more information on elevation data sources which requires authorization for accessing data see <see cref="ICredentialsRequiringElevDataDistribution"/>.  
 /// </summary>
-public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequiringElevDataDistribution
+public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiringElevDataDistribution
 {
-    
-    public static NoAuthorizationSimulatingElevDataDistribution Instance { get; } = new();
-    
+    public static AuthorizationSimulatingElevDataDistribution Instance { get; } = new();
     /// <summary>
     /// Initialize three demonstrating regions. One top region and two subregions.
     /// </summary>
-    private NoAuthorizationSimulatingElevDataDistribution()
+    private AuthorizationSimulatingElevDataDistribution()
     {
-        TopRegion topRegion = new TopRegion0()
+        TopRegion notRealRegion = new TopRegion0()
         {
             IsDownloaded = false
         };
-        new SubRegion2(topRegion)
+        _ = new SubRegion2(notRealRegion)
+        {
+            IsDownloaded = false
+        };
+        _ = new SubRegion1(notRealRegion)
         {
             IsDownloaded = true
         };
-        new SubRegion1(topRegion)
-        {
-            IsDownloaded = false
-        };
-        AllTopRegions = new HashSet<TopRegion>{ topRegion };
+        AllTopRegions = new HashSet<TopRegion>{ notRealRegion };
     }
-    
     /// <inheritdoc cref="IElevDataDistribution.Name"/>
-    public string Name => "No authorization simulating elevation data distribution";
-    
+    public string Name => "Authorization simulating elevation data distribution with name \"Name\" and password \"Password\"";
     /// <inheritdoc cref="IElevDataDistribution.AllTopRegions"/>
     public IReadOnlySet<TopRegion> AllTopRegions { get; }
-    
     /// <inheritdoc cref="IElevDataDistribution.Remove"/>
     public void Remove(Region region)
     {
@@ -67,33 +63,33 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
         if(region is SubRegion subRegion) SetRecursivelyUpperRegionsToNotDownloaded(subRegion.UpperRegion);
     }
 
-    
     /// <inheritdoc cref="IElevDataDistribution.AreElevDataObtainableFor"/>
     /// <remarks>
     /// Elevation data of this distribution are always available for any provided map.
     /// </remarks>
-    public ElevDataManager.ElevDataObtainability AreElevDataObtainableFor(IGeoLocatedMap map, CancellationToken? cancellationToken)
+    public ElevDataManager.ElevDataObtainability AreElevDataObtainableFor(IAreaQueryableMap map, CancellationToken? cancellationToken)
     {
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return ElevDataManager.ElevDataObtainability.Cancelled;
         return ElevDataManager.ElevDataObtainability.Obtainable;
     }
 
-    
     /// <inheritdoc cref="IElevDataDistribution.GetElevDataFor"/>
-    public IElevData GetElevDataFor(IGeoLocatedMap map, CancellationToken? cancellationToken)
+    public IElevData GetElevDataFor(IAreaQueryableMap map, CancellationToken? cancellationToken)
     {
         return new ElevData();
     }
 
-    /// <inheritdoc cref="ICredentialsNotRequiringElevDataDistribution.Download"/>
+    /// <inheritdoc cref="ICredentialsRequiringElevDataDistribution.Download"/>
     /// <remarks>
     /// This method simulates downloading of provided region.
-    /// It tries to download all subregions with small probability of unsuccessful download.
+    /// At first it checks credentials.
+    /// Then it tries to download all subregions with small probability of unsuccessful download.
     /// Responds to cancellation of downloading.
     /// </remarks>
-    public ElevDataManager.DownloadingResult Download(Region region, CancellationToken? cancellationToken)
+    public ElevDataManager.DownloadingResult Download(Region region, NetworkCredential credential, CancellationToken? cancellationToken)
     {
         Random rnd = new Random();
+        if (credential.UserName != "Name" || credential.Password != "Password") return ElevDataManager.DownloadingResult.WrongCredentials;
         List<Region> subRegionsWhichWereSuccessfulyDownloaded = new();
         foreach (var subRegion in region.SubRegions)
         {
@@ -128,7 +124,6 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
         }
         return ElevDataManager.DownloadingResult.UnableToDownload;
     }
-
     private void SetRecursivelySubRegionsToDownloaded(Region region)
     {
         region.IsDownloaded = true;
@@ -143,6 +138,7 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
     /// </summary>
     private class ElevData : IElevData
     {
+        
         /// <inheritdoc cref="IElevData.GetElevation(Optepafi.Models.MapMan.GeoCoordinate)"/>
         public double? GetElevation(GeoCoordinate coordinate)
         {

@@ -27,20 +27,19 @@ public class TextMapRepresentative : IMapRepresentative<TextMap>
     /// Reads input text file and saves its text into <c>TextMap</c> instance and returns it.  
     /// It do it so by creating instance of hidden <c>IntraTextMap</c> class which has public backing field for text.
     /// </remarks>
-    public TextMap CreateMapFrom((Stream, string) inputMapStreamWithPath, CancellationToken? cancellationToken,
+    public TextMap CreateMapFrom((Stream mapStream, string path) input, CancellationToken? cancellationToken,
         out MapManager.MapCreationResult creationResult)
     {
-        var (inputMapStream, path) = inputMapStreamWithPath;
         string mapText;
-        using (var sr = new StreamReader(inputMapStream))
+        using (var sr = new StreamReader(input.mapStream))
         {
             mapText = sr.ReadToEnd();
         }
 
         IntraTextMap textMap = new IntraTextMap
         {
-            FileName = Path.GetFileName(path),
-            FilePath = path,
+            FileName = Path.GetFileName(input.path),
+            FilePath = input.path,
             text = mapText
         };
         creationResult = MapManager.MapCreationResult.Ok;
@@ -56,3 +55,4 @@ public class TextMapRepresentative : IMapRepresentative<TextMap>
         public override string Text => text;
     }
 }
+

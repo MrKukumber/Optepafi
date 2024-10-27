@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Optepafi.Models.ElevationDataMan.Distributions;
-using Optepafi.Models.ElevationDataMan.Distributions.NotSufficient;
+using Optepafi.Models.ElevationDataMan.Distributions.Specific.NotSufficient;
 
 namespace Optepafi.Models.ElevationDataMan.ElevSources.NotSufficient;
 

@@ -5,7 +5,7 @@ namespace Optepafi.Models.MapMan.MapInterfaces;
 /// 
 /// In this case, coordinates of provided polygon are of <see cref="GeoCoordinate"/> type.
 /// </summary>
-public interface IDirectlyAreaQueryableMap : IGeoLocatedMap
+public interface IDirectlyAreaIntersectionQueryableMap : IAreaQueryableMap
 {
     /// <summary>
     /// Method for resolution of intersection of map and provided polygon.
@@ -20,7 +20,7 @@ public interface IDirectlyAreaQueryableMap : IGeoLocatedMap
 /// 
 /// In this case, coordinates of provided polygon are of <see cref="MapCoordinate"/> type.
 /// </summary>
-public interface IByReferenceAreaQueryableMap : IGeoReferencedMap
+public interface IByReferenceAreaIntersectionQueryableMap : IAreaQueryableMap
 {
     /// <summary>
     /// Method for resolution of intersection of map and provided polygon.

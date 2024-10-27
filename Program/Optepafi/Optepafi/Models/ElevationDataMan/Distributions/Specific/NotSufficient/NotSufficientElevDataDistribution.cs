@@ -4,7 +4,7 @@ using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 
-namespace Optepafi.Models.ElevationDataMan.Distributions.NotSufficient;
+namespace Optepafi.Models.ElevationDataMan.Distributions.Specific.NotSufficient;
 
 /// <summary>
 /// Elevation data distribution which never contains sufficient elevation data for provided map. It defines no regions what so ever.
@@ -38,14 +38,14 @@ public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDat
     /// <remarks>
     /// Elevation data for given map are never available.
     /// </remarks>
-    public ElevDataManager.ElevDataObtainability AreElevDataObtainableFor(IGeoLocatedMap map, CancellationToken? cancellationToken)
+    public ElevDataManager.ElevDataObtainability AreElevDataObtainableFor(IAreaQueryableMap map, CancellationToken? cancellationToken)
     {
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return ElevDataManager.ElevDataObtainability.Cancelled;
         return ElevDataManager.ElevDataObtainability.ElevDataNotPresent;
     }
 
     /// <inheritdoc cref="IElevDataDistribution.GetElevDataFor"/>
-    public IElevData GetElevDataFor(IGeoLocatedMap map, CancellationToken? cancellationToken)
+    public IElevData GetElevDataFor(IAreaQueryableMap map, CancellationToken? cancellationToken)
     {
         return new ElevData();
     }

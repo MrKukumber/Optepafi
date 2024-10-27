@@ -31,7 +31,7 @@ public abstract class PFMapRepreCreatingModelView : ModelViewBase
     /// <summary>
     /// Enumeration of elevation data check results. It contains result for every circumstance that can occur during check.
     /// </summary>
-    public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, ElevDataDistributionNotSet, Cancelled}
+    public enum ElevDataPrerequisiteCheckResult {InOrder, ElevDataForMapNotPresent, MapNotSupportedByElevDataDistribution, ElevDataDistributionNotSet, NotAreaQueryableMap, Cancelled}
     /// <summary>
     /// Method for elevation data requirements check.
     /// 
@@ -83,8 +83,8 @@ public partial class PathFindingSessionModelView
                 case MapRepreManager.NeedsElevDataIndic.Yes:
                     if (ct.IsCancellationRequested) return ElevDataPrerequisiteCheckResult.Cancelled;
                     if (ElevDataDistribution is null) return ElevDataPrerequisiteCheckResult.ElevDataDistributionNotSet;
-                    if (Map is IGeoLocatedMap geoLocatedMap)
-                        switch (ElevDataManager.Instance.AreElevDataFromDistObtainableFor(geoLocatedMap, ElevDataDistribution, ct))
+                    if (Map is IAreaQueryableMap areaQueryableMap)
+                        switch (ElevDataManager.Instance.AreElevDataFromDistObtainableFor(areaQueryableMap, ElevDataDistribution, ct))
                         {
                             case ElevDataManager.ElevDataObtainability.Obtainable:
                                 _useElevData = true;
@@ -98,11 +98,11 @@ public partial class PathFindingSessionModelView
                             default:
                                 throw new InvalidEnumArgumentException();
                         }
-                    else return ElevDataPrerequisiteCheckResult.MapNotSupportedByElevDataDistribution;
+                    else return ElevDataPrerequisiteCheckResult.NotAreaQueryableMap;
                 case MapRepreManager.NeedsElevDataIndic.NotNecessary:
                     if (ct.IsCancellationRequested) return ElevDataPrerequisiteCheckResult.Cancelled;
-                    if (Map is IGeoLocatedMap glm && ElevDataDistribution is not null)
-                        _useElevData = (ElevDataManager.Instance.AreElevDataFromDistObtainableFor(glm, ElevDataDistribution, ct)) switch
+                    if (Map is IAreaQueryableMap aqm && ElevDataDistribution is not null)
+                        _useElevData = (ElevDataManager.Instance.AreElevDataFromDistObtainableFor(aqm, ElevDataDistribution, ct)) switch
                         {
                             ElevDataManager.ElevDataObtainability.Obtainable => true,
                             _ => false
@@ -124,16 +124,16 @@ public partial class PathFindingSessionModelView
             
             if (_useElevData)
             {
-                if (Map is IGeoLocatedMap geoLocatedMap)
+                if (Map is IAreaQueryableMap areaQueryableMap)
                 {
                     progressInfo.Report("Acquiring elevation data"); //TODO: localize
                     IElevData elevData = await Task.Run(() =>
-                        ElevDataManager.Instance.GetElevDataFromDistFor(geoLocatedMap, ElevDataDistribution, cancellationToken));
+                        ElevDataManager.Instance.GetElevDataFromDistFor(areaQueryableMap, ElevDataDistribution, cancellationToken));
                     if (cancellationToken.IsCancellationRequested) return;
                     
                     progressInfo.Report("Creating map representation"); //TODO: localize
                     MapRepresentation = await Task.Run(() => 
-                        MapRepreManager.Instance.CreateMapRepre(Template, geoLocatedMap, MapRepreRepresentative, elevData, MapRepresentationConfiguration, mrcProgress, cancellationToken));
+                        MapRepreManager.Instance.CreateMapRepre(Template, areaQueryableMap, MapRepreRepresentative, elevData, MapRepresentationConfiguration, mrcProgress, cancellationToken));
                     if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
                 }
                 else throw new InvalidOperationException("There is some error in prerequisites check method, that allows _useElevData to be set to true, when map is not even IGeoLocatedMap.");

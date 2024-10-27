@@ -65,6 +65,8 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                     return PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution;
                 case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.ElevDataDistributionNotSet:
                     return PrerequisitiesCheckResult.ElevDataDistributionNotSet;
+                case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.NotAreaQueryableMap:
+                    return PrerequisitiesCheckResult.NotAreaQueryableMap;
                 case PFMapRepreCreatingModelView.ElevDataPrerequisiteCheckResult.Cancelled:
                     return PrerequisitiesCheckResult.Canceled;
             }
@@ -98,24 +100,32 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                     break;
                 case PrerequisitiesCheckResult.ElevDataAbsent:
                     CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
-                    DialogText = "Elevation data for given map are not available.\n " +
-                                 "Return to elevation data settings and download \n" +
-                                 "corresponding data for chosen map \n" +
+                    DialogText = "Elevation data for given map are not available. " + Environment.NewLine +
+                                 "Return to elevation data settings and download" + Environment.NewLine +
+                                 "corresponding data for chosen map" + Environment.NewLine +
                                  "or use another elevation data source."; //TODO: localize
                     break;
                 case PrerequisitiesCheckResult.MapNotSupportedByElevDataDistribution:
                     CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
-                    DialogText = "Elevation data can not be retrieved for given map.\n" +
-                                 "Please, choose different map or elevation data \n" +
+                    DialogText = "Elevation data can not be retrieved for given map." + Environment.NewLine +
+                                 "Please, choose different map or elevation data"+ Environment.NewLine +
                                  "source and try again."; //TODO: localize
                     break;
+                case PrerequisitiesCheckResult.NotAreaQueryableMap:
+                    CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
+                    DialogText = "ElevationData can not be retrieved for given map," + Environment.NewLine +
+                                 "because map can not be queried for its area, " + Environment.NewLine +
+                                 "even though appropriate elev. data are required." + Environment.NewLine +
+                                 "Pleas, choose different map format."; //TODO: localize
+                                 
+                    break;
                 case PrerequisitiesCheckResult.ElevDataDistributionNotSet:
-                    CurrentProcedureInfoText = "Elevation data problem";
-                    DialogText = "Elevation data are needed but elevation data \n" +
-                                 "distribution is not set. \n" +
-                                 "Return to the elevation data configuration in \n" +
-                                 "Main window and set appropriate distribution \n" +
-                                 "which can provide necessary elevation data.";
+                    CurrentProcedureInfoText = "Elevation data problem"; //TODO: localize
+                    DialogText = "Elevation data are needed but elevation data " + Environment.NewLine +
+                                 "distribution is not set. " + Environment.NewLine +
+                                 "Return to the elevation data configuration in " + Environment.NewLine +
+                                 "Main window and set appropriate distribution " + Environment.NewLine +
+                                 "which can provide necessary elevation data."; //TODO: localize
                     break;
             }
         });
@@ -225,7 +235,7 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
     /// <summary>
     /// Enumeration of every prerequisite check results.
     /// </summary>
-    public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataDistribution, ElevDataDistributionNotSet, Canceled}
+    public enum PrerequisitiesCheckResult {Ok, ElevDataAbsent, MapNotSupportedByElevDataDistribution, ElevDataDistributionNotSet, NotAreaQueryableMap, Canceled}
     
     /// <summary>
     /// Reactive command whether all prerequisites for map representation creation are satisfied.

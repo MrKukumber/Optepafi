@@ -5,12 +5,12 @@ namespace Optepafi.Models.MapMan.MapInterfaces;
 /// 
 /// This locations are provided by <see cref="GeoCoordinate"/>.
 /// </summary>
-public interface IMostNSWECoordQueryableGeoLocMap : IGeoLocatedMap
+public interface IMostNSWECoordQueryableGeoLocMap : IAreaQueryableMap
 {
-    public GeoCoordinate NorthernmostCoord { get; }
-    public GeoCoordinate SouthernmostCoord { get; }
-    public GeoCoordinate WesternmostCoord { get; }
-    public GeoCoordinate EasternmostCoord { get; }
+    public GeoCoordinate NorthernmostCoords { get; }
+    public GeoCoordinate SouthernmostCoords { get; }
+    public GeoCoordinate WesternmostCoords { get; }
+    public GeoCoordinate EasternmostCoords { get; }
 }
 
 
@@ -19,7 +19,7 @@ public interface IMostNSWECoordQueryableGeoLocMap : IGeoLocatedMap
 /// 
 /// This locations are provided by <see cref="MapCoordinate"/>.
 /// </summary>
-public interface IMostNSWECoordQueryableGeoRefMap : IGeoReferencedMap
+public interface IMostNSWECoordQueryableGeoRefMap : IAreaQueryableMap
 {
     public MapCoordinate NorthernmostCoords { get; }
     public MapCoordinate SouthernmostCoords { get; }

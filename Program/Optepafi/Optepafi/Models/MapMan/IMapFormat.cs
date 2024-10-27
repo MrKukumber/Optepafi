@@ -28,9 +28,9 @@ public interface IMapFormat<out TMap> where TMap : IMap
     /// This parsing should be done in linear time complexity relatively to size of the map file stream.  
     /// Stream should not be saved. It can be disposed after maps creation.  
     /// </summary>
-    /// <param name="inputMapStreamWithPath">Provided map file stream intended to be parsed. It comes along side with path to the source file</param>
+    /// <param name="input">Provided map file stream intended to be parsed. It comes along side with path to the source file</param>
     /// <param name="cancellationToken">Token for cancellation of parsing.</param>
     /// <param name="creationResult">Out parameter for result of map creation.</param>
     /// <returns>Resulting created map object.</returns>
-    TMap? CreateMapFrom((Stream,string) inputMapStreamWithPath, CancellationToken? cancellationToken, out MapManager.MapCreationResult creationResult);
+    TMap? CreateMapFrom((Stream mapStream,string path) input, CancellationToken? cancellationToken, out MapManager.MapCreationResult creationResult);
 }

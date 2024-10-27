@@ -3,13 +3,6 @@
 - riadit sa proste standardnymi hodnotami z ISOM-u
 - vyuzit reinforcement learningu, na urcenie konkretnych hodnot zpomalenia behu jednotlivymi porastami
   - tie su standartne urcene v isome do intervalov a teda by bolo fajn nechat uzivatela nech si vyberie hodnotu z danych intervalov taku, aby popisovala co najlepsie jeho predstavu idealneho postupu
-- nechať uživatela si vytvárať vlasnté modely pre dné formáty máp
-- spravit to cele co najobecnjesie
-  - teda dovolit rozsiritelnost o ine mapove subory a ich graficku repre
-  - dovolit rozsiritelnost o nove optimalizacne algoritmy
-  - o rozne sposoby vytvarania grafu z mapoveho suboru (proste uzavriet tu agregaciu toho grafu do nejakej triedy tak, aby sa to dalo jednoucho vymenit za nieco ine), asi o vsak nebudem uvadzat ako moznost na vyber v nastaveniach....len proste keby to tam chcel niekto v buducnosti prid, tak nech to neni pain
-- MVVM architektúra
-  - model view bude pocuvat na prikazy view a na zaklade nich bude podnecovat session controller-y k vykonavaniu postupnych cinnosti za pomoci modelu
 - vytvorit converter medzi geo suradnicovym systemom a canvas suradnicami, kde vstupom je velkost canvas
 
 ## reprezentacia mapy grafom
@@ -63,7 +56,6 @@
 ### co nezabudnut
 
 - zmienit, ze sa budeme drzat ISOM 2017
-- preco som nevyuzil curriously recurring template pattern v pripade map a mapovych reprezentacii pre moznost vratenia ich reprezentantov - preco to neslo, v com su nevyhody tohto patternu
 - preco mam taku architekturu MVVMMV aku mam, co ktore casti robia a spravuju, ako su navzajom oddelene, co vidia a co zase nie 
 - pre modelView skryva niektore vlastnosti pred ViewModelom pomocou inner typov definovanych v Session ModelView-e
 - Preco vyuzivam viewmodely pre vsetky data ktore je potrebne nejakym sposobom ukazat vo view-e, preco nepouzivam priamo tie data
@@ -151,7 +143,6 @@
 
 - spracovanie trate zo vstupneho suboru
 - nechat nech view vykresluje iba objekty ktore sa v danej chvili su vidiet na obrazovke...neviemsice uplne teraz preco ale proste mohlo by to pomoct nejakym sposobom mozno ku zlepseniu vykonu
-- vacsiu custom-izaciu toho, ktora implementacia sa kedy pouzije, moznost viacerych implementacii algoritmov pre rovnake kombinacie mapovych reprezentacii s uzivatelskymi modelmi a uzivatel bude moct vybrat nejakym sposobom preferovanu implementaciu...to iste pre mapove reprezentacie a ich implementacie
 - poriadne spravit lokalizaciu
 - zlepsit graficku stranku aplikacie
 - podpora pluginov
@@ -161,6 +152,7 @@
 ## DONE
 
 - nech kazda mapa moze po svojom znazornovat trat zadanu uzivatelom...nejako tak ze sa grafickemu managerovi predaju pozicie trate a mapa pre ktoru ma byt grafika vytvorena a on to za pomocou aggregatoru vytvori...v podstate vsetky graficke objekty budu dost podobne...az potom datatemplate vo view-u podla typu objektu urci jak sa to nakresli
+- vacsiu custom-izaciu toho, ktora implementacia sa kedy pouzije, moznost viacerych implementacii algoritmov pre rovnake kombinacie mapovych reprezentacii s uzivatelskymi modelmi a uzivatel bude moct vybrat nejakym sposobom preferovanu implementaciu...to iste pre mapove reprezentacie a ich implementacie - implementovane pomocou konfiguracii kotre mozu upravovat beh algoritmu
 
 ## Stare myslienky
 
@@ -202,3 +194,6 @@ Předpokládá se možnost parametrizace vyhledávácích algoritmů např. úda
 - vyhladavacie algoritmy konfigurovatelne, pre kazdu map. repre a uzivatelsky model jedna implementacia
 
 - mapove reprezentacie a uzivatelske modely mozu mat aj potomkov i guess, ale zretel sa na to prilis brat nebude...mozno v buducnosti aj v gui bude stromova struktura pre tieto dedicne hierarchie
+
+
+- asfalt -> open terrain, dashed paths, -> rough open terrain, forrest -> 

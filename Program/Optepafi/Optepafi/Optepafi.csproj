@@ -99,9 +99,6 @@
       <Compile Remove="Models\MapRepreMan\ImplementationReps\SpecificImplementationReps\ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep.cs" />
       <Compile Remove="Models\MapRepreMan\MapRepres\Implementations\ObjectRepreGraphOrienteeringOmapImplementation.cs" />
       <Compile Remove="Models\MapRepreMan\MapRepres\Implementations\CompleteGraphOrienteeringOmapImplementation.cs" />
-      <Compile Remove="Models\MapMan\Maps\OMAP.cs" />
-      <Compile Remove="Models\MapMan\Maps\GeoReferenceContainingOMAP.cs" />
-      <Compile Remove="Models\MapMan\MapRepresentatives\OMAPRepresentative.cs" />
       <Compile Remove="Views\ModelCreating\ModelCreatingSettingsWindow.axaml.cs" />
       <Compile Remove="ModelViews\ModelCreating\MCPathFindingModelView.cs" />
       <Compile Remove="ModelViews\ModelCreating\MCGraphCreatingModelView.cs" />
@@ -185,6 +182,7 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>PathFindingLocal.sk-SK.resx</DependentUpon>
       </Compile>
+      <Compile Remove="Models\MapMan\MapInterfaces\IGeoReferencedMap.cs" />
     </ItemGroup>
 
 

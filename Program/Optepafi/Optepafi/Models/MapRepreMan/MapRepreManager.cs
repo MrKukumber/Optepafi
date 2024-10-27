@@ -62,14 +62,14 @@ public class MapRepreManager :
     {
         bool dependentFound = false;
         bool independentFound = false;
-        foreach (var implementationInfo in mapRepreRep.ImplementationIndicators)
+        foreach (var implementationIndicator in mapRepreRep.ImplementationIndicators)
         {
-            if (!dependentFound && implementationInfo.UsedTemplate == template && implementationInfo.UsedMapFormat == mapFormat &&
-                implementationInfo.RequiresElevData)
+            if (!dependentFound && implementationIndicator.UsedTemplate == template && implementationIndicator.UsedMapFormat == mapFormat &&
+                implementationIndicator.RequiresElevData)
                 dependentFound = true;
-            else if (!independentFound && implementationInfo.UsedTemplate == template &&
-                     implementationInfo.UsedMapFormat == mapFormat &&
-                     !implementationInfo.RequiresElevData)
+            else if (!independentFound && implementationIndicator.UsedTemplate == template &&
+                     implementationIndicator.UsedMapFormat == mapFormat &&
+                     !implementationIndicator.RequiresElevData)
                 independentFound = true;
         }
         if (dependentFound)

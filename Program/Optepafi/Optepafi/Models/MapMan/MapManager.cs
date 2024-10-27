@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.MapRepresentatives;
 
@@ -24,7 +25,7 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
     /// <summary>
     /// Set of all usable map formats in application.
     /// </summary>
-    public ISet<IMapFormat<IMap>> MapFormats { get; } = ImmutableHashSet.Create<IMapFormat<IMap>>(TextMapRepresentative.Instance);
+    public ISet<IMapFormat<IMap>> MapFormats { get; } = ImmutableHashSet.Create<IMapFormat<IMap>>(TextMapRepresentative.Instance, OmapMapRepresentative.Instance);
 
     /// <summary>
     /// Returns map format for a specified map. It do it so by use of "generic visitor pattern" on map.
@@ -51,7 +52,7 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
     /// <summary>
     /// Returns map format, whose file extension matches with extension of provided file name.
     /// </summary>
-    /// <param name="mapFileName">Name of file for which corresponding map forma should be returned.t</param>
+    /// <param name="mapFileName">Name of file for which corresponding map format should be returned.t</param>
     /// <returns>Corresponding map format to provided file name. If there is no matching map format, returns null.</returns>
     public IMapFormat<IMap>? GetCorrespondingMapFormatTo(string mapFileName)
     {

@@ -605,7 +605,7 @@ Zajtra sa ale vlozim do pisania komentarov, aby som si to este nechal prejst hla
 
 Co treba spravit:
 
-- ! pridat vyber mapovej reprezentacie do path finding sessionu
+- ! pridat vyber mapovej reprezentacie do path finding sessionu - DONE
 - ! spravit parser pre omap
 - ! spravit orienteering template
 - ! zrobit stahovanie vyskovych dat
@@ -614,7 +614,7 @@ Co treba spravit:
 - ! vytvorit mapovu reprezentaciu pre orienteering template a omap mapy + constructor
 - ! spravit A* algoritmus
 - modfikovat model, tak aby mohli jednotlive polozky definovat svoje vnutorne konfigurovatelne vlastonsti
-  - umoznit konfigurovat tieto vlastnosti v hlavnych nastaveniach
+  - umoznit konfigurovat tieto vlastnosti v hlavnych nastaveniach - DONE
 - umoznit prvu trat zadat tu z mapoveho suboru
 
 - poriadne spravit lokalizaciu

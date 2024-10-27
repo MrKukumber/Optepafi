@@ -43,7 +43,7 @@ public interface IElevDataDistribution
     /// <param name="map">Map for which test for elevation data obtainability is requested.</param>
     /// <param name="cancellationToken">Token for cancellation of testing process.</param>
     /// <returns>Resulting obtainability of elevation data for map.</returns>
-    public ElevDataManager.ElevDataObtainability AreElevDataObtainableFor(IGeoLocatedMap map, CancellationToken? cancellationToken);
+    public ElevDataManager.ElevDataObtainability AreElevDataObtainableFor(IAreaQueryableMap map, CancellationToken? cancellationToken);
     
     /// <summary>
     /// Method for retrieving of elevation data for provided map.
@@ -55,6 +55,6 @@ public interface IElevDataDistribution
     /// <param name="map">Map for which elevation data are requested.</param>
     /// <param name="cancellationToken">Token for cancellation of elevation data delivery.</param>
     /// <returns>Elevation data object which is able to provide required data.</returns>
-    public IElevData GetElevDataFor(IGeoLocatedMap map, CancellationToken? cancellationToken);
+    public IElevData GetElevDataFor(IAreaQueryableMap map, CancellationToken? cancellationToken);
 }
 

@@ -1,3 +1,5 @@
+using System;
+
 namespace Optepafi.Models.MapMan;
 
 /// <summary>
@@ -15,6 +17,19 @@ public record struct MapCoordinate(int XPos, int YPos)
     public static MapCoordinate operator -(MapCoordinate coordinate1, MapCoordinate coordinate2)
     {
         return new MapCoordinate(coordinate1.XPos - coordinate2.XPos, coordinate1.YPos - coordinate2.YPos);
+    }
+    public static MapCoordinate operator +(MapCoordinate coordinate1, MapCoordinate coordinate2)
+    {
+        return new MapCoordinate(coordinate1.XPos + coordinate2.XPos, coordinate1.YPos + coordinate2.YPos);
+    }
+
+    public MapCoordinate Rotate(float angle, MapCoordinate center)
+    {
+        int translatedX = XPos - center.XPos;
+        int translatedY = YPos - center.YPos;
+        int rotatedTransposedX = (int)(translatedX * Math.Cos(angle) - translatedY * Math.Sin(angle));
+        int rotatedTransposedY = (int)(translatedX * Math.Sin(angle) + translatedY * Math.Cos(angle));
+        return new MapCoordinate(rotatedTransposedX + center.XPos, rotatedTransposedY + center.YPos);
     }
 }
 
