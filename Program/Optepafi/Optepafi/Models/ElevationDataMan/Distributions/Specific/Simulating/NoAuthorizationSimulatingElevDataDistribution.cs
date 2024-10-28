@@ -6,6 +6,7 @@ using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.ElevationDataMan.Regions.Simulating;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.ElevationDataMan.Distributions.Specific.Simulating;
 
@@ -143,13 +144,13 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
     /// </summary>
     private class ElevData : IElevData
     {
-        /// <inheritdoc cref="IElevData.GetElevation(Optepafi.Models.MapMan.GeoCoordinate)"/>
+        /// <inheritdoc cref="IElevData.GetElevation(GeoCoordinate)"/>
         public double? GetElevation(GeoCoordinate coordinate)
         {
             return 3.14;
         }
 
-        /// <inheritdoc cref="IElevData.GetElevation(Optepafi.Models.MapMan.MapCoordinate,Optepafi.Models.MapMan.GeoCoordinate)"/>
+        /// <inheritdoc cref="IElevData.GetElevation(MapCoordinate,GeoCoordinate)"/>
         public double? GetElevation(MapCoordinate coordinate, GeoCoordinate geoReference)
         {
             return 3.14;

@@ -3,6 +3,7 @@ using System.Threading;
 using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.ElevationDataMan.Distributions.Specific.NotSufficient;
 
@@ -65,13 +66,13 @@ public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDat
     private class ElevData : IElevData
     {
         
-        /// <inheritdoc cref="IElevData.GetElevation(Optepafi.Models.MapMan.GeoCoordinate)"/>
+        /// <inheritdoc cref="IElevData.GetElevation(GeoCoordinate)"/>
         public double? GetElevation(GeoCoordinate coordinate)
         {
             return null;
         }
 
-        /// <inheritdoc cref="IElevData.GetElevation(Optepafi.Models.MapMan.MapCoordinate,Optepafi.Models.MapMan.GeoCoordinate)"/>
+        /// <inheritdoc cref="IElevData.GetElevation(MapCoordinate,GeoCoordinate)"/>
         public double? GetElevation(MapCoordinate coordinate, GeoCoordinate geoReference)
         {
             return null;

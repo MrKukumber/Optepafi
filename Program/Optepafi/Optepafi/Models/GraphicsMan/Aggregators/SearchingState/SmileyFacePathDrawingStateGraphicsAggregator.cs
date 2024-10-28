@@ -6,6 +6,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
+using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.GraphicsMan.Aggregators.SearchingState;
 

@@ -5,6 +5,7 @@ using DynamicData;
 using Optepafi.Models.GraphicsMan.Objects;
 using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.MapMan;
+using Optepafi.Models.Utils;
 using Optepafi.ModelViews.Converters2Vm.Graphics;
 using ReactiveUI;
 

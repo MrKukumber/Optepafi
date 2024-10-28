@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Optepafi.Models.GraphicsMan.Objects.Path;
 using Optepafi.Models.MapMan;
+using Optepafi.Models.Utils;
 using Optepafi.ModelViews.Utils;
 using Optepafi.ViewModels.Data;
 using Optepafi.ViewModels.Data.Graphics;

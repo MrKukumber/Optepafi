@@ -1,3 +1,5 @@
+using Optepafi.Models.Utils;
+
 namespace Optepafi.Models.MapMan.MapInterfaces;
 
 /// <summary>
