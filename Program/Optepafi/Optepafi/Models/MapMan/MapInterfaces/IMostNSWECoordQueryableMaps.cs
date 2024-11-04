@@ -5,26 +5,26 @@ namespace Optepafi.Models.MapMan.MapInterfaces;
 /// <summary>
 /// Represents geo-located maps ability to provide its northernmost, southernmost, westernmost and easternmost coordinate.
 /// 
-/// This locations are provided by <see cref="GeoCoordinate"/>.
+/// This locations are provided by <see cref="GeoCoordinates"/>.
 /// </summary>
 public interface IMostNSWECoordQueryableGeoLocMap : IAreaQueryableMap
 {
-    public GeoCoordinate NorthernmostCoords { get; }
-    public GeoCoordinate SouthernmostCoords { get; }
-    public GeoCoordinate WesternmostCoords { get; }
-    public GeoCoordinate EasternmostCoords { get; }
+    public GeoCoordinates NorthernmostCoords { get; }
+    public GeoCoordinates SouthernmostCoords { get; }
+    public GeoCoordinates WesternmostCoords { get; }
+    public GeoCoordinates EasternmostCoords { get; }
 }
 
 
 /// <summary>
 /// Represents geo-referenced maps ability to provide its northernmost, southernmost, westernmost and easternmost coordinate.
 /// 
-/// This locations are provided by <see cref="MapCoordinate"/>.
+/// This locations are provided by <see cref="MapCoordinates"/>.
 /// </summary>
 public interface IMostNSWECoordQueryableGeoRefMap : IAreaQueryableMap
 {
-    public MapCoordinate NorthernmostCoords { get; }
-    public MapCoordinate SouthernmostCoords { get; }
-    public MapCoordinate WesternmostCoords { get; }
-    public MapCoordinate EasternmostCoords { get; }
+    public MapCoordinates NorthernmostCoords { get; }
+    public MapCoordinates SouthernmostCoords { get; }
+    public MapCoordinates WesternmostCoords { get; }
+    public MapCoordinates EasternmostCoords { get; }
 }

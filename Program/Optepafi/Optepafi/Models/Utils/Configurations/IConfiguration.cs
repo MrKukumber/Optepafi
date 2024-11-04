@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Optepafi.Models.Utils;
+namespace Optepafi.Models.Utils.Configurations;
 
 
 /// <summary>

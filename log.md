@@ -606,7 +606,9 @@ Zajtra sa ale vlozim do pisania komentarov, aby som si to este nechal prejst hla
 Co treba spravit:
 
 - ! pridat vyber mapovej reprezentacie do path finding sessionu - DONE
-- ! spravit parser pre omap
+- ! spravit parser pre omap - DONE
+- ! spravit graficku rep pre omap
+- ! vytvorit novu path pre vykreslovanie najdenej cesty 
 - ! spravit orienteering template
 - ! zrobit stahovanie vyskovych dat
 - ! spravit uzivatelske modely pre orientak, nastavovatelne
@@ -635,3 +637,12 @@ Jemne pozmenena struktura reprezentatov mapovych reprezentacii, grafov a z minul
 Este potrebne opravit komentare. Mozno by bolo fajn v nastaveniach path finding session-u, aby sa farebne odlisili mozne templaty pre vybrany mapovy format / mozne mapove reprezentacie pre dany uzivatelsky model.
 
 Zistil som, ze ak je implementovana defaultna metoda na interface, ktory definuje genericky paramter out TParam where IParam, tak pri volani takejto metody je TParam nastaveny na IParam a nie na typ vlozeny implementujucou triedou :o. I guess to dava zmysel a aj preto som vytvoril abstraktnu triedu pre grafovych reprezentantov, kde TGraph uz nieje konvariantny a teda v jeho implementacii metody createGraph sa uz za TGraph dosadi spravne typ implementujucej triedy.
+
+## 27.10.2024
+
+Dorobeny parser omap suborov.  
+Ziskavam mierku, geolokaciu, extremy suradnic a suradnice jednotlivych objektov.  
+Suradnice su v omapu zapisovane v textovom prevedeni, teda bolo potrebne ich spravne naparsovat. K parsovaniu som pristupil s rozmyslom, teda parsujem textovy vstup suradnic postupne a na mieste, aby som nahodou nezasekol program prilis velkym vstupom.  
+Pocas celeho pribehu parsovania sa pribezne konroluje cancellation token. Ten sa kontroluje v kontretnom intervale poctu read-ov z XmlReader-u+poctu naparsovanych suradnic objektov.  
+
+Dalej je rozrobene konvertovanie geo coordinatov na metre a naopak. Studuje Harvesin-ovu formulu na pocitanie tejto konverzie.

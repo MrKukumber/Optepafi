@@ -1,4 +1,5 @@
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.Models.UserModelMan.UserModelReps;
 

@@ -8,7 +8,7 @@ namespace Optepafi.ModelViews.Converters2Vm.Graphics;
 /// Represents converter of graphic object of specific type to its ViewModel.
 ///
 /// These ViewModels can be than presented to View for displaying to user.  
-/// It has one non generic predecessor, which should be never implemented right away. It is used mainly as type parameter of collections of convertors. This interface should be always implemented instead.  
+/// It has one non-generic predecessor, which should be never implemented right away. It is used mainly as type parameter of collections of convertors. This interface should be always implemented instead.  
 /// To be visible to applications logic, converters instance must be included in some collection of converters which application can use for searching of correct one. There is bunch of dictionaries, which are assembled in tree structure, where root dictionary is contained in static class <see cref="GraphicObjects2VmConverters"/>. Application directly uses this dictionary.  
 /// </summary>
 /// <typeparam name="TGraphicsObject">Type of graphic object for which is converter able to create ViewModel.</typeparam>
@@ -23,7 +23,7 @@ public interface IGraphicObjects2VmConverter<in TGraphicsObject> : IGraphicObjec
     /// <param name="graphicsObject">Graphic object to be converted to ViewModel.</param>
     /// <param name="mapsLeftBottomVertex">Coordinate of maps lef-bottom vertex used for correct positioning of graphic object on canvas.</param>
     /// <returns>Corresponding ViewModel to provided graphic object.</returns>
-    public GraphicObjectViewModel ConvertToViewModel(TGraphicsObject graphicsObject, MapCoordinate mapsLeftBottomVertex);
+    public GraphicObjectViewModel ConvertToViewModel(TGraphicsObject graphicsObject, MapCoordinates mapsLeftBottomVertex);
 }
 
 /// <summary>

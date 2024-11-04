@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.Maps;
@@ -31,7 +32,7 @@ public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
         foreach (var word in words)
         {
             collectorForAggregatedObjects.Add(new WordObject(
-                new MapCoordinate(
+                new MapCoordinates(
                     generator.Next(map.WesternmostCoords.XPos,map.EasternmostCoords.XPos), 
                     generator.Next(map.SouthernmostCoords.YPos,map.NorthernmostCoords.YPos)), 
                 word));
@@ -43,7 +44,7 @@ public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
     /// <remarks>
     /// For each point of track returns <c>TrackPointWordObject</c> with its position.
     /// </remarks>
-    public void AggregateGraphicsOfTrack(IList<MapCoordinate> track, IGraphicObjectCollector collectorForAggregatedObjects)
+    public void AggregateGraphicsOfTrack(IList<MapCoordinates> track, IGraphicObjectCollector collectorForAggregatedObjects)
     {
         List<TrackPointWordObject> trackPointWordObjects = new();
         foreach (var trackCoordinate in track)
@@ -56,6 +57,6 @@ public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
     /// <inheritdoc cref="IMapGraphicsAggregator{TMap}.GetAreaOf"/>
     public GraphicsArea GetAreaOf(TextMap map)
     {
-        return new GraphicsArea(new MapCoordinate(map.WesternmostCoords.XPos, map.SouthernmostCoords.YPos), new MapCoordinate(map.EasternmostCoords.XPos, map.NorthernmostCoords.YPos));
+        return new GraphicsArea(new MapCoordinates(map.WesternmostCoords.XPos, map.SouthernmostCoords.YPos), new MapCoordinates(map.EasternmostCoords.XPos, map.NorthernmostCoords.YPos));
     }
 }

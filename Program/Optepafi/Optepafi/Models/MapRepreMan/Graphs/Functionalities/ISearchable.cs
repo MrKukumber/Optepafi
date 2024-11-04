@@ -19,10 +19,10 @@ public interface ISearchable<out TVertex, out TEdge, out  TVertexAttributes, out
     where TEdgeAttributes : IEdgeAttributes
 {
     /// <summary>
-    /// Returns vertex of graph which corresponds to provided location <see cref="MapCoordinate"/>.
+    /// Returns vertex of graph which corresponds to provided location <see cref="MapCoordinates"/>.
     /// </summary>
     /// <param name="coords">Coordinate for which vertex is returned.</param>
     /// <returns>Corresponding vertex for provided <c>MapCoordinate</c>.</returns>
-    TVertex GetVertexFor(MapCoordinate coords);
+    TVertex GetVertexFor(MapCoordinates coords);
 }
 

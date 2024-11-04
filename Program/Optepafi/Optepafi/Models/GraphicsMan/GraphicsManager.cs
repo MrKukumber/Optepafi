@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.GraphicsMan.Aggregators;
 using Optepafi.Models.GraphicsMan.Aggregators.Map;
+using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
@@ -24,7 +25,7 @@ namespace Optepafi.Models.GraphicsMan;
 public class GraphicsManager :
     IMapGenericVisitor<GraphicsManager.AggregationResult, (IGraphicObjectCollector, CancellationToken?)>,
     IMapGenericVisitor<GraphicsArea?>,
-    IMapGenericVisitor<GraphicsManager.AggregationResult, (IList<MapCoordinate>, IGraphicObjectCollector)>
+    IMapGenericVisitor<GraphicsManager.AggregationResult, (IList<MapCoordinates>, IGraphicObjectCollector)>
 {
     public static GraphicsManager Instance { get; } = new();
     private GraphicsManager() { }
@@ -33,7 +34,7 @@ public class GraphicsManager :
     /// Collection of aggregators for specific map types. It is searched when map graphics is to be aggregated.
     /// </summary>
     public IReadOnlySet<IGraphicsAggregator> MapGraphicsAggregators { get; } =
-        ImmutableHashSet.Create<IGraphicsAggregator>(TextMapGraphicsAggregator.Instance);
+        ImmutableHashSet.Create<IGraphicsAggregator>(TextMapGraphicsAggregator.Instance, OmapMapGraphicsAggregator.Instance);
 
     
     public enum AggregationResult {Aggregated, NoUsableAggregatorFound, Cancelled}
@@ -108,12 +109,12 @@ public class GraphicsManager :
     /// <param name="map">Map for indication of correct aggregator.</param>
     /// <param name="collectorForAggregateObjects">Collector for aggregated track graphic objects.</param>
     /// <returns>Result of aggregation.</returns>
-    public AggregationResult AggregateTrackGraphicsAccordingTo(IList<MapCoordinate> trackCoordinates, IMap map, IGraphicObjectCollector collectorForAggregateObjects)
+    public AggregationResult AggregateTrackGraphicsAccordingTo(IList<MapCoordinates> trackCoordinates, IMap map, IGraphicObjectCollector collectorForAggregateObjects)
     {
-        return map.AcceptGeneric<AggregationResult, (IList<MapCoordinate>, IGraphicObjectCollector)>(this, (trackCoordinates, collectorForAggregateObjects));
+        return map.AcceptGeneric<AggregationResult, (IList<MapCoordinates>, IGraphicObjectCollector)>(this, (trackCoordinates, collectorForAggregateObjects));
     }
 
-    AggregationResult IMapGenericVisitor<AggregationResult, (IList<MapCoordinate>, IGraphicObjectCollector)>.GenericVisit<TMap>(TMap map, (IList<MapCoordinate>, IGraphicObjectCollector) otherParams)
+    AggregationResult IMapGenericVisitor<AggregationResult, (IList<MapCoordinates>, IGraphicObjectCollector)>.GenericVisit<TMap>(TMap map, (IList<MapCoordinates>, IGraphicObjectCollector) otherParams)
     {
         var (trackCoordinates, collectorForAggregatedObjects) = otherParams;
         foreach (var graphicsAggregator in MapGraphicsAggregators)

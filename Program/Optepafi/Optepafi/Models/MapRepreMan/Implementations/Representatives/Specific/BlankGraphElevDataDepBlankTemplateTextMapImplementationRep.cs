@@ -8,6 +8,7 @@ using Optepafi.Models.MapRepreMan.Graphs.Specific;
 using Optepafi.Models.MapRepreMan.Implementations.Specific;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific;
 

@@ -9,6 +9,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.Implementations;
 

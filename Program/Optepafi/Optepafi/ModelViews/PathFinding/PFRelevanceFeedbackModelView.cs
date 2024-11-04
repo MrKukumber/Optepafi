@@ -6,6 +6,7 @@ using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.ModelViews.PathFinding;
 

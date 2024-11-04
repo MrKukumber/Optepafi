@@ -2,6 +2,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using ExCSS;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 using ReactiveUI;
 using Color = System.Drawing.Color;
 
 namespace Optepafi.ViewModels.Data.Configuration;
 
+    //TODO: comment
 public class CategoricalConfigItemViewModel : ConfigItemViewModel
 {
     public ICategoricalConfigItem<Enum> ConfigItem { get; }

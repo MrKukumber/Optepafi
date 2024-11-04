@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DynamicData;
 using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Objects;
 using Optepafi.Models.GraphicsMan.Sources;
 

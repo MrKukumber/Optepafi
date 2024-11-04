@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 using Optepafi.ModelViews.Converters2Vm.ConfigItems;
 
 namespace Optepafi.ViewModels.Data.Configuration;
 
+//TODO: comment
 public class ConfigurationViewModel : WrappingDataViewModel<IConfiguration>,
     IConfigItemGenericVisitor<ConfigItemViewModel?>
 

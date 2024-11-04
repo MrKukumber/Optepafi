@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Drawing;
 
-namespace Optepafi.Models.Utils;
+namespace Optepafi.Models.Utils.Configurations;
 
 /// <summary>
 /// Interface to be implemented by every configuration item type. Represents item which configures some application process.
@@ -17,6 +15,7 @@ public interface IConfigItem
     public IConfigItem DeepCopy();
 }
 
+//TODO: comment
 public interface ICategoricalConfigItem<out TEnum> : IConfigItem where TEnum : Enum
 {
     string Name { get; }

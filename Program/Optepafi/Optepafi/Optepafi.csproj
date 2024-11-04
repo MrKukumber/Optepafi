@@ -197,8 +197,8 @@
 
 
     <ItemGroup>
-      <Folder Include="Models\GraphicsMan\Collectors\" />
       <Folder Include="Models\GraphicsMan\Objects\SearchingState\" />
+      <Folder Include="Models\GraphicsMan\Utils\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />
       <Folder Include="ViewModels\Data\Graphics\SearchingStateObjects\" />
     </ItemGroup>

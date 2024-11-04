@@ -21,7 +21,7 @@ namespace Optepafi.ViewModels.Data.Graphics;
 /// </summary>
 public sealed class GraphicsSourceViewModel : 
     DataViewModel, 
-    IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinate>
+    IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinates>
 {
     /// <summary>
     /// Creates ViewModel for ground graphic source.
@@ -52,7 +52,7 @@ public sealed class GraphicsSourceViewModel :
             .Bind(out _graphicObjectCollection)
             .Subscribe();
     }
-    GraphicObjectViewModel? IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinate>.GenericVisit<TGraphicObject>(TGraphicObject graphicObject, MapCoordinate leftBottomVertex)
+    GraphicObjectViewModel? IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinates>.GenericVisit<TGraphicObject>(TGraphicObject graphicObject, MapCoordinates leftBottomVertex)
     {
         if (GraphicObjects2VmConverters.Converters[typeof(TGraphicObject)] is IGraphicObjects2VmConverter<TGraphicObject> converter)
             return converter.ConvertToViewModel(graphicObject, leftBottomVertex);

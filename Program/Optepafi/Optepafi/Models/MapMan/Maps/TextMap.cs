@@ -40,31 +40,31 @@ public abstract class TextMap : IMostNSWECoordQueryableGeoRefMap
     /// <summary>
     /// Every text map is located in Prague, on the river side.
     /// </summary>
-    public GeoCoordinate RepresentativeLocation { get; } = new GeoCoordinate(50.088391, 14.413755);
+    public GeoCoordinates RepresentativeLocation { get; } = new GeoCoordinates(50.088391, 14.413755);
 
     /// <inheritdoc cref="IMostNSWECoordQueryableGeoRefMap.NorthernmostCoords"/>
     /// <remarks>
     /// Height of every text map is 100000 micrometers and it is centered on coordinate (0,0).
     /// </remarks>
-    public MapCoordinate NorthernmostCoords { get; } = new MapCoordinate(0, 50000);
+    public MapCoordinates NorthernmostCoords { get; } = new MapCoordinates(0, 50000);
     
     /// <inheritdoc cref="IMostNSWECoordQueryableGeoRefMap.SouthernmostCoords"/>
     /// <remarks>
     /// Height of every text map is 100000 micrometers and it is centered on coordinate (0,0).
     /// </remarks>
-    public MapCoordinate SouthernmostCoords { get; } = new MapCoordinate(0, -50000);
+    public MapCoordinates SouthernmostCoords { get; } = new MapCoordinates(0, -50000);
     
     /// <inheritdoc cref="IMostNSWECoordQueryableGeoRefMap.WesternmostCoords"/>
     /// <remarks>
     /// Width of every text map is 100000 micrometers and it is centered on coordinate (0,0).
     /// </remarks>
-    public MapCoordinate WesternmostCoords { get; } = new MapCoordinate(-50000, 0);
+    public MapCoordinates WesternmostCoords { get; } = new MapCoordinates(-50000, 0);
     
     /// <inheritdoc cref="IMostNSWECoordQueryableGeoRefMap.EasternmostCoords"/>
     /// <remarks>
     /// Width of every text map is 100000 micrometers and it is centered on coordinate (0,0).
     /// </remarks>
-    public MapCoordinate EasternmostCoords { get; } = new MapCoordinate(50000, 0);
+    public MapCoordinates EasternmostCoords { get; } = new MapCoordinates(50000, 0);
 
     /// <summary>
     /// Text of represented text file.

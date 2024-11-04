@@ -4,6 +4,7 @@ using System.Threading;
 using Optepafi.Models.GraphicsMan.Aggregators;
 using Optepafi.Models.GraphicsMan.Aggregators.Path;
 using Optepafi.Models.GraphicsMan.Aggregators.SearchingState;
+using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.TemplateMan;

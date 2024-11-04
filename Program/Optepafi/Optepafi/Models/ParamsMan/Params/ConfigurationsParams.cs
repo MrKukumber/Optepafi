@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.Models.ParamsMan.Params;
 

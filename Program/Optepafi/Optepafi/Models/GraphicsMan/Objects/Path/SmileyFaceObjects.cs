@@ -8,7 +8,7 @@ namespace Optepafi.Models.GraphicsMan.Objects.Path;
 /// </summary>
 public class SmileyFaceEyeObject : IGraphicObject
 {
-    public SmileyFaceEyeObject(MapCoordinate position, int width, int height)
+    public SmileyFaceEyeObject(MapCoordinates position, int width, int height)
     {
         Position = position;
         Width = width;
@@ -20,7 +20,7 @@ public class SmileyFaceEyeObject : IGraphicObject
     /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut}"/>
     public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) { return genericVisitor.GenericVisit(this); }
     
-    public MapCoordinate Position { get; }
+    public MapCoordinates Position { get; }
     public int Width { get; }
     public int Height { get; }
     
@@ -32,7 +32,7 @@ public class SmileyFaceEyeObject : IGraphicObject
 /// </summary>
 public class SmileyFaceNoseObject : IGraphicObject
 {
-    public SmileyFaceNoseObject(MapCoordinate position, int width, int height)
+    public SmileyFaceNoseObject(MapCoordinates position, int width, int height)
     {
         Position = position;
         Width = width;
@@ -44,7 +44,7 @@ public class SmileyFaceNoseObject : IGraphicObject
     /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut}"/>
     public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) { return genericVisitor.GenericVisit(this); }
     
-    public MapCoordinate Position { get; }
+    public MapCoordinates Position { get; }
     public int Width { get; }
     public int Height { get; }
     
@@ -55,7 +55,7 @@ public class SmileyFaceNoseObject : IGraphicObject
 /// </summary>
 public class SmileyFaceMouthObject : IGraphicObject
 {
-    public SmileyFaceMouthObject(MapCoordinate pos1, MapCoordinate pos2, MapCoordinate pos3, MapCoordinate pos4)
+    public SmileyFaceMouthObject(MapCoordinates pos1, MapCoordinates pos2, MapCoordinates pos3, MapCoordinates pos4)
     {
         BezierCurveData = (pos1, pos2, pos3, pos4);
     }
@@ -69,5 +69,5 @@ public class SmileyFaceMouthObject : IGraphicObject
     /// <summary>
     /// 4 coordinates of bezier curve by which mouth should be drawn.
     /// </summary>
-    public (MapCoordinate pos1, MapCoordinate pos2, MapCoordinate pos3, MapCoordinate pos4) BezierCurveData;
+    public (MapCoordinates pos1, MapCoordinates pos2, MapCoordinates pos3, MapCoordinates pos4) BezierCurveData;
 }

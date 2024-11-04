@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
+using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.Utils;
@@ -44,5 +45,5 @@ public interface IMapGraphicsAggregator<in TMap> : IGraphicsAggregator
     /// </summary>
     /// <param name="track">Track whose graphic representation is generated.</param>
     /// <param name="collectorForAggregatedObjects">Collector for aggregated graphic objects.</param>
-    public void AggregateGraphicsOfTrack(IList<MapCoordinate> track, IGraphicObjectCollector collectorForAggregatedObjects);
+    public void AggregateGraphicsOfTrack(IList<MapCoordinates> track, IGraphicObjectCollector collectorForAggregatedObjects);
 }

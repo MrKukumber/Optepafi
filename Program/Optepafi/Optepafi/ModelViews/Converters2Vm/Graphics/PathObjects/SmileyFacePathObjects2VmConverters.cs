@@ -41,7 +41,7 @@ public class SmileyFaceEyeObject2VmConverter : IGraphicObjects2VmConverter<Smile
     private SmileyFaceEyeObject2VmConverter(){}
 
     /// <inheritdoc cref="IGraphicObjects2VmConverter{TGraphicsObject}.ConvertToViewModel"/>.
-    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceEyeObject graphicsObject, MapCoordinate mapsLeftBottomVertex)
+    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceEyeObject graphicsObject, MapCoordinates mapsLeftBottomVertex)
     {
         return new SmileyFaceEyeObjectViewModel(graphicsObject.Position.ToCanvasCoordinate(mapsLeftBottomVertex), graphicsObject.Width, graphicsObject.Height);
     }
@@ -59,7 +59,7 @@ public class SmileyFaceNoseObject2VmConverter : IGraphicObjects2VmConverter<Smil
     
     
     /// <inheritdoc cref="IGraphicObjects2VmConverter{TGraphicsObject}.ConvertToViewModel"/>.
-    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceNoseObject graphicsObject, MapCoordinate mapsLeftBottomVertex)
+    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceNoseObject graphicsObject, MapCoordinates mapsLeftBottomVertex)
     {
         return new SmileyFaceNoseObjectViewModel(graphicsObject.Position.ToCanvasCoordinate(mapsLeftBottomVertex), graphicsObject.Width, graphicsObject.Height);
     }
@@ -79,7 +79,7 @@ public class SmileyFaceMouthObject2VmConverter : IGraphicObjects2VmConverter<Smi
     /// <remarks>
     /// Position of created ViewModel is set to be the first coordinate of bezier curve. All coordinates of bezier curve are positioned accordingly to this first coordinate.  
     /// </remarks>
-    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceMouthObject graphicsObject, MapCoordinate mapsLeftBottomVertex)
+    public GraphicObjectViewModel ConvertToViewModel(SmileyFaceMouthObject graphicsObject, MapCoordinates mapsLeftBottomVertex)
     {
         CanvasCoordinate position = graphicsObject.BezierCurveData.Item1.ToCanvasCoordinate(mapsLeftBottomVertex);
         return new SmileyFaceMouthObjectViewModel(

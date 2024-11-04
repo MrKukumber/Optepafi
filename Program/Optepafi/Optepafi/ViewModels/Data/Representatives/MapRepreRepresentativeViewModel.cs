@@ -1,9 +1,11 @@
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 
+    //TODO: comment
 public class MapRepreRepresentativeViewModel(IMapRepreRepresentative<IMapRepre> mapRepreRepresentative) : WrappingDataViewModel<IMapRepreRepresentative<IMapRepre>>
 {
 

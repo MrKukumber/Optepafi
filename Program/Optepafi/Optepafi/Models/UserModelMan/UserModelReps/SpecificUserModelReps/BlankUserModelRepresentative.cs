@@ -5,6 +5,7 @@ using System.Threading;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModels.Specific;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.Models.UserModelMan.UserModelReps.SpecificUserModelReps;
 

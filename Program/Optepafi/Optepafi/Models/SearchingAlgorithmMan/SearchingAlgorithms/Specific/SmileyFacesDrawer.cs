@@ -1,6 +1,7 @@
 using Optepafi.Models.SearchingAlgorithmMan.Implementations;
 using Optepafi.Models.SearchingAlgorithmMan.Implementations.SmileyFaceDrawer;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms.Specific;
 

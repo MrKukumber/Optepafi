@@ -66,14 +66,14 @@ public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDat
     private class ElevData : IElevData
     {
         
-        /// <inheritdoc cref="IElevData.GetElevation(GeoCoordinate)"/>
-        public double? GetElevation(GeoCoordinate coordinate)
+        /// <inheritdoc cref="IElevData.GetElevation(GeoCoordinates)"/>
+        public double? GetElevation(GeoCoordinates coordinates)
         {
             return null;
         }
 
-        /// <inheritdoc cref="IElevData.GetElevation(MapCoordinate,GeoCoordinate)"/>
-        public double? GetElevation(MapCoordinate coordinate, GeoCoordinate geoReference)
+        /// <inheritdoc cref="IElevData.GetElevation(MapCoordinates,GeoCoordinates)"/>
+        public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference)
         {
             return null;
         }

@@ -20,6 +20,7 @@ using Optepafi.Models.UserModelMan;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 using Optepafi.ModelViews.PathFinding.Utils;
 using Optepafi.ViewModels.Data.Configuration;
 using Optepafi.ViewModels.Data.Graphics;

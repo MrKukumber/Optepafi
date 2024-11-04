@@ -19,9 +19,9 @@ public abstract class Region
     /// </summary>
     public abstract HashSet<SubRegion> SubRegions { get; }
     /// <summary>
-    /// List of <see cref="GeoCoordinate"/>s that defines the geometry of this region. It can be used for nicer presenting of regions to users.
+    /// List of <see cref="GeoCoordinates"/>s that defines the geometry of this region. It can be used for nicer presenting of regions to users.
     /// </summary>
-    public virtual List<GeoCoordinate>? Geometry { get => null; }
+    public virtual List<GeoCoordinates>? Geometry { get => null; }
     public bool IsDownloaded { get; set; }
 }
 

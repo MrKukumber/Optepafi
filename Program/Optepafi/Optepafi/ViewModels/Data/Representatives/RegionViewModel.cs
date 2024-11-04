@@ -46,9 +46,9 @@ public abstract class RegionViewModel : WrappingDataViewModel<Region>
     public SubRegionViewModel[] SubRegions { get; protected set; }
     
     /// <summary>
-    /// List of <see cref="GeoCoordinate"/>s that defines the geometry of this region. It can be used for nicer presenting of regions to users.
+    /// List of <see cref="GeoCoordinates"/>s that defines the geometry of this region. It can be used for nicer presenting of regions to users.
     /// </summary>
-    public List<GeoCoordinate>? Geometry => Region.Geometry; //TODO: namiesto GeoCoordinate dat CanvasCoordinate a prekonvertovat Region.Geometry na CanvasCoordinate
+    public List<GeoCoordinates>? Geometry => Region.Geometry; //TODO: namiesto GeoCoordinate dat CanvasCoordinate a prekonvertovat Region.Geometry na CanvasCoordinate
     
     /// <summary>
     /// Enumeration of states that describes presence of elevation data for this region. 

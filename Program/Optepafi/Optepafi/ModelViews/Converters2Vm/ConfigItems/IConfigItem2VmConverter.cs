@@ -1,4 +1,5 @@
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 using Optepafi.ViewModels.Data.Configuration;
 
 namespace Optepafi.ModelViews.Converters2Vm.ConfigItems;

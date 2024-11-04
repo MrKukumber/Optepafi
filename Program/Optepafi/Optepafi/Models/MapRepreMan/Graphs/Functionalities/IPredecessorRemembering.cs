@@ -27,15 +27,15 @@ public interface IPredecessorRemembering<out TVertex, out TEdge, out TVertexAttr
     /// <param name="coords">Coordinate for which vertex is returned.</param>
     /// <returns>Corresponding vertex for provided <c>MapCoordinate</c>.</returns>
     
-    TVertex ISearchable<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>.GetVertexFor(MapCoordinate coords)
+    TVertex ISearchable<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>.GetVertexFor(MapCoordinates coords)
     {
         return GetVertexFor(coords);
     }
     
     /// <summary>
-    /// Returns vertex of graph which corresponds to provided location <see cref="MapCoordinate"/> and has ability to remember one other vertex.
+    /// Returns vertex of graph which corresponds to provided location <see cref="MapCoordinates"/> and has ability to remember one other vertex.
     /// </summary>
     /// <param name="coords">Coordinate for which vertex is returned.</param>
     /// <returns>Corresponding vertex for provided <c>MapCoordinate</c>.</returns>
-    new TVertex GetVertexFor(MapCoordinate coords);
+    new TVertex GetVertexFor(MapCoordinates coords);
 }

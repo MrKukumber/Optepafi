@@ -9,7 +9,7 @@ namespace Optepafi.Models.GraphicsMan.Objects.Map;
 /// </summary>
 /// <param name="Position">Position of word.</param>
 /// <param name="Text">Text of word.</param>
-public record WordObject(MapCoordinate Position, string Text) : IGraphicObject
+public record WordObject(MapCoordinates Position, string Text) : IGraphicObject
 {
     /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/>
     public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams)
@@ -28,7 +28,7 @@ public record WordObject(MapCoordinate Position, string Text) : IGraphicObject
 /// Object that represents point of track in <see cref="TextMap"/>. The look should be always the same. It therefore defines only its position.
 /// </summary>
 /// <param name="Position">Position of point of the track.</param>
-public record TrackPointWordObject(MapCoordinate Position) : IGraphicObject
+public record TrackPointWordObject(MapCoordinates Position) : IGraphicObject
 {
     
     /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/>

@@ -30,20 +30,20 @@ public class SmileyFacePath<TVertexAttributes, TEdgeAttributes> : IPath<TVertexA
     /// </summary>
     /// <param name="legStart">First defining coordinate associated with start of some leg.</param>
     /// <param name="legFinish">Second defining coordinate associated with end of some leg.</param>
-    public SmileyFacePath(MapCoordinate legStart, MapCoordinate legFinish) : this([(legStart, legFinish)]){}
+    public SmileyFacePath(MapCoordinates legStart, MapCoordinates legFinish) : this([(legStart, legFinish)]){}
     
     /// <summary>
     /// Initialize new smiley face path instance by provided list of path segments.
     /// </summary>
     /// <param name="pathSegments">List of path segments by which is instance initialized.</param>
-    public SmileyFacePath(List<(MapCoordinate legStart, MapCoordinate legFinish)> pathSegments)
+    public SmileyFacePath(List<(MapCoordinates legStart, MapCoordinates legFinish)> pathSegments)
     {
         PathSegments = pathSegments;
     }
     /// <summary>
     /// Paths segments which defines where smiley faces were drawn.
     /// </summary>
-    public List<(MapCoordinate legStart, MapCoordinate legFinish)> PathSegments { get; }
+    public List<(MapCoordinates legStart, MapCoordinates legFinish)> PathSegments { get; }
     
     ///<inheritdoc cref="IPath{TVertexAttributes,TEdgeAttributes}.AcceptGeneric{TOut,TOtherParams}"/>
     public TOut AcceptGeneric<TOut, TOtherParams>(IPathGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams)

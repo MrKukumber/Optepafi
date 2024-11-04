@@ -10,4 +10,4 @@ namespace Optepafi.Models.GraphicsMan;
 /// </summary>
 /// <param name="LeftBottomVertex">Left-bottom vertex of rectangle which defines maps area.</param>
 /// <param name="TopRightVertex">Right-top vertex of rectangle which defines maps area. </param>
-public record struct GraphicsArea(MapCoordinate LeftBottomVertex, MapCoordinate TopRightVertex);
+public record struct GraphicsArea(MapCoordinates LeftBottomVertex, MapCoordinates TopRightVertex);

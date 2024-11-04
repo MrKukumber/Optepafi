@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Optepafi.Models.GraphicsMan.Objects;
 
-namespace Optepafi.Models.GraphicsMan;
+namespace Optepafi.Models.GraphicsMan.Collectors;
 
 /// <summary>
 /// Represents collector for graphic objects.

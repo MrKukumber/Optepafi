@@ -11,6 +11,7 @@ using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Configurations;
 using Optepafi.ViewModels.Data.Reports;
 
 namespace Optepafi.ModelViews.PathFinding;

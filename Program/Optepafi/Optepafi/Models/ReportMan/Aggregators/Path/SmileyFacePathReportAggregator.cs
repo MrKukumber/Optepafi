@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
 using Optepafi.Models.GraphicsMan;
+using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Objects;
 using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.ReportMan.Reports;
