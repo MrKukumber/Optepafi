@@ -41,9 +41,9 @@ public partial class PathFindingView : ReactiveUserControl<PathFindingViewModel>
             var point = e.GetCurrentPoint(control);
             MicrometersToDipConverter converter = new MicrometersToDipConverter();
             if (converter.ConvertBack(point.Position.X/ViewModel.GraphicsScale) is int leftPos &&
-                converter.ConvertBack(control.Height/ViewModel.GraphicsScale - point.Position.Y/ViewModel.GraphicsScale) is int bottomPos)
+                converter.ConvertBack(point.Position.Y/ViewModel.GraphicsScale) is int topPos)
             {
-                await ViewModel.AddTrackPointCommand.Execute((new CanvasCoordinate(leftPos, bottomPos), null));
+                await ViewModel.AddTrackPointCommand.Execute((new CanvasCoordinate(leftPos, topPos), null));
             }
             else throw new InvalidOperationException("The conversion from dip to micrometers did not run correctly.");
         }

@@ -43,19 +43,20 @@ public sealed class GraphicsSourceViewModel :
     /// <param name="respondingGroundGraphicsSource">Ground graphics source to which converted graphics source respond.</param>
     public GraphicsSourceViewModel(IGraphicsSource graphicsSource, IGroundGraphicsSource respondingGroundGraphicsSource)
     {
-        GraphicsWidth = respondingGroundGraphicsSource.GraphicsArea.TopRightVertex.XPos - respondingGroundGraphicsSource.GraphicsArea.LeftBottomVertex.XPos;
-        GraphicsHeight = respondingGroundGraphicsSource.GraphicsArea.TopRightVertex.YPos - respondingGroundGraphicsSource.GraphicsArea.LeftBottomVertex.YPos;
+        GraphicsWidth = respondingGroundGraphicsSource.GraphicsArea.TopRightVertex.XPos - respondingGroundGraphicsSource.GraphicsArea.BottomLeftVertex.XPos;
+        GraphicsHeight = respondingGroundGraphicsSource.GraphicsArea.TopRightVertex.YPos - respondingGroundGraphicsSource.GraphicsArea.BottomLeftVertex.YPos;
         graphicsSource.GraphicObjects
             .Connect()
-            .Transform(graphicObject => graphicObject.AcceptGeneric(this, respondingGroundGraphicsSource.GraphicsArea.LeftBottomVertex))
+            .Transform(graphicObject => graphicObject.AcceptGeneric(this, 
+                new MapCoordinates(respondingGroundGraphicsSource.GraphicsArea.BottomLeftVertex.XPos, respondingGroundGraphicsSource.GraphicsArea.TopRightVertex.YPos)))
             .ObserveOn(RxApp.MainThreadScheduler)
             .Bind(out _graphicObjectCollection)
             .Subscribe();
     }
-    GraphicObjectViewModel? IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinates>.GenericVisit<TGraphicObject>(TGraphicObject graphicObject, MapCoordinates leftBottomVertex)
+    GraphicObjectViewModel? IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinates>.GenericVisit<TGraphicObject>(TGraphicObject graphicObject, MapCoordinates topLeftVertex)
     {
         if (GraphicObjects2VmConverters.Converters[typeof(TGraphicObject)] is IGraphicObjects2VmConverter<TGraphicObject> converter)
-            return converter.ConvertToViewModel(graphicObject, leftBottomVertex);
+            return converter.ConvertToViewModel(graphicObject, topLeftVertex);
         //TODO: lognut ked neni pritomny konverter
         return null;
     }

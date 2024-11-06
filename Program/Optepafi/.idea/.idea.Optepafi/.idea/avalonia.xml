@@ -19,6 +19,7 @@
         <entry key="Optepafi/Views/DataTemplates/Graphics/GraphicObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/GraphicsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapObjects/MapObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/DataTemplates/Graphics/MapObjects/OmapMapObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapObjects/TextMapObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/PathObjects/PathObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/PathObjects/SmileyFacePathObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
@@ -38,6 +39,7 @@
         <entry key="Optepafi/Views/DataTemplates/Reports/ReportsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Reports/Searching/SearchingReportTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Reports/SearchingReportTemplates.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/DataTemplates/Shapes/ShapesTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/ElevConfigDialogWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/ElevConfigView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/ElevConfigWindow.axaml" value="Optepafi/Optepafi.csproj" />

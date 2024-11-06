@@ -7,7 +7,7 @@
             <!-- <Ellipse Fill="Chartreuse" Width="5" Height="5"/> -->
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:TrackPointWordObjectViewModel}">
-            <TextBlock Text="o" Foreground="Red"></TextBlock>
+            <TextBlock Text="o" Foreground="Red"/>
         </DataTemplate>
     </DataTemplates>
 </ResourceDictionary>

@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sVm="clr-namespace:Optepafi.ViewModels.Data.Shapes">
+    <DataTemplates x:Key="ShapesTemplates">
+        <DataTemplate DataType="{x:Type sVm:LineSegmentViewModel}">
+            <LineSegment Point="{Binding Point1}"/> 
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type sVm:CubicBezierCurveSegmentViewModel}">
+            <BezierSegment Point1="{Binding Point1, Converter={StaticResource MapCoordsToPointConverter}}"
+                           Point2="{Binding Point2, Converter={StaticResource MapCoordsToPointConverter}}"
+                           Point3="{Binding Point3, Converter={StaticResource MapCoordsToPointConverter}}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type sVm:PathPolygonViewModel}">
+            <PathGeometry>
+                <PathFigure StartPoint="0,0" IsClosed="False" Segments="{Binding SegmentsRelativeToPosition, Converter={StaticResource MapCoordsToPointConverter}}"/>
+            </PathGeometry>
+        </DataTemplate>
+    </DataTemplates>
+</ResourceDictionary>

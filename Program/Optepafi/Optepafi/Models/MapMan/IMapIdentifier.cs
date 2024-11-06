@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.SearchingAlgorithmMan;
 
 namespace Optepafi.Models.MapMan;
 
@@ -13,4 +15,6 @@ namespace Optepafi.Models.MapMan;
 public interface IMapIdentifier<in TMap> where TMap : IMap
 {
     
+    //TODO: comment
+    List<Leg>? GetDefaultTrackFrom(TMap map);
 }

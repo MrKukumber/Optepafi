@@ -22,18 +22,26 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         foreach (OmapMap.Symbol symbol in map.Symbols)
         {
-            if (_constructors.ContainsKey(symbol.Code))
+            if (symbol.Code == 799) continue;
+            if (_constructors.TryGetValue(symbol.Code, out var constructor) && map.Objects.TryGetValue(symbol.Code, out var objects))
             {
-                foreach (OmapMap.Object obj in map.Objects[symbol.Code])
+                foreach (OmapMap.Object obj in objects)
                 {
-                   collectorForAggregatedObjects.AddRange(_constructors[symbol.Code].Construct(obj)); 
+                   collectorForAggregatedObjects.AddRange(constructor.Construct(obj)); 
                 }
             }
         }
+
+        return;
     }
-    public GraphicsArea GetAreaOf(OmapMap map) => new(new MapCoordinates(map.WesternmostCoords.XPos, map.SouthernmostCoords.YPos), new MapCoordinates(map.EasternmostCoords.XPos, map.NorthernmostCoords.YPos));
-    public void AggregateGraphicsOfTrack(IList<MapCoordinates> track, IGraphicObjectCollector collectorForAggregatedObjects) => collectorForAggregatedObjects.Add(SimpleOrienteeringCourseConstructor.Instance_.Construct(track));
-    
+    public GraphicsArea GetAreaOf(OmapMap map) 
+        => new(new MapCoordinates(map.WesternmostCoords.XPos, map.SouthernmostCoords.YPos), new MapCoordinates(map.EasternmostCoords.XPos, map.NorthernmostCoords.YPos));
+
+    public void AggregateGraphicsOfTrack(IList<MapCoordinates> track, IGraphicObjectCollector collectorForAggregatedObjects)
+    {
+        if (track.Count > 0) collectorForAggregatedObjects.Add(SimpleOrienteeringCourseConstructor.Instance_.Construct(track));
+    }
+
     private interface IConstructor
     {
         IGraphicObject[] Construct(OmapMap.Object omapObject);
@@ -213,6 +221,11 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     private static Polygon GetPolygonFrom((MapCoordinates coords, byte type)[] typedCoords)
     {
         List<Segment> collectedSegments = new();
+        if (typedCoords.Length == 1)
+        {
+            collectedSegments.Add(new LineSegment(typedCoords[0].coords));
+            return new Polygon(collectedSegments);
+        }
         int i = 0;
         while(i < typedCoords.Length)
         {
@@ -227,7 +240,10 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
                     collectedSegments.Add(new CubicBezierCurveSegment(typedCoords[++i].coords, typedCoords[++i].coords, typedCoords[++i].coords));
                     break;
                 case 2:
+                case 16:    
                 case 18:
+                    return new Polygon(collectedSegments);
+                default:
                     return new Polygon(collectedSegments);
             } ;
         } 
@@ -238,8 +254,13 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         List<Segment> collectedSegments = new();
         var startPoint = typedCoords[0].coords;
+        if (typedCoords.Length == 1)
+        {
+            collectedSegments.Add(new LineSegment(typedCoords[0].coords));
+            return new Utils.Shapes.Path(startPoint, collectedSegments);
+        }
         int i = 0;
-        while(i < typedCoords.Length)
+        while (i < typedCoords.Length)
         {
             switch (typedCoords[i].type % 32)
             {
@@ -249,13 +270,17 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
                     break;
                 case 1:
                     if (i + 3 >= typedCoords.Length) return new Utils.Shapes.Path(startPoint, collectedSegments);
-                    collectedSegments.Add(new CubicBezierCurveSegment(typedCoords[++i].coords, typedCoords[++i].coords, typedCoords[++i].coords));
+                    collectedSegments.Add(new CubicBezierCurveSegment(typedCoords[++i].coords,
+                        typedCoords[++i].coords, typedCoords[++i].coords));
                     break;
                 case 2:
+                case 16:
                 case 18:
                     return new Utils.Shapes.Path(startPoint, collectedSegments);
-            } ;
-        } 
+                default:
+                    return new Utils.Shapes.Path(startPoint, collectedSegments);
+            };
+        }
         return new Utils.Shapes.Path(startPoint, collectedSegments);
     }
     

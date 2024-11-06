@@ -51,7 +51,7 @@ public class TrackPointWordObjectViewModel : GraphicObjectViewModel
     /// <param name="position">Position to which will be graphic object centered.</param>
     public TrackPointWordObjectViewModel(CanvasCoordinate position)
     {
-        Position = new CanvasCoordinate(position.LeftPos - 1000, position.BottomPos - 2000);
+        Position = new CanvasCoordinate(position.LeftPos - 1000, position.TopPos - 2000);
         Priority = 1;
     }
     

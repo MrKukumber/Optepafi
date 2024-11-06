@@ -38,9 +38,9 @@ public class WordObject2VmConverter : IGraphicObjects2VmConverter<WordObject>
     private WordObject2VmConverter(){}
     
     /// <inheritdoc cref="IGraphicObjects2VmConverter{TGraphicsObject}.ConvertToViewModel"/>
-    public GraphicObjectViewModel ConvertToViewModel(WordObject wordObject, MapCoordinates mapsLeftBottomVertex)
+    public GraphicObjectViewModel ConvertToViewModel(WordObject wordObject, MapCoordinates mapsTopLeftVertex)
     {
-        return new WordObjectViewModel(wordObject.Position.ToCanvasCoordinate(mapsLeftBottomVertex), wordObject.Text);
+        return new WordObjectViewModel(wordObject.Position.ToCanvasCoordinate(mapsTopLeftVertex), wordObject.Text);
     }
 }
 
@@ -57,8 +57,8 @@ public class TrackPointWordObject2VmConverter : IGraphicObjects2VmConverter<Trac
     private TrackPointWordObject2VmConverter(){}
     
     /// <inheritdoc cref="IGraphicObjects2VmConverter{TGraphicsObject}.ConvertToViewModel"/>
-    public GraphicObjectViewModel ConvertToViewModel(TrackPointWordObject trackPointWordObject, MapCoordinates mapsLefBottomVertex)
+    public GraphicObjectViewModel ConvertToViewModel(TrackPointWordObject trackPointWordObject, MapCoordinates mapsTopLeftVertex)
     {
-        return new TrackPointWordObjectViewModel(trackPointWordObject.Position.ToCanvasCoordinate(mapsLefBottomVertex));
+        return new TrackPointWordObjectViewModel(trackPointWordObject.Position.ToCanvasCoordinate(mapsTopLeftVertex));
     }
 }

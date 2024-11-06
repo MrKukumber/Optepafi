@@ -607,17 +607,17 @@ Co treba spravit:
 
 - ! pridat vyber mapovej reprezentacie do path finding sessionu - DONE
 - ! spravit parser pre omap - DONE
-- ! spravit graficku rep pre omap
-- ! vytvorit novu path pre vykreslovanie najdenej cesty 
-- ! spravit orienteering template
-- ! zrobit stahovanie vyskovych dat
-- ! spravit uzivatelske modely pre orientak, nastavovatelne
-- ! spravit session pre vytvaranie uzivatelskych modelov
-- ! vytvorit mapovu reprezentaciu pre orienteering template a omap mapy + constructor
-- ! spravit A* algoritmus
-- modfikovat model, tak aby mohli jednotlive polozky definovat svoje vnutorne konfigurovatelne vlastonsti
+- ! spravit graficku rep pre omap 0.3
+- ! vytvorit novu path pre vykreslovanie najdenej cesty 0.3
+- ! spravit orienteering template 0.3
+- ! zrobit stahovanie vyskovych dat 1.5
+- ! spravit uzivatelske modely pre orientak, nastavovatelne 1
+- ! spravit session pre vytvaranie uzivatelskych modelov 2
+- ! vytvorit mapovu reprezentaciu pre orienteering template a omap mapy + constructor n
+- ! spravit A* algoritmus k
+- modfikovat model, tak aby mohli jednotlive polozky definovat svoje vnutorne konfigurovatelne vlastonsti - DONE
   - umoznit konfigurovat tieto vlastnosti v hlavnych nastaveniach - DONE
-- umoznit prvu trat zadat tu z mapoveho suboru
+- umoznit prvu trat zadat tu z mapoveho suboru 0.3
 
 - poriadne spravit lokalizaciu
 - zlepsit vizual

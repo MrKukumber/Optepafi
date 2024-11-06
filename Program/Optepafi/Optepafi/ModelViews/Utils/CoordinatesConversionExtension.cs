@@ -13,16 +13,16 @@ public static class CoordinatesConversionExtension
     /// <summary>
     /// Extension method for converting <c>CanvasCoordinate</c> to <c>MapCoordinate</c> according to provided maps left-bottom vertex position.
     /// 
-    /// Canvas coordinates are by default shifted so they correspond with axis of canvases. Therefore they have to be shifted back.  
+    /// Canvas coordinates are by default shifted so they correspond with axis of canvases. Therefore, they have to be shifted back.  
     /// </summary>
     /// <param name="canvasCoordinate">Coordinates to be converted to map coordinates.</param>
-    /// <param name="mapLeftBottomVertex">Coordinate of left-bottom vertex of corresponding GraphicsArea.</param>
+    /// <param name="mapTopLeftVertex">Coordinate of left-bottom vertex of corresponding GraphicsArea.</param>
     /// <returns>Converted coordinates.</returns>
     public static MapCoordinates ToMapCoordinate(this CanvasCoordinate canvasCoordinate,
-        MapCoordinates mapLeftBottomVertex)
+        MapCoordinates mapTopLeftVertex)
     {
-        return new MapCoordinates(canvasCoordinate.LeftPos + mapLeftBottomVertex.XPos,
-            canvasCoordinate.BottomPos + mapLeftBottomVertex.YPos);
+        return new MapCoordinates(canvasCoordinate.LeftPos + mapTopLeftVertex.XPos,
+            mapTopLeftVertex.YPos - canvasCoordinate.TopPos);
     }
 
     /// <summary>
@@ -31,29 +31,27 @@ public static class CoordinatesConversionExtension
     /// Canvas coordinates are by default shifted so they correspond with axis of canvases. This shift is defined by the area of corresponding graphics, namely by its lef-bottom vertex.  
     /// </summary>
     /// <param name="mapCoordinates">Coordinates to be converted to canvas coordinates.</param>
-    /// <param name="mapLeftBottomVertex">Coordinate of left-bottom vertex of corresponding GraphicsArea.</param>
+    /// <param name="mapTopLeftVertex">Coordinate of left-bottom vertex of corresponding GraphicsArea.</param>
     /// <returns>Converted coordinates.</returns>
     public static CanvasCoordinate ToCanvasCoordinate(this MapCoordinates mapCoordinates,
-        MapCoordinates mapLeftBottomVertex)
+        MapCoordinates mapTopLeftVertex)
     {
-        return new CanvasCoordinate(mapCoordinates.XPos - mapLeftBottomVertex.XPos,
-            mapCoordinates.YPos - mapLeftBottomVertex.YPos);
+        return new CanvasCoordinate(mapCoordinates.XPos - mapTopLeftVertex.XPos,
+            mapTopLeftVertex.YPos - mapCoordinates.YPos);
     }
 
     //TODO: comment
     public static GeoCoordinates ToGeoCoordinate(this CanvasCoordinate canvasCoordinate,
-        MapCoordinates mapLeftBottomVertex, GeoCoordinates geoReference, int scale)
+        MapCoordinates mapTopLeftVertex, GeoCoordinates geoReference, int scale)
     {
-        MapCoordinates mapCoords = new MapCoordinates(canvasCoordinate.LeftPos + mapLeftBottomVertex.XPos,
-            canvasCoordinate.BottomPos + mapLeftBottomVertex.YPos);
+        MapCoordinates mapCoords = canvasCoordinate.ToMapCoordinate(mapTopLeftVertex);
         return mapCoords.ToGeoCoordinates(geoReference, scale);
     }
 
     public static CanvasCoordinate ToCanvasCoordinate(this GeoCoordinates geoCoordinates,
-        MapCoordinates mapLeftBottomVertex, GeoCoordinates geoReference, int scale)
+        MapCoordinates mapTopLeftVertex, GeoCoordinates geoReference, int scale)
     {
         MapCoordinates mapCoords = geoCoordinates.ToMapCoordinates(geoReference, scale);
-        return new CanvasCoordinate(mapCoords.XPos - mapLeftBottomVertex.XPos,
-            mapCoords.YPos - mapLeftBottomVertex.YPos);
+        return mapCoords.ToCanvasCoordinate(mapTopLeftVertex);
     }
 }

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.GraphicsMan.Sources;
+using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.ReportMan;
@@ -55,6 +56,8 @@ public abstract class PFPathFindingModelView : ModelViewBase
     /// </summary>
     /// <returns>Maps ground graphic source.</returns>
     public abstract GraphicsSourceViewModel GetGroundMapGraphics();
+    //TODO:comment
+    public abstract Task<List<CanvasCoordinate>?>GetDefaultTrackFromMapAsync(); 
     /// <summary>
     /// Asynchronous execution of path finding algorithm on provided track.
     /// 
@@ -82,19 +85,29 @@ public partial class PathFindingSessionModelView
         {
             return new GraphicsSourceViewModel(CopyGroundGraphicsSource.ParallelCopy(MapGraphics));
         }
+
+        /// <inheritdoc cref="PFPathFindingModelView.GetDefaultTrackFromMapAsync"/> 
+        public override async Task<List<CanvasCoordinate>?> GetDefaultTrackFromMapAsync()
+        {
+            List<Leg>? defaultTrack = await Task.Run(() =>
+            {
+                MapManager.Instance.TryGetDefaultTrackFrom(Map, out List<Leg>? defaultTrack);
+                return defaultTrack;
+            });
+            return defaultTrack?.ConvertToCanvasCoords(MapGraphics.GraphicsArea);
+        }
         
         /// <inheritdoc cref="PFPathFindingModelView.GetTrackGraphicsAsync"/>
         public override async Task<GraphicsSourceViewModel> GetTrackGraphicsAsync(IEnumerable<CanvasCoordinate> trackCoords)
         {
-            var trackCoordinates= trackCoords.Select(trackCanvasCoord => trackCanvasCoord.ToMapCoordinate(MapGraphics.GraphicsArea.LeftBottomVertex)).ToList();
+            var trackCoordinates= trackCoords.Select(trackCanvasCoord => trackCanvasCoord.ToMapCoordinate(new MapCoordinates(MapGraphics.GraphicsArea.BottomLeftVertex.XPos, MapGraphics.GraphicsArea.TopRightVertex.YPos))).ToList();
             CollectingGraphicsSource trackGraphicsSource = new CollectingGraphicsSource();
             _ = await Task.Run(() => GraphicsManager.Instance.AggregateTrackGraphicsAccordingTo(trackCoordinates, Map, trackGraphicsSource.Collector)); //TODO: log neexistujuceho aggregatoru 
             return new GraphicsSourceViewModel(trackGraphicsSource, MapGraphics);
         }
+        
 
         private ISearchingExecutor? _searchingExecutor;
-        
-        
         /// <inheritdoc cref="PFPathFindingModelView.FindPathAsync"/>
         /// <remarks>
         /// Executes search of path by using appropriately created <see cref="ISearchingExecutor"/> filled with created map representation and selected user model.
@@ -105,7 +118,7 @@ public partial class PathFindingSessionModelView
         {
              _searchingExecutor ??= SearchingAlgorithmManager.Instance.GetExecutorOf(SearchingAlgorithm, MapRepresentation, UserModel, SearchingAlgorithmConfiguration);
              
-            List<Leg> track = CanvasCoordsToLegsConverter.ConvertAccordingTo(trackCanvasCoords, MapGraphics.GraphicsArea);
+            List<Leg> track = trackCanvasCoords.ConvertToLegs(MapGraphics.GraphicsArea);
             IProgress<ISearchingReport> searchingProgress = new Progress<ISearchingReport>(report =>
             {
                 var reportViewModel = SearchingReportViewModel.Construct(report, MapGraphics);

@@ -146,7 +146,7 @@ public class MapRepreManager :
     }
 
     /// <summary>
-    /// Returns representatives of map representations that are able to be constructed using given template and map format.
+    /// Returns representatives of map representations that can be constructed using given template and map format.
     /// </summary>
     /// <param name="template">Requested template for match.</param>
     /// <param name="mapFormat">Requested map format for match.</param>

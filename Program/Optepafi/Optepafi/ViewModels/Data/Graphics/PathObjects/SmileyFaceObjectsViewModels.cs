@@ -19,7 +19,7 @@ public class SmileyFaceEyeObjectViewModel : GraphicObjectViewModel
     /// <param name="height">Height of eye object.</param>
     public SmileyFaceEyeObjectViewModel(CanvasCoordinate position, int width, int height)
     {
-        Position = new CanvasCoordinate(position.LeftPos - width/2, position.BottomPos - height/2);
+        Position = new CanvasCoordinate(position.LeftPos - width/2, position.TopPos - height/2);
         Priority = 420;
         Width = width;
         Height = height;
@@ -57,7 +57,7 @@ public class SmileyFaceNoseObjectViewModel : GraphicObjectViewModel
     /// <param name="height">Height of nose object.</param>
     public SmileyFaceNoseObjectViewModel(CanvasCoordinate position, int width, int height)
     {
-        Position = new CanvasCoordinate(position.LeftPos - width/2, position.BottomPos - height/2);
+        Position = new CanvasCoordinate(position.LeftPos - width/2, position.TopPos - height/2);
         Priority = 420;
         Width = width;
         Height = height;

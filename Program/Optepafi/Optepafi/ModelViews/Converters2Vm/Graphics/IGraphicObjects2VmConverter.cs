@@ -21,9 +21,9 @@ public interface IGraphicObjects2VmConverter<in TGraphicsObject> : IGraphicObjec
     /// Method should convert graphic object into corresponding ViewModel type.  
     /// </summary>
     /// <param name="graphicsObject">Graphic object to be converted to ViewModel.</param>
-    /// <param name="mapsLeftBottomVertex">Coordinate of maps lef-bottom vertex used for correct positioning of graphic object on canvas.</param>
+    /// <param name="mapsTopLeftVertex">Coordinate of maps lef-bottom vertex used for correct positioning of graphic object on canvas.</param>
     /// <returns>Corresponding ViewModel to provided graphic object.</returns>
-    public GraphicObjectViewModel ConvertToViewModel(TGraphicsObject graphicsObject, MapCoordinates mapsLeftBottomVertex);
+    public GraphicObjectViewModel ConvertToViewModel(TGraphicsObject graphicsObject, MapCoordinates mapsTopLeftVertex);
 }
 
 /// <summary>

@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Avalonia.Media;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Shapes;
 using Optepafi.ModelViews.Utils;
+using LineSegment = Optepafi.Models.Utils.Shapes.LineSegment;
 
 namespace Optepafi.ViewModels.Data.Shapes;
 
@@ -11,15 +15,15 @@ public class PathPolygonViewModel :
     DataViewModel, 
     ISegmentVisitor<SegmentViewModel, MapCoordinates>
 {
-    public PathPolygonViewModel(Path path, MapCoordinates mapsLeftBottomVertex)
+    public PathPolygonViewModel(Path path, MapCoordinates mapsTopLeftVertex)
     {
-        Position = path.StartPoint.ToCanvasCoordinate(mapsLeftBottomVertex);
-        SegmentsRelativeToPosition = path.Segments.Select(segment => segment.Accept(this, mapsLeftBottomVertex));
+        Position = path.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
+        SegmentsRelativeToPosition = path.Segments.Select(segment => segment.Accept(this, mapsTopLeftVertex));
     }
-    public PathPolygonViewModel(Polygon polygon, MapCoordinates mapsLeftBottomVertex)
+    public PathPolygonViewModel(Polygon polygon, MapCoordinates mapsTopLeftVertex)
     {
-        Position = polygon.Segments.Last().LastPoint.ToCanvasCoordinate(mapsLeftBottomVertex);
-        SegmentsRelativeToPosition = polygon.Segments.Select(segment => segment.Accept(this, mapsLeftBottomVertex));
+        Position = polygon.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
+        SegmentsRelativeToPosition = polygon.Segments.Select(segment => segment.Accept(this, mapsTopLeftVertex));
     }
     SegmentViewModel ISegmentVisitor<SegmentViewModel, MapCoordinates>.GenericVisit(CubicBezierCurveSegment segment, MapCoordinates otherParams) =>
         new CubicBezierCurveSegmentViewModel(segment, Position, otherParams);
@@ -28,4 +32,15 @@ public class PathPolygonViewModel :
     
     public CanvasCoordinate Position { get; } 
     public IEnumerable<SegmentViewModel> SegmentsRelativeToPosition { get; }
+    public string Data
+    {
+        get
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("M 0,0 ");
+            foreach (var segmet in SegmentsRelativeToPosition)
+                sb.Append(segmet.GetStringRep());
+            return sb.ToString();
+        }
+    }
 }

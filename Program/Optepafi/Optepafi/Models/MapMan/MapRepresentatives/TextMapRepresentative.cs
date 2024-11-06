@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Optepafi.Models.MapMan.Maps;
+using Optepafi.Models.SearchingAlgorithmMan;
 
 namespace Optepafi.Models.MapMan.MapRepresentatives;
 
@@ -45,6 +47,8 @@ public class TextMapRepresentative : IMapRepresentative<TextMap>
         creationResult = MapManager.MapCreationResult.Ok;
         return textMap;
     }
+    /// <inheritdoc cref="IMapIdentifier{TMap}.GetDefaultTrackFrom"/> 
+    public List<Leg>? GetDefaultTrackFrom(TextMap map) => null;
 
     /// <summary>
     /// Hidden intra class which inherits from <c>TextMap</c>. It contains public backing field of <c>Text</c> property so it could be set from <c>CreateMapFrom</c> method.

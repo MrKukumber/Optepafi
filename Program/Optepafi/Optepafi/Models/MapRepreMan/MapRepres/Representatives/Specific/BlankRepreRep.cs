@@ -27,7 +27,7 @@ public class BlankRepreRep : MapRepreRepresentative<IBlankRepre, NullConfigurati
     public override string MapRepreName { get; } = "Blank representation.";
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.ImplementationIndicators"/>
-    public override IImplementationIndicator<ITemplate, IMap, IBlankRepre>[] ImplementationIndicators { get; } = [BlankGraphElevDataDepBlankTemplateTextMapImplementationRep.Instance];
+    public override IImplementationIndicator<ITemplate, IMap, IBlankRepre>[] ImplementationIndicators { get; } = [BlankGraphElevDataDepBlankTemplateTextMapImplementationRep.Instance, BlankGraphElevDataIndepBlankTemplateOmapMapImplementationRep.Instance];
 
     protected override NullConfiguration DefaultConfiguration { get; } = new(); 
 

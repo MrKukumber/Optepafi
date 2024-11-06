@@ -7,6 +7,7 @@ using System.Threading;
 using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.MapRepresentatives;
+using Optepafi.Models.SearchingAlgorithmMan;
 
 namespace Optepafi.Models.MapMan;
 
@@ -17,7 +18,10 @@ namespace Optepafi.Models.MapMan;
 /// It implements supporting methods for operating with maps. They should be managed preferably trough this class.  
 /// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.  
 /// </summary>
-public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
+public class MapManager : 
+    IMapGenericVisitor<IMapFormat<IMap>>,
+    IMapGenericVisitor<List<Leg>?>
+
 {
     public static MapManager Instance { get; } = new();
     private MapManager(){}
@@ -37,7 +41,7 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
     /// <returns>Format of provided map.</returns>
     public IMapFormat<IMap> GetFormat(IMap map)
     {
-        return map.AcceptGeneric(this);
+        return map.AcceptGeneric<IMapFormat<IMap>>(this);
     }
     IMapFormat<IMap> IMapGenericVisitor<IMapFormat<IMap>>.GenericVisit<TMap>(TMap map) 
     {
@@ -79,5 +83,22 @@ public class MapManager : IMapGenericVisitor<IMapFormat<IMap>>
         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested)
             return MapCreationResult.Cancelled;
         return creationResult;
+    }
+
+    //TODO: comment
+    public bool TryGetDefaultTrackFrom(IMap map, out List<Leg>? legs)
+    {
+        legs = map.AcceptGeneric<List<Leg>?>(this);
+        return legs is not null && legs.Count > 0;
+    }
+
+    public List<Leg>? GenericVisit<TMap>(TMap map) where TMap : IMap
+    {
+        foreach (var mapFormat in MapFormats)
+        {
+            if (mapFormat is IMapIdentifier<TMap> mapIdentifier)
+                return mapIdentifier.GetDefaultTrackFrom(map);
+        }
+        throw new ArgumentException("Given map was not created by any existing map format.");
     }
 }

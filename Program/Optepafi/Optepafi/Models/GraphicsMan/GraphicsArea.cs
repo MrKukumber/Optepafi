@@ -8,6 +8,6 @@ namespace Optepafi.Models.GraphicsMan;
 /// 
 /// It defines rectangle that encapsulates whole map. This rectangle is defined by its lef-bottom and top-right vertex coordinates.  
 /// </summary>
-/// <param name="LeftBottomVertex">Left-bottom vertex of rectangle which defines maps area.</param>
+/// <param name="BottomLeftVertex">Left-bottom vertex of rectangle which defines maps area.</param>
 /// <param name="TopRightVertex">Right-top vertex of rectangle which defines maps area. </param>
-public record struct GraphicsArea(MapCoordinates LeftBottomVertex, MapCoordinates TopRightVertex);
+public record struct GraphicsArea(MapCoordinates BottomLeftVertex, MapCoordinates TopRightVertex);

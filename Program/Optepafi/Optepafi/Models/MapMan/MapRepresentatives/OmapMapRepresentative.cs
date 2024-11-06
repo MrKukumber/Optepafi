@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Xml;
+using DynamicData;
 using Optepafi.Models.MapMan.Maps;
+using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapMan.MapFormats;
@@ -16,7 +18,7 @@ public sealed class OmapMapRepresentative : IMapRepresentative<OmapMap>
 {
     public static OmapMapRepresentative Instance { get; } = new OmapMapRepresentative();
     
-    public string Extension { get; } = ".omap";
+    public string Extension { get; } = "omap";
     public string MapFormatName { get; } = "OMAP";
     public OmapMap? CreateMapFrom((Stream mapStream,string path) input, CancellationToken? cancellationToken, out MapManager.MapCreationResult creationResult)
     {
@@ -31,7 +33,21 @@ public sealed class OmapMapRepresentative : IMapRepresentative<OmapMap>
         return map;
     }
 
-    
+    public List<Leg>? GetDefaultTrackFrom(OmapMap map)
+    {
+        if (map.Objects.TryGetValue(799, out var simpleOrienteeringCourses) && simpleOrienteeringCourses.Count > 0)
+        {
+            int i = 0;
+            List<Leg> track = new();
+            while (i + 1 < simpleOrienteeringCourses[0].TypedCoords.Length)
+            {
+                track.Add(new Leg(simpleOrienteeringCourses[0].TypedCoords[i].Item1, 
+                    simpleOrienteeringCourses[0].TypedCoords[++i].Item1));
+            }
+            return track;
+        }
+        return null;
+    }
 }
 
 public static class OmapMapParser
@@ -310,7 +326,9 @@ public static class OmapMapParser
             while (!int.TryParse(GetWordTill(strCoord, ' ', ref j, strBuilder), out y))
                 if (j >= strCoord.Length || !IsCancellationRequested(cancellationToken, ref readsOrParsesSinceLastCheck)) return false;
             while (!byte.TryParse(GetWordTill(strCoord, ' ', ref j, strBuilder), out type) && j < strCoord.Length && !IsCancellationRequested(cancellationToken, ref readsOrParsesSinceLastCheck)){}
-            
+
+            if (x == -130974 && y == -128884)
+                x = x;
             y = -y; //y-axis values are saved in omap files other way than we use them in map coordinates
             if (y > extremeCoords.nc.YPos) extremeCoords.nc = new MapCoordinates(x, y);
             if (y < extremeCoords.sc.YPos) extremeCoords.sc = new MapCoordinates(x, y);

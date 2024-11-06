@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Avalonia.Controls;
 using Optepafi.ModelViews.PathFinding;
 using Optepafi.ViewModels.Data;
 using Optepafi.ViewModels.Data.Graphics;
@@ -69,6 +70,14 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
         GetMapGraphicsCommand = ReactiveCommand.Create(() =>
         {
             return pathFindingMv.GetGroundMapGraphics();
+        });
+
+        GetDefaultTrackFromMapCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var defaultTrackCoords = await pathFindingMv.GetDefaultTrackFromMapAsync();
+            if (defaultTrackCoords is not null)
+                _acceptedTrackPointList.AddRange(defaultTrackCoords);
+            return await pathFindingMv.GetTrackGraphicsAsync(_acceptedTrackPointList);
         });
         
         FindPathCommand = ReactiveCommand.CreateFromObservable(
@@ -168,8 +177,12 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
                 GraphicsWidth = MapGraphicsSource.GraphicsWidth;
                 GraphicsHeight = MapGraphicsSource.GraphicsHeight;
             }).DisposeWith(disposables);
+            GetDefaultTrackFromMapCommand.Execute().Subscribe(trackGraphicsSource =>
+            {
+                AcceptedTrackPointsCount = _acceptedTrackPointList.Count;
+                TrackGraphicsSource = trackGraphicsSource;
+            }).DisposeWith(disposables);
         });
-
     }
 
     /// <summary>
@@ -313,6 +326,9 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     /// Graphics source will be returned immediately but in the background can run asynchronous process that will concurrently generate graphic objects and fill the source with them.  
     /// </summary>
     public ReactiveCommand<Unit, GraphicsSourceViewModel> GetMapGraphicsCommand { get; }
+    
+    //TODO:comment
+    public ReactiveCommand<Unit, GraphicsSourceViewModel> GetDefaultTrackFromMapCommand { get; }
     /// <summary>
     /// Reactive command for executing of path finding mechanism.
     /// 

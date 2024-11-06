@@ -10,7 +10,7 @@ namespace Optepafi.Models.MapMan;
 /// The other two are <see cref="IMapRepresentative{TMap}"/> and <see cref="IMapIdentifier{TMap}"/>.  
 /// This interface provides methods and properties, that are used for specification of map formats and creation of map objects.  
 /// It should not be implemented right away. All implementations should implement <c>IMapRepresentative{TMap}</c> instead.  
-/// Thanks to covariance of its map type parameter it is useful for transferring of map representatives in non generic way.  
+/// Thanks to covariance of its map type parameter it is useful for transferring of map representatives in non-generic way.  
 /// </summary>
 /// <typeparam name="TMap">Type of represented map.</typeparam>
 public interface IMapFormat<out TMap> where TMap : IMap
@@ -18,7 +18,7 @@ public interface IMapFormat<out TMap> where TMap : IMap
     string MapFormatName { get; }
     
     /// <summary>
-    /// File extension of represented maps format.
+    /// File extension of represented maps format without a dot.
     /// </summary>
     string Extension { get; }
     
