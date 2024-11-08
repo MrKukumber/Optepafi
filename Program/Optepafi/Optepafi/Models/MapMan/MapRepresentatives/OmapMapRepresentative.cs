@@ -226,7 +226,7 @@ public static class OmapMapParser
                 {
                     if (int.TryParse(reader.GetAttribute("symbol"), out int id) && symbols.ContainsKey(id))
                     {
-                        bool firstgetRotationFound = float.TryParse(reader.GetAttribute("rotation"), out float rotation);
+                        bool firstgetRotationFound = float.TryParse(reader.GetAttribute("rotation"), CultureInfo.InvariantCulture, out float rotation);
                         switch (TryGetCoords(reader, cancellationToken, ref readsSinceLastCancelCheck, out var typedCoords, out (MapCoordinates nc, MapCoordinates sc, MapCoordinates wc, MapCoordinates ec) objectsExtremCoords))
                         {
                             case ParseResult.Ok:
@@ -296,7 +296,7 @@ public static class OmapMapParser
         {
             if (IsCancellationRequested(cancellationToken, ref readsSinceLastCancelCheck)) return ParseResult.Cancelled;
             if (reader.NodeType is XmlNodeType.Element && reader.Name == "pattern" &&
-                float.TryParse(reader.GetAttribute("rotation"), new CultureInfo("en-US"),out rotation))
+                float.TryParse(reader.GetAttribute("rotation"), CultureInfo.InvariantCulture,out rotation))
                 return ParseResult.Ok;
             if (reader.NodeType is XmlNodeType.EndElement && reader.Name == "object")
                 return ParseResult.Ok;

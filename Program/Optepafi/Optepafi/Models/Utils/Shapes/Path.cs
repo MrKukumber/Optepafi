@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Optepafi.Models.Utils.Shapes.Segments;
 
 namespace Optepafi.Models.Utils.Shapes;
 

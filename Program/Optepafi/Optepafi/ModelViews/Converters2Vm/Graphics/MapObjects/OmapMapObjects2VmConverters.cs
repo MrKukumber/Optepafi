@@ -167,7 +167,11 @@ public static class OmapMapObjects2VmConverters
          { typeof(NorthLinesPatternBlue_601_4) , NorthLinesPatternBlue2VmConstructor.Instance }, 
          { typeof(RegistrationMark_602) , RegistrationMark2VmConstructor.Instance }, 
          { typeof(SpotHeightDot_603) , SpotHeightDot2VmConstructor.Instance }, 
-         { typeof(SimpleOrienteeringCourse_799) , SimpleOrienteeringCourse2VmConstructor.Instance },    
+         {typeof(Start_701), Start2VmConstructor.Instance},
+         {typeof(ControlPoint_703), ControlPoint2VmConstructor.Instance},
+         {typeof(CourseLine_705), CourseLine2VmConstructor.Instance},
+         {typeof(Finish_706), Finish2VmConstructor.Instance}
+         // { typeof(SimpleOrienteeringCourse_799) , SimpleOrienteeringCourse2VmConstructor.Instance },    
     };
 }
 
@@ -1357,10 +1361,31 @@ public class SpotHeightDot2VmConstructor : IGraphicObjects2VmConverter<SpotHeigh
     public GraphicObjectViewModel ConvertToViewModel(SpotHeightDot_603 graphicsObject, MapCoordinates mapsTopLeftVertex)
     => new SpotHeightDot_603_ViewModel(graphicsObject, mapsTopLeftVertex);
 }
-public class SimpleOrienteeringCourse2VmConstructor : IGraphicObjects2VmConverter<SimpleOrienteeringCourse_799>
+public class Start2VmConstructor : IGraphicObjects2VmConverter<Start_701>
 {
-    public static SimpleOrienteeringCourse2VmConstructor Instance { get; } = new();
-    private SimpleOrienteeringCourse2VmConstructor () { }
-    public GraphicObjectViewModel ConvertToViewModel(SimpleOrienteeringCourse_799 graphicsObject, MapCoordinates mapsTopLeftVertex)
-    => new SimpleOrienteeringCourse_799_ViewModel(graphicsObject, mapsTopLeftVertex);
+    public static Start2VmConstructor Instance { get; } = new();
+    private Start2VmConstructor () { }
+    public GraphicObjectViewModel ConvertToViewModel(Start_701 graphicsObject, MapCoordinates mapsTopLeftVertex)
+    => new Start_701_ViewModel(graphicsObject, mapsTopLeftVertex);
+}
+public class ControlPoint2VmConstructor : IGraphicObjects2VmConverter<ControlPoint_703>
+{
+    public static ControlPoint2VmConstructor Instance { get; } = new();
+    private ControlPoint2VmConstructor () { }
+    public GraphicObjectViewModel ConvertToViewModel(ControlPoint_703 graphicsObject, MapCoordinates mapsTopLeftVertex)
+    => new ControlPoint_703_ViewModel(graphicsObject, mapsTopLeftVertex);
+}
+public class CourseLine2VmConstructor : IGraphicObjects2VmConverter<CourseLine_705>
+{
+    public static CourseLine2VmConstructor Instance { get; } = new();
+    private CourseLine2VmConstructor () { }
+    public GraphicObjectViewModel ConvertToViewModel(CourseLine_705 graphicsObject, MapCoordinates mapsTopLeftVertex)
+    => new CourseLine_705_ViewModel(graphicsObject, mapsTopLeftVertex);
+}
+public class Finish2VmConstructor : IGraphicObjects2VmConverter<Finish_706>
+{
+    public static Finish2VmConstructor Instance { get; } = new();
+    private Finish2VmConstructor () { }
+    public GraphicObjectViewModel ConvertToViewModel(Finish_706 graphicsObject, MapCoordinates mapsTopLeftVertex)
+    => new Finish_706_ViewModel(graphicsObject, mapsTopLeftVertex);
 }

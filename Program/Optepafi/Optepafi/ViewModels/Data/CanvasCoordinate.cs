@@ -1,3 +1,6 @@
+using System;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
+
 namespace Optepafi.ViewModels.Data;
 
 /// <summary>
@@ -11,8 +14,35 @@ namespace Optepafi.ViewModels.Data;
 /// <param name="TopPos">Vertical distance from canvases top-right vertex.</param>
 public record struct CanvasCoordinate(int LeftPos, int TopPos)
 {
+    public static CanvasCoordinate operator *(CanvasCoordinate coord, int num)
+        => new CanvasCoordinate(coord.LeftPos * num, coord.TopPos * num);
+    public static CanvasCoordinate operator *(int num, CanvasCoordinate coord)
+        => coord * num;
+    public static CanvasCoordinate operator *(CanvasCoordinate coord, double num)
+        => new CanvasCoordinate((int)(coord.LeftPos * num), (int)(coord.TopPos * num));
+    public static CanvasCoordinate operator *(double num, CanvasCoordinate coord)
+        => coord * num;
+    
     public static CanvasCoordinate operator -(CanvasCoordinate coordinate1, CanvasCoordinate coordinate2)
+        => new CanvasCoordinate(coordinate1.LeftPos - coordinate2.LeftPos, coordinate1.TopPos - coordinate2.TopPos);
+    public static CanvasCoordinate operator +(CanvasCoordinate coordinate1, CanvasCoordinate coordinate2)
+        => new CanvasCoordinate(coordinate1.LeftPos + coordinate2.LeftPos, coordinate1.TopPos + coordinate2.TopPos);
+    
+    public CanvasCoordinate Rotate(float angle, CanvasCoordinate center)
     {
-        return new CanvasCoordinate(coordinate1.LeftPos - coordinate2.LeftPos, coordinate1.TopPos - coordinate2.TopPos);
+        int translatedLeft = LeftPos - center.LeftPos;
+        int translatedTop = TopPos - center.TopPos;
+        int rotatedTransposedLeft = (int)(translatedLeft * Math.Cos(angle) - translatedTop * Math.Sin(angle));
+        int rotatedTransposedTop = (int)(translatedLeft * Math.Sin(angle) + translatedTop * Math.Cos(angle));
+        return new CanvasCoordinate(rotatedTransposedLeft + center.LeftPos, rotatedTransposedTop + center.TopPos);
     }
+
+    public CanvasCoordinate Rotate(float angle)
+    {
+        int rotatedTransposedLeft = (int)(LeftPos * Math.Cos(angle) - TopPos * Math.Sin(angle));
+        int rotatedTransposedTop = (int)(LeftPos * Math.Sin(angle) + TopPos * Math.Cos(angle));
+        return new CanvasCoordinate(rotatedTransposedLeft, rotatedTransposedTop);
+    }
+
+    public double Size() => Math.Sqrt(LeftPos * LeftPos + TopPos * TopPos);
 }

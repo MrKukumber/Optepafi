@@ -5,14 +5,18 @@
         <DataTemplate DataType="{x:Type sVm:LineSegmentViewModel}">
             <LineSegment Point="{Binding Point1}"/> 
         </DataTemplate>
+        <DataTemplate DataType="{x:Type sVm:QuadraticBezierCurveSegmentViewModel}">
+            <QuadraticBezierSegment Point1="{Binding Point1, Converter={StaticResource CanvasCoordsToPointConverter}}"
+                                    Point2="{Binding Point2, Converter={StaticResource CanvasCoordsToPointConverter}}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type sVm:CubicBezierCurveSegmentViewModel}">
-            <BezierSegment Point1="{Binding Point1, Converter={StaticResource MapCoordsToPointConverter}}"
-                           Point2="{Binding Point2, Converter={StaticResource MapCoordsToPointConverter}}"
-                           Point3="{Binding Point3, Converter={StaticResource MapCoordsToPointConverter}}"/>
+            <BezierSegment Point1="{Binding Point1, Converter={StaticResource CanvasCoordsToPointConverter}}"
+                           Point2="{Binding Point2, Converter={StaticResource CanvasCoordsToPointConverter}}"
+                           Point3="{Binding Point3, Converter={StaticResource CanvasCoordsToPointConverter}}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type sVm:PathPolygonViewModel}">
             <PathGeometry>
-                <PathFigure StartPoint="0,0" IsClosed="False" Segments="{Binding SegmentsRelativeToPosition, Converter={StaticResource MapCoordsToPointConverter}}"/>
+                <PathFigure StartPoint="0,0" IsClosed="False" Segments="{Binding Segments, Converter={StaticResource CanvasCoordsToPointConverter}}"/>
             </PathGeometry>
         </DataTemplate>
     </DataTemplates>

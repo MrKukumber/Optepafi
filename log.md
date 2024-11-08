@@ -617,7 +617,7 @@ Co treba spravit:
 - ! spravit A* algoritmus k
 - modfikovat model, tak aby mohli jednotlive polozky definovat svoje vnutorne konfigurovatelne vlastonsti - DONE
   - umoznit konfigurovat tieto vlastnosti v hlavnych nastaveniach - DONE
-- umoznit prvu trat zadat tu z mapoveho suboru 0.3
+- umoznit prvu trat zadat tu z mapoveho suboru 0.3 - DONE
 
 - poriadne spravit lokalizaciu
 - zlepsit vizual
@@ -646,3 +646,13 @@ Suradnice su v omapu zapisovane v textovom prevedeni, teda bolo potrebne ich spr
 Pocas celeho pribehu parsovania sa pribezne konroluje cancellation token. Ten sa kontroluje v kontretnom intervale poctu read-ov z XmlReader-u+poctu naparsovanych suradnic objektov.  
 
 Dalej je rozrobene konvertovanie geo coordinatov na metre a naopak. Studuje Harvesin-ovu formulu na pocitanie tejto konverzie.
+
+## 6.11
+
+Konverzia geo koordinatov na metre uspesne dokonana. Mala by fungovat ako ma.
+
+Takmer dorobena graficka reprezentacia omap suborov, uz len treba doimplementovat vykreslovanie vo View-e.
+
+Prerobeny koncept CanvasCoordinate-ov, kde namiesto vzidalenosti od spodneho okraja Canvas-u sa ukladaju suradnice na zaklade vzidalenosti od horneho okraja. Dopomohlo to ku spravnemu spravaniu poziciovania grafickych objekto v na Canvas. Namiesto Canvas.Bottom property sa teraz dosadza za Canvas.Top property a funguje to bezchybne.
+
+Spravene nacitanie defaultnej trate z mapoveho suboru do path finding session-u.

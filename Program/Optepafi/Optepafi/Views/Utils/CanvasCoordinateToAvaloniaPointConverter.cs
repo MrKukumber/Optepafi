@@ -15,7 +15,8 @@ namespace Optepafi.Views.Utils;
 /// </summary>
 public class CanvasCoordinateToAvaloniaPointConverter : IValueConverter
 {
-    private static MicrometersToDipConverter _microToDipConverter = new ();
+    public static CanvasCoordinateToAvaloniaPointConverter Instance = new();
+    
     /// <inheritdoc cref="IValueConverter.Convert"/>
     /// <remarks>
     /// Converts <c>CanvasCoordinate</c> to Avalonia <c>Point</c>. 
@@ -23,7 +24,7 @@ public class CanvasCoordinateToAvaloniaPointConverter : IValueConverter
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is CanvasCoordinate mapCoordinate)
-            return new Point((double)_microToDipConverter.Convert(mapCoordinate.LeftPos), (double)_microToDipConverter.Convert(mapCoordinate.TopPos));
+            return new Point(MicrometersToDipConverter.Instance.Convert(mapCoordinate.LeftPos), MicrometersToDipConverter.Instance.Convert(mapCoordinate.TopPos));
         return new BindingNotification(new InvalidOperationException("The value must be a map coordinate of type MapCoordinate."));
     }
 
@@ -34,7 +35,7 @@ public class CanvasCoordinateToAvaloniaPointConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is Point point)
-            return new CanvasCoordinate((int)_microToDipConverter.ConvertBack(point.X), (int)_microToDipConverter.ConvertBack(point.Y));
+            return new CanvasCoordinate(MicrometersToDipConverter.Instance.ConvertBack(point.X), MicrometersToDipConverter.Instance.ConvertBack(point.Y));
         return new BindingNotification(new InvalidOperationException("The value must be a point of type Avalonia.Point."));
     }
     /// <summary>
@@ -42,17 +43,17 @@ public class CanvasCoordinateToAvaloniaPointConverter : IValueConverter
     /// </summary>
     /// <param name="value">CanvasCoordinates value to be converted to Avalonia Point.</param>
     /// <returns>Corresponding Avalonia Point.</returns>
-    public object Convert(object? value)
+    public Point Convert(CanvasCoordinate value)
     {
-        return Convert(value, typeof(Point), null, CultureInfo.CurrentCulture);
+        return (Point) Convert(value, typeof(Point), null, CultureInfo.CurrentCulture);
     }
     /// <summary>
     /// Method for more convenient backward conversion where only the value to be converted must be provided.
     /// </summary>
     /// <param name="value">Avalonia Point to be converted back to CanvasCoordinates.</param>
     /// <returns>Corresponding CanvasCoordinates.</returns>
-    public object ConvertBack(object? value)
+    public object ConvertBack(Point value)
     {
-        return ConvertBack(value, typeof(CanvasCoordinate), null, CultureInfo.CurrentCulture);
+        return (CanvasCoordinate) ConvertBack(value, typeof(CanvasCoordinate), null, CultureInfo.CurrentCulture);
     }
 }

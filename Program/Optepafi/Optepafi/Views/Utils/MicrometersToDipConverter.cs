@@ -12,6 +12,8 @@ namespace Optepafi.Views.Utils;
 /// </summary>
 public class MicrometersToDipConverter : IValueConverter
 {
+    public static MicrometersToDipConverter Instance { get;} = new MicrometersToDipConverter();
+
     private const double StandardDipPerInch = 96;
     private const int MicrometersPerInch = 25400;
     private const double MicrometersPerDip = MicrometersPerInch / StandardDipPerInch;
@@ -49,17 +51,17 @@ public class MicrometersToDipConverter : IValueConverter
     /// </summary>
     /// <param name="value">Value in micrometers to be converted to value of dip.</param>
     /// <returns>Corresponding value of dip.</returns>
-    public object Convert(object? value)
+    public double Convert(int value)
     {
-        return Convert(value, typeof(float), null, CultureInfo.CurrentCulture);
+        return (double) Convert(value, typeof(float), null, CultureInfo.CurrentCulture);
     }
     /// <summary>
     /// Method for more convenient backward conversion where only the value to be converted must be provided.
     /// </summary>
     /// <param name="value">Value of dip to be converted back to micrometers.</param>
     /// <returns>Corresponding value in micrometers.</returns>
-    public object ConvertBack(object? value)
+    public int ConvertBack(double value)
     {
-        return ConvertBack(value, typeof(Int32), null, CultureInfo.CurrentCulture);
+        return (int) ConvertBack(value, typeof(Int32), null, CultureInfo.CurrentCulture);
     }
 }

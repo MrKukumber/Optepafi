@@ -1,4 +1,5 @@
 
+using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Shapes;
 
@@ -1526,6 +1527,22 @@ public record SpotHeightDot_603(MapCoordinates Position) : IGraphicObject
     // public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) =>
         // genericVisitor.GenericVisit(this);
 // }
+
+public record Start_701(MapCoordinates Position, float Rotation) : IGraphicObject
+{
+    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/> 
+    public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
+    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut}"/> 
+    public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) => genericVisitor.GenericVisit(this);
+}
+
+public record ControlPoint_703(MapCoordinates Position) : IGraphicObject
+{
+    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/> 
+    public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
+    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut}"/> 
+    public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) => genericVisitor.GenericVisit(this);
+}
 // record ControlNumber_704(MapCoordinates Position) : IGraphicObject
 // {
     // /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/>
@@ -1535,12 +1552,31 @@ public record SpotHeightDot_603(MapCoordinates Position) : IGraphicObject
     // public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) =>
         // genericVisitor.GenericVisit(this);
 // }
-public record SimpleOrienteeringCourse_799(Utils.Shapes.Path Shape) : IGraphicObject
+
+public record CourseLine_705(Utils.Shapes.Path Shape) : IGraphicObject 
 {
-    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/>
-    public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor,
-        TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
-    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut}"/>
-    public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) =>
-        genericVisitor.GenericVisit(this);
+    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/> 
+    public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
+    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut}"/> 
+    public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) => genericVisitor.GenericVisit(this);
 }
+
+public record Finish_706(MapCoordinates Position) : IGraphicObject
+{
+    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/> 
+    public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
+    /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut}"/> 
+    public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) => genericVisitor.GenericVisit(this);
+}
+
+// public record SimpleOrienteeringCourse_799(Utils.Shapes.Path Shape) : IGraphicObject
+// {
+    // /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/>
+    // public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor,
+        // TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
+    // /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut}"/>
+    // public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) =>
+        // genericVisitor.GenericVisit(this);
+// }
+
+    

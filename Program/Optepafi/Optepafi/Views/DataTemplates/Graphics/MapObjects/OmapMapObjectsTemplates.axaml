@@ -4,21 +4,48 @@
                     xmlns:sVm="clr-namespace:Optepafi.ViewModels.Data.Shapes">
     <DataTemplates x:Key="OmapMapObjectTemplates">
         <DataTemplate DataType="{x:Type moVm:Contour_101_ViewModel}">
-            <Path Stroke="Chocolate" StrokeThickness="1" Data="{Binding Shape.Data}"/>
+            <Path Stroke="Chocolate"
+                  StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}"
+                  Data="{Binding Shape.Data}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:SlopeLine_101_1_ViewModel}">
-            
+            <Path Stroke="Chocolate" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}">
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="{Binding StartPoint, Converter={StaticResource CanvasCoordsToPointConverter}}" IsClosed="False">
+                            <LineSegment Point="{Binding EndPoint, Converter={StaticResource CanvasCoordsToPointConverter}}"/>
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path> 
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:IndexContour_102_ViewModel}">
-            
+            <Path Stroke="Chocolate" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:FormLine_103_ViewModel}">
-            
+            <Path Stroke="Chocolate" 
+                  StrokeDashArray="{Binding DashDefinition}"
+                  StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" 
+                  Data="{Binding Shape.Data}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:SlopeLineFormLine_103_1_ViewModel}">
-            
+            <Path Stroke="Chocolate" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}">
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="{Binding StartPoint, Converter={StaticResource CanvasCoordsToPointConverter}}" IsClosed="False">
+                            <LineSegment Point="{Binding EndPoint, Converter={StaticResource CanvasCoordsToPointConverter}}"/>
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path> 
         </DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:EarthBank_104_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:EarthBank_104_ViewModel}">
+            <Canvas>
+                <Path Stroke="Chocolate" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Chocolate" StrokeThickness="{Binding SlopeLinesLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding SlopeLinesGapsDefinition}" Data="{Binding SlopeLinesShape.Data}"/>
+            </Canvas>
+            <!-- <Path Stroke="Chocolate"  StrokeThickness="{Binding SlopeLinesLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding SlopeLinesGapsDefinition}" Data="{Binding Shape.Data}"/> -->
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:EarthBankMinSize_104_1_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:EarthBankTopLine_104_2_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:EarthBankTagLine_104_3_ViewModel}"></DataTemplate>
@@ -168,6 +195,9 @@
         <DataTemplate DataType="{x:Type moVm:NorthLinesPatternBlue_601_4_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:RegistrationMark_602_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:SpotHeightDot_603_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:SimpleOrienteeringCourse_799_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Start_701_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ControlPoint_703_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:CourseLine_705_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Finish_706_ViewModel}"></DataTemplate>
     </DataTemplates>
 </ResourceDictionary>

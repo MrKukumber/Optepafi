@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Avalonia.Platform;
 using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Objects;
 using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.Maps;
+using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Shapes;
+using Optepafi.Models.Utils.Shapes.Segments;
 
 namespace Optepafi.Models.GraphicsMan.Aggregators.Map;
 
@@ -31,7 +34,6 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
                 }
             }
         }
-
         return;
     }
     public GraphicsArea GetAreaOf(OmapMap map) 
@@ -39,7 +41,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
 
     public void AggregateGraphicsOfTrack(IList<MapCoordinates> track, IGraphicObjectCollector collectorForAggregatedObjects)
     {
-        if (track.Count > 0) collectorForAggregatedObjects.Add(SimpleOrienteeringCourseConstructor.Instance_.Construct(track));
+        if (track.Count > 0) collectorForAggregatedObjects.AddRange(SimpleOrienteeringCourseConstructor.Instance_.Construct(track));
     }
 
     private interface IConstructor
@@ -220,11 +222,20 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
 
     private static Polygon GetPolygonFrom((MapCoordinates coords, byte type)[] typedCoords)
     {
+        return new Polygon(CollectSegments(typedCoords));
+    }
+    private static Utils.Shapes.Path GetPathFrom((MapCoordinates coords, byte type)[] typedCoords)
+    {
+        var startPoint = typedCoords[0].coords;
+        return new Utils.Shapes.Path(startPoint, CollectSegments(typedCoords));
+    }
+    private static List<Segment> CollectSegments((MapCoordinates coords, byte type)[] typedCoords)
+    {
         List<Segment> collectedSegments = new();
         if (typedCoords.Length == 1)
         {
             collectedSegments.Add(new LineSegment(typedCoords[0].coords));
-            return new Polygon(collectedSegments);
+            return collectedSegments;
         }
         int i = 0;
         while(i < typedCoords.Length)
@@ -232,56 +243,35 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
             switch (typedCoords[i].type % 32)
             {
                 case 0:
-                    if (i + 1 >= typedCoords.Length) return new Polygon(collectedSegments);
-                    collectedSegments.Add(new LineSegment(typedCoords[++i].coords));
+                    if (i + 1 >= typedCoords.Length) return collectedSegments;
+                    // collectedSegments.Add(new LineSegment(typedCoords[++i].coords));
+                    collectedSegments.Add(ResolveLineSegment(typedCoords[i].coords, typedCoords[++i].coords));
                     break;
                 case 1:
-                    if (i + 3 >= typedCoords.Length) return new Polygon(collectedSegments);
-                    collectedSegments.Add(new CubicBezierCurveSegment(typedCoords[++i].coords, typedCoords[++i].coords, typedCoords[++i].coords));
+                    if (i + 3 >= typedCoords.Length) return collectedSegments;
+                    // collectedSegments.Add(new CubicBezierCurveSegment(typedCoords[++i].coords, typedCoords[++i].coords, typedCoords[++i].coords));
+                    collectedSegments.Add(ResolveCubicBezierSegment(typedCoords[i].coords, typedCoords[++i].coords, typedCoords[++i].coords, typedCoords[++i].coords));
                     break;
                 case 2:
                 case 16:    
                 case 18:
-                    return new Polygon(collectedSegments);
+                    return collectedSegments;
                 default:
-                    return new Polygon(collectedSegments);
+                    return collectedSegments;
             } ;
-        } 
-        return new Polygon(collectedSegments);
+        }
+        return collectedSegments;
     }
 
-    private static Utils.Shapes.Path GetPathFrom((MapCoordinates coords, byte type)[] typedCoords)
+    private static Segment ResolveLineSegment(MapCoordinates point0, MapCoordinates point1)
+        => point0 != point1 ? new LineSegment(point1) : new LineSegment(point1 + new MapCoordinates(1,1)) ;
+    private static Segment ResolveCubicBezierSegment(MapCoordinates point0, MapCoordinates point1, MapCoordinates point2, MapCoordinates point3)
     {
-        List<Segment> collectedSegments = new();
-        var startPoint = typedCoords[0].coords;
-        if (typedCoords.Length == 1)
-        {
-            collectedSegments.Add(new LineSegment(typedCoords[0].coords));
-            return new Utils.Shapes.Path(startPoint, collectedSegments);
-        }
-        int i = 0;
-        while (i < typedCoords.Length)
-        {
-            switch (typedCoords[i].type % 32)
-            {
-                case 0:
-                    if (i + 1 >= typedCoords.Length) return new Utils.Shapes.Path(startPoint, collectedSegments);
-                    collectedSegments.Add(new LineSegment(typedCoords[++i].coords));
-                    break;
-                case 1:
-                    if (i + 3 >= typedCoords.Length) return new Utils.Shapes.Path(startPoint, collectedSegments);
-                    collectedSegments.Add(new CubicBezierCurveSegment(typedCoords[++i].coords,
-                        typedCoords[++i].coords, typedCoords[++i].coords));
-                    break;
-                case 2:
-                case 16:
-                case 18:
-                    return new Utils.Shapes.Path(startPoint, collectedSegments);
-                default:
-                    return new Utils.Shapes.Path(startPoint, collectedSegments);
-            };
-        }
-        return new Utils.Shapes.Path(startPoint, collectedSegments);
+       if (point0 != point1 && point1 != point2 && point2 != point3) return new CubicBezierCurveSegment(point1, point2, point3); 
+       if (point0 == point1 && point1 != point2 && point2 != point3) return new QuadraticBezierCurveSegment(point2, point3);
+       if (point0 != point1 && point1 == point2 && point2 != point3) return new QuadraticBezierCurveSegment(point1, point3);
+       if (point0 != point1 && point1 != point2 && point2 == point3) return new QuadraticBezierCurveSegment(point1, point2);
+       return ResolveLineSegment(point0, point3);
     }
     
     private class ContourConstructor : IConstructor
@@ -1313,14 +1303,45 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     private class SimpleOrienteeringCourseConstructor : IConstructor
     {
         public static SimpleOrienteeringCourseConstructor Instance_ { get; } = new();
-        public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new SimpleOrienteeringCourse_799(GetPathFrom(omapObject.TypedCoords))];
 
-        public IGraphicObject Construct(IList<MapCoordinates> CourseCoordinatesList)
-        {
-            MapCoordinates firstCoords = CourseCoordinatesList[0];
-            CourseCoordinatesList.RemoveAt(0);
-            return new SimpleOrienteeringCourse_799(new Utils.Shapes.Path(firstCoords, CourseCoordinatesList.Select(coords => new LineSegment(coords)).ToList<Segment>()));
+        public IGraphicObject[] Construct(OmapMap.Object omapObject)
+        { 
+            Utils.Shapes.Path courseShape = GetPathFrom(omapObject.TypedCoords);
+            List<Leg> trackLegs = [new Leg(courseShape.StartPoint, courseShape.Segments[0].LastPoint)];
+            for (int i = 0; i + 1 < courseShape.Segments.Count; ++i)
+                trackLegs.Add(new Leg(courseShape.Segments[i].LastPoint, courseShape.Segments[i + 1].LastPoint));
+            return CreateOjects(trackLegs);
         }
+
+        public IGraphicObject[] Construct(IList<MapCoordinates> courseCoordinatesList)
+        {
+            if (courseCoordinatesList.Count == 0) return []; 
+            List<Leg> trackLegs = new();
+            if (courseCoordinatesList.Count == 1)
+                trackLegs.Add(new Leg(courseCoordinatesList[0], courseCoordinatesList[0]));
+            else
+                for (int i = 0; i + 1 < courseCoordinatesList.Count; ++i)
+                    trackLegs.Add(new Leg(courseCoordinatesList[i], courseCoordinatesList[i + 1]));
+            return CreateOjects(trackLegs);
+        }
+
+        private IGraphicObject[] CreateOjects(List<Leg> trackLegs)
+        {
+            float startRotation = ComputeRotationOfStart(trackLegs[0].Start, trackLegs[0].Finish);
+            List<Start_701> start = [new Start_701(trackLegs[0].Start, startRotation)];
+            List<ControlPoint_703> controls = new();
+            List<CourseLine_705> courseLines = [ new CourseLine_705(new Utils.Shapes.Path(trackLegs[0].Start, [new LineSegment(trackLegs[0].Finish)]))];
+            List<Finish_706> finish = [new Finish_706(trackLegs.Last().Finish)];
+            for(int i = 1; i < trackLegs.Count; ++i)
+            {
+                controls.Add(new ControlPoint_703(trackLegs[i].Start));
+                courseLines.Add(new CourseLine_705(new Utils.Shapes.Path(trackLegs[0].Start, [new LineSegment(trackLegs[0].Finish)])));
+            }
+            return start.Concat<IGraphicObject>(controls).Concat(courseLines).Concat(finish).ToArray();
+        }
+        private float ComputeRotationOfStart(MapCoordinates startPosition, MapCoordinates firstControlPosition)
+            => (float) Math.Asin((firstControlPosition.YPos - startPosition.YPos) 
+                                 / (float)
+                                 Math.Abs(firstControlPosition.XPos - startPosition.XPos));
     }
 }

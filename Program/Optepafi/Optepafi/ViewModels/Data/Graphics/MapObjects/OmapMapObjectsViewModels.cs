@@ -1,11 +1,15 @@
 
+using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
+using Avalonia.Collections;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Shapes;
 using Optepafi.ModelViews.Utils;
 using Optepafi.ViewModels.Data.Shapes;
+using Optepafi.Views.Utils;
 
 namespace Optepafi.ViewModels.Data.Graphics.MapObjects;
 
@@ -15,42 +19,50 @@ public class Contour_101_ViewModel(Contour_101 obj, MapCoordinates mapsTopLeftVe
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 28;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
 }
-
 public class SlopeLine_101_1_ViewModel(SlopeLine_101_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 26;
-    public float Rotation { get; } = obj.Rotation;
-}
+    public int LineThickness { get; } = 140;
+    public CanvasCoordinate StartPoint { get; } = new CanvasCoordinate(0, 0);
+    public CanvasCoordinate EndPoint { get; } = new CanvasCoordinate(0, -400).Rotate(-obj.Rotation, new CanvasCoordinate(0,0));
 
+}
 public class IndexContour_102_ViewModel(IndexContour_102 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 28;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 250;
 }
-
 public class FormLine_103_ViewModel(FormLine_103 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 28;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
-
+    public AvaloniaList<double> DashDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(200)];
+    public int LineThickness { get; } = 100;
 }
-
 public class SlopeLineFormLine_103_1_ViewModel(SlopeLineFormLine_103_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 28;
     public float Rotation { get; } = obj.Rotation;
+    public int LineThickness { get; } = 100;
+    public CanvasCoordinate StartPoint { get; } = new CanvasCoordinate(0, 0);
+    public CanvasCoordinate EndPoint { get; } = new CanvasCoordinate(0, -400).Rotate(-obj.Rotation, new CanvasCoordinate(0,0));
 }
-
 public class EarthBank_104_ViewModel(EarthBank_104 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 28;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public PathPolygonViewModel SlopeLinesShape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex).GetTopAlignmentWithRespectTo(250 + (400 - 250)/2 - 5); // -5 to make sure that the line and slopes always overlap
+    public int LineThickness { get; } = 250;
+    public int SlopeLinesLength { get; } = 400;
+    public AvaloniaList<double> SlopeLinesGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(500)];
 }
 
 public class EarthBankMinSize_104_1_ViewModel(EarthBankMinSize_104_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
@@ -962,9 +974,27 @@ public class SpotHeightDot_603_ViewModel(SpotHeightDot_603 obj, MapCoordinates m
     public override CanvasCoordinate Position { get; }= obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
 }
-public class SimpleOrienteeringCourse_799_ViewModel(SimpleOrienteeringCourse_799 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
+public class Start_701_ViewModel(Start_701 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
+{
+    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
+    public override int Priority => 27;
+    public float Rotation { get; } = obj.Rotation;
+}
+public class ControlPoint_703_ViewModel(ControlPoint_703 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
+{
+    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
+    public override int Priority => 27;
+}
+
+public class CourseLine_705_ViewModel(CourseLine_705 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel 
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 27;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+}
+
+public class Finish_706_ViewModel(Finish_706 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
+{
+    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
+    public override int Priority => 27;
 }

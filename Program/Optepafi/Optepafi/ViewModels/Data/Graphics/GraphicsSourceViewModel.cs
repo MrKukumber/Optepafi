@@ -55,9 +55,10 @@ public sealed class GraphicsSourceViewModel :
     }
     GraphicObjectViewModel? IGraphicObjectGenericVisitor<GraphicObjectViewModel?, MapCoordinates>.GenericVisit<TGraphicObject>(TGraphicObject graphicObject, MapCoordinates topLeftVertex)
     {
-        if (GraphicObjects2VmConverters.Converters[typeof(TGraphicObject)] is IGraphicObjects2VmConverter<TGraphicObject> converter)
-            return converter.ConvertToViewModel(graphicObject, topLeftVertex);
+        if (GraphicObjects2VmConverters.Converters.TryGetValue(typeof(TGraphicObject), out var converter) && converter is IGraphicObjects2VmConverter<TGraphicObject> correctConverter)
+            return correctConverter.ConvertToViewModel(graphicObject, topLeftVertex);
         //TODO: lognut ked neni pritomny konverter
+        Console.WriteLine("Nepritomny konverter do View-Model pre graficky objekt" + typeof(TGraphicObject).Name);
         return null;
     }
     
