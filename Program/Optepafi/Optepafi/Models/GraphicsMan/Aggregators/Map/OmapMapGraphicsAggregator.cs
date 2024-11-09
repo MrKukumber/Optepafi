@@ -723,7 +723,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static SpringConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Spring_312(omapObject.TypedCoords[0].Item1)];
+            [new Spring_312(omapObject.TypedCoords[0].Item1, omapObject.SymbolRotation)];
     }
     private class ProminentWaterFeatureConstructor : IConstructor
     {
@@ -1310,7 +1310,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
             List<Leg> trackLegs = [new Leg(courseShape.StartPoint, courseShape.Segments[0].LastPoint)];
             for (int i = 0; i + 1 < courseShape.Segments.Count; ++i)
                 trackLegs.Add(new Leg(courseShape.Segments[i].LastPoint, courseShape.Segments[i + 1].LastPoint));
-            return CreateOjects(trackLegs);
+            return CreateOjects(trackLegs).Concat([new CourseLine_705(GetPathFrom(omapObject.TypedCoords))]).ToArray();
         }
 
         public IGraphicObject[] Construct(IList<MapCoordinates> courseCoordinatesList)
@@ -1318,26 +1318,26 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
             if (courseCoordinatesList.Count == 0) return []; 
             List<Leg> trackLegs = new();
             if (courseCoordinatesList.Count == 1)
+            {
                 trackLegs.Add(new Leg(courseCoordinatesList[0], courseCoordinatesList[0]));
-            else
-                for (int i = 0; i + 1 < courseCoordinatesList.Count; ++i)
-                    trackLegs.Add(new Leg(courseCoordinatesList[i], courseCoordinatesList[i + 1]));
-            return CreateOjects(trackLegs);
+                return CreateOjects(trackLegs).ToArray();
+            }
+            for (int i = 0; i + 1 < courseCoordinatesList.Count; ++i)
+                trackLegs.Add(new Leg(courseCoordinatesList[i], courseCoordinatesList[i + 1]));
+            return CreateOjects(trackLegs).Concat([new CourseLine_705(GetPathFrom(courseCoordinatesList.Select(coord => (coord, (byte) 0)).ToArray()))]).ToArray();
         }
 
-        private IGraphicObject[] CreateOjects(List<Leg> trackLegs)
+        private IEnumerable<IGraphicObject>CreateOjects(List<Leg> trackLegs)
         {
             float startRotation = ComputeRotationOfStart(trackLegs[0].Start, trackLegs[0].Finish);
             List<Start_701> start = [new Start_701(trackLegs[0].Start, startRotation)];
             List<ControlPoint_703> controls = new();
-            List<CourseLine_705> courseLines = [ new CourseLine_705(new Utils.Shapes.Path(trackLegs[0].Start, [new LineSegment(trackLegs[0].Finish)]))];
             List<Finish_706> finish = [new Finish_706(trackLegs.Last().Finish)];
             for(int i = 1; i < trackLegs.Count; ++i)
             {
                 controls.Add(new ControlPoint_703(trackLegs[i].Start));
-                courseLines.Add(new CourseLine_705(new Utils.Shapes.Path(trackLegs[0].Start, [new LineSegment(trackLegs[0].Finish)])));
             }
-            return start.Concat<IGraphicObject>(controls).Concat(courseLines).Concat(finish).ToArray();
+            return start.Concat<IGraphicObject>(controls).Concat(finish);
         }
         private float ComputeRotationOfStart(MapCoordinates startPosition, MapCoordinates firstControlPosition)
             => (float) Math.Asin((firstControlPosition.YPos - startPosition.YPos) 

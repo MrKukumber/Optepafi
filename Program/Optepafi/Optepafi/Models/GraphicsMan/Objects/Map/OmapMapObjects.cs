@@ -680,7 +680,7 @@ public record WellFountainWaterTank_311(MapCoordinates Position) : IGraphicObjec
         genericVisitor.GenericVisit(this);
 }
 
-public record Spring_312(MapCoordinates Position) : IGraphicObject
+public record Spring_312(MapCoordinates Position, float Rotation) : IGraphicObject
 {
     /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/>
     public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor,

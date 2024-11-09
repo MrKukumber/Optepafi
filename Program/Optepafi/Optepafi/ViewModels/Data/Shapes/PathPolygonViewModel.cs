@@ -73,9 +73,7 @@ public class PathPolygonViewModel :
                 isFirst = false;
             }
             else
-            {
                 newSegments.Add(segment.GetTopAlignmentWithRespectTo(thickness, segmentPoint0));
-            }
             segmentPoint0 = segment.LastPoint;
         }
         return new PathPolygonViewModel(Position, newStartPoint, newSegments);

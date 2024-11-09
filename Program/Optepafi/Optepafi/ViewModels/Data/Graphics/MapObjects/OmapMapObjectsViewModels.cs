@@ -1,5 +1,7 @@
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Avalonia;
 using Avalonia.Collections;
@@ -62,7 +64,7 @@ public class EarthBank_104_ViewModel(EarthBank_104 obj, MapCoordinates mapsTopLe
     public PathPolygonViewModel SlopeLinesShape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex).GetTopAlignmentWithRespectTo(250 + (400 - 250)/2 - 5); // -5 to make sure that the line and slopes always overlap
     public int LineThickness { get; } = 250;
     public int SlopeLinesLength { get; } = 400;
-    public AvaloniaList<double> SlopeLinesGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(500)];
+    public AvaloniaList<double> SlopeLinesGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(360)];
 }
 
 public class EarthBankMinSize_104_1_ViewModel(EarthBankMinSize_104_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
@@ -92,7 +94,9 @@ public class EarthWall_105_ViewModel(EarthWall_105 obj, MapCoordinates mapsTopLe
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 28;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
-
+    public int LineThickness { get; } = 180;
+    public int CirclesDiameter { get; } = 450;
+    public AvaloniaList<double> CirclesGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(2000)];
 }
 
 public class RuinedEarthWall_106_ViewModel(RuinedEarthWall_106 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
@@ -152,6 +156,7 @@ public class BrokenGround_113_ViewModel(BrokenGround_113 obj, MapCoordinates map
     public override int Priority => 28;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public double Opacity { get; } = 0.3;
 }
 
 public class BrokenGroundIndividualDot_113_1_ViewModel(BrokenGroundIndividualDot_113_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
@@ -166,6 +171,7 @@ public class VeryBrokenGround_114_ViewModel(VeryBrokenGround_114 obj, MapCoordin
     public override int Priority => 28;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public double Opacity { get; } = 0.6;
 }
 
 public class ProminentLandformFeature_115_ViewModel(ProminentLandformFeature_115 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
@@ -179,6 +185,10 @@ public class ImpassableCliff_201_ViewModel(ImpassableCliff_201 obj, MapCoordinat
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public PathPolygonViewModel SlopeLinesShape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex).GetTopAlignmentWithRespectTo(350 + (400 - 350)/2 - 5); // -5 to make sure that the line and slopes always overlap
+    public int LineThickness { get; } = 350;
+    public int SlopeLinesLength { get; } = 400;
+    public AvaloniaList<double> SlopeLinesGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(120), MicrometersToDipConverter.Instance.Convert(380)];
 }
 public class ImpassableCliffMinSize_201_1_ViewModel(ImpassableCliffMinSize_201_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -191,18 +201,21 @@ public class ImpassableCliffTopLine_201_3_ViewModel(ImpassableCliffTopLine_201_3
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 350;
 }
 public class ImpassableCliffTagLine_201_4_ViewModel(ImpassableCliffTagLine_201_4 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 120;
 }
 public class Cliff_202_ViewModel(Cliff_202 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 250;
 }
 public class CliffMinSize_202_1_ViewModel(CliffMinSize_202_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -215,6 +228,10 @@ public class CliffWithTags_202_2_ViewModel(CliffWithTags_202_2 obj, MapCoordinat
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public PathPolygonViewModel SlopeLinesShape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex).GetTopAlignmentWithRespectTo(250 + (400 - 250)/2 - 5); // -5 to make sure that the line and slopes always overlap
+    public int LineThickness { get; } = 250;
+    public int SlopeLinesLength { get; } = 400;
+    public AvaloniaList<double> SlopeLinesGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(120), MicrometersToDipConverter.Instance.Convert(380)];
 }
 public class CliffWithTagsMinSize_202_3_ViewModel(CliffWithTagsMinSize_202_3 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -265,6 +282,9 @@ public class BoulderField_208_ViewModel(BoulderField_208 obj, MapCoordinates map
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public double Opacity { get; } = 0.3;
+    public int StrokeSquaresSize { get; } = 800;
+    public AvaloniaList<double> StrokeSquaresSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(2000)];
 }
 
 public class BoulderFieldSingleTriangle_208_1_ViewModel(BoulderFieldSingleTriangle_208_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
@@ -285,6 +305,9 @@ public class DenseBoulderField_209_ViewModel(DenseBoulderField_209 obj, MapCoord
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public double Opacity { get; } = 0.6;
+    public int StrokeSquaresSize { get; } = 800;
+    public AvaloniaList<double> StrokeSquaresSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(1000)];
 }
 public class StonyGroundSlowRunning_210_ViewModel(StonyGroundSlowRunning_210 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -292,6 +315,9 @@ public class StonyGroundSlowRunning_210_ViewModel(StonyGroundSlowRunning_210 obj
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public double Opacity { get; } = 0.2;
+    public int StrokeCirclesSize { get; } = 300;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(1500)];
 }
 public class StonyGroundIndividualDot_210_1_ViewModel(StonyGroundIndividualDot_210_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -304,6 +330,9 @@ public class StonyGroundWalk_211_ViewModel(StonyGroundWalk_211 obj, MapCoordinat
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public double Opacity { get; } = 0.4;
+    public int StrokeCirclesSize { get; } = 300;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(1000)];
 }
 public class StonyGroundFight_212_ViewModel(StonyGroundFight_212 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -311,12 +340,17 @@ public class StonyGroundFight_212_ViewModel(StonyGroundFight_212 obj, MapCoordin
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public double Opacity { get; } = 0.6;
+    public int StrokeCirclesSize { get; } = 300;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(500)];
 }
 public class SandyGround_213_ViewModel(SandyGround_213 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 0;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int StrokeCirclesSize { get; } = 300;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(1000)];
 }
 public class BareRock_214_ViewModel(BareRock_214 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -347,6 +381,8 @@ public class UncrossableBodyOfWaterBankLine_301_4_ViewModel(UncrossableBodyOfWat
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 120;
+
 }
 public class ShallowBodyOfWater_302_1_ViewModel(ShallowBodyOfWater_302_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -359,12 +395,15 @@ public class ShallowBodyOfWaterSolidOutline_302_2_ViewModel(ShallowBodyOfWaterSo
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 29;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 100;
 }
 public class ShallowBodyOfWaterDashedOutline_302_3_ViewModel(ShallowBodyOfWaterDashedOutline_302_3 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 29;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    // public int LineThickness { get; } = 100;
+    // public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(1250), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class SmallShallowBodyOfWater_302_5_ViewModel(SmallShallowBodyOfWater_302_5 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -382,6 +421,7 @@ public class CrossableWatercourse_304_ViewModel(CrossableWatercourse_304 obj, Ma
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 29;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 300;
 }
 
 public class SmallCrossableWatercourse_305_ViewModel(SmallCrossableWatercourse_305 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
@@ -389,30 +429,41 @@ public class SmallCrossableWatercourse_305_ViewModel(SmallCrossableWatercourse_3
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 29;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 180;
 }
 public class SeasonalWaterChannel_306_ViewModel(SeasonalWaterChannel_306 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 29;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 180;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(1250), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class UncrossableMarsh_307_1_ViewModel(UncrossableMarsh_307_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 19;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public PathPolygonViewModel OuterLineShape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex).GetTopAlignmentWithRespectTo(200);
+    public double Opacity { get; } = 0.6;
+    public int OuterLineThickness { get; } = 250;
+    public AvaloniaList<double> OuterLineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(500)];
 }
 public class UncrossableMarshOutline_307_2_ViewModel(UncrossableMarshOutline_307_2 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 120;
 }
 public class Marsh_308_ViewModel(Marsh_308 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 19;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public double Opacity { get; } = 0.4;
+    public int LineThickness { get; } = 150;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(1000), MicrometersToDipConverter.Instance.Convert(500)];
 }
 public class MarshMinSize_308_1_ViewModel(MarshMinSize_308_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -424,12 +475,17 @@ public class NarrowMarsh_309_ViewModel(NarrowMarsh_309 obj, MapCoordinates mapsT
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 29;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int CirclesSize { get; } = 250;
+    public AvaloniaList<double> CirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(450)];
 }
 public class IndistinctMarsh_310_ViewModel(IndistinctMarsh_310 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 19;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public double Opacity { get; } = 0.2;
+    public int LineThickness { get; } = 150;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(500), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class IndistinctMarshMinSize_310_1_ViewModel(IndistinctMarshMinSize_310_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -446,6 +502,7 @@ public class Spring_312_ViewModel(Spring_312 obj, MapCoordinates mapsTopLeftVert
 {
     public override CanvasCoordinate Position { get; }= obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 29;
+    public float Rotation => obj.Rotation;
 }
 public class ProminentWaterFeature_313_ViewModel(ProminentWaterFeature_313 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -463,12 +520,16 @@ public class OpenLandWithTrees_402_ViewModel(OpenLandWithTrees_402 obj, MapCoord
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 1;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int StrokeCirclesSize { get; } = 400;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(350)];
 }
 public class OpenLandWithBushes_402_1_ViewModel(OpenLandWithBushes_402_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 1;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int StrokeCirclesSize { get; } = 400;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(350)];
 }
 public class RoughOpenLand_403_ViewModel(RoughOpenLand_403 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -481,12 +542,16 @@ public class RoughOpenLandWithTrees_404_ViewModel(RoughOpenLandWithTrees_404 obj
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 0;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int StrokeCirclesSize { get; } = 400;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(350)];
 }
 public class RoughOpenLandWithBushes_404_1_ViewModel(RoughOpenLandWithBushes_404_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 0;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int StrokeCirclesSize { get; } = 400;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(350)];
 }
 public class Forest_405_ViewModel(Forest_405 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -512,6 +577,9 @@ public class VegetationSlowGoodVisibility_407_ViewModel(VegetationSlowGoodVisibi
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 5;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public double Opacity { get; } = 0.3;
+    public int LineThickness { get; } = 120;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(1000), MicrometersToDipConverter.Instance.Convert(500)];
 }
 public class VegetationWalk_408_ViewModel(VegetationWalk_408 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -538,6 +606,9 @@ public class VegetationWalkGoodVisibility_409_ViewModel(VegetationWalkGoodVisibi
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 5;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public double Opacity { get; } = 0.6;
+    public int LineThickness { get; } = 140;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(1000)];
 }
 
 public class VegetationFight_410_ViewModel(VegetationFight_410 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
@@ -572,12 +643,15 @@ public class VegetationFightMinWidth_410_4_ViewModel(VegetationFightMinWidth_410
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 8;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 250;
 }
 public class CultivatedLandBlackPattern_412_1_ViewModel(CultivatedLandBlackPattern_412_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 1;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int StrokeCirclesSize { get; } = 300;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(1000)];
 }
 public class Orchard_413_ViewModel(Orchard_413 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -585,6 +659,8 @@ public class Orchard_413_ViewModel(Orchard_413 obj, MapCoordinates mapsTopLeftVe
     public override int Priority => 1;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public int StrokeCirclesSize { get; } = 450;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(800)];
 }
 public class OrchardRoughOpenLand_413_1_ViewModel(OrchardRoughOpenLand_413_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -592,6 +668,8 @@ public class OrchardRoughOpenLand_413_1_ViewModel(OrchardRoughOpenLand_413_1 obj
     public override int Priority => 0;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public int StrokeCirclesSize { get; } = 450;
+    public AvaloniaList<double> StrokeCirclesSpacing { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(800)];
 }
 public class Vineyard_414_ViewModel(Vineyard_414 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -599,6 +677,8 @@ public class Vineyard_414_ViewModel(Vineyard_414 obj, MapCoordinates mapsTopLeft
     public override int Priority => 1;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public int LineThickness { get; } = 200;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(1300), MicrometersToDipConverter.Instance.Convert(600)];
 }
 public class VineyardRoughOpenLand_414_1_ViewModel(VineyardRoughOpenLand_414_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -606,6 +686,8 @@ public class VineyardRoughOpenLand_414_1_ViewModel(VineyardRoughOpenLand_414_1 o
     public override int Priority => 0;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public float Rotation { get; } = obj.Rotation;
+    public int LineThickness { get; } = 200;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(1300), MicrometersToDipConverter.Instance.Convert(600)];
 }
 public class DistinctCultivationBoundary_415_ViewModel(DistinctCultivationBoundary_415 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -651,78 +733,108 @@ public class PavedAreaBoundingLine_501_2_ViewModel(PavedAreaBoundingLine_501_2 o
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 26;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 100;
 }
 public class WideRoadMinWidth_502_ViewModel(WideRoadMinWidth_502 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 23;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int BoundingLineThickness { get; } = 680;
+    public int LineThickness { get; } = 400;
 }
 public class RoadWithTwoCarriageways_502_2_ViewModel(RoadWithTwoCarriageways_502_2 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 23;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public PathPolygonViewModel TopLineShape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex).GetTopAlignmentWithRespectTo(470);
+    public PathPolygonViewModel BottomLineShape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex).GetTopAlignmentWithRespectTo(-470);
+    public int BoundingLineThickness { get; } = 1220;
+    public int LineThickness { get; } = 400;
 }
 public class Road_503_ViewModel(Road_503 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 350;
 }
 public class VehicleTrack_504_ViewModel(VehicleTrack_504 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 350;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(3000), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class Footpath_505_ViewModel(Footpath_505 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 250;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class SmallFootpath_506_ViewModel(SmallFootpath_506 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 180;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(1000), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class LessDistinctSmallFootpath_507_ViewModel(LessDistinctSmallFootpath_507 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 180;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(1000), MicrometersToDipConverter.Instance.Convert(250), MicrometersToDipConverter.Instance.Convert(1000), MicrometersToDipConverter.Instance.Convert(800)];
 }
 public class NarrowRide_508_ViewModel(NarrowRide_508 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class NarrowRideEasy_508_1_ViewModel(NarrowRideEasy_508_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
+    public int BackgroundLineThickness { get; } = 450;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class NarrowRideNormal_508_2_ViewModel(NarrowRideNormal_508_2 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
+    public int BackgroundLineThickness { get; } = 450;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class NarrowRideSlow_508_3_ViewModel(NarrowRideSlow_508_3 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
+    public int BackgroundLineThickness { get; } = 450;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class NarrowRideWalk_508_4_ViewModel(NarrowRideWalk_508_4 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
+    public int BackgroundLineThickness { get; } = 450;
+    public AvaloniaList<double> LineDashesDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(2000), MicrometersToDipConverter.Instance.Convert(250)];
 }
 public class Railway_509_ViewModel(Railway_509 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -777,6 +889,9 @@ public class Wall_513_ViewModel(Wall_513 obj, MapCoordinates mapsTopLeftVertex) 
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
+    public int CirclesDiameter { get; } = 400;
+    public AvaloniaList<double> CirclesGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(2000)];
 }
 public class RuinedWall_514_ViewModel(RuinedWall_514 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -789,12 +904,18 @@ public class ImpassableWall_515_ViewModel(ImpassableWall_515 obj, MapCoordinates
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 250;
+    public int CirclesDiameter { get; } = 600;
+    public AvaloniaList<double> CirclesGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(800), MicrometersToDipConverter.Instance.Convert(0), MicrometersToDipConverter.Instance.Convert(2200)];
 }
 public class Fence_516_ViewModel(Fence_516 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
+    public int TagsLength { get; } = 400 + 140;
+    public AvaloniaList<double> TagsGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(2000)];
 }
 public class RuinedFence_517_ViewModel(RuinedFence_517 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -807,6 +928,9 @@ public class ImpassableFence_518_ViewModel(ImpassableFence_518 obj, MapCoordinat
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 250;
+    public int TagsLength { get; } = 400 + 250;
+    public AvaloniaList<double> TagsGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(600), MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(1900)];
 }
 public class CrossingPoint_519_ViewModel(CrossingPoint_519 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -825,6 +949,7 @@ public class NotEnterableAreaSolidColourBoundingLine_520_1_ViewModel(NotEnterabl
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 180;
 }
 public class NotEnterableAreaStripes_502_2_ViewModel(NotEnterableAreaStripes_502_2 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -861,6 +986,7 @@ public class LargeBuildingOutline_521_4_ViewModel(LargeBuildingOutline_521_4 obj
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 200;
 }
 public class Canopy_522_1_ViewModel(Canopy_522_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -873,6 +999,7 @@ public class CanopyOutline_522_2_ViewModel(CanopyOutline_522_2 obj, MapCoordinat
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 100;
 }
 public class Ruin_523_ViewModel(Ruin_523 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -911,12 +1038,18 @@ public class ProminentLineFeature_528_ViewModel(ProminentLineFeature_528 obj, Ma
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 140;
+    public int TagsLength { get; } = 400 + 400 + 140;
+    public AvaloniaList<double> TagsGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(2000)];
 }
 public class ProminentImpassableLineFeature_529_ViewModel(ProminentImpassableLineFeature_529 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 250;
+    public int TagsLength { get; } = 400 + 400 + 250;
+    public AvaloniaList<double> TagsGapsDefinition { get; } = [MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(600), MicrometersToDipConverter.Instance.Convert(140), MicrometersToDipConverter.Instance.Convert(1400)];
 }
 public class ProminentManMadeFeatureRing_530_ViewModel(ProminentManMadeFeatureRing_530 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
@@ -974,16 +1107,31 @@ public class SpotHeightDot_603_ViewModel(SpotHeightDot_603 obj, MapCoordinates m
     public override CanvasCoordinate Position { get; }= obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
 }
-public class Start_701_ViewModel(Start_701 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
+public class Start_701_ViewModel : GraphicObjectViewModel
 {
-    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
+    public Start_701_ViewModel(Start_701 obj, MapCoordinates mapsTopLeftVertex)
+    {
+        Position = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
+        Rotation = obj.Rotation;
+        CanvasCoordinate trianglePoint0 = new CanvasCoordinate(0, -4000).Rotate(Rotation);
+        CanvasCoordinate trianglePoint1 = new CanvasCoordinate(-3000, 2000).Rotate(Rotation);
+        CanvasCoordinate trianglePoint2 = new CanvasCoordinate(3000, 2000).Rotate(Rotation);
+        TriangleData = "M " + MicrometersToDipConverter.Instance.Convert(trianglePoint0.LeftPos).ToString(CultureInfo.InvariantCulture) + "," + MicrometersToDipConverter.Instance.Convert(trianglePoint0.TopPos).ToString(CultureInfo.InvariantCulture) +
+                       " L " + MicrometersToDipConverter.Instance.Convert(trianglePoint1.LeftPos).ToString(CultureInfo.InvariantCulture) + "," + MicrometersToDipConverter.Instance.Convert(trianglePoint1.TopPos).ToString(CultureInfo.InvariantCulture) +
+                       " L " + MicrometersToDipConverter.Instance.Convert(trianglePoint2.LeftPos).ToString(CultureInfo.InvariantCulture) + "," + MicrometersToDipConverter.Instance.Convert(trianglePoint2.TopPos).ToString(CultureInfo.InvariantCulture) + " Z";
+    }
+    public override CanvasCoordinate Position { get; } 
     public override int Priority => 27;
-    public float Rotation { get; } = obj.Rotation;
+    public float Rotation { get; }
+    public string TriangleData { get; }
+    public int LineThickness { get; } = 350;
 }
 public class ControlPoint_703_ViewModel(ControlPoint_703 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
-    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
+    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex) - new CanvasCoordinate(2500, 2500);
     public override int Priority => 27;
+    public int LineThickness { get; } = 350;
+    public int Diameter { get; } = 5000;
 }
 
 public class CourseLine_705_ViewModel(CourseLine_705 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel 
@@ -991,10 +1139,72 @@ public class CourseLine_705_ViewModel(CourseLine_705 obj, MapCoordinates mapsTop
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 27;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 350;
 }
 
-public class Finish_706_ViewModel(Finish_706 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
+public class Finish_706_ViewModel : GraphicObjectViewModel
 {
-    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
+    public Finish_706_ViewModel(Finish_706 obj, MapCoordinates mapsTopLeftVertex)
+    {
+        Position = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
+        int innerRadius = 2000;
+        int outerRadius = 3000;
+        Point innerPoint0 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(innerRadius, 0));
+        Point innerPoint1 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(innerRadius, (int)(4*innerRadius*Math.Tan(Math.PI/8)/3)));
+        Point innerPoint2 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate((int)(4*innerRadius*Math.Tan(Math.PI/8)/3), innerRadius ));
+        Point innerPoint3 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate( 0, innerRadius));
+        Point innerPoint4 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- (int)(4 * innerRadius*Math.Tan(Math.PI/8) / 3), innerRadius));
+        Point innerPoint5 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- innerRadius, (int)(4*innerRadius*Math.Tan(Math.PI/8)/3)));
+        Point innerPoint6 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- innerRadius, 0));
+        Point innerPoint7 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- innerRadius , - (int)(4*innerRadius*Math.Tan(Math.PI/8)/3)));
+        Point innerPoint8 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- (int)(4 * innerRadius*Math.Tan(Math.PI/8)/3), -innerRadius ));
+        Point innerPoint9 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(0, - innerRadius));
+        Point innerPoint10 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate((int)(4*innerRadius*Math.Tan(Math.PI/8)/3), -innerRadius));
+        Point innerPoint11 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(innerRadius, - (int)(4*innerRadius*Math.Tan(Math.PI/8)/3)));
+        Point innerPoint12 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(innerRadius, 0));
+        Point outerPoint0 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(outerRadius, 0));
+        Point outerPoint1 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(outerRadius, (int)(4*outerRadius*Math.Tan(Math.PI/8)/3)));
+        Point outerPoint2 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate((int)(4*outerRadius*Math.Tan(Math.PI/8)/3), outerRadius ));
+        Point outerPoint3 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate( 0, outerRadius));
+        Point outerPoint4 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- (int)(4 * outerRadius*Math.Tan(Math.PI/8) / 3), outerRadius));
+        Point outerPoint5 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- outerRadius, (int)(4*outerRadius*Math.Tan(Math.PI/8)/3)));
+        Point outerPoint6 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- outerRadius, 0));
+        Point outerPoint7 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- outerRadius , - (int)(4*outerRadius*Math.Tan(Math.PI/8)/3)));
+        Point outerPoint8 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(- (int)(4 * outerRadius*Math.Tan(Math.PI/8)/3), -outerRadius ));
+        Point outerPoint9 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(0, - outerRadius));
+        Point outerPoint10 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate((int)(4*outerRadius*Math.Tan(Math.PI/8)/3), -outerRadius));
+        Point outerPoint11 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(outerRadius, - (int)(4*outerRadius*Math.Tan(Math.PI/8)/3)));
+        Point outerPoint12 = CanvasCoordinateToAvaloniaPointConverter.Instance.Convert(new CanvasCoordinate(outerRadius, 0));
+        InnerCircleData = "M " + innerPoint0.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint0.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                          "C " + innerPoint1.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint1.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 innerPoint2.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint2.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 innerPoint3.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint3.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                          "C " + innerPoint4.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint4.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 innerPoint5.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint5.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 innerPoint6.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint6.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                          "C " + innerPoint7.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint7.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 innerPoint8.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint8.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 innerPoint9.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint9.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                          "C " + innerPoint10.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint10.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 innerPoint11.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint11.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 innerPoint12.X.ToString(CultureInfo.InvariantCulture) + "," + innerPoint12.Y.ToString(CultureInfo.InvariantCulture);
+        OuterCircleData = "M " + outerPoint0.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint0.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                          "C " + outerPoint1.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint1.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 outerPoint2.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint2.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 outerPoint3.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint3.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                          "C " + outerPoint4.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint4.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 outerPoint5.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint5.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 outerPoint6.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint6.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                          "C " + outerPoint7.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint7.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 outerPoint8.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint8.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 outerPoint9.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint9.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                          "C " + outerPoint10.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint10.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 outerPoint11.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint11.Y.ToString(CultureInfo.InvariantCulture) + " " +
+                                 outerPoint12.X.ToString(CultureInfo.InvariantCulture) + "," + outerPoint12.Y.ToString(CultureInfo.InvariantCulture);
+    }
+    public override CanvasCoordinate Position { get; }
     public override int Priority => 27;
+    public int LineThickness { get; } = 350;
+    public string InnerCircleData { get; }
+    public string OuterCircleData{ get; }
 }

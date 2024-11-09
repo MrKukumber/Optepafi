@@ -44,12 +44,22 @@
                 <Path Stroke="Chocolate" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
                 <Path Stroke="Chocolate" StrokeThickness="{Binding SlopeLinesLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding SlopeLinesGapsDefinition}" Data="{Binding SlopeLinesShape.Data}"/>
             </Canvas>
-            <!-- <Path Stroke="Chocolate"  StrokeThickness="{Binding SlopeLinesLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding SlopeLinesGapsDefinition}" Data="{Binding Shape.Data}"/> -->
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:EarthBankMinSize_104_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:EarthBankTopLine_104_2_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:EarthBankTopLine_104_2_ViewModel}"> </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:EarthBankTagLine_104_3_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:EarthWall_105_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:EarthWall_105_ViewModel}">
+            <Canvas>
+                <Path Stroke="Chocolate" 
+                      StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" 
+                      Data="{Binding Shape.Data}"/>
+                <Path Stroke="Chocolate" 
+                      StrokeThickness="{Binding CirclesDiameter, Converter={StaticResource Micro2DipConverter}}" 
+                      StrokeLineCap="Round" 
+                      StrokeDashArray="{Binding CirclesGapsDefinition}" 
+                      Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:RuinedEarthWall_106_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ErosionGully_107_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:SmallErosionGully_108_ViewModel}"></DataTemplate>
@@ -57,101 +67,314 @@
         <DataTemplate DataType="{x:Type moVm:SmallEllongatedKnoll_110_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:SmallDepression_111_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Pit_112_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:BrokenGround_113_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:BrokenGround_113_ViewModel}">
+            <Path Fill="Chocolate" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:BrokenGroundIndividualDot_113_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VeryBrokenGround_114_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VeryBrokenGround_114_ViewModel}">
+            <Path Fill="Chocolate" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ProminentLandformFeature_115_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ImpassableCliff_201_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ImpassableCliff_201_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding SlopeLinesLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding SlopeLinesGapsDefinition}" Data="{Binding SlopeLinesShape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ImpassableCliffMinSize_201_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ImpassableCliffTopLine_201_3_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ImpassableCliffTagLine_201_4_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Cliff_202_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ImpassableCliffTopLine_201_3_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ImpassableCliffTagLine_201_4_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Cliff_202_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:CliffMinSize_202_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:CliffWithTags_202_2_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:CliffWithTags_202_2_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding SlopeLinesLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding SlopeLinesGapsDefinition}" Data="{Binding SlopeLinesShape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:CliffWithTagsMinSize_202_3_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:RockyPitOrCave_203_1_2_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Boulder_204_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:BoulderOrLargeBoulder_204_5_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:LargeBoulder_205_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:GiganticBoulder_206_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:GiganticBoulder_206_ViewModel}">
+            <Path Fill="Black" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:BoulderCluster_207_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:BoulderClusterLarge_207_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:BoulderField_208_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:BoulderField_208_ViewModel}">
+            <Canvas>
+                <Path Fill="Black" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding StrokeSquaresSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Square" StrokeDashArray="{Binding StrokeSquaresSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas> 
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:BoulderFieldSingleTriangle_208_1_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:BoulderFieldSingleTriangleEnlarged_208_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:DenseBoulderField_209_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:StonyGroundSlowRunning_210_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:DenseBoulderField_209_ViewModel}">
+            <Canvas>
+                <Path Fill="Black" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding StrokeSquaresSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Square" StrokeDashArray="{Binding StrokeSquaresSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas> 
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:StonyGroundSlowRunning_210_ViewModel}">
+            <Canvas>
+                <Path Fill="Black" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas> 
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:StonyGroundIndividualDot_210_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:StonyGroundWalk_211_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:StonyGroundFight_212_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:SandyGround_213_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:BareRock_214_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:StonyGroundWalk_211_ViewModel}">
+            <Canvas>
+                <Path Fill="Black" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas> 
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:StonyGroundFight_212_ViewModel}">
+            <Canvas>
+                <Path Fill="Black" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas> 
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:SandyGround_213_ViewModel}">
+            <Path Fill="NavajoWhite" Stroke="Black" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:BareRock_214_ViewModel}">
+            <Path Fill="Gray" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Trench_215_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:UncrossableBodyOfWaterFullCol_301_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:UncrossableBodyOfWaterDominant_301_3_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:UncrossableBodyOfWaterBankLine_301_4_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ShallowBodyOfWater_302_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ShallowBodyOfWaterSolidOutline_302_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ShallowBodyOfWaterDashedOutline_302_3_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:SmallShallowBodyOfWater_302_5_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:UncrossableBodyOfWaterFullCol_301_1_ViewModel}">
+            <Path Fill="DodgerBlue" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:UncrossableBodyOfWaterDominant_301_3_ViewModel}">
+            <Path Fill="DeepSkyBlue" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:UncrossableBodyOfWaterBankLine_301_4_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ShallowBodyOfWater_302_1_ViewModel}">
+            <Path Fill="LightSkyBlue" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ShallowBodyOfWaterSolidOutline_302_2_ViewModel}">
+            <Path Stroke="DodgerBlue" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ShallowBodyOfWaterDashedOutline_302_3_ViewModel}"> <!-- <Path Stroke="DodgerBlue" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/> --> </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:SmallShallowBodyOfWater_302_5_ViewModel}">
+            <Path Fill="DodgerBlue" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:WaterHole_303_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:CrossableWatercourse_304_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:SmallCrossableWatercourse_305_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:SeasonalWaterChannel_306_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:UncrossableMarsh_307_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:UncrossableMarshOutline_307_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Marsh_308_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:CrossableWatercourse_304_ViewModel}">
+            <Path Stroke="DodgerBlue" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:SmallCrossableWatercourse_305_ViewModel}">
+            <Path Stroke="DeepSkyBlue" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:SeasonalWaterChannel_306_ViewModel}">
+            <Path Stroke="DeepSkyBlue" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:UncrossableMarsh_307_1_ViewModel}">
+            <Canvas>
+                <Path Fill="DodgerBlue" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="DodgerBlue" StrokeThickness="{Binding OuterLineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding OuterLineDashesDefinition}" Data="{Binding OuterLineShape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:UncrossableMarshOutline_307_2_ViewModel}">
+           <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}"/> 
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Marsh_308_ViewModel}">
+            <Canvas>
+                <Path Fill="DodgerBlue" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="DodgerBlue" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:MarshMinSize_308_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NarrowMarsh_309_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:IndistinctMarsh_310_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NarrowMarsh_309_ViewModel}">
+            <Path Stroke="DodgerBlue" StrokeThickness="{Binding CirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding CirclesSpacing}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:IndistinctMarsh_310_ViewModel}">
+            <Canvas>
+                <Path Fill="DodgerBlue" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="DodgerBlue" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:IndistinctMarshMinSize_310_1_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:WellFountainWaterTank_311_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Spring_312_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ProminentWaterFeature_313_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:OpenLand_401_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:OpenLandWithTrees_402_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:OpenLandWithBushes_402_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:RoughOpenLand_403_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:RoughOpenLandWithTrees_404_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:RoughOpenLandWithBushes_404_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Forest_405_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationSlow_406_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationSlowNormalOneDir_406_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationSlowGoodVisibility_407_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationWalk_408_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationWalkNormalOneDir_408_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationWalkSlowOneDir_408_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationWalkGoodVisibility_409_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationFight_410_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationFightNormalOneDir_410_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationFightSlowOneDir_410_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationFightWalkOneDir_410_3_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VegetationFightMinWidth_410_4_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:CultivatedLandBlackPattern_412_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Orchard_413_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:OrchardRoughOpenLand_413_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Vineyard_414_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VineyardRoughOpenLand_414_1_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:OpenLand_401_ViewModel}">
+            <Path Fill="Gold" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:OpenLandWithTrees_402_ViewModel}">
+            <Canvas>
+                <Path Fill="Gold" Data="{Binding Shape.Data}"/>
+                <Path Stroke="White" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:OpenLandWithBushes_402_1_ViewModel}">
+            <Canvas>
+                <Path Fill="Gold" Data="{Binding Shape.Data}"/>
+                <Path Stroke="MediumSeaGreen" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:RoughOpenLand_403_ViewModel}">
+            <Path Fill="NavajoWhite" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:RoughOpenLandWithTrees_404_ViewModel}">
+            <Canvas>
+                <Path Fill="NavajoWhite" Data="{Binding Shape.Data}"/>
+                <Path Stroke="White" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:RoughOpenLandWithBushes_404_1_ViewModel}">
+            <Canvas>
+                <Path Fill="NavajoWhite" Data="{Binding Shape.Data}"/>
+                <Path Stroke="MediumSeaGreen" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Forest_405_ViewModel}">
+            <Path Fill="White" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationSlow_406_ViewModel}">
+            <Path Fill="DarkSeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationSlowNormalOneDir_406_1_ViewModel}">
+            <Path Fill="DarkSeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationSlowGoodVisibility_407_ViewModel}">
+            <Canvas>
+                <Path Fill="SeaGreen" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="SeaGreen" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationWalk_408_ViewModel}">
+            <Path Fill="MediumSeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationWalkNormalOneDir_408_1_ViewModel}">
+            <Path Fill="MediumSeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationWalkSlowOneDir_408_2_ViewModel}">
+            <Path Fill="MediumSeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationWalkGoodVisibility_409_ViewModel}">
+            <Canvas>
+                <Path Fill="SeaGreen" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="SeaGreen" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationFight_410_ViewModel}">
+            <Path Fill="SeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationFightNormalOneDir_410_1_ViewModel}">
+            <Path Fill="SeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationFightSlowOneDir_410_2_ViewModel}">
+            <Path Fill="SeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationFightWalkOneDir_410_3_ViewModel}">
+            <Path Fill="SeaGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VegetationFightMinWidth_410_4_ViewModel}">
+            <Path Stroke="SeaGreen" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:CultivatedLandBlackPattern_412_1_ViewModel}">
+            <Path Fill="Gold" Stroke="Black" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Orchard_413_ViewModel}">
+            <Canvas>
+                <Path Fill="Gold" Data="{Binding Shape.Data}"/>
+                <Path Stroke="SeaGreen" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+           </Canvas> 
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:OrchardRoughOpenLand_413_1_ViewModel}">
+            <Canvas>
+                <Path Fill="NavajoWhite" Data="{Binding Shape.Data}"/>
+                <Path Stroke="SeaGreen" StrokeThickness="{Binding StrokeCirclesSize, Converter={StaticResource Micro2DipConverter}}" StrokeLineCap="Round" StrokeDashArray="{Binding StrokeCirclesSpacing}" Data="{Binding Shape.Data}"/>
+           </Canvas> 
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Vineyard_414_ViewModel}">
+            <Canvas>
+                <Path Fill="Gold" Data="{Binding Shape.Data}"/>
+                <Path Stroke="SeaGreen" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VineyardRoughOpenLand_414_1_ViewModel}">
+            <Canvas>
+                <Path Fill="NavajoWhite" Data="{Binding Shape.Data}"/>
+                <Path Stroke="SeaGreen" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:DistinctCultivationBoundary_415_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:DistinctVegetationBoundary_416_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:DistinctVegetationBoundaryGreenDashedLine_416_1_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ProminentLargeTree_417_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ProminentBush_418_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ProminentVegetationFeature_419_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:PavedArea_501_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:PavedAreaBoundingLine_501_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:WideRoadMinWidth_502_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:RoadWithTwoCarriageways_502_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Road_503_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:VehicleTrack_504_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Footpath_505_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:SmallFootpath_506_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:LessDistinctSmallFootpath_507_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NarrowRide_508_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NarrowRideEasy_508_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NarrowRideNormal_508_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NarrowRideSlow_508_3_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NarrowRideWalk_508_4_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:PavedArea_501_1_ViewModel}">
+            <Path Fill="DarkSalmon" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:PavedAreaBoundingLine_501_2_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:WideRoadMinWidth_502_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" StrokeThickness="{Binding BoundingLineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="DarkSalmon" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:RoadWithTwoCarriageways_502_2_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" StrokeThickness="{Binding BoundingLineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="DarkSalmon" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding TopLineShape.Data}"/>
+                <Path Stroke="DarkSalmon" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding BottomLineShape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Road_503_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:VehicleTrack_504_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Footpath_505_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:SmallFootpath_506_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:LessDistinctSmallFootpath_507_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NarrowRide_508_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NarrowRideEasy_508_1_ViewModel}">
+            <Canvas>
+                <Path Stroke="Gold" StrokeThickness="{Binding BackgroundLineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NarrowRideNormal_508_2_ViewModel}">
+            <Canvas>
+                <Path Stroke="White" StrokeThickness="{Binding BackgroundLineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NarrowRideSlow_508_3_ViewModel}">
+            <Canvas>
+                <Path Stroke="DarkSeaGreen" StrokeThickness="{Binding BackgroundLineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NarrowRideWalk_508_4_ViewModel}">
+            <Canvas>
+                <Path Stroke="MediumSeaGreen" StrokeThickness="{Binding BackgroundLineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding LineDashesDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Railway_509_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:PowerLine_510_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:MajorPowerLineMinWidth_511_ViewModel}"></DataTemplate>
@@ -160,31 +383,87 @@
         <DataTemplate DataType="{x:Type moVm:BridgeTunnel_512_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:BridgeTunnelMinSize_512_1_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:FootBridge_512_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Wall_513_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Wall_513_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" 
+                      StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" 
+                      Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" 
+                      StrokeThickness="{Binding CirclesDiameter, Converter={StaticResource Micro2DipConverter}}" 
+                      StrokeLineCap="Round" 
+                      StrokeDashArray="{Binding CirclesGapsDefinition}" 
+                      Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:RuinedWall_514_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ImpassableWall_515_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Fence_516_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ImpassableWall_515_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" 
+                      StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" 
+                      Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" 
+                      StrokeThickness="{Binding CirclesDiameter, Converter={StaticResource Micro2DipConverter}}" 
+                      StrokeLineCap="Round" 
+                      StrokeDashArray="{Binding CirclesGapsDefinition}" 
+                      Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Fence_516_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding TagsLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding TagsGapsDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:RuinedFence_517_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ImpassableFence_518_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ImpassableFence_518_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding TagsLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding TagsGapsDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:CrossingPoint_519_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NotEnterableArea_520_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NotEnterableAreaSolidColourBoundingLine_520_1_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NotEnterableArea_520_ViewModel}">
+            <Path Fill="YellowGreen" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NotEnterableAreaSolidColourBoundingLine_520_1_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripes_502_2_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripesBoundingLine_520_3_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Building_521_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Building_521_ViewModel}">
+            <Path Fill="Black" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:BuildingMinSize_521_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:LargeBuilding_521_3_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:LargeBuildingOutline_521_4_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Canopy_522_1_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:CanopyOutline_522_2_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:LargeBuilding_521_3_ViewModel}">
+            <Path Fill="SlateGray" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:LargeBuildingOutline_521_4_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Canopy_522_1_ViewModel}">
+            <Path Fill="LightGray" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:CanopyOutline_522_2_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Ruin_523_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:RuinMinSize_523_1_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:HighTower_524_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:SmallTower_525_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Cairn_526_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:FodderRack_527_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ProminentLineFeature_528_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ProminentImpassableLineFeature_529_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ProminentLineFeature_528_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding TagsLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding TagsGapsDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ProminentImpassableLineFeature_529_ViewModel}">
+            <Canvas>
+                <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="Black" StrokeThickness="{Binding TagsLength, Converter={StaticResource Micro2DipConverter}}" StrokeDashArray="{Binding TagsGapsDefinition}" Data="{Binding Shape.Data}"/>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ProminentManMadeFeatureRing_530_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ProminentManMadeFeatureX_531_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Stairway_532_ViewModel}"></DataTemplate>
@@ -195,9 +474,20 @@
         <DataTemplate DataType="{x:Type moVm:NorthLinesPatternBlue_601_4_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:RegistrationMark_602_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:SpotHeightDot_603_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Start_701_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:ControlPoint_703_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:CourseLine_705_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:Finish_706_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Start_701_ViewModel}">
+            <Path Stroke="Purple" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding TriangleData}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:ControlPoint_703_ViewModel}">
+            <Ellipse Stroke="Purple" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Width="{Binding Diameter, Converter={StaticResource Micro2DipConverter}}" Height="{Binding Diameter, Converter={StaticResource Micro2DipConverter}}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:CourseLine_705_ViewModel}">
+            <Path Stroke="Purple" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:Finish_706_ViewModel}">
+            <Canvas>
+                <Path Stroke="Purple" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding InnerCircleData}"/>
+                <Path Stroke="Purple" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding OuterCircleData}"/>
+            </Canvas> 
+        </DataTemplate>
     </DataTemplates>
 </ResourceDictionary>
