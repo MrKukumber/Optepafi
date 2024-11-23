@@ -34,7 +34,7 @@ public class MapManager :
     /// <summary>
     /// Returns map format for a specified map. It do it so by use of "generic visitor pattern" on map.
     /// 
-    /// After visiting of map it runs trough all usable map formats and pattern-matches them to map identifier with desired map type parameter.  
+    /// After visiting of map it runs through all usable map formats and pattern-matches them to map identifier with desired map type parameter.  
     /// If none map format matches to provided map, exception is thrown. It namely means that map was not created by any of those map formats that is against principle of usage of these constructs.  
     /// </summary>
     /// <param name="map">Map which format is looked for.</param>

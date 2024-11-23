@@ -315,7 +315,7 @@
         <DataTemplate DataType="{x:Type moVm:ProminentBush_418_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:ProminentVegetationFeature_419_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:PavedArea_501_1_ViewModel}">
-            <Path Fill="DarkSalmon" Data="{Binding Shape.Data}"/>
+            <Path Fill="BurlyWood" Data="{Binding Shape.Data}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:PavedAreaBoundingLine_501_2_ViewModel}">
             <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
@@ -323,14 +323,14 @@
         <DataTemplate DataType="{x:Type moVm:WideRoadMinWidth_502_ViewModel}">
             <Canvas>
                 <Path Stroke="Black" StrokeThickness="{Binding BoundingLineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
-                <Path Stroke="DarkSalmon" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+                <Path Stroke="BurlyWood" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
             </Canvas>
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:RoadWithTwoCarriageways_502_2_ViewModel}">
             <Canvas>
                 <Path Stroke="Black" StrokeThickness="{Binding BoundingLineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
-                <Path Stroke="DarkSalmon" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding TopLineShape.Data}"/>
-                <Path Stroke="DarkSalmon" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding BottomLineShape.Data}"/>
+                <Path Stroke="BurlyWood" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding TopLineShape.Data}"/>
+                <Path Stroke="BurlyWood" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding BottomLineShape.Data}"/>
             </Canvas>
         </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Road_503_ViewModel}">
@@ -428,7 +428,7 @@
         <DataTemplate DataType="{x:Type moVm:NotEnterableAreaSolidColourBoundingLine_520_1_ViewModel}">
             <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripes_502_2_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripes_520_2_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripesBoundingLine_520_3_ViewModel}"></DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Building_521_ViewModel}">
             <Path Fill="Black" Data="{Binding Shape.Data}"/>

@@ -49,7 +49,7 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     /// <summary>
     /// Constructs path finding ViewModel.
     /// 
-    /// It initialize all reactive constructs and creates various reactions to them.  
+    /// It initializes all reactive constructs and creates various reactions to them.  
     /// It also calls <c>WhenActivated</c> method which calls inserted lambda expression on ViewModels activation. This activation secures load of map graphics.  
     /// </summary>
     /// <param name="pathFindingMv">Corresponding ModelView to this ViewModel</param>
@@ -77,6 +77,7 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
             var defaultTrackCoords = await pathFindingMv.GetDefaultTrackFromMapAsync();
             if (defaultTrackCoords is not null)
                 _acceptedTrackPointList.AddRange(defaultTrackCoords);
+            AcceptedTrackPointsCount = _acceptedTrackPointList.Count;
             return await pathFindingMv.GetTrackGraphicsAsync(_acceptedTrackPointList);
         });
         
@@ -179,7 +180,6 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
             }).DisposeWith(disposables);
             GetDefaultTrackFromMapCommand.Execute().Subscribe(trackGraphicsSource =>
             {
-                AcceptedTrackPointsCount = _acceptedTrackPointList.Count;
                 TrackGraphicsSource = trackGraphicsSource;
             }).DisposeWith(disposables);
         });
@@ -333,8 +333,8 @@ public class PathFindingViewModel : PathFindingViewModelBase, IActivatableViewMo
     /// Reactive command for executing of path finding mechanism.
     /// 
     /// It can be executed only when is application in state of accepting track and when more then one track point is selected.  
-    /// At first it sets <c>IsAcceptingTrack</c> property to false indicating that user can no longer change input track.  
-    /// Then instance of <c>Progress{T}"</c> type is created for handling of searching reports from path finding.  
+    /// At first, it sets <c>IsAcceptingTrack</c> property to false indicating that user can no longer change input track.  
+    /// Then instance of <c>Progress{T}</c> type is created for handling of searching reports from path finding.  
     /// In the end is path finding ModelView asked for asynchronous execution of path finding itself.  
     /// Result of execution is returned for anyone who would care about it.  
     /// Commands execution will take until cancellation command is executed or when is ViewModel informed that Windows closed event was fired by executing <c>OnClosedCommand</c>.  

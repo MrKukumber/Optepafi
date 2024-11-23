@@ -38,12 +38,12 @@
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Name="ZoomButton" Content="+" Command="{Binding ZoomCommand}" >
                             <Button.CommandParameter>
-                                <sys:Single>0.1</sys:Single>
+                                <sys:Single>0.2</sys:Single>
                             </Button.CommandParameter>
                         </Button>
                         <Button Name="UnZoomButton" Content="-" Command="{Binding UnZoomCommand}" >
                             <Button.CommandParameter>
-                                <sys:Single>0.1</sys:Single>
+                                <sys:Single>0.2</sys:Single>
                             </Button.CommandParameter>
                         </Button>
                     </StackPanel>

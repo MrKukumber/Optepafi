@@ -95,7 +95,6 @@
       <Compile Remove="Models\SearchingAlgorithmMan\Implementations\BasicRefferingAStarImplementation.cs" />
       <Compile Remove="Models\SearchingAlgorithmMan\SearchingAlgorithms\AStar.cs" />
       <Compile Remove="Models\SearchingAlgorithmMan\Paths\ClassicColoredPath.cs" />
-      <Compile Remove="Models\TemplateMan\Templates\Orienteering_ISOM_2017_2.cs" />
       <Compile Remove="Models\MapRepreMan\ImplementationReps\SpecificImplementationReps\ObjectRepreGraphElevDataDepOrienteeringOmapImplementationRep.cs" />
       <Compile Remove="Models\MapRepreMan\MapRepres\Implementations\ObjectRepreGraphOrienteeringOmapImplementation.cs" />
       <Compile Remove="Models\MapRepreMan\MapRepres\Implementations\CompleteGraphOrienteeringOmapImplementation.cs" />
@@ -197,6 +196,8 @@
 
 
     <ItemGroup>
+      <Folder Include="Models\GraphicsMan\Aggregators\MapRepre\" />
+      <Folder Include="Models\GraphicsMan\Objects\MapRepre\" />
       <Folder Include="Models\GraphicsMan\Objects\SearchingState\" />
       <Folder Include="Models\GraphicsMan\Utils\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />

@@ -48,7 +48,7 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
     /// <summary>
     /// Constructs path findings settings ViewModel.
     /// 
-    /// It initialize all reactive constructs and creates various reactions to them.  
+    /// It initializes all reactive constructs and creates various reactions to them.  
     /// It also includes mechanism for initializing of default parameters based on saved parameters by previously run session.  
     /// </summary>
     /// <param name="settingsMv">Corresponding ModelView to this ViewModel.</param>
@@ -210,6 +210,12 @@ public class PathFindingSettingsViewModel : PathFindingViewModelBase
                 case MapManager.MapCreationResult.Incomplete:
                     // TODO: vypisat hlasku, ze vytvorena mapa bude nekompletna, teda z velkej pravdepodobnosti nepouzitelna
                     // v modelView-u uz nastavena tato mapa, takze urcite nenechavat aby sa uzivatel mohol navratit ku predchadzajucej
+                    Console.WriteLine("Map creation incomplete.");
+                    SelectedMapFileName = Path.GetFileName(mapFilePath);
+                    SelectedMapFilePath = mapFilePath;
+                    SelectedMapsPreview = mapGraphics;
+                    CurrentlyUsedMapFormat = mapFormat;
+                    break; 
                 case MapManager.MapCreationResult.Ok:
                     SelectedMapFileName = Path.GetFileName(mapFilePath);
                     SelectedMapFilePath = mapFilePath;

@@ -1266,7 +1266,7 @@ public record NotEnterableAreaSolidColourBoundingLine_520_1(Utils.Shapes.Path Sh
     public TOut AcceptGeneric<TOut>(IGraphicObjectGenericVisitor<TOut> genericVisitor) =>
         genericVisitor.GenericVisit(this);
 }
-public record NotEnterableAreaStripes_502_2(Polygon Shape) : IGraphicObject
+public record NotEnterableAreaStripes_520_2(Polygon Shape) : IGraphicObject
 {
     /// <inheritdoc cref="IGraphicObject.AcceptGeneric{TOut,TOtherParams}"/>
     public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor,

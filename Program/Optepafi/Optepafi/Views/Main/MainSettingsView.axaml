@@ -28,8 +28,8 @@
                 </Grid>
                 <StackPanel Grid.Column="0" Orientation="Vertical">
                     <TextBlock Name="ConfigurationTextBlock" Text="{x:Static local:MainWindowLocal.Settings_ConfigurationsTextBlock}"/>
-                    <TreeView ItemsSource="{Binding Nodes}"
-                              SelectedItem="{Binding SelectedNode}"
+                    <TreeView ItemsSource="{Binding ConfigurationNodes}"
+                              SelectedItem="{Binding SelectedConfigurationNode}"
                               SelectionMode="Single">
                         <TreeView.ItemTemplate>
                             <TreeDataTemplate ItemsSource="{Binding SubNodes}">
@@ -41,7 +41,7 @@
             </Grid>
             <StackPanel Grid.Row="1">
                 <TextBlock Text="{Binding SelectedConfigurationTitle}"></TextBlock>
-                <ContentControl Content="{Binding SelectedNode.Configuration}"></ContentControl>
+                <ContentControl Content="{Binding SelectedConfigurationNode.Configuration}"></ContentControl>
             </StackPanel>
         </Grid>
         

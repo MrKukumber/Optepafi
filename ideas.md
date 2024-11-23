@@ -145,8 +145,8 @@
 - poriadne spravit lokalizaciu
 - zlepsit graficku stranku aplikacie
 - podpora pluginov
-- implementovat orientacke spracovanie map a algoritmy
 - zlepsit uzivatelsku privetivost
+- pridat spravne spracovavanie dier v polygonoch v omap file-och - nateraz diery v polygonoch ignorujem - upravit aj vykreslovanie map aj vytvaranie mapovych reprezentacii 
 
 ## DONE
 

@@ -141,7 +141,7 @@ public static class OmapMapObjects2VmConverters
          { typeof(CrossingPoint_519) , CrossingPoint2VmConstructor.Instance }, 
          { typeof(NotEnterableArea_520) , NotEnterableArea2VmConstructor.Instance }, 
          { typeof(NotEnterableAreaSolidColourBoundingLine_520_1) , NotEnterableAreaSolidColourBoundingLine2VmConstructor.Instance }, 
-         { typeof(NotEnterableAreaStripes_502_2) , NotEnterableAreaStripes2VmConstructor.Instance }, 
+         { typeof(NotEnterableAreaStripes_520_2) , NotEnterableAreaStripes2VmConstructor.Instance }, 
          { typeof(NotEnterableAreaStripesBoundingLine_520_3) , NotEnterableAreaStripesBoundingLine2VmConstructor.Instance }, 
          { typeof(Building_521) , Building2VmConstructor.Instance }, 
          { typeof(BuildingMinSize_521_1) , BuildingMinSize2VmConstructor.Instance }, 
@@ -1178,12 +1178,12 @@ public class NotEnterableAreaSolidColourBoundingLine2VmConstructor : IGraphicObj
     public GraphicObjectViewModel ConvertToViewModel(NotEnterableAreaSolidColourBoundingLine_520_1 graphicsObject, MapCoordinates mapsTopLeftVertex)
     => new NotEnterableAreaSolidColourBoundingLine_520_1_ViewModel(graphicsObject, mapsTopLeftVertex);
 }
-public class NotEnterableAreaStripes2VmConstructor : IGraphicObjects2VmConverter<NotEnterableAreaStripes_502_2>
+public class NotEnterableAreaStripes2VmConstructor : IGraphicObjects2VmConverter<NotEnterableAreaStripes_520_2>
 {
     public static NotEnterableAreaStripes2VmConstructor Instance { get; } = new();
     private NotEnterableAreaStripes2VmConstructor () { }
-    public GraphicObjectViewModel ConvertToViewModel(NotEnterableAreaStripes_502_2 graphicsObject, MapCoordinates mapsTopLeftVertex)
-    => new NotEnterableAreaStripes_502_2_ViewModel(graphicsObject, mapsTopLeftVertex);
+    public GraphicObjectViewModel ConvertToViewModel(NotEnterableAreaStripes_520_2 graphicsObject, MapCoordinates mapsTopLeftVertex)
+    => new NotEnterableAreaStripes_520_2_ViewModel(graphicsObject, mapsTopLeftVertex);
 }
 public class NotEnterableAreaStripesBoundingLine2VmConstructor : IGraphicObjects2VmConverter<NotEnterableAreaStripesBoundingLine_520_3>
 {

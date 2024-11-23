@@ -34,11 +34,9 @@ public class LineSegmentViewModel : SegmentViewModel
     public override SegmentViewModel GetTopAlignmentWithRespectTo(int thickness, CanvasCoordinate point0, out CanvasCoordinate alignedPoint0)
     {
         var tan_0 = dL(0, point0);
-        var tan_1 = dL(1, point0);
         var norm_0 = tan_0.Rotate((float)Math.PI / 2);
-        var norm_1 = tan_1.Rotate((float)Math.PI / 2);
-        alignedPoint0 = point0 * (thickness / norm_0.Size()); 
-        return new LineSegmentViewModel( Point1 + norm_1 * (thickness / norm_1.Size()) );
+        alignedPoint0 = point0 * (thickness / norm_0.Size());
+        return GetTopAlignmentWithRespectTo(thickness, point0);
     }
     
     private LineSegmentViewModel(CanvasCoordinate point1)

@@ -3,6 +3,9 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="MapRepreViewer/App.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
+        <entry key="MapRepreViewer/Views/MainWindow.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
+        <entry key="MapRepreViewer/Views/MapRepreViewingView.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/App.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplateCollections/GraphicObjects/PathFindingObjectTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplateResDicts/MapObjectTemplates.axaml" value="Optepafi/Optepafi.csproj" />

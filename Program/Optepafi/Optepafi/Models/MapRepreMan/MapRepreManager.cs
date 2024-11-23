@@ -39,7 +39,7 @@ public class MapRepreManager :
     /// Set of representatives of all usable map representations. 
     /// </summary>
     public ISet<IMapRepreRepresentative<IMapRepre>> MapRepreReps { get; } =
-        new HashSet<IMapRepreRepresentative<IMapRepre>>() {BlankRepreRep.Instance};
+        new HashSet<IMapRepreRepresentative<IMapRepre>>() {BlankRepreRep.Instance, CompleteSnappingMapRepreRep.Instance};
             
 
     public enum NeedsElevDataIndic { Yes, NotNecessary, No };

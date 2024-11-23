@@ -7,6 +7,10 @@ using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.MapRepreMan;
+using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.GraphicsMan;
@@ -25,7 +29,8 @@ namespace Optepafi.Models.GraphicsMan;
 public class GraphicsManager :
     IMapGenericVisitor<GraphicsManager.AggregationResult, (IGraphicObjectCollector, CancellationToken?)>,
     IMapGenericVisitor<GraphicsArea?>,
-    IMapGenericVisitor<GraphicsManager.AggregationResult, (IList<MapCoordinates>, IGraphicObjectCollector)>
+    IMapGenericVisitor<GraphicsManager.AggregationResult, (IList<MapCoordinates>, IGraphicObjectCollector)>,
+    IMapRepreGenericVisitor<GraphicsManager.AggregationResult, (IGraphicObjectCollector, CancellationToken?)>
 {
     public static GraphicsManager Instance { get; } = new();
     private GraphicsManager() { }
@@ -36,6 +41,11 @@ public class GraphicsManager :
     public IReadOnlySet<IGraphicsAggregator> MapGraphicsAggregators { get; } =
         ImmutableHashSet.Create<IGraphicsAggregator>(TextMapGraphicsAggregator.Instance, OmapMapGraphicsAggregator.Instance);
 
+    /// <summary>
+    /// Collection of aggregators for specific map representation/graph implementation types. It is searched when map representation graphics is to be aggregated.
+    /// </summary>
+    public IReadOnlySet<IGraphicsAggregator> MapRepreGraphicsAggregators { get; } = 
+        ImmutableHashSet.Create<IGraphicsAggregator>();
     
     public enum AggregationResult {Aggregated, NoUsableAggregatorFound, Cancelled}
 
@@ -80,7 +90,7 @@ public class GraphicsManager :
     /// When such aggregator is found, method for retrieving are of map is called on it. Area is then returned.  
     /// </summary>
     /// <param name="map">Map whose area is requested.</param>
-    /// <returns>Area of map.</returns>
+    /// <returns>Area of map. Null, when aggregator is not found.</returns>
     public GraphicsArea? GetAreaOf(IMap map)
     {
         return map.AcceptGeneric(this);
@@ -103,15 +113,15 @@ public class GraphicsManager :
     /// 
     /// It accepts track to be aggregated, map for indication of correct aggregator and collector which should be filled with aggregated objects.  
     /// It do it so by use of "generic visitor pattern" on provided map.  After visiting of map it runs through <c>MapGraphicsAggregators</c> and looks for appropriate graphics aggregator.  
-    /// When it is found, the track coordinates are handed over to it together with graphic objects collector.  
+    /// When it is found, the track coordinates are handed over to it together with graphics objects collector.  
     /// </summary>
     /// <param name="trackCoordinates">Coordinates of track which graphics is to be aggregated.</param>
     /// <param name="map">Map for indication of correct aggregator.</param>
-    /// <param name="collectorForAggregateObjects">Collector for aggregated track graphic objects.</param>
+    /// <param name="collectorForAggregatedObjects">Collector for aggregated track graphic objects.</param>
     /// <returns>Result of aggregation.</returns>
-    public AggregationResult AggregateTrackGraphicsAccordingTo(IList<MapCoordinates> trackCoordinates, IMap map, IGraphicObjectCollector collectorForAggregateObjects)
+    public AggregationResult AggregateTrackGraphicsAccordingTo(IList<MapCoordinates> trackCoordinates, IMap map, IGraphicObjectCollector collectorForAggregatedObjects)
     {
-        return map.AcceptGeneric<AggregationResult, (IList<MapCoordinates>, IGraphicObjectCollector)>(this, (trackCoordinates, collectorForAggregateObjects));
+        return map.AcceptGeneric<AggregationResult, (IList<MapCoordinates>, IGraphicObjectCollector)>(this, (trackCoordinates, collectorForAggregatedObjects));
     }
 
     AggregationResult IMapGenericVisitor<AggregationResult, (IList<MapCoordinates>, IGraphicObjectCollector)>.GenericVisit<TMap>(TMap map, (IList<MapCoordinates>, IGraphicObjectCollector) otherParams)
@@ -122,6 +132,30 @@ public class GraphicsManager :
             if (graphicsAggregator is IMapGraphicsAggregator<TMap> mapGraphicsAggregator)
             {
                 mapGraphicsAggregator.AggregateGraphicsOfTrack(trackCoordinates, collectorForAggregatedObjects);
+                return AggregationResult.Aggregated;
+            }
+        }
+        return AggregationResult.NoUsableAggregatorFound;
+    }
+
+    //TODO: comment
+    public AggregationResult AggregateMapRepreGraphics(IMapRepre mapRepre,
+        IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken = null)
+    {
+        return mapRepre.AcceptGeneric<AggregationResult, (IGraphicObjectCollector, CancellationToken?)>(this, (collectorForAggregatedObjects, cancellationToken));
+    }
+
+    AggregationResult IMapRepreGenericVisitor<AggregationResult, (IGraphicObjectCollector, CancellationToken?)>.GenericVisit<TImplementation, TVertexAttributes, TEdgeAttributes>(TImplementation implementation,
+        (IGraphicObjectCollector, CancellationToken?) otherParams) 
+    {
+        var (collectorForAggregatedObjects, cancellationToken) = otherParams;
+        foreach (var graphicsAggregator in MapRepreGraphicsAggregators)
+        {
+            if (graphicsAggregator is IMapRepreGraphicsAggregator<TImplementation> implementationGraphcisAggregator)
+            {
+                implementationGraphcisAggregator.AggregateGraphics(implementation, collectorForAggregatedObjects, cancellationToken);
+                if (cancellationToken?.IsCancellationRequested ?? false)
+                    return AggregationResult.Cancelled;
                 return AggregationResult.Aggregated;
             }
         }

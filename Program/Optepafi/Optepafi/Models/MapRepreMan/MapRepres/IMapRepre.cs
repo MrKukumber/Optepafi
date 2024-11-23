@@ -14,10 +14,12 @@ public interface IMapRepre
     public string Name { get; }
     
     // public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(
-        // IMapRepresentationGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,
+        // IMapRepreGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,
         // TGenericParam genericParam, TOtherParams otherParams) where TGenericParam : TConstraint;
-    // public TOut AcceptGeneric<TOut, TOtherParams>(IMapRepresentationGenericVisitor<TOut, TOtherParams> genericVisitor,
-        // TOtherParams otherParams);
-    // public TOut AcceptGeneric<TOut>(IMapRepresentationGenericVisitor<TOut> genericVisitor);
+        
+    //TODO: comment
+    public TOut AcceptGeneric<TOut, TOtherParams>(IMapRepreGenericVisitor<TOut, TOtherParams> genericVisitor,
+        TOtherParams otherParams);
+    // public TOut AcceptGeneric<TOut>(IMapRepreGenericVisitor<TOut> genericVisitor);
     // public void AcceptGeneric(ITemplateGenericVisitor genericVisitor);
 }

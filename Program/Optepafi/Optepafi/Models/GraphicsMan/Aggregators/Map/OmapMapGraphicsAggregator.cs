@@ -232,6 +232,10 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     private static List<Segment> CollectSegments((MapCoordinates coords, byte type)[] typedCoords)
     {
         List<Segment> collectedSegments = new();
+        if (typedCoords[0].coords.XPos == -14731)
+        {
+            Console.WriteLine();
+        }
         if (typedCoords.Length == 1)
         {
             collectedSegments.Add(new LineSegment(typedCoords[0].coords));
@@ -244,12 +248,10 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
             {
                 case 0:
                     if (i + 1 >= typedCoords.Length) return collectedSegments;
-                    // collectedSegments.Add(new LineSegment(typedCoords[++i].coords));
                     collectedSegments.Add(ResolveLineSegment(typedCoords[i].coords, typedCoords[++i].coords));
                     break;
                 case 1:
                     if (i + 3 >= typedCoords.Length) return collectedSegments;
-                    // collectedSegments.Add(new CubicBezierCurveSegment(typedCoords[++i].coords, typedCoords[++i].coords, typedCoords[++i].coords));
                     collectedSegments.Add(ResolveCubicBezierSegment(typedCoords[i].coords, typedCoords[++i].coords, typedCoords[++i].coords, typedCoords[++i].coords));
                     break;
                 case 2:
@@ -1124,7 +1126,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static NotEnterableAreaStripesConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NotEnterableAreaStripes_502_2(GetPolygonFrom(omapObject.TypedCoords))];
+            [new NotEnterableAreaStripes_520_2(GetPolygonFrom(omapObject.TypedCoords))];
     }
     private class NotEnterableAreaStripesBoundingLineConstructor : IConstructor
     {
@@ -1339,9 +1341,18 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
             }
             return start.Concat<IGraphicObject>(controls).Concat(finish);
         }
+
         private float ComputeRotationOfStart(MapCoordinates startPosition, MapCoordinates firstControlPosition)
-            => (float) Math.Asin((firstControlPosition.YPos - startPosition.YPos) 
-                                 / (float)
-                                 Math.Abs(firstControlPosition.XPos - startPosition.XPos));
+            => startPosition.XPos == firstControlPosition.XPos && startPosition.YPos <= firstControlPosition.YPos
+                ? (float)(Math.PI/2)
+                : startPosition.XPos == firstControlPosition.XPos && startPosition.YPos > firstControlPosition.YPos
+                    ? (float)(-Math.PI/2)
+                    : startPosition.XPos < firstControlPosition.XPos
+                        ? (float)Math.Atan((firstControlPosition.YPos - startPosition.YPos)
+                                           / (float)
+                                           (firstControlPosition.XPos - startPosition.XPos))
+                        : (float)(Math.PI + Math.Atan((firstControlPosition.YPos - startPosition.YPos)
+                                           / (float)
+                                           (firstControlPosition.XPos - startPosition.XPos)));
     }
 }

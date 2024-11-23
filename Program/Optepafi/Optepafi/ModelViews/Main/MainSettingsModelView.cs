@@ -62,7 +62,6 @@ public class MainSettingsModelView : ModelViewBase
                 var defaultConfigurationCopy = searchingAlgorithm.DefaultConfigurationDeepCopy;
                 _configurationsParams.Configurations[searchingAlgorithm.DefaultConfigurationDeepCopy.GetType()] = defaultConfigurationCopy;
                 return (searchingAlgorithm, defaultConfigurationCopy);
-
             }).ToDictionary(x => new SearchingAlgorithmViewModel(x.Item1), x => new ConfigurationViewModel(x.Item2));
         MapRepresentationsConfigurations = MapRepreManager.Instance.MapRepreReps
             .Select(mapRepreRepresentative =>
@@ -151,6 +150,7 @@ public class MainSettingsModelView : ModelViewBase
         }
     }
 
+    //TODO: comment
     public Dictionary<SearchingAlgorithmViewModel, ConfigurationViewModel> SearchingAlgorithmsConfigurations { get; }
     public Dictionary<MapRepreRepresentativeViewModel, ConfigurationViewModel> MapRepresentationsConfigurations { get; }
     public Dictionary<UserModelTypeViewModel, ConfigurationViewModel> UserModelsConfigurations { get; }

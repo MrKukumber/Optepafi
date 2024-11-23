@@ -88,9 +88,6 @@
                     </ComboBox>
                 </StackPanel>    
             </Grid>
-            
-            
-            
         </Grid>
     </DockPanel>
 </UserControl>

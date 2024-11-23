@@ -36,8 +36,8 @@ public class MainSettingsViewModel : ViewModelBase
     /// <summary>
     /// Construction of main settings ViewModel instance.
     /// 
-    /// It initialize all reactive constructs.  
-    /// It also initialize main parameters according to saved parameters in previous run of application. It uses ModelViews services for this purpose.  
+    /// It initializes all reactive constructs.  
+    /// It also initializes main parameters according to saved parameters in previous run of application. It uses ModelViews services for this purpose.  
     /// </summary>
     /// <param name="mainSettingsMv">Corresponding ModelView to this ViewModel.</param>
     public MainSettingsViewModel(MainSettingsModelView mainSettingsMv)
@@ -56,17 +56,17 @@ public class MainSettingsViewModel : ViewModelBase
         this.WhenAnyValue(x => x.CurrentElevDataDistribution)
             .Subscribe(currentElevDataDistribution => _mainSettingsMv.CurrentElevDataDistribution = currentElevDataDistribution);
 
-        _selectedConfigurationTitle = this.WhenAnyValue(x => x.SelectedNode,
+        _selectedConfigurationTitle = this.WhenAnyValue(x => x.SelectedConfigurationNode,
                 selectedNode => selectedNode is not InnerNode ? selectedNode?.Title : null)
             .ToProperty(this, nameof(SelectedConfigurationTitle));
 
-        Nodes = new List<Node>
+        ConfigurationNodes = new List<Node>
         {
             new InnerNode("Searching algorithms", mainSettingsMv.SearchingAlgorithmsConfigurations.Select(kv => new SearchingAlgorithmConfigNode(kv.Key))),
             new InnerNode("Map representations", mainSettingsMv.MapRepresentationsConfigurations.Select(kv => new MapRepreConfigNode(kv.Key))),
             new InnerNode("User models", mainSettingsMv.UserModelsConfigurations.Select(kv => new UserModelConfigNode(kv.Key)))
         };
-        SelectedNode = null;
+        SelectedConfigurationNode = null;
         
         ElevConfigInteraction = new Interaction<ElevConfigViewModel, ElevDataDistributionViewModel?>();
         OpenElevConfigCommand = ReactiveCommand.CreateFromTask(async () =>
@@ -110,17 +110,17 @@ public class MainSettingsViewModel : ViewModelBase
             this.RaiseAndSetIfChanged(ref _currentCulture, value);
         }
     }
-
     private CultureInfo _currentCulture;
     
-    public IEnumerable<Node> Nodes { get; }
+    //TODO:comment
+    public IEnumerable<Node> ConfigurationNodes { get; }
 
-    private Node? _selectedNode;
-    public Node? SelectedNode
+    public Node? SelectedConfigurationNode
     {
-        get => _selectedNode; 
-        set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
+        get => _selectedConfigurationNode; 
+        set => this.RaiseAndSetIfChanged(ref _selectedConfigurationNode, value);
     }
+    private Node? _selectedConfigurationNode;
 
     private ObservableAsPropertyHelper<string?> _selectedConfigurationTitle;
     public string? SelectedConfigurationTitle => _selectedConfigurationTitle.Value;

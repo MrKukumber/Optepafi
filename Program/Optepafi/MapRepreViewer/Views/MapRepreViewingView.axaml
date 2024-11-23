@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:MapRepreViewer.ViewModels"
+             xmlns:v="clr-namespace:MapRepreViewer.Views"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             x:Class="MapRepreViewer.Views.MapRepreViewingView"
+             x:DataType="vm:MapRepreViewingViewModel">
+    
+    <DockPanel>
+        <Panel DockPanel.Dock="Top" Margin="10">
+            <TextBlock Name="PathFindingHeaderTextBlock" Text="Map representation viewing" HorizontalAlignment="Center"></TextBlock>
+        </Panel>
+        <Grid ColumnDefinitions="10 * 2 150 10">
+            <Grid Grid.Column="1" RowDefinitions="* Auto" Margin="5">
+                <Border Grid.Row="0" BorderBrush="Black" BorderThickness="2">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Viewbox Width="{Binding ScaledGraphicsWidth, Converter={StaticResource Micro2DipConverter}}" 
+                                 Height="{Binding ScaledGraphicsHeight, Converter={StaticResource Micro2DipConverter}}">
+                            <Viewbox.GestureRecognizers>
+                                <PinchGestureRecognizer/>
+                            </Viewbox.GestureRecognizers>
+                            <Grid>
+                                <ContentControl Name="MapGraphics" Content="{Binding MapGraphicsSource}" />
+                                <ContentControl Name="TrackGraphics" Content="{Binding MapRepreGraphicsSource}"/>
+                            </Grid>
+                        </Viewbox>
+                    </ScrollViewer>
+                </Border>
+                <DockPanel Grid.Row="1">
+                    <TextBlock Name="GraphicsProblemTextBlock" Text="{Binding GraphicsProblemText}" DockPanel.Dock="Left"/>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Name="ZoomButton" Content="+" Command="{Binding ZoomCommand}" >
+                            <Button.CommandParameter>
+                                <sys:Single>0.2</sys:Single>
+                            </Button.CommandParameter>
+                        </Button>
+                        <Button Name="UnZoomButton" Content="-" Command="{Binding UnZoomCommand}" >
+                            <Button.CommandParameter>
+                                <sys:Single>0.2</sys:Single>
+                            </Button.CommandParameter>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Name="RemoveObjectButton" Content="&lt;" Command="{Binding RemoveObjectCommand}" >
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="IsViewingByPartsActive"/>        
+                                    <Binding Path="ShownObjectsCount" Converter="{x:Static v:MapRepreViewingView.IsGreaterThanOne}"></Binding>
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                        <Button Name="AddObjectButton" Content="&gt;" Command="{Binding AddObjectCommand}" >
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="IsViewingByPartsActive"/>        
+                                    <Binding Path="!AreAllObjectsShown"/>
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+            <GridSplitter Grid.Column="2"/>
+            <DockPanel Grid.Column="3">
+                <StackPanel VerticalAlignment="Center">
+                    <Button Name="MapSelectingButton" Content="Select a map" Click="MapSelectingButton_OnClick"/>
+                    <TextBlock Name="SelectedMapFileNameTextBlock" Text="{Binding SelectedMapFileName}"/>
+                    <Rectangle Fill="Transparent" Height="50"/>
+                    <TextBlock Name="MapRepreConfigurationTitleTextBloc" Text="Map repre configuration"/>
+                    <ContentControl Name="MapRepreConfiguration" Content="{Binding Configuration}"/>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Bottom">
+                    <Button Name="CreateAndViewMapRepreByPartsButton" Content="View map repre by parts" Command="{Binding CreateAndViewMapRepreByPartsCommand}" IsEnabled="{Binding CurrentlyUsedMapFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                    <Button Name="CreateAndViewWholeMapRepreButton" Content="View whole map repre" Command="{Binding CreateAndViewWholeMapRepreCommand}" IsEnabled="{Binding CurrentlyUsedMapFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

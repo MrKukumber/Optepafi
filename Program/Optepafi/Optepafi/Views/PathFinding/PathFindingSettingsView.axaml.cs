@@ -67,8 +67,8 @@ public partial class PathFindingSettingsView : ReactiveUserControl<PathFindingSe
         //For disposing opened stream on this instance takes care ViewModel.
         try
         {
-                await ViewModel.LoadUserModelCommand
-                .Execute((await file.OpenReadAsync(), file.Path.LocalPath));
+            await ViewModel.LoadUserModelCommand
+            .Execute((await file.OpenReadAsync(), file.Path.LocalPath));
         } catch (UnauthorizedAccessException) {
             ViewModel.SelectedUserModelFileName = "Unable to open file."; //TODO: localize
         }

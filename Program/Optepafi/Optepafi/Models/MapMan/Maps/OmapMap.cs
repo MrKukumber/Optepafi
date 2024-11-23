@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapMan.Maps;
 
 //TODO: comment
-public abstract class OmapMap : IMap
+public abstract class OmapMap : IMap, IPartitionableMap
 {
     //TODO: implement
     public string FileName { get; init; }
@@ -29,6 +30,7 @@ public abstract class OmapMap : IMap
     public abstract MapCoordinates WesternmostCoords { get; }
     public abstract MapCoordinates EasternmostCoords { get; }
 
+    public abstract IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned);
 }
 
 public abstract class GeoLocatedOmapMap : OmapMap, IMostNSWECoordQueryableGeoRefMap

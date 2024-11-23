@@ -951,7 +951,7 @@ public class NotEnterableAreaSolidColourBoundingLine_520_1_ViewModel(NotEnterabl
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
     public int LineThickness { get; } = 180;
 }
-public class NotEnterableAreaStripes_502_2_ViewModel(NotEnterableAreaStripes_502_2 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
+public class NotEnterableAreaStripes_520_2_ViewModel(NotEnterableAreaStripes_520_2 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
@@ -1113,9 +1113,9 @@ public class Start_701_ViewModel : GraphicObjectViewModel
     {
         Position = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
         Rotation = obj.Rotation;
-        CanvasCoordinate trianglePoint0 = new CanvasCoordinate(0, -4000).Rotate(Rotation);
-        CanvasCoordinate trianglePoint1 = new CanvasCoordinate(-3000, 2000).Rotate(Rotation);
-        CanvasCoordinate trianglePoint2 = new CanvasCoordinate(3000, 2000).Rotate(Rotation);
+        CanvasCoordinate trianglePoint0 = new CanvasCoordinate((int) (Math.Sqrt(6000*6000 - 3000*3000)*2/3), 0).Rotate(-Rotation);
+        CanvasCoordinate trianglePoint1 = new CanvasCoordinate((int) -(Math.Sqrt(6000*6000 - 3000*3000)/3), 3000).Rotate(-Rotation);
+        CanvasCoordinate trianglePoint2 = new CanvasCoordinate((int) -(Math.Sqrt(6000*6000 - 3000*3000)/3), -3000).Rotate(-Rotation);
         TriangleData = "M " + MicrometersToDipConverter.Instance.Convert(trianglePoint0.LeftPos).ToString(CultureInfo.InvariantCulture) + "," + MicrometersToDipConverter.Instance.Convert(trianglePoint0.TopPos).ToString(CultureInfo.InvariantCulture) +
                        " L " + MicrometersToDipConverter.Instance.Convert(trianglePoint1.LeftPos).ToString(CultureInfo.InvariantCulture) + "," + MicrometersToDipConverter.Instance.Convert(trianglePoint1.TopPos).ToString(CultureInfo.InvariantCulture) +
                        " L " + MicrometersToDipConverter.Instance.Convert(trianglePoint2.LeftPos).ToString(CultureInfo.InvariantCulture) + "," + MicrometersToDipConverter.Instance.Convert(trianglePoint2.TopPos).ToString(CultureInfo.InvariantCulture) + " Z";

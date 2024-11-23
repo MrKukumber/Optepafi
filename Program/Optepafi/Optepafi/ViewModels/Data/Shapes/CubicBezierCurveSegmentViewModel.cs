@@ -50,16 +50,9 @@ public class CubicBezierCurveSegmentViewModel : SegmentViewModel
     public override SegmentViewModel GetTopAlignmentWithRespectTo(int thickness, CanvasCoordinate point0, out CanvasCoordinate alignedPoint0)
     {
         var tan_0 = dB(0, point0);
-        var tan_0_5 = dB(0.5, point0);
-        var tan_1 = dB(1, point0);
         var norm_0 = tan_0.Rotate((float)Math.PI / 2);
-        var norm_0_5 = tan_0_5.Rotate((float)Math.PI / 2);
-        var norm_1 = tan_1.Rotate((float)Math.PI / 2);
         alignedPoint0 = point0 * (thickness / norm_0.Size()); 
-        return new CubicBezierCurveSegmentViewModel(
-            Point1 + norm_0_5 * (thickness / norm_0_5.Size()), 
-            Point2 + norm_0_5 * (thickness / norm_0_5.Size()),
-            Point3 + norm_1 * (thickness / norm_1.Size()));
+        return GetTopAlignmentWithRespectTo(thickness, alignedPoint0);
     }
     private CubicBezierCurveSegmentViewModel(CanvasCoordinate point1, CanvasCoordinate point2, CanvasCoordinate point3)
     {

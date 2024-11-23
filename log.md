@@ -656,3 +656,18 @@ Takmer dorobena graficka reprezentacia omap suborov, uz len treba doimplementova
 Prerobeny koncept CanvasCoordinate-ov, kde namiesto vzidalenosti od spodneho okraja Canvas-u sa ukladaju suradnice na zaklade vzidalenosti od horneho okraja. Dopomohlo to ku spravnemu spravaniu poziciovania grafickych objekto v na Canvas. Namiesto Canvas.Bottom property sa teraz dosadza za Canvas.Top property a funguje to bezchybne.
 
 Spravene nacitanie defaultnej trate z mapoveho suboru do path finding session-u.
+
+## 7.11
+
+Oprava tvarov v aplikacii - pridany kvadraticka bezierova krivka ako segment
+Pri vytvarani segmentov sa testuje, ci su validne, teda ci sa vsetky ich susediacie point-y lysia....ak nie, tak sa podla poctu tychto nevalidnych pointov urci, ci sa pouzije kubicka, kvadraticka krivka alebo liniovy segment. tym sa zabezpeci, ze nasledne vykreslovanie objektov bude spravne, nebude vznikat ziadne delenie nulou, ktore mi kazilo vykreslovanie top-aligne-nutych objektov.
+
+## 14.11
+
+Najdenych par malych chyb grafickych
+Pri vykreslovani mapy jura sa opat ukazali nekoneecne line-y, skusit debugnut v com je problem
+Pri zadani trate sa neotaca trojuholnik startu, skusit debugnut
+
+trianglePoint0 = {CanvasCoordinate} CanvasCoordinate { LeftPos = 3123, TopPos = -2499 }
+trianglePoint1 = {CanvasCoordinate} CanvasCoordinate { LeftPos = -3435, TopPos = -1092 }
+trianglePoint2 = {CanvasCoordinate} CanvasCoordinate { LeftPos = 312, TopPos = 3591 }

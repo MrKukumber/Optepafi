@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using DynamicData;
+using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.Utils;
@@ -327,8 +329,8 @@ public static class OmapMapParser
                 if (j >= strCoord.Length || !IsCancellationRequested(cancellationToken, ref readsOrParsesSinceLastCheck)) return false;
             while (!byte.TryParse(GetWordTill(strCoord, ' ', ref j, strBuilder), out type) && j < strCoord.Length && !IsCancellationRequested(cancellationToken, ref readsOrParsesSinceLastCheck)){}
 
-            if (x == -130974 && y == -128884)
-                x = x;
+            if (x == -14731 && y == 8283)
+                Console.WriteLine();
             y = -y; //y-axis values are saved in omap files other way than we use them in map coordinates
             if (y > extremeCoords.nc.YPos) extremeCoords.nc = new MapCoordinates(x, y);
             if (y < extremeCoords.sc.YPos) extremeCoords.sc = new MapCoordinates(x, y);
@@ -373,6 +375,41 @@ public static class OmapMapParser
         public override MapCoordinates WesternmostCoords => extremeCoords.wc;
         public override MapCoordinates EasternmostCoords => extremeCoords.ec;
 
+        public override IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned)
+        {
+            wholeMapReturned = false;
+            List<Symbol> newSymbols = new ();
+            foreach (var symbol in symbols) newSymbols.Add(symbol);
+            
+            Dictionary<decimal, List<Object>> newObjects = new ();
+            if (0 >= Symbols.Count)
+            {
+                wholeMapReturned = true;
+                return new InnerOmapMap(Scale, newSymbols, newObjects, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
+                { FilePath = FilePath, FileName = FileName };
+            }
+            int sinceLastCancelCheck = 0;
+            int currentSymbolIndex = 0;
+            int currentObjectIndex = 0;
+            while (size-- > 0)
+            {
+                if (sinceLastCancelCheck++ >= _cancellationCheckInterval)
+                {
+                    if (cancellationToken is not null && !cancellationToken.Value.IsCancellationRequested) { wholeMapReturned = false; return this; }
+                    sinceLastCancelCheck = 0;
+                }
+
+                if (currentObjectIndex >= Objects[Symbols[currentSymbolIndex].Code].Count)
+                {
+                    currentObjectIndex = 0;
+                    if (++currentSymbolIndex >= Symbols.Count) { wholeMapReturned = true; break; }
+                    newObjects[Symbols[currentSymbolIndex].Code] = new List<Object>();
+                }
+                newObjects[Symbols[currentSymbolIndex].Code].Add(Objects[Symbols[currentSymbolIndex].Code][currentObjectIndex++]);
+            }
+            return new InnerOmapMap(Scale, newSymbols, newObjects, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
+            { FilePath = FilePath, FileName = FileName };
+        }
     }
 
     private class InnerGeoLocatedOmapMap(int scale,   List<OmapMap.Symbol> symbols, Dictionary<decimal, List<OmapMap.Object>> objects, 
@@ -388,6 +425,41 @@ public static class OmapMapParser
         public override List<Symbol> Symbols => symbols;
         public override Dictionary<decimal, List<Object>> Objects => objects;
         
+        public override IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned)
+        {
+            wholeMapReturned = false;
+            List<Symbol> newSymbols = new ();
+            foreach (var symbol in symbols) newSymbols.Add(symbol);
+            
+            Dictionary<decimal, List<Object>> newObjects = new ();
+            if (0 >= Symbols.Count)
+            {
+                wholeMapReturned = true;
+                return new InnerGeoLocatedOmapMap(Scale, newSymbols, newObjects, RepresentativeLocation, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
+                { FilePath = FilePath, FileName = FileName };
+            }
+            int sinceLastCancelCheck = 0;
+            int currentSymbolIndex = 0;
+            int currentObjectIndex = 0;
+            while (size-- > 0)
+            {
+                if (sinceLastCancelCheck >= _cancellationCheckInterval)
+                {
+                    if (cancellationToken is not null && !cancellationToken.Value.IsCancellationRequested) { wholeMapReturned = false; return this; }
+                    sinceLastCancelCheck = 0;
+                }
+
+                if (currentObjectIndex >= Objects[Symbols[currentSymbolIndex].Code].Count)
+                {
+                    currentObjectIndex = 0;
+                    if (++currentSymbolIndex >= Symbols.Count) { wholeMapReturned = true; break; }
+                    newObjects[Symbols[currentSymbolIndex].Code] = new List<Object>();
+                }
+                newObjects[Symbols[currentSymbolIndex].Code].Add(Objects[Symbols[currentSymbolIndex].Code][currentObjectIndex++]);
+            }
+            return new InnerGeoLocatedOmapMap(Scale, newSymbols, newObjects, RepresentativeLocation, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
+            { FilePath = FilePath, FileName = FileName };
+        }
+        
     }
-    
 }
