@@ -65,16 +65,16 @@
             </Grid>
             <GridSplitter Grid.Column="2"/>
             <DockPanel Grid.Column="3">
+                <StackPanel DockPanel.Dock="Bottom">
+                    <Button Name="CreateAndViewMapRepreByPartsButton" Content="View map repre by parts" Command="{Binding CreateAndViewMapRepreByPartsCommand}" IsEnabled="{Binding CurrentlyUsedMapFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                    <Button Name="CreateAndViewWholeMapRepreButton" Content="View whole map repre" Command="{Binding CreateAndViewWholeMapRepreCommand}" IsEnabled="{Binding CurrentlyUsedMapFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </StackPanel>
                 <StackPanel VerticalAlignment="Center">
                     <Button Name="MapSelectingButton" Content="Select a map" Click="MapSelectingButton_OnClick"/>
                     <TextBlock Name="SelectedMapFileNameTextBlock" Text="{Binding SelectedMapFileName}"/>
                     <Rectangle Fill="Transparent" Height="50"/>
                     <TextBlock Name="MapRepreConfigurationTitleTextBloc" Text="Map repre configuration"/>
                     <ContentControl Name="MapRepreConfiguration" Content="{Binding Configuration}"/>
-                </StackPanel>
-                <StackPanel DockPanel.Dock="Bottom">
-                    <Button Name="CreateAndViewMapRepreByPartsButton" Content="View map repre by parts" Command="{Binding CreateAndViewMapRepreByPartsCommand}" IsEnabled="{Binding CurrentlyUsedMapFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-                    <Button Name="CreateAndViewWholeMapRepreButton" Content="View whole map repre" Command="{Binding CreateAndViewWholeMapRepreCommand}" IsEnabled="{Binding CurrentlyUsedMapFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
                 </StackPanel>
             </DockPanel>
         </Grid>

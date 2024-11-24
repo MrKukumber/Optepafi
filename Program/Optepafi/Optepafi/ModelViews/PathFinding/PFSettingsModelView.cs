@@ -45,7 +45,7 @@ public abstract class PFSettingsModelView : ModelViewBase
 {
     
     /// <summary>
-    /// Upon creation it loads (by previous path finding session) saved parameters and sets them to "default" properties.
+    /// Upon creation, it loads (by previous path finding session) saved parameters and sets them to "default" properties.
     /// 
     /// Corresponding ViewModel can then take these unchecked "default" parameters and execute mechanism for their correctness testing and assign them as default parameters of current session.  
     /// </summary>
@@ -95,7 +95,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     /// It runs through all searching algorithm instances collected in <c>SearchingAlgorithmManager</c> and returns the corresponding one.  
     /// </summary>
     /// <param name="searchingAlgorithmTypeName">Name of searching algorithms type.</param>
-    /// <returns>Corresponding searching algorithm if exists. Otherwise null.</returns>
+    /// <returns>Corresponding searching algorithm if exists. Otherwise, null.</returns>
     private ISearchingAlgorithm? GetSearchingAlgorithmByTypeName(string searchingAlgorithmTypeName)
     {
         foreach (var serachingAlgorithm in SearchingAlgorithmManager.Instance.SearchingAlgorithms)
