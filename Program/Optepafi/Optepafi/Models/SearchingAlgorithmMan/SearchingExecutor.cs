@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
@@ -61,7 +62,7 @@ public class SearchingExecutor<TConfiguration, TVertexAttributes, TEdgeAttribute
 {
     public delegate IPath? AlgorithmSearchingDelegate(
         Leg[] track,
-        IGraph<TVertexAttributes, TEdgeAttributes> graph,
+        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
         IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         TConfiguration configuration,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
@@ -78,11 +79,11 @@ public class SearchingExecutor<TConfiguration, TVertexAttributes, TEdgeAttribute
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
     private readonly IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
-    private readonly IGraph<TVertexAttributes, TEdgeAttributes> _graph;
+    private readonly IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> _graph;
     private readonly TConfiguration _configuration;
     
 
-    public SearchingExecutor(IGraph<TVertexAttributes, TEdgeAttributes> graph, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, AlgorithmSearchingDelegate algorithmSearchingDelegate, TConfiguration configuration)
+    public SearchingExecutor(IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, AlgorithmSearchingDelegate algorithmSearchingDelegate, TConfiguration configuration)
     {
         _graph = graph;
         _userModel = userModel;

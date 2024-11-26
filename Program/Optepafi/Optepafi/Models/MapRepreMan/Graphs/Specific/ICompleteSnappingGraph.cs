@@ -6,40 +6,46 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 
 //TODO: comment + add functionalities
-public interface ICompleteSnappingGraph<TVertexAttributes, TEdgeAttributes> : 
+public interface ICompleteSnappingGraph: 
     ICompleteSnappingMapRepre,
-    IGraph<TVertexAttributes, TEdgeAttributes>,
-    IPredecessorRemembering< ICompleteSnappingGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteSnappingGraph<TVertexAttributes, TEdgeAttributes>.Edge, TVertexAttributes , TEdgeAttributes> 
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
+    IPredecessorRemembering<ICompleteSnappingGraph.Vertex<IVertexAttributes, IEdgeAttributes>, ICompleteSnappingGraph.Edge<IEdgeAttributes, IVertexAttributes>>
 {
 
 
-    public class Vertex : IBasicVertex<Edge, TVertexAttributes>,
-        IPredecessorRememberingVertex<Edge, TVertexAttributes>
+    public class Vertex<TVertexAttributes, TEdgeAttributes> : 
+        IBasicVertex<Edge<TEdgeAttributes, TVertexAttributes>, TVertexAttributes>,
+        IPredecessorRememberingVertex
+        where TVertexAttributes : IVertexAttributes 
+        where TEdgeAttributes : IEdgeAttributes
     {
         
-        public Edge[] GetEdges()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SetWeight(int weight, Edge edge)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public int? GetWeight(Edge edge)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public TVertexAttributes Attributes { get; }
-        public IPredecessorRememberingVertex<Edge, TVertexAttributes>? Predecessor { get; set; }
+        
+        public Edge<TEdgeAttributes, TVertexAttributes>[] GetEdges()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetWeight(int weight, Edge<TEdgeAttributes, TVertexAttributes> edge)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int? GetWeight(Edge<TEdgeAttributes, TVertexAttributes> edge)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IPredecessorRememberingVertex? Predecessor { get; set; }
     }
 
-    public struct Edge : IBasicEdge<Vertex, TEdgeAttributes>
+    public struct Edge<TEdgeAttributes, TVertexAttributes> : 
+        IBasicEdge<Vertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>
+        where TEdgeAttributes : IEdgeAttributes
+        where TVertexAttributes : IVertexAttributes
     {
+        public TEdgeAttributes Attributes { get; }
         
+        public Vertex<TVertexAttributes, TEdgeAttributes> To { get; }
     }
 }

@@ -14,12 +14,9 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 /// <typeparam name="TEdge">Type of edges used by graph.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of attributes used in vertices of a graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of attributes used in edges of a graph.</typeparam>
-public interface IPredecessorRemembering<out TVertex, out TEdge, out TVertexAttributes, out TEdgeAttributes> :
-    ISearchable<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
-    where TVertex : IPredecessorRememberingVertex<TEdge, TVertexAttributes>
-    where TEdge : IBasicEdge<TVertex, TEdgeAttributes>
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
+public interface IPredecessorRemembering<out TVertex, out TEdge> : ISearchable<TVertex, TEdge>
+    where TVertex : IPredecessorRememberingVertex, IEdgesContainingVertex<TEdge>
+    where TEdge : IDestVertexContainingEdge<TVertex>
 {
     /// <summary>
     /// Explicit implementation of method GetVertexFor of ISearchable interface for better convenience of using this interface.
@@ -27,15 +24,15 @@ public interface IPredecessorRemembering<out TVertex, out TEdge, out TVertexAttr
     /// <param name="coords">Coordinate for which vertex is returned.</param>
     /// <returns>Corresponding vertex for provided <c>MapCoordinate</c>.</returns>
     
-    TVertex ISearchable<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>.GetVertexFor(MapCoordinates coords)
-    {
-        return GetVertexFor(coords);
-    }
+    // TVertex ISearchable<TVertex, TEdge>.GetVertexFor(MapCoordinates coords)
+    // {
+        // return GetVertexFor(coords);
+    // }
     
     /// <summary>
     /// Returns vertex of graph which corresponds to provided location <see cref="MapCoordinates"/> and has ability to remember one other vertex.
     /// </summary>
     /// <param name="coords">Coordinate for which vertex is returned.</param>
     /// <returns>Corresponding vertex for provided <c>MapCoordinate</c>.</returns>
-    new TVertex GetVertexFor(MapCoordinates coords);
+    // new TVertex GetVertexFor(MapCoordinates coords);
 }

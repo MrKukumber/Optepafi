@@ -4,6 +4,7 @@ using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.Utils;
@@ -33,20 +34,20 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 /// <typeparam name="TTemplate">Indicated type of template and used for creating of map representation/graph.</typeparam>
 /// <typeparam name="TMap">Indicated type of map whose representative format is provided.</typeparam>
 /// <typeparam name="TUsableSubMap">Subtype of map type that has correct properties to be used for map representation/graph creation.</typeparam>
-/// <typeparam name="TGraph">Type of graph (map representation) which will be constructed.</typeparam>
+/// <typeparam name="TImplementation">Type of graph (map representation) which will be constructed.</typeparam>
 /// <typeparam name="TConfiguration">Type of configuration used in graph construction process. It is set by graph representative so that all implementations use the same configuration type.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes which will be used in vertices of created graph, defined by used template.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes which will be used in edges of created graph, defined by used template.</typeparam>
-public abstract class ElevDataIndepImplementationRep<TTemplate, TMap, TUsableSubMap, TGraph, TConfiguration,
-    TVertexAttributes, TEdgeAttributes> :
-    IImplementationIndicator<TTemplate, TMap, TGraph>,
-    IImplementationElevDataIndepConstr<TTemplate, TUsableSubMap, TGraph, TConfiguration, TVertexAttributes,
-        TEdgeAttributes>
+public abstract class ElevDataIndepImplementationRep<TTemplate, TMap, TUsableSubMap, TImplementation, TConfiguration, TVertex, TEdge, TVertexAttributes, TEdgeAttributes> :
+    IImplementationIndicator<TTemplate, TMap, TImplementation>,
+    IImplementationElevDataIndepCreator<TTemplate, TUsableSubMap, TImplementation, TConfiguration, TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
     where TMap : IMap
     where TUsableSubMap : TMap, IMap
-    where TGraph : IGraph<TVertexAttributes, TEdgeAttributes>
+    where TImplementation : IGraph<TVertex, TEdge>
     where TConfiguration : IConfiguration
+    where TVertex : IAttributeBearingVertex<TVertexAttributes>
+    where TEdge : IAttributesBearingEdge<TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
@@ -54,6 +55,6 @@ public abstract class ElevDataIndepImplementationRep<TTemplate, TMap, TUsableSub
     public abstract IMapFormat<TMap> UsedMapFormat { get; }
     public bool RequiresElevData { get; } = false;
 
-    public abstract TGraph ConstructMapRepre(TTemplate template, TUsableSubMap map, TConfiguration configuration,
+    public abstract TImplementation CreateImplementation(TTemplate template, TUsableSubMap map, TConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
 }

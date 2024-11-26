@@ -10,13 +10,9 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 /// </summary>
 /// <typeparam name="TVertex">Type of vertices used by graph.</typeparam>
 /// <typeparam name="TEdge">Type of edges used by graph.</typeparam>
-/// <typeparam name="TVertexAttributes">Type of attributes used in vertices of a graph.</typeparam>
-/// <typeparam name="TEdgeAttributes">Type of attributes used in edges of a graph.</typeparam>
-public interface ISearchable<out TVertex, out TEdge, out  TVertexAttributes, out TEdgeAttributes>
-    where TVertex : IBasicVertex<TEdge, TVertexAttributes>
-    where TEdge : IBasicEdge<TVertex, TEdgeAttributes>
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
+public interface ISearchable<out TVertex, out TEdge> : IGraph<TVertex, TEdge>
+    where TVertex : IEdgesContainingVertex<TEdge>
+    where TEdge : IDestVertexContainingEdge<TVertex>
 {
     /// <summary>
     /// Returns vertex of graph which corresponds to provided location <see cref="MapCoordinates"/>.

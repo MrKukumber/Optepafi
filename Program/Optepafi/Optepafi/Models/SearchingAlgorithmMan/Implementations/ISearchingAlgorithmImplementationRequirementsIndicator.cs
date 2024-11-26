@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.Graphs.Representatives;
+using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
@@ -24,10 +26,11 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// This test has to correspond to test provided by <see cref="IsUsableGraph{TVertexAttributes,TEdgeAttributes}"/> method.  
         /// Test is done on no particular vertex-edge attribute types.  
         /// </summary>
-        /// <param name="graphRepresentative">Representative of graph type whose functionalities are tested.</param>
-        /// <returns>True if all requirements are satisfied. Otherwise false.</returns>
-        bool DoesRepresentUsableGraph(IGraphRepresentative<IGraph<IVertexAttributes, IEdgeAttributes>, IVertexAttributes, IEdgeAttributes>
-                graphRepresentative);
+        /// <param name="mapRepreCreator">Representative of graph type whose functionalities are tested.</param>
+        /// <returns>True if all requirements are satisfied. Otherwise, false.</returns>
+        bool DoesRepresentUsableGraph<TVertex, TEdge>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> mapRepreCreator) 
+            where TVertex : IVertex
+            where TEdge : IEdge;
     
         /// <summary>
         /// For provided user model type resolves whether represented user model type satisfies implementations functionality requirements.
@@ -51,7 +54,7 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// <typeparam name="TEdgeAttributes">Type of edge attributes used in edges of graph.</typeparam>
         /// <returns>True if all requirements are satisfied. Otherwise false.</returns>
         bool IsUsableGraph<TVertexAttributes, TEdgeAttributes>(
-            IGraph<TVertexAttributes, TEdgeAttributes> graph)
+            IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph)
             where TVertexAttributes : IVertexAttributes
             where TEdgeAttributes : IEdgeAttributes;
     

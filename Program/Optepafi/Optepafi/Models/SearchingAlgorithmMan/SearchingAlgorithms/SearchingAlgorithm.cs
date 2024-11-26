@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.Graphs.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Implementations;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 using Optepafi.Models.Utils;
@@ -47,22 +50,22 @@ public abstract class SearchingAlgorithm<TConfiguration> : ISearchingAlgorithm w
     /// <inheritdoc cref="ISearchingAlgorithm.DefaultConfigurationDeepCopy"/>
     IConfiguration ISearchingAlgorithm.DefaultConfigurationDeepCopy => DefaultConfiguration.DeepCopy();
     
-    /// <inheritdoc cref="ISearchingAlgorithm.DoesRepresentUsableMapRepreUserModelCombination{TVertexAttributes,TEdgeAttributes}"/>
-    public bool DoesRepresentUsableMapRepreUserModelCombination<TVertexAttributes, TEdgeAttributes>(IMapRepreRepresentative<IMapRepre> mapRepreRep, IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) 
-        where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+    /// <inheritdoc cref="ISearchingAlgorithm.DoesRepresentUsableGraphUserModelCombination{TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/>
+    public bool DoesRepresentUsableGraphUserModelCombination<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRep, IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) 
+        where TVertex : IVertex
+        where TEdge : IEdge
+        where TVertexAttributes : IVertexAttributes 
+        where TEdgeAttributes : IEdgeAttributes
     {
-        var graphRepresentative = mapRepreRep.GetCorrespondingGraphRepresentative<IVertexAttributes, IEdgeAttributes>();
         foreach (var implementation in Implementations)
-        {
-            if (implementation.DoesRepresentUsableGraph(graphRepresentative) && implementation.DoesRepresentUsableUserModel(userModelType))
+            if (implementation.DoesRepresentUsableGraph(graphRep) && implementation.DoesRepresentUsableUserModel(userModelType))
                 return true;
-        }
         return false;
     }
-    
+
     /// <inheritdoc cref="ISearchingAlgorithm.ExecuteSearch{TVertexAttributes,TEdgeAttributes}"/>
     public IPath<TVertexAttributes, TEdgeAttributes>[] ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IGraph<TVertexAttributes, TEdgeAttributes> graph,
+        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
         IList<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>> userModels,
         IConfiguration configuration,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
@@ -87,7 +90,7 @@ public abstract class SearchingAlgorithm<TConfiguration> : ISearchingAlgorithm w
 
     /// <inheritdoc cref="ISearchingAlgorithm.GetExecutor{TVertexAttributes,TEdgeAttributes}"/>
     public ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
-        IGraph<TVertexAttributes, TEdgeAttributes> graph,
+        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
         IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IConfiguration configuration)
         where TVertexAttributes : IVertexAttributes

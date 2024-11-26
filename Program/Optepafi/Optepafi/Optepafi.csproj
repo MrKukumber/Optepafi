@@ -182,6 +182,7 @@
         <DependentUpon>PathFindingLocal.sk-SK.resx</DependentUpon>
       </Compile>
       <Compile Remove="Models\MapMan\MapInterfaces\IGeoReferencedMap.cs" />
+      <Compile Remove="Models\MapRepreMan\Implementations\IImplementation.cs" />
     </ItemGroup>
 
 

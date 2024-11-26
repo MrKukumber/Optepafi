@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Optepafi.Models.MapRepreMan.MapRepres.Specific;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.Utils;
 
@@ -11,13 +12,20 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 /// It is just blank object used as demonstrative type for presenting application functionality.  
 /// For more information about graphs see <see cref="IGraph{TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
-/// <typeparam name="TVertexAttributes">Type of vertex attributes that are provided in vertices of generated graph.</typeparam>
-/// <typeparam name="TEdgeAttributes">Type of edge attributes that are provided in edges of generated graph.</typeparam>
-public interface IBlankGraph<TVertexAttributes, TEdgeAttributes> :
+public interface IBlankGraph :
     IBlankRepre,
-    IGraph<TVertexAttributes, TEdgeAttributes>
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
+    IGraph<IBlankGraph.Vertex<IVertexAttributes>, IBlankGraph.Edge<IEdgeAttributes>>
 {
-    
+    public class Vertex<TVertexAttributes>(TVertexAttributes vertexAttributes) : IAttributeBearingVertex<TVertexAttributes>
+        where TVertexAttributes : IVertexAttributes
+    {
+        public TVertexAttributes Attributes { get; } = vertexAttributes;
+    }
+
+    public class Edge<TEdgeAttributes>(TEdgeAttributes edgeAttributes) : IAttributesBearingEdge<TEdgeAttributes>
+        where TEdgeAttributes : IEdgeAttributes
+    {
+        
+        public TEdgeAttributes Attributes { get; } = edgeAttributes;
+    }
 }

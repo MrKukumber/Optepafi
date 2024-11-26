@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.Graphs.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms.Specific;
 using Optepafi.Models.TemplateMan;
+using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
@@ -62,9 +65,10 @@ public class SearchingAlgorithmManager :
         HashSet<ISearchingAlgorithm> usableAlgorithms = new();
         if (userModelType is IUserModelType< IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
         {
+            var graphCreator = mapRepreRep.GetCorrespondingGraphCreator();
             foreach (var searchingAlgorithm in SearchingAlgorithms)
             {
-                if (searchingAlgorithm.DoesRepresentUsableMapRepreUserModelCombination(mapRepreRep, computingUserModelType))
+                if (graphCreator.RevelationForSearchingAlgorithmMan(this, computingUserModelType, searchingAlgorithm))
                     usableAlgorithms.Add(searchingAlgorithm);
             }
         }
@@ -109,9 +113,24 @@ public class SearchingAlgorithmManager :
     bool ITemplateGenericVisitor<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm) otherParams)
     {
         var (mapRepreRep, userModelType, algorithm) = otherParams;
-        if (userModelType is IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
-            return algorithm.DoesRepresentUsableMapRepreUserModelCombination(mapRepreRep, computingUserModelType);
+        if (userModelType is IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> , ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
+        {
+            var graphCreator = mapRepreRep.GetCorrespondingGraphCreator();
+            graphCreator.RevelationForSearchingAlgorithmMan(this, computingUserModelType, algorithm);
+        }
         return false;
+    }
+
+    public bool AcceptGraphCreatorsRevelation<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(
+        IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> revealedGraphRep,
+        IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType,
+        ISearchingAlgorithm algorithm)
+        where TVertex : IVertex
+        where TEdge : IEdge
+        where TVertexAttributes : IVertexAttributes
+        where TEdgeAttributes : IEdgeAttributes
+    {
+        return algorithm.DoesRepresentUsableGraphUserModelCombination(revealedGraphRep, computingUserModelType);
     }
     
     public enum SearchResult{Ok = 1, NotComputingUserModelOrNotTiedToTemplate}
@@ -147,11 +166,11 @@ public class SearchingAlgorithmManager :
         var (track, algorithm, mapRepre, userModel, configuration,progress, cancellationToken) = otherParams;
         if (userModel is IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
         {
-            if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> graph)
+            if (mapRepre is IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph)
             {
                 return algorithm.ExecuteSearch(track, graph, [computingUserModel], configuration, progress, cancellationToken)[0];
             }
-            throw new ArgumentException("Provided map representation is not a graph ot it is not tide to given template.");
+            throw new ArgumentException("Provided map representation is not a graph ot its vertices or edges bear attributes of given template.");
         }
         throw new ArgumentException("Provided user model is not computing one.");
     }
@@ -207,7 +226,7 @@ public class SearchingAlgorithmManager :
         
         IPath[] foundPaths;
 
-        if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> definedFunctionalityMapRepre)
+        if (mapRepre is IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> definedFunctionalityMapRepre)
             foundPaths = usableUserModels.Count == 0 ? [] : algorithm.ExecuteSearch(track, definedFunctionalityMapRepre, usableUserModels, configuration, progress, cancellationToken);
         else
             throw new ArgumentException("Provided map representation is not a graph or it is not tied to given template.");
@@ -258,7 +277,7 @@ public class SearchingAlgorithmManager :
         var (algorithm, mapRepre, userModel, configuration) = otherParams;
         if (userModel is IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> computingUserModel)
         {
-            if (mapRepre is IGraph<TVertexAttributes, TEdgeAttributes> definedFunctionalityMapRepre)
+            if (mapRepre is IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> definedFunctionalityMapRepre)
             {
                 var executor = algorithm.GetExecutor(definedFunctionalityMapRepre, computingUserModel, configuration);
                 return executor;
@@ -267,6 +286,7 @@ public class SearchingAlgorithmManager :
         }
         throw new ArgumentException("Provided user model is not computing one.");
     }
+    
 }
 
 

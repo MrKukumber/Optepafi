@@ -12,7 +12,8 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Specific.Blank;
 /// For more information on graphs see <see cref="IGraph{TVertexAttributes,TEdgeAttributes}"/> and on map representations <see cref="IMapRepre"/>.  
 /// </summary>
 public abstract class BlankElevDataDepBlankTemplateTextMapImplementation :
-    IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
+    IGraph<IBlankGraph.Vertex<BlankTemplate.VertexAttributes>, IBlankGraph.Edge<BlankTemplate.EdgeAttributes>>,
+    IBlankGraph
 {
     /// <inheritdoc cref="IGraph{TVertexAttributes,TEdgeAttributes}.RestoreConsistency"/>
     public void RestoreConsistency() { }
@@ -21,5 +22,5 @@ public abstract class BlankElevDataDepBlankTemplateTextMapImplementation :
     public string Name { get; } = "Blank map representation.";
     
     /// <inheritdoc cref="IMapRepre.AcceptGeneric{TOut,TOtherParams}"/>
-    TOut IMapRepre.AcceptGeneric<TOut, TOtherParams>(IMapRepreGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit<BlankElevDataDepBlankTemplateTextMapImplementation, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>(this, otherParams);
+    TOut IMapRepre.AcceptGeneric<TOut, TOtherParams>(IMapRepreGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
 }

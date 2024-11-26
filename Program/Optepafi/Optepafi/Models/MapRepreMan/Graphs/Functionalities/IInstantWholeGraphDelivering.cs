@@ -8,8 +8,9 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 /// That means this map representations that corresponds to graphs with this ability must generate their graphs before start of path finding on them. 
 /// </summary>
 /// <typeparam name="TVertex">Type of vertices of graph.</typeparam>
-public interface IInstantWholeGraphDelivering<out TVertex>
+public interface IInstantWholeGraphDelivering<out TVertex, out TEdge> : IGraph<TVertex, TEdge>
     where TVertex : IVertex
+    where TEdge : IEdge
 {
     /// <summary>
     /// Returns array of all vertices of generated graph.

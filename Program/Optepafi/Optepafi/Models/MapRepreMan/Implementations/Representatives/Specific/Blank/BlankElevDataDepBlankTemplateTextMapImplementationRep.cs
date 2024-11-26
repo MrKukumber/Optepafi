@@ -15,26 +15,26 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.B
 /// Represents implementation of blank map representation/graph for <c>BlankTemplate</c> template type and <c>TextMap</c> map type.
 /// 
 /// Represented implementation needs elevation data for its creation even though it does not use them.  
-/// For more information on representatives of elevation data independent implementations see <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}"/>.  
+/// For more information on representatives of elevation data independent implementations see <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TImplementation,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
-public class BlankGraphElevDataDepBlankTemplateTextMapImplementationRep :
-    ElevDataDepImplementationRep<BlankTemplate, TextMap, TextMap, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, NullConfiguration, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
+public class BlankElevDataDepBlankTemplateTextMapImplementationRep :
+    ElevDataDepImplementationRep<BlankTemplate, TextMap, TextMap, BlankElevDataDepBlankTemplateTextMapImplementation, NullConfiguration, IBlankGraph.Vertex<BlankTemplate.VertexAttributes>, IBlankGraph.Edge<BlankTemplate.EdgeAttributes>, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
-    public static BlankGraphElevDataDepBlankTemplateTextMapImplementationRep Instance { get; } = new();
-    private BlankGraphElevDataDepBlankTemplateTextMapImplementationRep() { }
+    public static BlankElevDataDepBlankTemplateTextMapImplementationRep Instance { get; } = new();
+    private BlankElevDataDepBlankTemplateTextMapImplementationRep() { }
 
 
-    /// <inheritdoc cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}.UsedTemplate"/>
+    /// <inheritdoc cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TImplementation,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}.UsedTemplate"/>
     public override BlankTemplate UsedTemplate { get; } = BlankTemplate.Instance;
     
-    /// <inheritdoc cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}.UsedMapFormat"/>
+    /// <inheritdoc cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TImplementation,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}.UsedMapFormat"/>
     public override IMapFormat<TextMap> UsedMapFormat { get; } = TextMapRepresentative.Instance;
 
-    /// <inheritdoc cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TVertexAttributes,TEdgeAttributes}.ConstructMapRepre"/>
+    /// <inheritdoc cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TImplementation,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}.CreateImplementation"/>
     /// <remarks>
     /// It simulates implementations creation with reporting state of simulated process.
     /// </remarks>
-    public override IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes> ConstructMapRepre
+    public override BlankElevDataDepBlankTemplateTextMapImplementation CreateImplementation
     (BlankTemplate template, TextMap map, IElevData elevData, NullConfiguration configuration, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
     {
         for (int i = 1; i <= 100; i++)

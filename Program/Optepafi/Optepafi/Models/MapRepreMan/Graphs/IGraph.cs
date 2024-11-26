@@ -1,4 +1,5 @@
 using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.Graphs;
@@ -11,12 +12,12 @@ namespace Optepafi.Models.MapRepreMan.Graphs;
 /// Each implementation of this interface should implement set of graph functionality interfaces which will define its provided abilities.  
 /// Each graph type should have it own representative by which it is presented in some map representation representative as map representations corresponding graph type.  
 /// </summary>
-/// <typeparam name="TVertexAttributes">Type of vertex attributes that are provided in vertices of generated graph.</typeparam>
-/// <typeparam name="TEdgeAttributes">Type of edge attributes that are provided in edges of generated graph.</typeparam>
-public interface IGraph<TVertexAttributes, TEdgeAttributes> : 
+/// <typeparam name="TVertex">Type of vertices that are provided in generated graph.</typeparam>
+/// <typeparam name="TEdge">Type of edges that are provided in generated graph.</typeparam>
+public interface IGraph<out TVertex, out TEdge> : 
     IMapRepre
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
+    where TVertex : IVertex
+    where TEdge : IEdge
 {
     public void RestoreConsistency();
 }

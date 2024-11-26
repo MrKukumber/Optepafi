@@ -4,6 +4,7 @@ using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.Utils;
@@ -18,14 +19,16 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 /// This class has elevation data independent counterpart. For more information about both of these classes see <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/>.  
 /// Everything what is stated for <c>ElevDataIndepImplementationRep</c> holds for this class too except the fact that this class needs providing of elevation data for map representations/graphs creation.  
 /// </summary>
-public abstract class ElevDataDepImplementationRep<TTemplate, TMap, TUsableSubMap, TGraph, TConfiguration, TVertexAttributes, TEdgeAttributes> :
-    IImplementationIndicator<TTemplate, TMap, TGraph>, 
-    IImplementationElevDataDepConstr<TTemplate,TUsableSubMap,TGraph, TConfiguration, TVertexAttributes,TEdgeAttributes>
+public abstract class ElevDataDepImplementationRep<TTemplate, TMap, TUsableSubMap, TImplementation, TConfiguration, TVertex, TEdge, TVertexAttributes, TEdgeAttributes> :
+    IImplementationIndicator<TTemplate, TMap, TImplementation>, 
+    IImplementationElevDataDepCreator<TTemplate,TUsableSubMap,TImplementation, TConfiguration, TVertex, TEdge, TVertexAttributes,TEdgeAttributes>
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> 
     where TMap : IMap 
     where TUsableSubMap : TMap, IGeoLocatedMap
-    where TGraph : IGraph<TVertexAttributes, TEdgeAttributes>
+    where TImplementation : IGraph<TVertex, TEdge>
     where TConfiguration : IConfiguration
+    where TVertex : IAttributeBearingVertex<TVertexAttributes>
+    where TEdge : IAttributesBearingEdge<TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
@@ -33,6 +36,6 @@ public abstract class ElevDataDepImplementationRep<TTemplate, TMap, TUsableSubMa
     public abstract IMapFormat<TMap> UsedMapFormat { get; }
     public bool RequiresElevData { get; } = true;
     
-    public abstract TGraph ConstructMapRepre(TTemplate template, TUsableSubMap map, IElevData elevData, TConfiguration configuration, 
+    public abstract TImplementation CreateImplementation(TTemplate template, TUsableSubMap map, IElevData elevData, TConfiguration configuration, 
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
 }

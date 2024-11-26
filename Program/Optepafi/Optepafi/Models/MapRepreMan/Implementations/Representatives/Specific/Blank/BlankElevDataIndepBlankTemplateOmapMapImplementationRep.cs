@@ -11,15 +11,15 @@ using Optepafi.Models.Utils.Configurations;
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.Blank;
 
 //TODO: comment
-public class BlankGraphElevDataIndepBlankTemplateOmapMapImplementationRep:
-    ElevDataIndepImplementationRep<BlankTemplate, OmapMap, OmapMap, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>, NullConfiguration, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
+public class BlankElevDataIndepBlankTemplateOmapMapImplementationRep:
+    ElevDataIndepImplementationRep<BlankTemplate, OmapMap, OmapMap, BlankElevDataIndepBlankTemplateOmapMapImplementation, NullConfiguration, IBlankGraph.Vertex<BlankTemplate.VertexAttributes>, IBlankGraph.Edge<BlankTemplate.EdgeAttributes>, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
-    public static BlankGraphElevDataIndepBlankTemplateOmapMapImplementationRep Instance { get; } = new();
-    private BlankGraphElevDataIndepBlankTemplateOmapMapImplementationRep(){ }
+    public static BlankElevDataIndepBlankTemplateOmapMapImplementationRep Instance { get; } = new();
+    private BlankElevDataIndepBlankTemplateOmapMapImplementationRep(){ }
     public override BlankTemplate UsedTemplate { get; } = BlankTemplate.Instance;
     public override IMapFormat<OmapMap> UsedMapFormat { get; } = OmapMapRepresentative.Instance;
 
-    public override IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes> ConstructMapRepre(BlankTemplate template, OmapMap map, NullConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
+    public override BlankElevDataIndepBlankTemplateOmapMapImplementation CreateImplementation(BlankTemplate template, OmapMap map, NullConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
         CancellationToken? cancellationToken)
     {
         for (int i = 1; i <= 100; i++)

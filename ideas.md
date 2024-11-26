@@ -147,6 +147,7 @@
 - podpora pluginov
 - zlepsit uzivatelsku privetivost
 - pridat spravne spracovavanie dier v polygonoch v omap file-och - nateraz diery v polygonoch ignorujem - upravit aj vykreslovanie map aj vytvaranie mapovych reprezentacii 
+- nechat nech mapovu reprezentaciu moze implementovat viac grafov, ktore budu mat rozne vlastnosti a teda bude mozne otestovat viac moznosti vo vyhladavcom algoritme, ci aspon jedna z grafovych reprezentacii je pouzitelna. Vsetky grafove reprezentacie pritom budu dodrzovat podstatu mapovej reprezentacie.
 
 ## DONE
 

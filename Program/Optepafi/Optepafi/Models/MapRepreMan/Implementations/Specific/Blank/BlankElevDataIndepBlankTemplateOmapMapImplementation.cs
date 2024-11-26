@@ -7,7 +7,8 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Specific.Blank;
 
 //TODO: comment
 public class BlankElevDataIndepBlankTemplateOmapMapImplementation :
-    IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
+    IGraph<IBlankGraph.Vertex<BlankTemplate.VertexAttributes>, IBlankGraph.Edge<BlankTemplate.EdgeAttributes>>,
+    IBlankGraph
 {
     /// <inheritdoc cref="IGraph{TVertexAttributes,TEdgeAttributes}.RestoreConsistency"/>
     public void RestoreConsistency() { }
@@ -16,5 +17,5 @@ public class BlankElevDataIndepBlankTemplateOmapMapImplementation :
     public string Name { get; } = "Blank map representation.";
 
     /// <inheritdoc cref="IMapRepre.AcceptGeneric{TOut,TOtherParams}"/>
-    TOut IMapRepre.AcceptGeneric<TOut, TOtherParams>(IMapRepreGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit<BlankElevDataIndepBlankTemplateOmapMapImplementation, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>(this, otherParams);
+    TOut IMapRepre.AcceptGeneric<TOut, TOtherParams>(IMapRepreGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
 }

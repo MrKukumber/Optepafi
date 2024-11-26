@@ -5,6 +5,7 @@ using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.Graphs.Representatives;
 using Optepafi.Models.MapRepreMan.Implementations.Representatives;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.Utils;
@@ -21,7 +22,7 @@ namespace Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 /// - collection of implementation indicators
 /// - reference to the corresponding graph representative
 ///
-/// Implementation indicator collection should contain either <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/>. or <see cref="MapRepreManager"/> instances so they could be used for map creation too.  
+/// Implementation indicator collection should contain either <see cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/>. or <see cref="MapRepreManager"/> instances so they could be used for map creation too.  
 /// Each implementation representative should occur in this collection for one template-map combination at most once. So there should be at most one elev data dependent and at most one elev data independent implementation for each template-map combination.  
 /// Corresponding graph representative provides work with corresponding graph derived from represented map representation by implementation of this interface.  
 /// Each map representation should have its own representative, so it could be presented at <see cref="MapRepreManager"/> as viable map representation.  
@@ -35,23 +36,16 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <summary>
     /// Indicator collection of all implementations of represented map representation.
     /// 
-    /// These indicators should be of <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/> or <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/> type so they could be used for map creation too.
+    /// These indicators should be of <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/> or <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/> type so they could be used for map creation too.
     /// </summary>
     IImplementationIndicator<ITemplate, IMap, TMapRepre>[] ImplementationIndicators { get; }
     
-    
     /// <summary>
-    /// Returns graph representative which represents corresponding graph derived from represented map representation.
-    /// 
-    /// This inheritance is not forced by any type parameter. In runtime there is check in graph construction method of graph representative which "forces" this inheritance between graph type and type of constructed map representation.
+    /// Returns graph creator which represents corresponding graph derived from represented map representation.
     /// </summary>
-    /// <typeparam name="TVertexAttributes">Type of vertex attributes of represented graph.</typeparam>
-    /// <typeparam name="TEdgeAttributes">Type of edge attributes of represented graph.</typeparam>
-    /// <returns>Representative of corresponding graph to the map representation.</returns>
-    IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
-        GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>()
-        where TVertexAttributes : IVertexAttributes
-        where TEdgeAttributes : IEdgeAttributes;
+    /// <returns>Creator of corresponding graph to the map representation.</returns>
+    IMapRepreCreator<TMapRepre>
+        GetCorrespondingGraphCreator();
 
     /// <summary>
     /// Default configuration of represented map representation.

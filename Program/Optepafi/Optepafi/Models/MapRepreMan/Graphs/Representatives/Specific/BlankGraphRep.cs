@@ -4,9 +4,14 @@ using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs.Specific;
 using Optepafi.Models.MapRepreMan.Implementations.Representatives;
+using Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.Blank;
 using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.SearchingAlgorithmMan;
+using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.UserModelMan.UserModelReps;
+using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapRepreMan.Graphs.Representatives.Specific;
@@ -16,12 +21,14 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Representatives.Specific;
 /// 
 /// Its instance is contained in <c>BlankRepreRep</c> so it can be used for creation of represented map representation/graph. 
 /// </summary>
-/// <typeparam name="TVertexAttributes">Type of vertex attributes used in represented graph.</typeparam>
-/// <typeparam name="TEdgeAttributes">Type of edge attributes used in represented graph.</typeparam>
-public class BlankGraphRep<TVertexAttributes, TEdgeAttributes> : GraphRepresentative<IBlankGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes
+public class BlankGraphRep : GraphRepresentative<IBlankGraph, IBlankGraph.Vertex<IVertexAttributes>, IBlankGraph.Edge<IEdgeAttributes>>
 {
-    public static BlankGraphRep<TVertexAttributes, TEdgeAttributes> Instance { get; } = new();
+    public static BlankGraphRep Instance { get; } = new();
     private BlankGraphRep() { }
+    
+    ///<inheritdoc cref="GraphRepresentative{TGraph,TVertex,TEdge}.CreateableImplementationsIndicators"/>
+    public override IImplementationIndicator<ITemplate, IMap, IBlankGraph>[] CreateableImplementationsIndicators { get; } = [BlankElevDataDepBlankTemplateTextMapImplementationRep.Instance, BlankElevDataIndepBlankTemplateOmapMapImplementationRep.Instance];
+
+    public override bool RevelationForSearchingAlgorithmMan<TVertexAttributes, TEdgeAttributes>(SearchingAlgorithmManager searchingAlgorithmMan, IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType, ISearchingAlgorithm algorithm) => searchingAlgorithmMan.AcceptGraphCreatorsRevelation(this, userModelType, algorithm);
+
 }

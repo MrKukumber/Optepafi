@@ -1,4 +1,6 @@
 using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan;
@@ -16,11 +18,9 @@ namespace Optepafi.Models.MapRepreMan;
 
 public interface IMapRepreGenericVisitor<TOut, TOtherParams>
 {
-    public TOut GenericVisit<TImplementation, TVertexAttributes, TEdgeAttributes>(TImplementation implementation,
+    public TOut GenericVisit<TImplementation>(TImplementation implementation,
         TOtherParams otherParams)
-        where TImplementation : IGraph<TVertexAttributes, TEdgeAttributes>
-        where TVertexAttributes : IVertexAttributes
-        where TEdgeAttributes : IEdgeAttributes;
+        where TImplementation : IMapRepre;
 }
 
 // public interface IMapRepreGenericVisitor<TOut>

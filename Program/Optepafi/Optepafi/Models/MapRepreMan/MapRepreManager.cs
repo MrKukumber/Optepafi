@@ -7,6 +7,7 @@ using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives.Specific;
+using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
@@ -26,7 +27,6 @@ namespace Optepafi.Models.MapRepreMan;
 /// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.  
 /// </summary>
 public class MapRepreManager : 
-    ITemplateGenericVisitor<HashSet<IMapRepreRepresentative<IMapRepre>>, (ISearchingAlgorithm, IUserModelType<IUserModel<ITemplate>, ITemplate>)>,
     IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
     IGeoLocatedMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
     ITemplateGenericVisitor<IMapRepre, IMap, (IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
@@ -124,25 +124,11 @@ public class MapRepreManager :
     public HashSet<IMapRepreRepresentative<IMapRepre>> GetUsableMapRepreRepsFor(
         ISearchingAlgorithm algorithm, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType)
     {
-        return userModelType.AssociatedTemplate.AcceptGeneric(this, (algorithm, userModelType));
-    }
-
-    public HashSet<IMapRepreRepresentative<IMapRepre>> GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template,
-        (ISearchingAlgorithm, IUserModelType<IUserModel<ITemplate>, ITemplate>) otherParams) where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
-    {
-        var (algorithm, userModelType) = otherParams;
-        if (userModelType is IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> comptuingUserModelType)
-        {
-            HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = new();
-            foreach (var mapRepreRep in MapRepreReps)
-            {
-                if (algorithm.DoesRepresentUsableMapRepreUserModelCombination(mapRepreRep, comptuingUserModelType))
+        HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = new();
+        foreach (var mapRepreRep in MapRepreReps)
+            if(SearchingAlgorithmManager.Instance.DoesRepresentUsableMapRepreUserModelCombFor(mapRepreRep,  userModelType, algorithm))
                     usableMapRepreReps.Add(mapRepreRep);
-            }
-
-            return usableMapRepreReps;
-        }
-        return [];
+        return usableMapRepreReps;
     }
 
     /// <summary>

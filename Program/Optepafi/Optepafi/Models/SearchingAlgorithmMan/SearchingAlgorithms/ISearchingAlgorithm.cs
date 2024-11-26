@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.Graphs.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Implementations;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
@@ -23,7 +25,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 /// Searching is done upon graph which satisfies functionality conditions.  
 /// Computing of weights for edges is done by provided user model to the algorithm. Weights of graphs edges are not computed before algorithm execution. Every algorithm should check at first that weight of specific edge is computed already. If it is not, it has to let user model to compute this weight and set it to the edge during run of its execution.
 /// Execution of the algorithm can be adjusted by providing configuration object of specific type.
-/// Before execution of algorithm should be run <see cref="DoesRepresentUsableMapRepreUserModelCombination{TVertexAttributes,TEdgeAttributes}"/> method to check if given graph - user model combination is usable for this algorithm.  
+/// Before execution of algorithm should be run <see cref="DoesRepresentUsableGraphUserModelCombination{TVertexAttributes,TEdgeAttributes}"/> method to check if given graph - user model combination is usable for this algorithm.  
 /// Methods of searching algorithm should not be called directly from logic of application (ModelViews/ViewModels). <see cref="SearchingAlgorithmManager"/> should be used instead.  
 /// Each searching algorithm should be singleton and its instance presented in <see cref="SearchingAlgorithmManager"/> as viable option.
 /// 
@@ -51,14 +53,18 @@ public interface ISearchingAlgorithm
     /// Method that checks whether there is some implementation of algorithm that can use both map representation type and user model type represented by provided representatives. /// 
     /// It checks if they possess the correct functionality.
     /// </summary>
-    /// <param name="mapRepreRep">Representative of map representation type that is checked.</param>
+    /// <param name="graphRep">Representative of map representation type that is checked.</param>
     /// <param name="userModelType">Represents computing user model type that is checked.</param>
+    /// <typeparam name="TVertex">Type of vertices used in tested graph.</typeparam>
+    /// <typeparam name="TEdge">Type of edges used in tested graph.</typeparam>
     /// <typeparam name="TVertexAttributes">Type of vertex attributes bounded to tested user model type.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes bounded to tested user model type.</typeparam>
     /// <returns>True if any of implementations can use both represented map representation type and user model type. False otherwise</returns>
-    bool DoesRepresentUsableMapRepreUserModelCombination<TVertexAttributes, TEdgeAttributes>(
-        IMapRepreRepresentative<IMapRepre> mapRepreRep,
+    bool DoesRepresentUsableGraphUserModelCombination<TVertex, TEdge,TVertexAttributes, TEdgeAttributes>(
+        IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRep,
         IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType)
+        where TVertex : IVertex
+        where TEdge : IEdge
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
@@ -78,7 +84,7 @@ public interface ISearchingAlgorithm
     /// <returns>Collection of resulting found paths. Merged paths for legs of track are returned in order of corresponding user models.</returns>
     /// <exception cref="ArgumentException">When no implementation is able to use provided graph or any of provided user models.</exception>
     IPath<TVertexAttributes, TEdgeAttributes>[] ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IGraph<TVertexAttributes, TEdgeAttributes> graph,
+        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
         IList<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> userModels,
         IConfiguration configuration,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
@@ -99,7 +105,7 @@ public interface ISearchingAlgorithm
     /// <returns>Executor of this searching algorithm.</returns>
     /// <exception cref="ArgumentException">When no implementation is able to use provided graph or user model.</exception>
     ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
-        IGraph<TVertexAttributes, TEdgeAttributes> graph,
+        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
         IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
         IConfiguration configuration)
         where TVertexAttributes : IVertexAttributes

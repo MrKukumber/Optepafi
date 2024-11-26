@@ -671,3 +671,13 @@ Pri zadani trate sa neotaca trojuholnik startu, skusit debugnut
 trianglePoint0 = {CanvasCoordinate} CanvasCoordinate { LeftPos = 3123, TopPos = -2499 }
 trianglePoint1 = {CanvasCoordinate} CanvasCoordinate { LeftPos = -3435, TopPos = -1092 }
 trianglePoint2 = {CanvasCoordinate} CanvasCoordinate { LeftPos = 312, TopPos = 3591 }
+
+## 26.11
+
+Dokonceny refactoring mapovych reprezentacii (zasa). Prerobeny graph tak aby definoval typy hran a vrcholov, ktore pouziva, co dava vazcsi zmysel + odrezanie informacie o type vrchovlovych a hranovych atributov od definicie grafu, tuto informaciu drzi len implementacia, co zasa dava zmysel, nakolko ta je uz vytvorena pre konkretny template.
+
+IMPORTANT!! 
+- Tym ze do algoritmu ide graf ktory ma IAttributeBearingVertex/Edge, tak ked budem zistovat jeho funkcionality, tak mozem patternmatchovat tiez na IAttributeBearingVertex/Edge a teda aj vysledna premenna bude schopna vracat vrcholove a hranove atributy. V algoritme nieje dolezity konkretny typ hran a vrcholov, len musia splnovat co algoritmus potrebuje. :))))))
+- este premysliet, ci je potrebne mat genericke parametre aj pri testovani reprezentatnov a typov mapovych reprezentacii a uzivatelskych mnodelov v seraching algoritmoch, nakolko by tam teoreticky vsade mohli byt IVertex, IEdge, IVertexAttribute, IEdgeAttribute typy, nakolko by nemali byt potrebne pri testovani funkcionality.....len tam zasa bude mozno klasicky problem s tym priradovanym  parametroveho typu constraine-uteho na nejaky interface do daneho interface-u
+
+- mozne rozsirenie ktore by ale potrebovalo poriadne premysliet - nechat nech mapovu reprezentaciu moze implementovat viac grafov, ktore budu mat rozne vlastnosti a teda bude mozne otestovat viac moznosti vo vyhladavcom algoritme, ci aspon jedna z grafovych reprezentacii je pouzitelna

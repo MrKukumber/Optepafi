@@ -25,15 +25,8 @@ public class BlankRepreRep : MapRepreRepresentative<IBlankRepre, NullConfigurati
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.MapRepreName"/>
     public override string MapRepreName { get; } = "Blank representation.";
-    
-    ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.ImplementationIndicators"/>
-    public override IImplementationIndicator<ITemplate, IMap, IBlankRepre>[] ImplementationIndicators { get; } = [BlankGraphElevDataDepBlankTemplateTextMapImplementationRep.Instance, BlankGraphElevDataIndepBlankTemplateOmapMapImplementationRep.Instance];
 
+    ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.GetCorrespondingGraphCreator"/>
+    public override IMapRepreCreator<IBlankRepre> GetCorrespondingGraphCreator() => BlankGraphRep.Instance;
     protected override NullConfiguration DefaultConfiguration { get; } = new(); 
-
-    ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.GetCorrespondingGraphRepresentative{TVertexAttributes, TEdgeAttributes}"/>
-    public override IGraphRepresentative<IGraph<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> GetCorrespondingGraphRepresentative<TVertexAttributes, TEdgeAttributes>() 
-    {
-        return BlankGraphRep<TVertexAttributes, TEdgeAttributes>.Instance;
-    }
 }

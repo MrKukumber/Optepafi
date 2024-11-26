@@ -142,10 +142,10 @@ public class GraphicsManager :
     public AggregationResult AggregateMapRepreGraphics(IMapRepre mapRepre,
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken = null)
     {
-        return mapRepre.AcceptGeneric<AggregationResult, (IGraphicObjectCollector, CancellationToken?)>(this, (collectorForAggregatedObjects, cancellationToken));
+        return mapRepre.AcceptGeneric(this, (collectorForAggregatedObjects, cancellationToken));
     }
 
-    AggregationResult IMapRepreGenericVisitor<AggregationResult, (IGraphicObjectCollector, CancellationToken?)>.GenericVisit<TImplementation, TVertexAttributes, TEdgeAttributes>(TImplementation implementation,
+    AggregationResult IMapRepreGenericVisitor<AggregationResult, (IGraphicObjectCollector, CancellationToken?)>.GenericVisit<TImplementation>(TImplementation implementation,
         (IGraphicObjectCollector, CancellationToken?) otherParams) 
     {
         var (collectorForAggregatedObjects, cancellationToken) = otherParams;
