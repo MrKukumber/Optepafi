@@ -26,7 +26,7 @@ public class Contour_101_ViewModel(Contour_101 obj, MapCoordinates mapsTopLeftVe
 public class SlopeLine_101_1_ViewModel(SlopeLine_101_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex);
-    public override int Priority => 26;
+    public override int Priority => 28;
     public int LineThickness { get; } = 140;
     public CanvasCoordinate StartPoint { get; } = new CanvasCoordinate(0, 0);
     public CanvasCoordinate EndPoint { get; } = new CanvasCoordinate(0, -400).Rotate(-obj.Rotation, new CanvasCoordinate(0,0));
@@ -1064,7 +1064,7 @@ public class ProminentManMadeFeatureX_531_ViewModel(ProminentManMadeFeatureX_531
 public class Stairway_532_ViewModel(Stairway_532 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
-    public override int Priority => 12;
+    public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
 }
 public class StairWayWithoutBorderLines_532_1_ViewModel(StairWayWithoutBorderLines_532_1 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel

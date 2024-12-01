@@ -18,14 +18,14 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives;
 /// </summary>
 /// <typeparam name="TTemplate">Type of template used in implementation and its construction.</typeparam>
 /// <typeparam name="TMap">Type of map used in implementation and its construction.</typeparam>
-/// <typeparam name="TImplementation">Type of graph that is returned from construction.</typeparam>
+/// <typeparam name="TGraph">Type of graph that is returned from construction.</typeparam>
 /// <typeparam name="TConfiguration">Type of configuration used in graph construction process. It is set by graph representative so that all implementations use same configuration type.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes used in vertices of returned graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes used in edges of returned graph.</typeparam>
-public interface IImplementationElevDataIndepCreator<in TTemplate, in TMap, out TImplementation, TConfiguration, TVertex, TEdge, TVertexAttributes, TEdgeAttributes> 
+public interface IImplementationElevDataIndepCreator<in TTemplate, in TMap, out TGraph, in TConfiguration, out TVertex, out TEdge, out TVertexAttributes, out TEdgeAttributes> 
     where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
     where TMap : IMap 
-    where TImplementation : IGraph<TVertex, TEdge>
+    where TGraph : IGraph<TVertex, TEdge>
     where TConfiguration : IConfiguration
     where TVertex : IVertex
     where TEdge : IEdge
@@ -40,7 +40,7 @@ public interface IImplementationElevDataIndepCreator<in TTemplate, in TMap, out 
     /// <param name="configuration">Configuration of created map representation.Type of configuration is set by graph representative so that all implementations use same configuration type.</param>
     /// <param name="progress">Object by which can be progress of construction subscribed.</param>
     /// <param name="cancellationToken">Token for cancelling of construction.</param>
-    public TImplementation CreateImplementation(TTemplate template, TMap map, TConfiguration configuration,
+    public TGraph CreateImplementation(TTemplate template, TMap map, TConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken);
     
 }

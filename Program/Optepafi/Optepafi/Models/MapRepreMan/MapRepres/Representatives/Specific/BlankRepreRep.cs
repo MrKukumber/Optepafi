@@ -27,6 +27,6 @@ public class BlankRepreRep : MapRepreRepresentative<IBlankRepre, NullConfigurati
     public override string MapRepreName { get; } = "Blank representation.";
 
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.GetCorrespondingGraphCreator"/>
-    public override IMapRepreCreator<IBlankRepre> GetCorrespondingGraphCreator() => BlankGraphRep.Instance;
+    public override IGraphCreator<IBlankRepre> GetCorrespondingGraphCreator() => BlankGraphRep.Instance;
     protected override NullConfiguration DefaultConfiguration { get; } = new(); 
 }

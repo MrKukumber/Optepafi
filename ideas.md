@@ -155,6 +155,10 @@
 - vacsiu custom-izaciu toho, ktora implementacia sa kedy pouzije, moznost viacerych implementacii algoritmov pre rovnake kombinacie mapovych reprezentacii s uzivatelskymi modelmi a uzivatel bude moct vybrat nejakym sposobom preferovanu implementaciu...to iste pre mapove reprezentacie a ich implementacie - implementovane pomocou konfiguracii kotre mozu upravovat beh algoritmu
 - spracovanie trate zo vstupneho suboru
 
+## Myslienky do buducna
+
+- ked spravim moznost definovat pre mapovu reprezentaciu viac grafovych rerpezetnacii, spravit aj grafy, v ktorych sa pohybujeme vo vrcholoch nedeterministicky, potom na to pustit nejakeho UI agenta, ktory bude pocitat s tym, ze sa nemusi nachadzat tam kde chcel ist, zacnu byt symboly dolezite aj koli orientacii, obzervovanie prostredia bude taktiez obmedzene
+
 ## Stare myslienky
 
 - spravit nejaky research toho, aky je rozdiel medzi behanim v roznych porastoch

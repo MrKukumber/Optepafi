@@ -69,7 +69,6 @@ public static class OmapMapParser
             (MapCoordinates, MapCoordinates, MapCoordinates, MapCoordinates) extremeCoords;
 
             int readsSinceLastCancelCheck = 0;
-            // reader.MoveToContent();
             
             var res = TryGetVersion(reader, cancellationToken, ref readsSinceLastCancelCheck, out int version);
             if (res is not ParseResult.Ok) return res;

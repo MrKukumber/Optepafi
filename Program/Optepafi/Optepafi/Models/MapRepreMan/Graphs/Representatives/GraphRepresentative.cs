@@ -30,17 +30,17 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Representatives;
 /// <typeparam name="TEdge">Type of edges used in represented graph.</typeparam>
 public abstract class GraphRepresentative<TGraph, TVertex, TEdge> : 
     IGraphRepresentative<TGraph, TVertex, TEdge>,
-    IMapRepreCreator<TGraph> 
+    IGraphCreator<TGraph> 
     where TGraph : IGraph<TVertex, TEdge>
     where TVertex: IVertex
     where TEdge: IEdge
 {
     
-    /// <inheritdoc cref="IMapRepreCreator{TGraph}.CreateableImplementationsIndicators"/>
+    /// <inheritdoc cref="IGraphCreator{TMapRepre}.CreateableImplementationsIndicators"/>
     public abstract IImplementationIndicator<ITemplate, IMap, TGraph>[] CreateableImplementationsIndicators { get; }
     
-    /// <inheritdoc cref="IMapRepreCreator{TGraph}.CreateGraph{TTemplate,TMap,TConfiguration,TVertexAttributes,TEdgeAttributes}(TTemplate,TMap,TConfiguration,System.IProgress{Optepafi.Models.MapRepreMan.MapRepreConstructionReport}?,System.Nullable{System.Threading.CancellationToken})"/> 
-    public TGraph CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(
+    /// <inheritdoc cref="IGraphCreator{TMapRepre}.CreateGraph{TTemplate,TMap,TConfiguration,TVertexAttributes,TEdgeAttributes}(TTemplate,TMap,TConfiguration,System.IProgress{Optepafi.Models.MapRepreMan.MapRepreConstructionReport}?,System.Nullable{System.Threading.CancellationToken})"/> 
+    public IGraph<IVertex, IEdge> CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(
         TTemplate template, TMap map, TConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
@@ -51,7 +51,7 @@ public abstract class GraphRepresentative<TGraph, TVertex, TEdge> :
     {
         foreach (var indicator in CreateableImplementationsIndicators)
         {
-            if (indicator is IImplementationElevDataIndepCreator<TTemplate, TMap, TGraph, TConfiguration, TVertex, TEdge, TVertexAttributes, TEdgeAttributes> constructor)
+            if (indicator is IImplementationElevDataIndepCreator<TTemplate, TMap, IGraph<IVertex, IEdge>, TConfiguration, IVertex, IEdge, TVertexAttributes, TEdgeAttributes> constructor)
             {
                 return constructor.CreateImplementation(template, map, configuration, progress, cancellationToken);
             }
@@ -62,8 +62,8 @@ public abstract class GraphRepresentative<TGraph, TVertex, TEdge> :
     }
 
 
-    ///<inheritdoc cref="IMapRepreCreator{TGraph}.CreateGraph{TTemplate,TMap,TConfiguration,TVertexAttributes,TEdgeAttributes}(TTemplate,TMap,Optepafi.Models.ElevationDataMan.IElevData,TConfiguration,System.IProgress{Optepafi.Models.MapRepreMan.MapRepreConstructionReport}?,System.Nullable{System.Threading.CancellationToken})"/> 
-    public TGraph CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(
+    ///<inheritdoc cref="IGraphCreator{TMapRepre}.CreateGraph{TTemplate,TMap,TConfiguration,TVertexAttributes,TEdgeAttributes}(TTemplate,TMap,Optepafi.Models.ElevationDataMan.IElevData,TConfiguration,System.IProgress{Optepafi.Models.MapRepreMan.MapRepreConstructionReport}?,System.Nullable{System.Threading.CancellationToken})"/> 
+    public IGraph<IVertex, IEdge> CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(
         TTemplate template, TMap map, IElevData elevData,
         TConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
         CancellationToken? cancellationToken)
@@ -75,7 +75,7 @@ public abstract class GraphRepresentative<TGraph, TVertex, TEdge> :
     {
         foreach (var indicator in CreateableImplementationsIndicators)
         {
-            if (indicator is IImplementationElevDataDepCreator<TTemplate, TMap, TGraph, TConfiguration, TVertex, TEdge, TVertexAttributes, TEdgeAttributes> constructor) 
+            if (indicator is IImplementationElevDataDepCreator<TTemplate, TMap, IGraph<IVertex, IEdge>, TConfiguration, IVertex, IEdge, TVertexAttributes, TEdgeAttributes> constructor) 
             {
                 return constructor.CreateImplementation(template, map, elevData, configuration, progress, cancellationToken);
             }

@@ -56,6 +56,8 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
+        <PackageReference Include="KdTree" Version="1.4.1" />
+        <PackageReference Include="QuadTrees" Version="1.0.4" />
         <PackageReference Include="SRTM" Version="0.0.7" />
     </ItemGroup>
 

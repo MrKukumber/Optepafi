@@ -5,8 +5,8 @@ using Optepafi.Models.MapRepreMan.MapRepres;
 namespace Optepafi.Models.GraphicsMan.Aggregators;
 
 //TODO: comment
-public interface IMapRepreGraphicsAggregator<in TImplementation> : IGraphicsAggregator
-    where TImplementation : IMapRepre
+public interface IMapRepreGraphicsAggregator<in TMapRepre> : IGraphicsAggregator
+    where TMapRepre : IMapRepre
 {
-    public void AggregateGraphics(TImplementation map, IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken);
+    public void AggregateGraphics(TMapRepre map, IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken);
 }

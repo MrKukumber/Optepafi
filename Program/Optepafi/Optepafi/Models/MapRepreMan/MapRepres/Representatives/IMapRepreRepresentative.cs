@@ -44,7 +44,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// Returns graph creator which represents corresponding graph derived from represented map representation.
     /// </summary>
     /// <returns>Creator of corresponding graph to the map representation.</returns>
-    IMapRepreCreator<TMapRepre>
+    IGraphCreator<TMapRepre>
         GetCorrespondingGraphCreator();
 
     /// <summary>

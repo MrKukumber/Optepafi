@@ -19,7 +19,7 @@ public abstract class MapRepreRepresentative<TMapRepre, TConfiguration> : IMapRe
     where TConfiguration : IConfiguration
 {
     public abstract string MapRepreName { get; }
-    public abstract IMapRepreCreator<TMapRepre> GetCorrespondingGraphCreator();
+    public abstract IGraphCreator<TMapRepre> GetCorrespondingGraphCreator();
     
     public IImplementationIndicator<ITemplate, IMap, TMapRepre>[] ImplementationIndicators => GetCorrespondingGraphCreator().CreateableImplementationsIndicators;
     protected abstract TConfiguration DefaultConfiguration { get; }

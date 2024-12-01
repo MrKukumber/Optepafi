@@ -22,6 +22,6 @@ public class CompleteSnappingMapRepreRep : MapRepreRepresentative<ICompleteSnapp
     public override string MapRepreName { get; } = "Complete, iteratively snapping map representation";
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.GetCorrespondingGraphCreator"/>
-    public override IMapRepreCreator<ICompleteSnappingMapRepre> GetCorrespondingGraphCreator() => CompleteSnappingGraphRep.Instance;
-    protected override CompleteSnappingMapRepreConfiguration DefaultConfiguration { get; } = new CompleteSnappingMapRepreConfiguration();
+    public override IGraphCreator<ICompleteSnappingMapRepre> GetCorrespondingGraphCreator() => CompleteSnappingGraphRep.Instance;
+    protected override CompleteSnappingMapRepreConfiguration DefaultConfiguration { get; } = new CompleteSnappingMapRepreConfiguration(5000, 0.25f, 0);
 }

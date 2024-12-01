@@ -681,3 +681,8 @@ IMPORTANT!!
 - este premysliet, ci je potrebne mat genericke parametre aj pri testovani reprezentatnov a typov mapovych reprezentacii a uzivatelskych mnodelov v seraching algoritmoch, nakolko by tam teoreticky vsade mohli byt IVertex, IEdge, IVertexAttribute, IEdgeAttribute typy, nakolko by nemali byt potrebne pri testovani funkcionality.....len tam zasa bude mozno klasicky problem s tym priradovanym  parametroveho typu constraine-uteho na nejaky interface do daneho interface-u
 
 - mozne rozsirenie ktore by ale potrebovalo poriadne premysliet - nechat nech mapovu reprezentaciu moze implementovat viac grafov, ktore budu mat rozne vlastnosti a teda bude mozne otestovat viac moznosti vo vyhladavcom algoritme, ci aspon jedna z grafovych reprezentacii je pouzitelna
+
+## 29.11
+
+- dokonceny predbezny nacrt vytvarania mapovej reprezentacie
+- vytvorena prva metoda pre vytvaranie trojuholnikovej siete

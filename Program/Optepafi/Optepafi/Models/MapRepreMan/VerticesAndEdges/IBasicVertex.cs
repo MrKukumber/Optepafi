@@ -46,7 +46,7 @@ public interface IEdgesContainingVertex<TEdge> : IVertex
     /// </summary>
     /// <param name="weight">Weight to be set for edge.</param>
     /// <param name="edge">Edge the weight is going to be set for.</param>
-    void SetWeight(int weight, TEdge edge);
+    void SetWeight(int? weight, TEdge edge);
     
     /// <summary>
     /// Method for getting the weight of some edge. If edges wight is not computed yet or it is not present in vertex, returns null.

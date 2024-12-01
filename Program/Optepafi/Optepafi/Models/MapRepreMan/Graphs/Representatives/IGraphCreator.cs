@@ -4,6 +4,7 @@ using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Implementations.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres;
+using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
@@ -15,7 +16,7 @@ using Optepafi.Models.Utils.Configurations;
 namespace Optepafi.Models.MapRepreMan.Graphs.Representatives;
 
 //TODO: comment + repair comments in methods
-public interface IMapRepreCreator<out TMapRepre>
+public interface IGraphCreator<out TMapRepre>
     where TMapRepre : IMapRepre
 {
     /// <summary>
@@ -43,7 +44,7 @@ public interface IMapRepreCreator<out TMapRepre>
     /// <typeparam name="TMapRepre">Type of map representation whose implementations indicators are provided for constructing the graph.</typeparam>
     /// <returns>Created graph tide to some map representation.</returns>
     /// <exception cref="ArgumentException">When none of provided indicators is usable implementation constructor.</exception>
-    TMapRepre CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, TConfiguration configuration,
+    IGraph<IVertex, IEdge> CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, TConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
@@ -68,7 +69,7 @@ public interface IMapRepreCreator<out TMapRepre>
     /// <typeparam name="TMapRepre">Type of map representation whose implementations indicators are provided for constructing the graph.</typeparam>
     /// <returns>Created graph tide to some map representation.</returns>
     /// <exception cref="ArgumentException">When none of provided indicators is usable implementation constructor.</exception>
-    TMapRepre CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData,
+    IGraph<IVertex, IEdge> CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData,
         TConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
         CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
