@@ -36,11 +36,6 @@ public abstract class SearchingReportViewModel : GraphicsContainingDataViewModel
     {
         public static Constructor Instance { get; } = new();
         private Constructor(){}
-
-        /// <summary>
-        /// Dictionary of converters of searching reports to ViewModels. Each converter is saved under type of searching report, which it converts.
-        /// </summary>
-        private Dictionary<Type, ISearchingReport2VmConverter> _converters = SearchingReports2VmConverters.Converters;
         
         /// <summary>
         /// Method for constructing of ViewModel for provided searching report by using so called "generic visitor pattern" on searching report.
@@ -58,7 +53,7 @@ public abstract class SearchingReportViewModel : GraphicsContainingDataViewModel
         }
         SearchingReportViewModel? ISearchingReportGenericVisitor<SearchingReportViewModel?, IGroundGraphicsSource>.GenericVisit<TSearchingReport>(TSearchingReport searchingReport, IGroundGraphicsSource associatedMapGraphics)
         {
-            if (_converters[typeof(TSearchingReport)] is ISearchingReport2VmConverter<TSearchingReport> searchingReport2VmConverter)
+            if (SearchingReports2VmConverters.Converters.ContainsKey(typeof(TSearchingReport)) && SearchingReports2VmConverters.Converters[typeof(TSearchingReport)] is ISearchingReport2VmConverter<TSearchingReport> searchingReport2VmConverter)
             {
                 return searchingReport2VmConverter.ConvertToViewModel(searchingReport, associatedMapGraphics);
             }

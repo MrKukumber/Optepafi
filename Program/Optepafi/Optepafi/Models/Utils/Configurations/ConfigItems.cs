@@ -15,13 +15,12 @@ public interface IConfigItem
     public IConfigItem DeepCopy();
 }
 
-//TODO: comment
-public interface ICategoricalConfigItem<out TEnum> : IConfigItem where TEnum : Enum
-{
-    string Name { get; }
-    TEnum[] AllValues { get; }
-    int IndexOfSelectedValue { get; set; } 
-}
+// public interface ICategoricalConfigItem<out TEnum> : IConfigItem where TEnum : Enum
+// {
+    // string Name { get; }
+    // TEnum[] AllValues { get; }
+    // int IndexOfSelectedValue { get; set; } 
+// }
 
 /// <summary>
 /// Represents configuration item with categorical values. It is used for setting of categorical values.
@@ -33,10 +32,10 @@ public interface ICategoricalConfigItem<out TEnum> : IConfigItem where TEnum : E
 /// <param name="name">Name of configuration item.</param>
 /// <param name="allValues">Usable values for this configuration item.</param>
 /// <param name="indexOfSelectedValue">Index in allValues collection of currently selected value.</param>
-public class CategoricalConfigItem<TEnum>(string name, TEnum[] allValues, int indexOfSelectedValue) : ICategoricalConfigItem<TEnum> where TEnum : Enum
+public class CategoricalConfigItem(string name, Enum[] allValues, int indexOfSelectedValue) : IConfigItem
 {
     public string Name => name;
-    public TEnum[] AllValues => allValues;
+    public Enum[] AllValues => allValues;
     
     private int _indexOfSelectedValue = indexOfSelectedValue;
     public int IndexOfSelectedValue
@@ -54,13 +53,41 @@ public class CategoricalConfigItem<TEnum>(string name, TEnum[] allValues, int in
 
     public IConfigItem DeepCopy()
     {
-        return new CategoricalConfigItem<TEnum>(Name, AllValues, IndexOfSelectedValue);
+        return new CategoricalConfigItem(Name, AllValues, IndexOfSelectedValue);
     }
     public TOut GenericVisit<TOut>(IConfigItemGenericVisitor<TOut> genericVisitor)
     {
         return genericVisitor.AcceptGeneric(this);
     }
 }
+// public class CategoricalConfigItem<TEnum>(string name, TEnum[] allValues, int indexOfSelectedValue) : ICategoricalConfigItem<TEnum> where TEnum : Enum
+// {
+    // public string Name => name;
+    // public TEnum[] AllValues => allValues;
+    
+    // private int _indexOfSelectedValue = indexOfSelectedValue;
+    // public int IndexOfSelectedValue
+    // {
+        // get => _indexOfSelectedValue;
+        // set
+        // {
+            // if (value >= AllValues.Length)
+                // _indexOfSelectedValue = AllValues.Length - 1;
+            // else if (value < 0)
+                // _indexOfSelectedValue = 0;
+            // else _indexOfSelectedValue = value;
+        // }
+    // }
+
+    // public IConfigItem DeepCopy()
+    // {
+        // return new CategoricalConfigItem<TEnum>(Name, AllValues, IndexOfSelectedValue);
+    // }
+    // public TOut GenericVisit<TOut>(IConfigItemGenericVisitor<TOut> genericVisitor)
+    // {
+        // return genericVisitor.AcceptGeneric(this);
+    // }
+// }
 
 /// <summary>
 /// Represents single int value configuration item.

@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using ExCSS;
-using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Configurations;
 using ReactiveUI;
 using Color = System.Drawing.Color;
@@ -12,11 +8,18 @@ namespace Optepafi.ViewModels.Data.Configuration;
     //TODO: comment
 public class CategoricalConfigItemViewModel : ConfigItemViewModel
 {
-    public ICategoricalConfigItem<Enum> ConfigItem { get; }
-    public CategoricalConfigItemViewModel(ICategoricalConfigItem<Enum> configItem)
+    public CategoricalConfigItem ConfigItem { get; }
+    // public ICategoricalConfigItem<Enum> ConfigItem { get; }
+    public CategoricalConfigItemViewModel(CategoricalConfigItem configItem)
     {
         ConfigItem = configItem;
+        _indexOfSelectedValue = configItem.IndexOfSelectedValue;
     }
+    // public CategoricalConfigItemViewModel(ICategoricalConfigItem<Enum> configItem)
+    // {
+        // ConfigItem = configItem;
+        // _indexOfSelectedValue = configItem.IndexOfSelectedValue;
+    // }
 
     public string Name => ConfigItem.Name;
     public Enum[] AllValues => ConfigItem.AllValues;
@@ -40,6 +43,7 @@ public class IntValueConfigItemViewModel : ConfigItemViewModel
     public IntValueConfigItemViewModel(IntValueConfigItem configItem)
     {
         _configItem = configItem;
+        _value = ConfigItem.Value;
     }
 
     public string Name => ConfigItem.Name;
@@ -64,6 +68,7 @@ public class FloatValueConfigItemViewModel : ConfigItemViewModel
     public FloatValueConfigItemViewModel(FloatValueConfigItem configItem)
     {
         _configItem = configItem;
+        _value = ConfigItem.Value;
     }
 
     public string Name => ConfigItem.Name;
@@ -112,6 +117,7 @@ public class BoundedIntValueConfigItemViewModel : ConfigItemViewModel
     public BoundedIntValueConfigItemViewModel(BoundedIntValueConfigItem configItem)
     {
         ConfigItem = configItem;
+        _value = ConfigItem.Value;
     }
 
     public string Name => ConfigItem.Name;
@@ -137,6 +143,7 @@ public class BoundedFloatValueConfigItemViewModel : ConfigItemViewModel
     public BoundedFloatValueConfigItemViewModel(BoundedFloatValueConfigItem configItem)
     {
         ConfigItem = configItem;
+        _value = ConfigItem.Value;
     }
 
     public string Name => ConfigItem.Name;

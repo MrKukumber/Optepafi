@@ -205,6 +205,7 @@ public static class OmapMapParser
          out (MapCoordinates nc,MapCoordinates sc,MapCoordinates wc,MapCoordinates ec) extremeCoords)
     {
         objects = new();
+        foreach (var symbol in symbols) if (!objects.ContainsKey(symbol.Value.Code)) objects[symbol.Value.Code] = new List<OmapMap.Object>();
         extremeCoords = (new MapCoordinates(0, int.MinValue), new MapCoordinates(0, int.MaxValue), new MapCoordinates(int.MaxValue,0), new MapCoordinates(int.MinValue, 0));
         try
         {
@@ -236,8 +237,7 @@ public static class OmapMapParser
                                     var secondGetRotationResult = TryGetRotation2(reader, cancellationToken, ref readsSinceLastCancelCheck, out rotation);
                                     if (secondGetRotationResult is not ParseResult.Ok) return secondGetRotationResult;
                                 }
-                                if (objects.ContainsKey(symbols[id].Code)) objects[symbols[id].Code].Add(new OmapMap.Object(typedCoords, rotation));
-                                else objects[symbols[id].Code] = [new OmapMap.Object(typedCoords, rotation)]; 
+                                objects[symbols[id].Code].Add(new OmapMap.Object(typedCoords, rotation));
                                 
                                 extremeCoords.nc = objectsExtremCoords.nc.YPos > extremeCoords.nc.YPos ? objectsExtremCoords.nc : extremeCoords.nc;
                                 extremeCoords.sc = objectsExtremCoords.sc.YPos < extremeCoords.sc.YPos ? objectsExtremCoords.sc : extremeCoords.sc;
@@ -376,36 +376,7 @@ public static class OmapMapParser
 
         public override IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned)
         {
-            wholeMapReturned = false;
-            List<Symbol> newSymbols = new ();
-            foreach (var symbol in symbols) newSymbols.Add(symbol);
-            
-            Dictionary<decimal, List<Object>> newObjects = new ();
-            if (0 >= Symbols.Count)
-            {
-                wholeMapReturned = true;
-                return new InnerOmapMap(Scale, newSymbols, newObjects, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
-                { FilePath = FilePath, FileName = FileName };
-            }
-            int sinceLastCancelCheck = 0;
-            int currentSymbolIndex = 0;
-            int currentObjectIndex = 0;
-            while (size-- > 0)
-            {
-                if (sinceLastCancelCheck++ >= _cancellationCheckInterval)
-                {
-                    if (cancellationToken is not null && !cancellationToken.Value.IsCancellationRequested) { wholeMapReturned = false; return this; }
-                    sinceLastCancelCheck = 0;
-                }
-
-                if (currentObjectIndex >= Objects[Symbols[currentSymbolIndex].Code].Count)
-                {
-                    currentObjectIndex = 0;
-                    if (++currentSymbolIndex >= Symbols.Count) { wholeMapReturned = true; break; }
-                    newObjects[Symbols[currentSymbolIndex].Code] = new List<Object>();
-                }
-                newObjects[Symbols[currentSymbolIndex].Code].Add(Objects[Symbols[currentSymbolIndex].Code][currentObjectIndex++]);
-            }
+            var (newSymbols, newObjects) = GetNewSymbolsAndObjects(size, cancellationToken, symbols, objects, out wholeMapReturned);
             return new InnerOmapMap(Scale, newSymbols, newObjects, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
             { FilePath = FilePath, FileName = FileName };
         }
@@ -426,39 +397,47 @@ public static class OmapMapParser
         
         public override IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned)
         {
-            wholeMapReturned = false;
-            List<Symbol> newSymbols = new ();
-            foreach (var symbol in symbols) newSymbols.Add(symbol);
-            
-            Dictionary<decimal, List<Object>> newObjects = new ();
-            if (0 >= Symbols.Count)
-            {
-                wholeMapReturned = true;
-                return new InnerGeoLocatedOmapMap(Scale, newSymbols, newObjects, RepresentativeLocation, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
-                { FilePath = FilePath, FileName = FileName };
-            }
-            int sinceLastCancelCheck = 0;
-            int currentSymbolIndex = 0;
-            int currentObjectIndex = 0;
-            while (size-- > 0)
-            {
-                if (sinceLastCancelCheck >= _cancellationCheckInterval)
-                {
-                    if (cancellationToken is not null && !cancellationToken.Value.IsCancellationRequested) { wholeMapReturned = false; return this; }
-                    sinceLastCancelCheck = 0;
-                }
-
-                if (currentObjectIndex >= Objects[Symbols[currentSymbolIndex].Code].Count)
-                {
-                    currentObjectIndex = 0;
-                    if (++currentSymbolIndex >= Symbols.Count) { wholeMapReturned = true; break; }
-                    newObjects[Symbols[currentSymbolIndex].Code] = new List<Object>();
-                }
-                newObjects[Symbols[currentSymbolIndex].Code].Add(Objects[Symbols[currentSymbolIndex].Code][currentObjectIndex++]);
-            }
-            return new InnerGeoLocatedOmapMap(Scale, newSymbols, newObjects, RepresentativeLocation, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
+            var (newSymbols, newObjects) = GetNewSymbolsAndObjects(size, cancellationToken, symbols, objects, out wholeMapReturned);
+            return new InnerGeoLocatedOmapMap(Scale, newSymbols, newObjects, representativeLocation, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
             { FilePath = FilePath, FileName = FileName };
         }
+    }
+
+    private static (List<OmapMap.Symbol>, Dictionary<decimal, List<OmapMap.Object>>) GetNewSymbolsAndObjects(int size, CancellationToken? cancellationToken, List<OmapMap.Symbol> symbols, Dictionary<decimal, List<OmapMap.Object>> objects, out bool wholeMapReturned)
+    {
+        wholeMapReturned = false;
+        List<OmapMap.Symbol> newSymbols = new ();
+        foreach (var symbol in symbols) newSymbols.Add(symbol);
         
+        Dictionary<decimal, List<OmapMap.Object>> newObjects = new ();
+        foreach (var symbol in newSymbols) if (!newObjects.ContainsKey(symbol.Code)) newObjects[symbol.Code] = new List<OmapMap.Object>();
+        
+        if (0 >= symbols.Count)
+        {
+            wholeMapReturned = true;
+            return (newSymbols, newObjects);
+        }
+
+        int sinceLastCancelCheck = 0;
+        int currentSymbolIndex = 0;
+        int currentObjectIndex = 0;
+        while (size-- > 0)
+        {
+            if (sinceLastCancelCheck >= _cancellationCheckInterval)
+            {
+                if (cancellationToken is not null && !cancellationToken.Value.IsCancellationRequested) return (newSymbols, newObjects);
+                sinceLastCancelCheck = 0;
+            }
+
+            if (currentObjectIndex >= objects[symbols[currentSymbolIndex].Code].Count)
+            {
+                currentObjectIndex = 0;
+                if (++currentSymbolIndex >= symbols.Count) { wholeMapReturned = true; break; }
+                while (objects[symbols[currentSymbolIndex].Code].Count == 0)
+                    if (++currentSymbolIndex >= symbols.Count) { wholeMapReturned = true; break; }
+            }
+            newObjects[symbols[currentSymbolIndex].Code].Add(objects[symbols[currentSymbolIndex].Code][currentObjectIndex++]);
+        }
+        return (newSymbols, newObjects);
     }
 }

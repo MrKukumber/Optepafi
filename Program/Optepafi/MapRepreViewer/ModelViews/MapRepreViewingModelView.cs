@@ -85,12 +85,12 @@ public class MapRepreViewingModelView
     private bool _useElevData = false;
     public async Task CreateMapRepreAsync(ConfigurationViewModel mapRepresentationConfigurationVm, CancellationToken cancellationToken)
     {
-        if (Map is null || MapRepreRepresentative is null) throw new NullReferenceException(nameof(Map) + " and  " + nameof(MapRepreRepresentative) + " property should be instantiated before calling this method.");
+        if (MapForUse is null || MapRepreRepresentative is null) throw new NullReferenceException(nameof(MapForUse) + " and  " + nameof(MapRepreRepresentative) + " property should be instantiated before calling this method.");
         IConfiguration mapRepresentationConfiguration = mapRepresentationConfigurationVm.Configuration;
         if (_useElevData)
         {
             if (ElevDataDistribution is null) throw new NullReferenceException(nameof(ElevDataDistribution) + " property should be instantiated before calling this method.");
-            if (Map is IAreaQueryableMap areaQueryableMap)
+            if (MapForUse is IAreaQueryableMap areaQueryableMap)
             {
                 IElevData elevData = await Task.Run(() =>
                     ElevDataManager.Instance.GetElevDataFromDistFor(areaQueryableMap, ElevDataDistribution, cancellationToken));
@@ -105,15 +105,15 @@ public class MapRepreViewingModelView
         else
         {
             MapRepresentation = await Task.Run(() =>
-                MapRepreManager.Instance.CreateMapRepre(Template, Map, MapRepreRepresentative, mapRepresentationConfiguration, null, cancellationToken));
+                MapRepreManager.Instance.CreateMapRepre(Template, MapForUse, MapRepreRepresentative, mapRepresentationConfiguration, null, cancellationToken));
             if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
         }
     }
 
     public GraphicsSourceViewModel? GetMapGraphics()
     {
-        if (Map is null) throw new NullReferenceException(nameof(Map) + " property should be instantiated before calling this method.");
-        IMap map = Map;
+        if (MapForUse is null) throw new NullReferenceException(nameof(MapForUse) + " property should be instantiated before calling this method.");
+        IMap map = MapForUse;
         GraphicsArea? graphicsArea = GraphicsManager.Instance.GetAreaOf(map);
         if (graphicsArea is null) { return null; }
 
@@ -144,7 +144,7 @@ public class MapRepreViewingModelView
     private IMapRepre? MapRepresentation { get; set; }
     private IGroundGraphicsSource? MapGraphics { get; set; }
     private ITemplate Template { get; set; } = Orienteering_ISOM_2017_2.Instance;
-    private IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; set; } = CompleteSnappingMapRepreRep.Instance;
+    private IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; set; } = CompleteNetIntertwiningMapRepreRep.Instance;
     private IElevDataDistribution? ElevDataDistribution { get; set; }
 
 }

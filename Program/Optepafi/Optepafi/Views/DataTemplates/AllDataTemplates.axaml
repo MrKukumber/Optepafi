@@ -4,5 +4,6 @@
         <ResourceInclude Source="Graphics/GraphicsTemplates.axaml"/>
         <ResourceInclude Source="Reports/ReportsTemplates.axaml"/>
         <ResourceInclude Source="Shapes/ShapesTemplates.axaml"/>
+        <ResourceInclude Source="Configuration/ConfigurationTemplates.axaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cnimroVm="clr-namespace:Optepafi.ViewModels.Data.Graphics.MapRepreObjects.CompleteNetIntertwiningMapRepre">
+    <DataTemplates x:Key="CompleteNetIntertwiningElevDataIndepOrienteering_2017_2OmapMapImplementationObjectsTempaltes">
+        <DataTemplate DataType="{x:Type cnimroVm:VertexObjectViewModel}">
+            <Ellipse Fill="Red" Width="{Binding Diameter, Converter={StaticResource Micro2DipConverter}}" Height="{Binding Diameter, Converter={StaticResource Micro2DipConverter}}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type cnimroVm:EdgeObjectViewModel}">
+            <Line Stroke="Red" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StartPoint="{Binding StartPoint, Converter={StaticResource CanvasCoordsToPointConverter}}" EndPoint="{Binding EndPoint, Converter={StaticResource CanvasCoordsToPointConverter}}"/>
+        </DataTemplate>
+    </DataTemplates>
+</ResourceDictionary>

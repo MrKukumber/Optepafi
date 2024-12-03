@@ -62,9 +62,9 @@ public class MainSettingsViewModel : ViewModelBase
 
         ConfigurationNodes = new List<Node>
         {
-            new InnerNode("Searching algorithms", mainSettingsMv.SearchingAlgorithmsConfigurations.Select(kv => new SearchingAlgorithmConfigNode(kv.Key))),
-            new InnerNode("Map representations", mainSettingsMv.MapRepresentationsConfigurations.Select(kv => new MapRepreConfigNode(kv.Key))),
-            new InnerNode("User models", mainSettingsMv.UserModelsConfigurations.Select(kv => new UserModelConfigNode(kv.Key)))
+            new InnerNode("Searching algorithms", mainSettingsMv.SearchingAlgorithmsConfigurations.Select(kv => new SearchingAlgorithmConfigNode(kv.Key, kv.Value))),
+            new InnerNode("Map representations", mainSettingsMv.MapRepresentationsConfigurations.Select(kv => new MapRepreConfigNode(kv.Key, kv.Value))),
+            new InnerNode("User models", mainSettingsMv.UserModelsConfigurations.Select(kv => new UserModelConfigNode(kv.Key, kv.Value)))
         };
         SelectedConfigurationNode = null;
         
@@ -208,36 +208,35 @@ public class MainSettingsViewModel : ViewModelBase
     public class MapRepreConfigNode : Node
     {
         public override string Title { get; }
-        public MapRepreRepresentativeViewModel MapRepreRepresentative { get; }
+        public override ConfigurationViewModel? Configuration { get; }
 
-        public MapRepreConfigNode(MapRepreRepresentativeViewModel mapRepreRepresentative)
+        public MapRepreConfigNode(MapRepreRepresentativeViewModel mapRepreRepresentative, ConfigurationViewModel configuration)
         {
-            MapRepreRepresentative = mapRepreRepresentative;
-            Title = MapRepreRepresentative.MapRepreName;
+            Title = mapRepreRepresentative.MapRepreName;
+            Configuration = configuration;
         }
     }
 
     public class SearchingAlgorithmConfigNode : Node
     {
         public override string Title { get; }
-        public SearchingAlgorithmViewModel SearchingAlgorithm { get; }
+        public override ConfigurationViewModel? Configuration { get; }
 
-        public SearchingAlgorithmConfigNode(SearchingAlgorithmViewModel searchingAlgorithm)
+        public SearchingAlgorithmConfigNode(SearchingAlgorithmViewModel searchingAlgorithm, ConfigurationViewModel configuration)
         {
-            SearchingAlgorithm = searchingAlgorithm;
-            Title = SearchingAlgorithm.Name;
+            Title = searchingAlgorithm.Name;
+            Configuration = configuration;
         }
     }
 
     public class UserModelConfigNode : Node
     {
         public override string Title { get; }
-        public UserModelTypeViewModel UserModelType { get; }
-
-        public UserModelConfigNode(UserModelTypeViewModel userModelType)
+        public override ConfigurationViewModel? Configuration { get; }
+        public UserModelConfigNode(UserModelTypeViewModel userModelType, ConfigurationViewModel configuration)
         {
-            UserModelType = userModelType;
-            Title = UserModelType.UserModelTypeName;
+            Title = userModelType.UserModelTypeName;
+            Configuration = configuration;
         }
     }
 }

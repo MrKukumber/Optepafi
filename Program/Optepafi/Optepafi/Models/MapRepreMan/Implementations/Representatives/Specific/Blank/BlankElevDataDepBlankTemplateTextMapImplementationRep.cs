@@ -18,7 +18,7 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.B
 /// For more information on representatives of elevation data independent implementations see <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TImplementation,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
 public class BlankElevDataDepBlankTemplateTextMapImplementationRep :
-    ElevDataDepImplementationRep<BlankTemplate, TextMap, TextMap, BlankElevDataDepBlankTemplateTextMapImplementation, NullConfiguration, IBlankGraph.Vertex<BlankTemplate.VertexAttributes>, IBlankGraph.Edge<BlankTemplate.EdgeAttributes>, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
+    ElevDataDepImplementationRep<BlankTemplate, TextMap, TextMap, BlankElevDataDepBlankTemplateTextMapImplementation, NullConfiguration, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>.Vertex, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>.Edge, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
     public static BlankElevDataDepBlankTemplateTextMapImplementationRep Instance { get; } = new();
     private BlankElevDataDepBlankTemplateTextMapImplementationRep() { }

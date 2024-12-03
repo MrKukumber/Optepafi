@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:moVm="clr-namespace:Optepafi.ViewModels.Data.Graphics.MapObjects"
                     xmlns:sVm="clr-namespace:Optepafi.ViewModels.Data.Shapes">
-    <DataTemplates x:Key="OmapMapObjectTemplates">
+    <DataTemplates x:Key="OmapMapObjectsTemplates">
         <DataTemplate DataType="{x:Type moVm:Contour_101_ViewModel}">
             <Path Stroke="Chocolate"
                   StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}"

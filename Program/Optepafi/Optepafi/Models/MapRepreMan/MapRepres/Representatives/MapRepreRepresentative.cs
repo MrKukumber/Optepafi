@@ -19,9 +19,11 @@ public abstract class MapRepreRepresentative<TMapRepre, TConfiguration> : IMapRe
     where TConfiguration : IConfiguration
 {
     public abstract string MapRepreName { get; }
-    public abstract IGraphCreator<TMapRepre> GetCorrespondingGraphCreator();
+    public abstract IGraphCreator<TMapRepre> GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>()
+        where TVertexAttributes : IVertexAttributes
+        where TEdgeAttributes : IEdgeAttributes;
     
-    public IImplementationIndicator<ITemplate, IMap, TMapRepre>[] ImplementationIndicators => GetCorrespondingGraphCreator().CreateableImplementationsIndicators;
+    public IImplementationIndicator<ITemplate, IMap, IMapRepre>[] ImplementationIndicators => GetCorrespondingGraphCreator<IVertexAttributes, IEdgeAttributes>().CreateableImplementationsIndicators;
     protected abstract TConfiguration DefaultConfiguration { get; }
     public IConfiguration DefaultConfigurationDeepCopy => DefaultConfiguration.DeepCopy(); 
 
@@ -33,10 +35,11 @@ public abstract class MapRepreRepresentative<TMapRepre, TConfiguration> : IMapRe
         where TEdgeAttributes : IEdgeAttributes
     { 
         if (configuration is TConfiguration config) 
-            return GetCorrespondingGraphCreator()
+            return GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>()
                 .CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(template, map, config, progress, cancellationToken);
         // TODO: log wrong type of retrieved configuration
-        return GetCorrespondingGraphCreator()
+        Console.WriteLine($"Wrong type of retrieved configuration in {typeof(TMapRepre).Name} representative. Retrived confifiguration was of type {configuration.GetType().Name}.");
+        return GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>()
             .CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(template, map, DefaultConfiguration, progress, cancellationToken);
     }
     public IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData, IConfiguration configuration, 
@@ -47,10 +50,10 @@ public abstract class MapRepreRepresentative<TMapRepre, TConfiguration> : IMapRe
             where TEdgeAttributes : IEdgeAttributes
         { 
             if (configuration is TConfiguration config) 
-                return GetCorrespondingGraphCreator()
+                return GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>()
                     .CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(template, map, elevData, config, progress, cancellationToken); 
             // TODO: log wrong type of retrieved configuration
-            return GetCorrespondingGraphCreator()
+            return GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>()
                 .CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(template, map, elevData, DefaultConfiguration, progress, cancellationToken); 
         }
 }

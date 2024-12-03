@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Optepafi.Models.MapRepreMan.Configurations;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Configurations;
 using Optepafi.ModelViews.Converters2Vm.ConfigItems;
@@ -24,9 +26,12 @@ public class ConfigurationViewModel : WrappingDataViewModel<IConfiguration>,
 
     public ConfigItemViewModel? AcceptGeneric<TConfigItem>(TConfigItem configItem) where TConfigItem : IConfigItem
     {
-        if (ConfigItems2VmConverters.Converters[typeof(TConfigItem)] is IConfigItem2VmConverter<TConfigItem> converter)
+        // if (configItem is ICategoricalConfigItem<Enum> categoricalConfigItem)
+            // return CategoricalConfigItem2VmConverter.Instance.ConvertToViewModel(categoricalConfigItem);
+        if (ConfigItems2VmConverters.Converters.ContainsKey(typeof(TConfigItem)) && ConfigItems2VmConverters.Converters[typeof(TConfigItem)] is IConfigItem2VmConverter<TConfigItem> converter)
             return converter.ConvertToViewModel(configItem);
         //TODO: lognut ked neni pritomny konverter
+        Console.WriteLine("Converter is not available for type " + typeof(TConfigItem).Name);
         return null;
     }
 

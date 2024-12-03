@@ -12,18 +12,18 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 /// It is just blank object used as demonstrative type for presenting application functionality.  
 /// For more information about graphs see <see cref="IGraph{TVertexAttributes,TEdgeAttributes}"/>.  
 /// </summary>
-public interface IBlankGraph :
+public interface IBlankGraph<TVertexAttributes, TEdgeAttributes> :
     IBlankRepre,
-    IGraph<IBlankGraph.Vertex<IVertexAttributes>, IBlankGraph.Edge<IEdgeAttributes>>
+    IGraph<IBlankGraph<TVertexAttributes, TEdgeAttributes>.Vertex, IBlankGraph<TVertexAttributes, TEdgeAttributes>.Edge>
+    where TVertexAttributes : IVertexAttributes
+    where TEdgeAttributes : IEdgeAttributes
 {
-    public class Vertex<TVertexAttributes>(TVertexAttributes vertexAttributes) : IAttributeBearingVertex<TVertexAttributes>
-        where TVertexAttributes : IVertexAttributes
+    public class Vertex(TVertexAttributes vertexAttributes) : IAttributeBearingVertex<TVertexAttributes>
     {
         public TVertexAttributes Attributes { get; } = vertexAttributes;
     }
 
-    public class Edge<TEdgeAttributes>(TEdgeAttributes edgeAttributes) : IAttributesBearingEdge<TEdgeAttributes>
-        where TEdgeAttributes : IEdgeAttributes
+    public class Edge(TEdgeAttributes edgeAttributes) : IAttributesBearingEdge<TEdgeAttributes>
     {
         
         public TEdgeAttributes Attributes { get; } = edgeAttributes;

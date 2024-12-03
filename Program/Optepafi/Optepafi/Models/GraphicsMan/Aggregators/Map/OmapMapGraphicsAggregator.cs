@@ -26,9 +26,9 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
         foreach (OmapMap.Symbol symbol in map.Symbols)
         {
             if (symbol.Code == 799) continue;
-            if (_constructors.TryGetValue(symbol.Code, out var constructor) && map.Objects.TryGetValue(symbol.Code, out var objects))
+            if (_constructors.TryGetValue(symbol.Code, out var constructor))
             {
-                foreach (OmapMap.Object obj in objects)
+                foreach (OmapMap.Object obj in map.Objects[symbol.Code])
                 {
                    collectorForAggregatedObjects.AddRange(constructor.Construct(obj)); 
                 }

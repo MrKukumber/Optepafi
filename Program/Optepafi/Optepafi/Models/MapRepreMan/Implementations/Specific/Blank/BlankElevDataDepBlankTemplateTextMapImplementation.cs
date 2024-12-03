@@ -12,8 +12,7 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Specific.Blank;
 /// For more information on graphs see <see cref="IGraph{TVertexAttributes,TEdgeAttributes}"/> and on map representations <see cref="IMapRepre"/>.  
 /// </summary>
 public abstract class BlankElevDataDepBlankTemplateTextMapImplementation :
-    IGraph<IBlankGraph.Vertex<BlankTemplate.VertexAttributes>, IBlankGraph.Edge<BlankTemplate.EdgeAttributes>>,
-    IBlankGraph
+    IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
     /// <inheritdoc cref="IGraph{TVertexAttributes,TEdgeAttributes}.RestoreConsistency"/>
     public void RestoreConsistency() { }

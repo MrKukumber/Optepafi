@@ -65,7 +65,7 @@ public class SearchingAlgorithmManager :
         HashSet<ISearchingAlgorithm> usableAlgorithms = new();
         if (userModelType is IUserModelType< IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
         {
-            var graphCreator = mapRepreRep.GetCorrespondingGraphCreator();
+            var graphCreator = mapRepreRep.GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>();
             foreach (var searchingAlgorithm in SearchingAlgorithms)
             {
                 if (graphCreator.RevelationForSearchingAlgorithmMan(this, computingUserModelType, searchingAlgorithm))
@@ -115,7 +115,7 @@ public class SearchingAlgorithmManager :
         var (mapRepreRep, userModelType, algorithm) = otherParams;
         if (userModelType is IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> , ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
         {
-            var graphCreator = mapRepreRep.GetCorrespondingGraphCreator();
+            var graphCreator = mapRepreRep.GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>();
             graphCreator.RevelationForSearchingAlgorithmMan(this, computingUserModelType, algorithm);
         }
         return false;

@@ -7,8 +7,7 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Specific.Blank;
 
 //TODO: comment
 public class BlankElevDataIndepBlankTemplateOmapMapImplementation :
-    IGraph<IBlankGraph.Vertex<BlankTemplate.VertexAttributes>, IBlankGraph.Edge<BlankTemplate.EdgeAttributes>>,
-    IBlankGraph
+    IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
     /// <inheritdoc cref="IGraph{TVertexAttributes,TEdgeAttributes}.RestoreConsistency"/>
     public void RestoreConsistency() { }

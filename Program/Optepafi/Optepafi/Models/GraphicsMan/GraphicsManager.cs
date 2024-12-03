@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Threading;
 using Optepafi.Models.GraphicsMan.Aggregators;
 using Optepafi.Models.GraphicsMan.Aggregators.Map;
+using Optepafi.Models.GraphicsMan.Aggregators.MapRepre.CompleteNetIntertwining;
 using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.MapMan;
@@ -45,7 +46,7 @@ public class GraphicsManager :
     /// Collection of aggregators for specific map representation/graph implementation types. It is searched when map representation graphics is to be aggregated.
     /// </summary>
     public IReadOnlySet<IGraphicsAggregator> MapRepreGraphicsAggregators { get; } = 
-        ImmutableHashSet.Create<IGraphicsAggregator>();
+        ImmutableHashSet.Create<IGraphicsAggregator>(CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator.Instance);
     
     public enum AggregationResult {Aggregated, NoUsableAggregatorFound, Cancelled}
 
@@ -153,7 +154,10 @@ public class GraphicsManager :
         {
             if (graphicsAggregator is IMapRepreGraphicsAggregator<TImplementation> implementationGraphcisAggregator)
             {
-                implementationGraphcisAggregator.AggregateGraphics(implementation, collectorForAggregatedObjects, cancellationToken);
+                lock (implementation)
+                {
+                    implementationGraphcisAggregator.AggregateGraphics(implementation, collectorForAggregatedObjects, cancellationToken);
+                }
                 if (cancellationToken?.IsCancellationRequested ?? false)
                     return AggregationResult.Cancelled;
                 return AggregationResult.Aggregated;

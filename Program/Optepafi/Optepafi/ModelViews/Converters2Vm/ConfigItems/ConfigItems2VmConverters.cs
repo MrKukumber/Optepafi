@@ -10,7 +10,8 @@ public static class ConfigItems2VmConverters
 {
     public static Dictionary<Type, IConfigItem2VmConverter> Converters = new()
     {
-        [typeof(ICategoricalConfigItem<Enum>)] =  CategoricalConfigItem2VmConverter.Instance,
+        // [typeof(ICategoricalConfigItem<Enum>)] = CategoricalConfigItem2VmConverter.Instance,
+        [typeof(CategoricalConfigItem)] = CategoricalConfigItem2VmConverter.Instance,
         [typeof(IntValueConfigItem)] =  IntValueConfigItem2VmConverter.Instance,
         [typeof(FloatValueConfigItem)] =  FloatValueConfigItem2VmConverter.Instance,
         [typeof(ColorConfigItem)] =  ColorConfigItem2VmConverter.Instance,
@@ -19,17 +20,28 @@ public static class ConfigItems2VmConverters
     };
 }
 
-public class CategoricalConfigItem2VmConverter : IConfigItem2VmConverter<ICategoricalConfigItem<Enum>>
+public class CategoricalConfigItem2VmConverter : IConfigItem2VmConverter<CategoricalConfigItem>
 {
 
     public static CategoricalConfigItem2VmConverter Instance { get; } = new();
     private CategoricalConfigItem2VmConverter(){}
 
-    public ConfigItemViewModel ConvertToViewModel(ICategoricalConfigItem<Enum> configItem)
+    public ConfigItemViewModel ConvertToViewModel(CategoricalConfigItem configItem)
     {
         return new CategoricalConfigItemViewModel(configItem);
     }
 }
+// public class CategoricalConfigItem2VmConverter : IConfigItem2VmConverter<ICategoricalConfigItem<Enum>>
+// {
+
+    // public static CategoricalConfigItem2VmConverter Instance { get; } = new();
+    // private CategoricalConfigItem2VmConverter(){}
+
+    // public ConfigItemViewModel ConvertToViewModel(ICategoricalConfigItem<Enum> configItem)
+    // {
+        // return new CategoricalConfigItemViewModel(configItem);
+    // }
+// }
 
 public class IntValueConfigItem2VmConverter : IConfigItem2VmConverter<IntValueConfigItem>
 {

@@ -5,6 +5,7 @@
         <ResourceInclude Source="MapObjects/MapObjectsTemplates.axaml"/>
         <ResourceInclude Source="PathObjects/PathObjectsTemplates.axaml"/>
         <ResourceInclude Source="SearchingStateObjects/SearchingStateObjectsTemplates.axaml"/>
+        <ResourceInclude Source="MapRepreObjects/MapRepreObjectsTemplates.axaml"/>
     </ResourceDictionary.MergedDictionaries>
     <DataTemplate x:Key="GraphicsSourceTemplate" x:DataType="{x:Type grVm:GraphicsSourceViewModel}">
         <ItemsControl Name="SelectedMapPreview" ItemsSource="{Binding GraphicObjectsCollection}">

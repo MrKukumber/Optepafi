@@ -19,17 +19,17 @@ using Splat.ApplicationPerformanceMonitoring;
 
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.CompleteIterativelySnapping;
 
-public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep : 
-    ElevDataIndepImplementationRep<Orienteering_ISOM_2017_2, OmapMap, OmapMap, CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation, CompleteSnappingMapRepreConfiguration, ICompleteSnappingGraph.Vertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>, ICompleteSnappingGraph.Edge<Orienteering_ISOM_2017_2.EdgeAttributes, Orienteering_ISOM_2017_2.VertexAttributes>, Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>
+public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep : 
+    ElevDataIndepImplementationRep<Orienteering_ISOM_2017_2, OmapMap, OmapMap, CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation, CompleteNetIntertwiningMapRepreConfiguration, ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge, Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>
 {
-    public static CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep Instance { get; } = new();
-    private CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep(){ }
+    public static CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep Instance { get; } = new();
+    private CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep(){ }
 
     public override Orienteering_ISOM_2017_2 UsedTemplate { get; } = Orienteering_ISOM_2017_2.Instance;
     public override IMapFormat<OmapMap> UsedMapFormat { get; } = OmapMapRepresentative.Instance;
 
-    public override CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation CreateImplementation(Orienteering_ISOM_2017_2 template, OmapMap map,
-        CompleteSnappingMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
+    public override CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation CreateImplementation(Orienteering_ISOM_2017_2 template, OmapMap map,
+        CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
     {
         return GraphCreator.Create(map, configuration, progress, cancellationToken);
     }
@@ -37,12 +37,12 @@ public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImpleme
 
     private static class GraphCreator
     {
-        public static CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation Create(OmapMap map,
-            CompleteSnappingMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
+        public static CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation Create(OmapMap map,
+            CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
             CancellationToken? cancellationToken)
         {
             List<VertexBuilder> vertexBuildersInNet = CreateNet(map, configuration);
-            if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteSnappingGraph.Vertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), configuration);
+            if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
             
             IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders = new RadiallySearchableKdTree<VertexBuilder>(vertexBuildersInNet, vb => (vb.Position.XPos, vb.Position.YPos));
             int allObjectsCount = map.Objects.Values.Sum(x => x.Count);
@@ -53,7 +53,7 @@ public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImpleme
                     {
                         ProcessCrossablePolygonalObject(obj, vertexBuilders, configuration, cancellationToken);
                         if (progress is not null && ++processedObjectsCount % (allObjectsCount/100) == 0) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteSnappingGraph.Vertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), configuration);
+                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             foreach (var pathSymbolCode in OrderedPathsSymbolsCodes)
                 if (map.Symbols.Contains(new OmapMap.Symbol(pathSymbolCode)))
@@ -61,7 +61,7 @@ public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImpleme
                     {
                         ProcessPathObject(obj, vertexBuilders, configuration, cancellationToken);
                         if (progress is not null && ++processedObjectsCount % (allObjectsCount/100) == 0) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteSnappingGraph.Vertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), configuration);
+                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             foreach (var linearObstacleSymbolCode in OrderedLinearObstacleSymbolsCodes)
                 if (map.Symbols.Contains(new OmapMap.Symbol(linearObstacleSymbolCode)))
@@ -69,7 +69,7 @@ public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImpleme
                     {
                         ProcessLinearObstacleObject(obj, vertexBuilders, configuration, cancellationToken);
                         if (progress is not null && ++processedObjectsCount % (allObjectsCount/100) == 0) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteSnappingGraph.Vertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), configuration);
+                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             foreach (var uncrossablePolygonalSymbolCode in OrderedUncrossablePolygonalSymbolsCodes)
                 if (map.Symbols.Contains(new OmapMap.Symbol(uncrossablePolygonalSymbolCode)))
@@ -77,10 +77,11 @@ public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImpleme
                     {
                         ProcessUncrossablePolygonalObject(obj, vertexBuilders, configuration, cancellationToken);
                         if (progress is not null && ++processedObjectsCount % (allObjectsCount/100) == 0) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteSnappingGraph.Vertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), configuration);
+                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             RadiallySearchableKdTree<BuildableVertex> vertices = new RadiallySearchableKdTree<BuildableVertex>(vertexBuilders.Select(vb => vb.Build()), v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos));
-            return new CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(vertices, configuration);
+            foreach (var vertexBuilder in vertexBuilders) vertexBuilder.ConnectAfterBuild(); 
+            return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(vertices, map.Scale);
         }
         
         private static List<decimal> OrderedCrossablePolygonalSymbolsCodes =
@@ -104,18 +105,19 @@ public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImpleme
             520, 307, 307.1m, 301, 301.1m, 301.3m, 521, 521.3m, 206, 520.2m
         ];
 
-        private static List<VertexBuilder> CreateNet(OmapMap map, CompleteSnappingMapRepreConfiguration configuration) => configuration.typeOfNet.AllValues[configuration.typeOfNet.IndexOfSelectedValue] switch
+        private static List<VertexBuilder>
+            CreateNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration) => configuration.typeOfNet.AllValues[configuration.typeOfNet.IndexOfSelectedValue] switch
         {
-            CompleteSnappingMapRepreConfiguration.NetTypesEnumeration.Triangular => CreateTriangularNet(map, configuration),
+            CompleteNetIntertwiningMapRepreConfiguration.NetTypesEnumeration.Triangular => CreateTriangularNet(map, configuration),
             _ => throw new InvalidEnumArgumentException()
         };
 
-        private static List<VertexBuilder> CreateTriangularNet(OmapMap map, CompleteSnappingMapRepreConfiguration configuration)
+        private static List<VertexBuilder> CreateTriangularNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration)
         {
             (int left, int top, int right, int bottom) boundaries = (map.WesternmostCoords.XPos, map.NorthernmostCoords.YPos, map.EasternmostCoords.XPos, map.SouthernmostCoords.YPos);
             int edgeLength = configuration.averageEdgeLength.Value;
             int colls = (boundaries.right - boundaries.left)/edgeLength + 1;
-            int rows = (int)((boundaries.top - boundaries.bottom)/(Math.Sqrt(3)*edgeLength)/2) + 1;
+            int rows = (int)((boundaries.top - boundaries.bottom)/(Math.Sqrt(3)*edgeLength/2)) + 1;
             List<VertexBuilder> vertices = new List<VertexBuilder>();
             List<VertexBuilder> lastRow = new List<VertexBuilder>();
             List<VertexBuilder> currentRow = new List<VertexBuilder>();
@@ -188,27 +190,27 @@ public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImpleme
         }
 
         private static void ProcessCrossablePolygonalObject(OmapMap.Object obj, IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders,
-            CompleteSnappingMapRepreConfiguration configuration, CancellationToken? cancellationToken)
+            CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
         {
-            
+            //TODO:
         }
         
         private static void ProcessPathObject(OmapMap.Object obj, IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders,
-            CompleteSnappingMapRepreConfiguration configuration, CancellationToken? cancellationToken)
+            CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
         {
-            
+            //TODO:
         }
         
         private static void ProcessLinearObstacleObject(OmapMap.Object obj, IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders,
-            CompleteSnappingMapRepreConfiguration configuration, CancellationToken? cancellationToken)
+            CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
         {
-            
+            //TODO:
         }
         
         private static void ProcessUncrossablePolygonalObject(OmapMap.Object obj, IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders,
-            CompleteSnappingMapRepreConfiguration configuration, CancellationToken? cancellationToken)
+            CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
         {
-            
+            //TODO:
         }
     }
 
@@ -228,19 +230,25 @@ public class CompleteSnappingElevDataIndepOrienteering_ISOM_2017_2OmapMapImpleme
         {
             if (_builtVertex is not null) return _builtVertex;
             _builtVertex = new BuildableVertex(Attributes);
+            return _builtVertex;
+        }
+
+        public void ConnectAfterBuild()
+        {
+            if (_builtVertex is null) return;
             foreach (var (builder, edgeAttributes) in NeighboringVertexBuilders)
             {
-                BuildableVertex vertex = builder.Build(); 
-                _builtVertex.AddEdge(new ICompleteSnappingGraph.Edge<Orienteering_ISOM_2017_2.EdgeAttributes, Orienteering_ISOM_2017_2.VertexAttributes>(edgeAttributes, vertex));
+                BuildableVertex? vertex = builder._builtVertex; 
+                if (vertex is null) continue;
+                _builtVertex.AddEdge(new ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge(edgeAttributes, vertex));
             }
-            return _builtVertex;
         }
     }
 
-    private class BuildableVertex : ICompleteSnappingGraph.Vertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>
+    private class BuildableVertex : ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex
     {
-        public BuildableVertex(Orienteering_ISOM_2017_2.VertexAttributes attributes) : base(attributes, new List<ICompleteSnappingGraph.Edge<Orienteering_ISOM_2017_2.EdgeAttributes, Orienteering_ISOM_2017_2.VertexAttributes>>()) { }
-        public void AddEdge(ICompleteSnappingGraph.Edge<Orienteering_ISOM_2017_2.EdgeAttributes, Orienteering_ISOM_2017_2.VertexAttributes> edge) 
+        public BuildableVertex(Orienteering_ISOM_2017_2.VertexAttributes attributes) : base(attributes, new List<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge>()) { }
+        public void AddEdge(ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge) 
             => _outgoingWeightedEdges[edge] = null;
     }
 

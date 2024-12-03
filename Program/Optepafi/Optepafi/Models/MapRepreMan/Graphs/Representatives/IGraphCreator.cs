@@ -25,8 +25,9 @@ public interface IGraphCreator<out TMapRepre>
     /// These indicators should be of <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/> or <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/> type so they could be used for map creation too.
     /// </summary>
     
-    IImplementationIndicator<ITemplate, IMap, TMapRepre>[] CreateableImplementationsIndicators { get; }
+    IImplementationIndicator<ITemplate, IMap, IMapRepre>[] CreateableImplementationsIndicators { get; }
     
+    //TODO:repair comments
     /// <summary>
     /// Method which creates graph from provided template and map represented by the representative by using one of provided implementation indicator (constructor).
     /// 
@@ -38,13 +39,12 @@ public interface IGraphCreator<out TMapRepre>
     /// <param name="configuration">Configuration of created graph.</param>
     /// <param name="progress">Object by which can be progress of construction subscribed .</param>
     /// <param name="cancellationToken">Token for cancelling construction.</param>
-    /// <param name="indicators">Indicators of implementations which are used for graphs construction. They should be convertible to implementation constructors.</param>
     /// <typeparam name="TTemplate">Type of provided template. It is used for testing and pattern matching of indicators to corresponding constructors.</typeparam>
     /// <typeparam name="TMap">Type of provided map. It is used for testing and pattern matching of indicators to corresponding constructors.</typeparam>
     /// <typeparam name="TMapRepre">Type of map representation whose implementations indicators are provided for constructing the graph.</typeparam>
     /// <returns>Created graph tide to some map representation.</returns>
     /// <exception cref="ArgumentException">When none of provided indicators is usable implementation constructor.</exception>
-    IGraph<IVertex, IEdge> CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, TConfiguration configuration,
+    TMapRepre CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, TConfiguration configuration,
         IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
@@ -63,13 +63,12 @@ public interface IGraphCreator<out TMapRepre>
     /// <param name="elevData">Elevation data corresponding to map area used in graphs creation.</param>
     /// <param name="progress">Object by which can be progress of construction subscribed .</param>
     /// <param name="cancellationToken">Token for cancelling construction.</param>
-    /// <param name="indicators">Indicators of implementations which are used for graphs construction. They should be convertible to implementation constructors.</param>
     /// <typeparam name="TTemplate">Type of provided template. It is used for testing and pattern matching of indicators to corresponding constructors.</typeparam>
     /// <typeparam name="TMap">Type of provided map. It is used for testing and pattern matching of indicators to corresponding constructors.</typeparam>
     /// <typeparam name="TMapRepre">Type of map representation whose implementations indicators are provided for constructing the graph.</typeparam>
     /// <returns>Created graph tide to some map representation.</returns>
     /// <exception cref="ArgumentException">When none of provided indicators is usable implementation constructor.</exception>
-    IGraph<IVertex, IEdge> CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData,
+    TMapRepre CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData,
         TConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
         CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
@@ -78,6 +77,7 @@ public interface IGraphCreator<out TMapRepre>
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 
+    //TODO: comment
     bool RevelationForSearchingAlgorithmMan<TVertexAttributes, TEdgeAttributes>(
         SearchingAlgorithmManager searchingAlgorithmMan, 
         IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType,

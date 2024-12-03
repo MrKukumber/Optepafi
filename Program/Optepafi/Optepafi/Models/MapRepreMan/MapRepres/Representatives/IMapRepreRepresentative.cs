@@ -38,14 +38,15 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// 
     /// These indicators should be of <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/> or <see cref="ElevDataDepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertexAttributes,TEdgeAttributes}"/> type so they could be used for map creation too.
     /// </summary>
-    IImplementationIndicator<ITemplate, IMap, TMapRepre>[] ImplementationIndicators { get; }
+    IImplementationIndicator<ITemplate, IMap, IMapRepre>[] ImplementationIndicators { get; }
     
     /// <summary>
     /// Returns graph creator which represents corresponding graph derived from represented map representation.
     /// </summary>
     /// <returns>Creator of corresponding graph to the map representation.</returns>
-    IGraphCreator<TMapRepre>
-        GetCorrespondingGraphCreator();
+    IGraphCreator<TMapRepre> GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttriubtes>()
+        where TVertexAttributes : IVertexAttributes
+        where TEdgeAttriubtes : IEdgeAttributes;
 
     /// <summary>
     /// Default configuration of represented map representation.

@@ -199,8 +199,6 @@
 
 
     <ItemGroup>
-      <Folder Include="Models\GraphicsMan\Aggregators\MapRepre\" />
-      <Folder Include="Models\GraphicsMan\Objects\MapRepre\" />
       <Folder Include="Models\GraphicsMan\Objects\SearchingState\" />
       <Folder Include="Models\GraphicsMan\Utils\" />
       <Folder Include="Models\RelevanceFeedbackMan\" />

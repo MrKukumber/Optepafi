@@ -12,7 +12,7 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.B
 
 //TODO: comment
 public class BlankElevDataIndepBlankTemplateOmapMapImplementationRep:
-    ElevDataIndepImplementationRep<BlankTemplate, OmapMap, OmapMap, BlankElevDataIndepBlankTemplateOmapMapImplementation, NullConfiguration, IBlankGraph.Vertex<BlankTemplate.VertexAttributes>, IBlankGraph.Edge<BlankTemplate.EdgeAttributes>, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
+    ElevDataIndepImplementationRep<BlankTemplate, OmapMap, OmapMap, BlankElevDataIndepBlankTemplateOmapMapImplementation, NullConfiguration, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>.Vertex, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>.Edge, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
     public static BlankElevDataIndepBlankTemplateOmapMapImplementationRep Instance { get; } = new();
     private BlankElevDataIndepBlankTemplateOmapMapImplementationRep(){ }
