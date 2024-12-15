@@ -16,9 +16,10 @@
         <Grid ColumnDefinitions="10 * 2 150 10">
             <Grid Grid.Column="1" RowDefinitions="* Auto" Margin="5">
                 <Border Grid.Row="0" BorderBrush="Black" BorderThickness="2">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" PointerMoved="InputElement_OnPointerMoved">
                         <Viewbox Width="{Binding ScaledGraphicsWidth, Converter={StaticResource Micro2DipConverter}}" 
-                                 Height="{Binding ScaledGraphicsHeight, Converter={StaticResource Micro2DipConverter}}">
+                                 Height="{Binding ScaledGraphicsHeight, Converter={StaticResource Micro2DipConverter}}"
+                                 >
                             <Viewbox.GestureRecognizers>
                                 <PinchGestureRecognizer/>
                             </Viewbox.GestureRecognizers>
@@ -32,6 +33,8 @@
                 <DockPanel Grid.Row="1">
                     <TextBlock Name="GraphicsProblemTextBlock" Text="{Binding GraphicsProblemText}" DockPanel.Dock="Left"/>
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Name="XPointerPositionTextBlock"/>
+                        <TextBlock Name="YPointerPositionTextBlock"/>
                         <Button Name="ZoomButton" Content="+" Command="{Binding ZoomCommand}" >
                             <Button.CommandParameter>
                                 <sys:Single>0.2</sys:Single>

@@ -3,10 +3,30 @@
                     xmlns:cnimroVm="clr-namespace:Optepafi.ViewModels.Data.Graphics.MapRepreObjects.CompleteNetIntertwiningMapRepre">
     <DataTemplates x:Key="CompleteNetIntertwiningElevDataIndepOrienteering_2017_2OmapMapImplementationObjectsTempaltes">
         <DataTemplate DataType="{x:Type cnimroVm:VertexObjectViewModel}">
-            <Ellipse Fill="Red" Width="{Binding Diameter, Converter={StaticResource Micro2DipConverter}}" Height="{Binding Diameter, Converter={StaticResource Micro2DipConverter}}"/>
+            <Ellipse Stroke="Red" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Width="{Binding Diameter, Converter={StaticResource Micro2DipConverter}}" Height="{Binding Diameter, Converter={StaticResource Micro2DipConverter}}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type cnimroVm:EdgeObjectViewModel}">
-            <Line Stroke="Red" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" StartPoint="{Binding StartPoint, Converter={StaticResource CanvasCoordsToPointConverter}}" EndPoint="{Binding EndPoint, Converter={StaticResource CanvasCoordsToPointConverter}}"/>
+            <Canvas>
+                <Line Stroke="Red" StrokeThickness="{Binding BottomLineThickness, Converter={StaticResource Micro2DipConverter}}" StartPoint="{Binding StartPoint, Converter={StaticResource CanvasCoordsToPointConverter}}" EndPoint="{Binding EndPoint, Converter={StaticResource CanvasCoordsToPointConverter}}"/>
+                <Line StrokeThickness="{Binding TopLineThickness, Converter={StaticResource Micro2DipConverter}}" StartPoint="{Binding StartPoint, Converter={StaticResource CanvasCoordsToPointConverter}}" EndPoint="{Binding EndPoint, Converter={StaticResource CanvasCoordsToPointConverter}}">
+                    <Line.Stroke>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Offset="0" Color="{Binding BoulderColor}"/>
+                                <GradientStop Offset="0.125" Color="{Binding GroundColor}"/>
+                                <GradientStop Offset="0.25" Color="{Binding StonesColor}"/>
+                                <GradientStop Offset="0.375" Color="{Binding VegetationManMadeColor}"/>
+                                <GradientStop Offset="0.5" Color="{Binding WaterColor}"/>
+                                <GradientStop Offset="0.625" Color="{Binding VegetationGoodVisColor}"/>
+                                <GradientStop Offset="0.75" Color="{Binding NaturalObstacleColor}"/>
+                                <GradientStop Offset="0.875" Color="{Binding PathsColor}"/>
+                                <GradientStop Offset="1" Color="{Binding ManMadeObstacleColor}"/>
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                        <!-- <SolidColorBrush Color="Blue"></SolidColorBrush> -->
+                    </Line.Stroke>
+                </Line>
+            </Canvas>
         </DataTemplate>
     </DataTemplates>
 </ResourceDictionary>

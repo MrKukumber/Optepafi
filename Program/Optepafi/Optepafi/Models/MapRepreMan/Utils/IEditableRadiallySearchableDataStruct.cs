@@ -9,6 +9,8 @@ public interface IEditableRadiallySearchableDataStruct<TValue> : IRadiallySearch
     void Insert(TValue value);
     
     void Delete(TValue value);
+    
+    bool TryFindAt(TValue value, out TValue foundValue);
 }
 
 public class BlankEditableRadiallySearchableDataStruct<TValue> : IEditableRadiallySearchableDataStruct<TValue>
@@ -22,6 +24,12 @@ public class BlankEditableRadiallySearchableDataStruct<TValue> : IEditableRadial
     public void Delete(TValue value) { }
 
     public IReadOnlyList<TValue> FindInEuclideanDistanceFrom((int, int) coords, int distance) => new List<TValue>();
+
+    public bool TryFindAt(TValue value, out TValue foundItem)
+    {
+        foundItem = value;
+        return false;
+    }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     public IEnumerator<TValue> GetEnumerator() => new Enumerator();

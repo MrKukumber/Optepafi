@@ -7,18 +7,18 @@ using Optepafi.Views.Utils;
 namespace Optepafi.Models.MapRepreMan.Configurations;
 
 //TODO: comment + add configs if necessary
-public class CompleteNetIntertwiningMapRepreConfiguration(int defaultAverageEdgeLength, float defaultEdgeVariance, int indexOfDefaultNetType) : IConfiguration
+public class CompleteNetIntertwiningMapRepreConfiguration(int defaultStandardEdgeLength, float defaultMinBoundaryEdgeRatio, int indexOfDefaultNetType) : IConfiguration
 {
 
-    public readonly BoundedIntValueConfigItem averageEdgeLength = new BoundedIntValueConfigItem("Average edge length", defaultAverageEdgeLength, "micrometers", (int)(1 / defaultEdgeVariance) + 1, 50_000);
-    public readonly BoundedFloatValueConfigItem edgeVariance = new BoundedFloatValueConfigItem("Edge variance", defaultEdgeVariance, "between 0 and 1", 0, 1);
+    public readonly BoundedIntValueConfigItem standardEdgeLength = new BoundedIntValueConfigItem("Standard edge length", defaultStandardEdgeLength, "micrometers", 500, 50_000);
+    public readonly BoundedFloatValueConfigItem minBoundaryEdgeRatio = new BoundedFloatValueConfigItem("Ratio of minimal boundary edge length to standard one", defaultMinBoundaryEdgeRatio, "between 0 and 1", 0, 1);
     public readonly CategoricalConfigItem typeOfNet = new CategoricalConfigItem("Type of net", [NetTypesEnumeration.Triangular], indexOfDefaultNetType);
     // public readonly CategoricalConfigItem<NetTypesEnumeration> typeOfNet = new CategoricalConfigItem<NetTypesEnumeration>("Type of net", NetTypesEnumeration.GetValuesAsUnderlyingType<NetTypesEnumeration>().OfType<NetTypesEnumeration>() .ToArray(), indexOfDefaultNetType);
-    public ImmutableList<IConfigItem> ConfigItems => [averageEdgeLength, edgeVariance, typeOfNet];
+    public ImmutableList<IConfigItem> ConfigItems => [standardEdgeLength, minBoundaryEdgeRatio, typeOfNet];
     public enum NetTypesEnumeration { Triangular = 0 }
     
     public IConfiguration DeepCopy()
     {
-        return new CompleteNetIntertwiningMapRepreConfiguration(averageEdgeLength.Value, edgeVariance.Value, typeOfNet.IndexOfSelectedValue);
+        return new CompleteNetIntertwiningMapRepreConfiguration(standardEdgeLength.Value, minBoundaryEdgeRatio.Value, typeOfNet.IndexOfSelectedValue);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using ExCSS;
 
 namespace Optepafi.Models.Utils;
 
@@ -22,9 +23,19 @@ public record struct MapCoordinates(int XPos, int YPos)
     {
         return new MapCoordinates(coordinate1.XPos + coordinate2.XPos, coordinate1.YPos + coordinate2.YPos);
     }
+    public static MapCoordinates operator *(MapCoordinates coordinate, double scalar)
+    {
+        return new MapCoordinates((int)(coordinate.XPos * scalar), (int)(coordinate.YPos * scalar));
+    }
+    public static MapCoordinates operator *(double scalar, MapCoordinates coordinate)
+    {
+        return new MapCoordinates((int)(coordinate.XPos * scalar), (int)(coordinate.YPos * scalar));
+    }
+
+    public double Length() => Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2));
 
     //TODO: comment
-    public MapCoordinates Rotate(float angle, MapCoordinates center)
+    public MapCoordinates Rotate(double angle, MapCoordinates center)
     {
         int translatedX = XPos - center.XPos;
         int translatedY = YPos - center.YPos;

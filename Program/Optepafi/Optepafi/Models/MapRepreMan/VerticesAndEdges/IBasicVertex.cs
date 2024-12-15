@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
@@ -39,7 +40,7 @@ public interface IEdgesContainingVertex<TEdge> : IVertex
     /// Method for getting collection of edges originated in this vertex.
     /// </summary>
     /// <returns>Collection of edges originated in vertex.</returns>
-    TEdge[] GetEdges();
+    IEnumerable<TEdge> GetEdges();
     
     /// <summary>
     /// Sets weight of provided edge. If edge is not present in vertex, it sets nothing.

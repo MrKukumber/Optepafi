@@ -25,8 +25,7 @@ public interface ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttribute
         protected TVertexAttributes _attributes = attributes;
         
         public TVertexAttributes Attributes => _attributes;
-        
-        public Edge[] GetEdges() => _outgoingWeightedEdges.Keys.ToArray();
+        public IEnumerable<Edge> GetEdges() => _outgoingWeightedEdges.Keys;
         public void SetWeight(int? weight, Edge edge) => _outgoingWeightedEdges[edge] = weight;
         public int? GetWeight(Edge edge) => _outgoingWeightedEdges[edge];
 

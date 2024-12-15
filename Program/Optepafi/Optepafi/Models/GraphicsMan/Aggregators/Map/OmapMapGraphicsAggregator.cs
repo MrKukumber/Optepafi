@@ -219,68 +219,12 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
         // { 704, ControlNumberConstructor.Instance_ }, 
         { 799, SimpleOrienteeringCourseConstructor.Instance_ }, 
     };
-
-    private static Polygon GetPolygonFrom((MapCoordinates coords, byte type)[] typedCoords)
-    {
-        return new Polygon(CollectSegments(typedCoords));
-    }
-    private static Utils.Shapes.Path GetPathFrom((MapCoordinates coords, byte type)[] typedCoords)
-    {
-        var startPoint = typedCoords[0].coords;
-        return new Utils.Shapes.Path(startPoint, CollectSegments(typedCoords));
-    }
-    private static List<Segment> CollectSegments((MapCoordinates coords, byte type)[] typedCoords)
-    {
-        List<Segment> collectedSegments = new();
-        if (typedCoords[0].coords.XPos == -14731)
-        {
-            Console.WriteLine();
-        }
-        if (typedCoords.Length == 1)
-        {
-            collectedSegments.Add(new LineSegment(typedCoords[0].coords));
-            return collectedSegments;
-        }
-        int i = 0;
-        while(i < typedCoords.Length)
-        {
-            switch (typedCoords[i].type % 32)
-            {
-                case 0:
-                    if (i + 1 >= typedCoords.Length) return collectedSegments;
-                    collectedSegments.Add(ResolveLineSegment(typedCoords[i].coords, typedCoords[++i].coords));
-                    break;
-                case 1:
-                    if (i + 3 >= typedCoords.Length) return collectedSegments;
-                    collectedSegments.Add(ResolveCubicBezierSegment(typedCoords[i].coords, typedCoords[++i].coords, typedCoords[++i].coords, typedCoords[++i].coords));
-                    break;
-                case 2:
-                case 16:    
-                case 18:
-                    return collectedSegments;
-                default:
-                    return collectedSegments;
-            } ;
-        }
-        return collectedSegments;
-    }
-
-    private static Segment ResolveLineSegment(MapCoordinates point0, MapCoordinates point1)
-        => point0 != point1 ? new LineSegment(point1) : new LineSegment(point1 + new MapCoordinates(1,1)) ;
-    private static Segment ResolveCubicBezierSegment(MapCoordinates point0, MapCoordinates point1, MapCoordinates point2, MapCoordinates point3)
-    {
-       if (point0 != point1 && point1 != point2 && point2 != point3) return new CubicBezierCurveSegment(point1, point2, point3); 
-       if (point0 == point1 && point1 != point2 && point2 != point3) return new QuadraticBezierCurveSegment(point2, point3);
-       if (point0 != point1 && point1 == point2 && point2 != point3) return new QuadraticBezierCurveSegment(point1, point3);
-       if (point0 != point1 && point1 != point2 && point2 == point3) return new QuadraticBezierCurveSegment(point1, point2);
-       return ResolveLineSegment(point0, point3);
-    }
     
     private class ContourConstructor : IConstructor
     {
         public static ContourConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) => 
-            [new Contour_101(GetPathFrom(omapObject.TypedCoords))];
+            [new Contour_101(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))] ;
     }
 
     private class SlopeLineConstructor : IConstructor
@@ -294,7 +238,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static IndexContourConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) => 
-            [new IndexContour_102(GetPathFrom(omapObject.TypedCoords))];
+            [new IndexContour_102(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
 
     // private class ContourValueConstructor : IConstructor
@@ -312,7 +256,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static FormLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) => 
-            [new FormLine_103(GetPathFrom(omapObject.TypedCoords))];
+            [new FormLine_103(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
 
     } 
     private class SlopeLineFormLineConstructor : IConstructor
@@ -326,7 +270,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static EarthBankConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new EarthBank_104(GetPathFrom(omapObject.TypedCoords))];
+            [new EarthBank_104(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     } 
     private class EarthBankMinSizeConstructor : IConstructor
     {
@@ -338,37 +282,37 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static EarthBankTopLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new EarthBankTopLine_104_2(GetPathFrom(omapObject.TypedCoords))];
+            [new EarthBankTopLine_104_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     } 
     private class EarthBankTagLineConstructor : IConstructor
     {
         public static EarthBankTagLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new EarthBankTagLine_104_3(GetPathFrom(omapObject.TypedCoords))];
+            [new EarthBankTagLine_104_3(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     } 
     private class EarthWallConstructor : IConstructor
     {
         public static EarthWallConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new EarthWall_105(GetPathFrom(omapObject.TypedCoords))];
+            [new EarthWall_105(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     } 
     private class RuinedEarthWallConstructor : IConstructor
     {
         public static RuinedEarthWallConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new RuinedEarthWall_106(GetPathFrom(omapObject.TypedCoords))];
+            [new RuinedEarthWall_106(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     } 
     private class ErosionGullyConstructor : IConstructor
     {
         public static ErosionGullyConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ErosionGully_107(GetPathFrom(omapObject.TypedCoords))];
+            [new ErosionGully_107(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     } 
     private class SmallErosionGullyConstructor : IConstructor
     {
         public static SmallErosionGullyConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new SmallErosionGully_108(GetPathFrom(omapObject.TypedCoords))];
+            [new SmallErosionGully_108(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     } 
     private class SmallKnollConstructor : IConstructor
     {
@@ -398,7 +342,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static BrokenGroundConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new BrokenGround_113(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new BrokenGround_113(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     } 
     private class BrokenGroundIndividualDotConstructor : IConstructor
     {
@@ -410,7 +354,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static VeryBrokenGroundConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VeryBrokenGround_114(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new VeryBrokenGround_114(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     } 
     private class ProminentLandformFeatureConstructor : IConstructor
     {
@@ -422,7 +366,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static ImpassableCliffConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ImpassableCliff_201(GetPathFrom(omapObject.TypedCoords))];
+            [new ImpassableCliff_201(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ImpassableCliffMinSizeConstructor : IConstructor
     {
@@ -434,19 +378,19 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static ImpassableCliffTopLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ImpassableCliffTopLine_201_3(GetPathFrom(omapObject.TypedCoords))];
+            [new ImpassableCliffTopLine_201_3(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ImpassableCliffTagLineConstructor : IConstructor
     {
         public static ImpassableCliffTagLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ImpassableCliffTagLine_201_4(GetPathFrom(omapObject.TypedCoords))];
+            [new ImpassableCliffTagLine_201_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class CliffConstructor : IConstructor
     {
         public static CliffConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Cliff_202(GetPathFrom(omapObject.TypedCoords))];
+            [new Cliff_202(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class CliffMinSizeConstructor : IConstructor
     {
@@ -458,7 +402,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static CliffWithTagsConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new CliffWithTags_202_2(GetPathFrom(omapObject.TypedCoords))];
+            [new CliffWithTags_202_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class CliffWithTagsMinSizeConstructor : IConstructor
     {
@@ -494,7 +438,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static GiganticBoulderConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new GiganticBoulder_206(GetPolygonFrom(omapObject.TypedCoords))];
+            [new GiganticBoulder_206(new Polygon(omapObject.CollectSegments()))];
     }
     private class BoulderClusterConstructor : IConstructor
     {
@@ -512,7 +456,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static BoulderFieldConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new BoulderField_208(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new BoulderField_208(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
 
     private class BoulderFieldSingleTriangleConstructor : IConstructor
@@ -531,13 +475,13 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static DenseBoulderFieldConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new DenseBoulderField_209(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new DenseBoulderField_209(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class StonyGroundSlowRunningConstructor : IConstructor
     {
         public static StonyGroundSlowRunningConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new StonyGroundSlowRunning_210(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new StonyGroundSlowRunning_210(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class StonyGroundIndividualDotConstructor : IConstructor
     {
@@ -551,94 +495,94 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static StonyGroundWalkConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new StonyGroundWalk_211(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new StonyGroundWalk_211(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class StonyGroundFightConstructor : IConstructor
     {
         public static StonyGroundFightConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new StonyGroundFight_212(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new StonyGroundFight_212(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class SandyGroundConstructor : IConstructor
     {
         public static SandyGroundConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new SandyGround_213(GetPolygonFrom(omapObject.TypedCoords))];
+            [new SandyGround_213(new Polygon(omapObject.CollectSegments()))];
     }
     private class BareRockConstructor : IConstructor
     {
         public static BareRockConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new BareRock_214(GetPolygonFrom(omapObject.TypedCoords))];
+            [new BareRock_214(new Polygon(omapObject.CollectSegments()))];
     }
     private class TrenchConstructor : IConstructor
     {
         public static TrenchConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Trench_215(GetPathFrom(omapObject.TypedCoords))];
+            [new Trench_215(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class UncrossableBodyOfWaterFullColWithBankLineConstructor : IConstructor
     {
         public static UncrossableBodyOfWaterFullColWithBankLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new UncrossableBodyOfWaterFullCol_301_1(GetPolygonFrom(omapObject.TypedCoords)),
-            new UncrossableBodyOfWaterBankLine_301_4(GetPathFrom(omapObject.TypedCoords))];
+            [new UncrossableBodyOfWaterFullCol_301_1(new Polygon(omapObject.CollectSegments())),
+            new UncrossableBodyOfWaterBankLine_301_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class UncrossableBodyOfWaterFullColConstructor : IConstructor
     {
         public static UncrossableBodyOfWaterFullColConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new UncrossableBodyOfWaterFullCol_301_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new UncrossableBodyOfWaterFullCol_301_1(new Polygon(omapObject.CollectSegments()))];
     }
     private class UncrossableBodyOfWaterDominantWithBankLineConstructor : IConstructor
     {
         public static UncrossableBodyOfWaterDominantWithBankLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new UncrossableBodyOfWaterDominant_301_3(GetPolygonFrom(omapObject.TypedCoords)),
-            new UncrossableBodyOfWaterBankLine_301_4(GetPathFrom(omapObject.TypedCoords))];
+            [new UncrossableBodyOfWaterDominant_301_3(new Polygon(omapObject.CollectSegments())),
+            new UncrossableBodyOfWaterBankLine_301_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class UncrossableBodyOfWaterDominantConstructor : IConstructor
     {
         public static UncrossableBodyOfWaterDominantConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new UncrossableBodyOfWaterDominant_301_3(GetPolygonFrom(omapObject.TypedCoords))];
+            [new UncrossableBodyOfWaterDominant_301_3(new Polygon(omapObject.CollectSegments()))];
     }
     private class UncrossableBodyOfWaterBankLineConstructor : IConstructor
     {
         public static UncrossableBodyOfWaterBankLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new UncrossableBodyOfWaterBankLine_301_4(GetPathFrom(omapObject.TypedCoords))];
+            [new UncrossableBodyOfWaterBankLine_301_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ShallowBodyOfWaterWithSolidOutlineConstructor : IConstructor
     {
         public static ShallowBodyOfWaterWithSolidOutlineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ShallowBodyOfWater_302_1(GetPolygonFrom(omapObject.TypedCoords)),
-            new ShallowBodyOfWaterSolidOutline_302_2(GetPathFrom(omapObject.TypedCoords))];
+            [new ShallowBodyOfWater_302_1(new Polygon(omapObject.CollectSegments())),
+            new ShallowBodyOfWaterSolidOutline_302_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ShallowBodyOfWaterConstructor : IConstructor
     {
         public static ShallowBodyOfWaterConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ShallowBodyOfWater_302_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new ShallowBodyOfWater_302_1(new Polygon(omapObject.CollectSegments()))];
     }
     private class ShallowBodyOfWaterSolidOutlineConstructor : IConstructor
     {
         public static ShallowBodyOfWaterSolidOutlineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ShallowBodyOfWaterSolidOutline_302_2(GetPathFrom(omapObject.TypedCoords))];
+            [new ShallowBodyOfWaterSolidOutline_302_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ShallowBodyOfWaterDashedOutlineConstructor : IConstructor
     {
         public static ShallowBodyOfWaterDashedOutlineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ShallowBodyOfWaterDashedOutline_302_3(GetPathFrom(omapObject.TypedCoords))];
+            [new ShallowBodyOfWaterDashedOutline_302_3(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class SmallShallowBodyOfWaterConstructor : IConstructor
     {
         public static SmallShallowBodyOfWaterConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new SmallShallowBodyOfWater_302_5(GetPolygonFrom(omapObject.TypedCoords))];
+            [new SmallShallowBodyOfWater_302_5(new Polygon(omapObject.CollectSegments()))];
     }
     private class WaterHoleConstructor : IConstructor
     {
@@ -650,45 +594,45 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static CrossableWatercourseConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new CrossableWatercourse_304(GetPathFrom(omapObject.TypedCoords))];
+            [new CrossableWatercourse_304(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class SmallCrossableWatercourseConstructor : IConstructor
     {
         public static SmallCrossableWatercourseConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new SmallCrossableWatercourse_305(GetPathFrom(omapObject.TypedCoords))];
+            [new SmallCrossableWatercourse_305(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class SeasonalWaterChannelConstructor : IConstructor
     {
         public static SeasonalWaterChannelConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new SeasonalWaterChannel_306(GetPathFrom(omapObject.TypedCoords))];
+            [new SeasonalWaterChannel_306(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class UncrossableMarshWithOutlineConstructor : IConstructor
     {
         public static UncrossableMarshWithOutlineConstructor Instance_ { get; } = new();
 
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new UncrossableMarsh_307_1(GetPolygonFrom(omapObject.TypedCoords)),
-            new UncrossableMarshOutline_307_2(GetPathFrom(omapObject.TypedCoords))];
+            [new UncrossableMarsh_307_1(new Polygon(omapObject.CollectSegments())),
+            new UncrossableMarshOutline_307_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class UncrossableMarshConstructor : IConstructor
     {
         public static UncrossableMarshConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new UncrossableMarsh_307_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new UncrossableMarsh_307_1(new Polygon(omapObject.CollectSegments()))];
     }
     private class UncrossableMarshOutlineConstructor : IConstructor
     {
         public static UncrossableMarshOutlineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new UncrossableMarshOutline_307_2(GetPathFrom(omapObject.TypedCoords))];
+            [new UncrossableMarshOutline_307_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class MarshConstructor : IConstructor
     {
         public static MarshConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Marsh_308(GetPolygonFrom(omapObject.TypedCoords))];
+            [new Marsh_308(new Polygon(omapObject.CollectSegments()))];
     }
     private class MarshMinSizeConstructor : IConstructor
     {
@@ -700,13 +644,13 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static NarrowMarshConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NarrowMarsh_309(GetPathFrom(omapObject.TypedCoords))];
+            [new NarrowMarsh_309(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class IndistinctMarshConstructor : IConstructor
     {
         public static IndistinctMarshConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new IndistinctMarsh_310(GetPolygonFrom(omapObject.TypedCoords))];
+            [new IndistinctMarsh_310(new Polygon(omapObject.CollectSegments()))];
     }
     private class IndistinctMarshMinSizeConstructor : IConstructor
     {
@@ -737,98 +681,98 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static OpenLandConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new OpenLand_401(GetPolygonFrom(omapObject.TypedCoords))];
+            [new OpenLand_401(new Polygon(omapObject.CollectSegments()))];
     }
     private class OpenLandWithTreesConstructor : IConstructor
     {
         public static OpenLandWithTreesConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new OpenLandWithTrees_402(GetPolygonFrom(omapObject.TypedCoords))];
+            [new OpenLandWithTrees_402(new Polygon(omapObject.CollectSegments()))];
     }
     private class OpenLandWithBushesConstructor : IConstructor
     {
         public static OpenLandWithBushesConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new OpenLandWithBushes_402_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new OpenLandWithBushes_402_1(new Polygon(omapObject.CollectSegments()))];
     }
     private class RoughOpenLandConstructor : IConstructor
     {
         public static RoughOpenLandConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new RoughOpenLand_403(GetPolygonFrom(omapObject.TypedCoords))];
+            [new RoughOpenLand_403(new Polygon(omapObject.CollectSegments()))];
     }
     private class RoughOpenLandWithTreesConstructor : IConstructor
     {
         public static RoughOpenLandWithTreesConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new RoughOpenLandWithTrees_404(GetPolygonFrom(omapObject.TypedCoords))];
+            [new RoughOpenLandWithTrees_404(new Polygon(omapObject.CollectSegments()))];
     }
     private class RoughOpenLandWithBushesConstructor : IConstructor
     {
         public static RoughOpenLandWithBushesConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new RoughOpenLandWithBushes_404_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new RoughOpenLandWithBushes_404_1(new Polygon(omapObject.CollectSegments()))];
     }
     private class ForestConstructor : IConstructor
     {
         public static ForestConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Forest_405(GetPolygonFrom(omapObject.TypedCoords))];
+            [new Forest_405(new Polygon(omapObject.CollectSegments()))];
     }
     private class VegetationSlowConstructor : IConstructor
     {
         public static VegetationSlowConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationSlow_406(GetPolygonFrom(omapObject.TypedCoords))];
+            [new VegetationSlow_406(new Polygon(omapObject.CollectSegments()))];
     }
     private class VegetationSlowNormalOneDirConstructor : IConstructor
     {
         public static VegetationSlowNormalOneDirConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationSlowNormalOneDir_406_1(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new VegetationSlowNormalOneDir_406_1(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class VegetationSlowGoodVisibilityConstructor : IConstructor
     {
         public static VegetationSlowGoodVisibilityConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationSlowGoodVisibility_407(GetPolygonFrom(omapObject.TypedCoords))];
+            [new VegetationSlowGoodVisibility_407(new Polygon(omapObject.CollectSegments()))];
     }
     private class VegetationWalkConstructor : IConstructor
     {
         public static VegetationWalkConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationWalk_408(GetPolygonFrom(omapObject.TypedCoords))];
+            [new VegetationWalk_408(new Polygon(omapObject.CollectSegments()))];
     }
     private class VegetationWalkNormalOneDirConstructor : IConstructor
     {
         public static VegetationWalkNormalOneDirConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationWalkNormalOneDir_408_1(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new VegetationWalkNormalOneDir_408_1(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class VegetationWalkSlowOneDirConstructor : IConstructor
     {
         public static VegetationWalkSlowOneDirConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationWalkSlowOneDir_408_2(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new VegetationWalkSlowOneDir_408_2(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class VegetationWalkGoodVisibilityConstructor : IConstructor 
     {
         public static VegetationWalkGoodVisibilityConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationWalkGoodVisibility_409(GetPolygonFrom(omapObject.TypedCoords))];
+            [new VegetationWalkGoodVisibility_409(new Polygon(omapObject.CollectSegments()))];
     }
 
     private class VegetationFightConstructor : IConstructor
     {
         public static VegetationFightConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationFight_410(GetPolygonFrom(omapObject.TypedCoords))];
+            [new VegetationFight_410(new Polygon(omapObject.CollectSegments()))];
     }
     private class VegetationFightNormalOneDirConstructor : IConstructor
     {
         public static VegetationFightNormalOneDirConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationFightNormalOneDir_410_1(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new VegetationFightNormalOneDir_410_1(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
         
 
     }
@@ -836,75 +780,75 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static VegetationFightSlowOneDirConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationFightSlowOneDir_410_2(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new VegetationFightSlowOneDir_410_2(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class VegetationFightWalkOneDirConstructor : IConstructor
     {
         public static VegetationFightWalkOneDirConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationFightWalkOneDir_410_3(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new VegetationFightWalkOneDir_410_3(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class VegetationFightMinWidthConstructor : IConstructor
     {
         public static VegetationFightMinWidthConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VegetationFightMinWidth_410_4(GetPathFrom(omapObject.TypedCoords))];
+            [new VegetationFightMinWidth_410_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class CultivatedLandConstructor : IConstructor
     {
         public static CultivatedLandConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new OpenLand_401(GetPolygonFrom(omapObject.TypedCoords)),
-            new CultivatedLandBlackPattern_412_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new OpenLand_401(new Polygon(omapObject.CollectSegments())),
+            new CultivatedLandBlackPattern_412_1(new Polygon(omapObject.CollectSegments()))];
     }
 
     private class CultivatedLandBlackPatternConstructor : IConstructor
     {
         public static CultivatedLandBlackPatternConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new CultivatedLandBlackPattern_412_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new CultivatedLandBlackPattern_412_1(new Polygon(omapObject.CollectSegments()))];
     }
     private class OrchardConstructor : IConstructor 
     {
         public static OrchardConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Orchard_413(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new Orchard_413(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class OrchardRoughOpenLandConstructor : IConstructor
     {
         public static OrchardRoughOpenLandConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new OrchardRoughOpenLand_413_1(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new OrchardRoughOpenLand_413_1(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class VineyardConstructor : IConstructor
     {
         public static VineyardConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Vineyard_414(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new Vineyard_414(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class VineyardRoughOpenLandConstructor : IConstructor
     {
         public static VineyardRoughOpenLandConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VineyardRoughOpenLand_414_1(GetPolygonFrom(omapObject.TypedCoords), omapObject.SymbolRotation)];
+            [new VineyardRoughOpenLand_414_1(new Polygon(omapObject.CollectSegments()), omapObject.SymbolRotation)];
     }
     private class DistinctCultivationBoundaryConstructor : IConstructor
     {
         public static DistinctCultivationBoundaryConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new DistinctCultivationBoundary_415(GetPathFrom(omapObject.TypedCoords))];
+            [new DistinctCultivationBoundary_415(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class DistinctVegetationBoundaryConstructor : IConstructor
     {
         public static DistinctVegetationBoundaryConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new DistinctVegetationBoundary_416(GetPathFrom(omapObject.TypedCoords))];
+            [new DistinctVegetationBoundary_416(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class DistinctVegetationBoundaryGreenDashedLineConstructor : IConstructor
     {
         public static DistinctVegetationBoundaryGreenDashedLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new DistinctVegetationBoundaryGreenDashedLine_416_1(GetPathFrom(omapObject.TypedCoords))];
+            [new DistinctVegetationBoundaryGreenDashedLine_416_1(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ProminentLargeTreeConstructor : IConstructor
     {
@@ -930,75 +874,75 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static PavedAreaWithBoundingLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new PavedArea_501_1(GetPolygonFrom(omapObject.TypedCoords)),
-            new PavedAreaBoundingLine_501_2(GetPathFrom(omapObject.TypedCoords))];
+            [new PavedArea_501_1(new Polygon(omapObject.CollectSegments())),
+            new PavedAreaBoundingLine_501_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class PavedAreaConstructor : IConstructor
     {
         public static PavedAreaConstructor Instance_ { get; } = new();
 
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new PavedArea_501_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new PavedArea_501_1(new Polygon(omapObject.CollectSegments()))];
     }
     private class PavedAreaBoundingLineConstructor : IConstructor
     {
         public static PavedAreaBoundingLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new PavedAreaBoundingLine_501_2(GetPathFrom(omapObject.TypedCoords))];
+            [new PavedAreaBoundingLine_501_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class WideRoadMinWidthConstructor : IConstructor
     {
         public static WideRoadMinWidthConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new WideRoadMinWidth_502(GetPathFrom(omapObject.TypedCoords))];
+            [new WideRoadMinWidth_502(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class RoadWithTwoCarriagewaysConstructor : IConstructor
     {
         public static RoadWithTwoCarriagewaysConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new RoadWithTwoCarriageways_502_2(GetPathFrom(omapObject.TypedCoords))];
+            [new RoadWithTwoCarriageways_502_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class RoadConstructor : IConstructor
     {
         public static RoadConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Road_503(GetPathFrom(omapObject.TypedCoords))];
+            [new Road_503(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class VehicleTrackConstructor : IConstructor
     {
         public static VehicleTrackConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new VehicleTrack_504(GetPathFrom(omapObject.TypedCoords))];
+            [new VehicleTrack_504(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class FootpathConstructor : IConstructor
     {
         public static FootpathConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Footpath_505(GetPathFrom(omapObject.TypedCoords))];
+            [new Footpath_505(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class SmallFootpathConstructor : IConstructor
     {
         public static SmallFootpathConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new SmallFootpath_506(GetPathFrom(omapObject.TypedCoords))];
+            [new SmallFootpath_506(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class LessDistinctSmallFootpathConstructor : IConstructor
     {
         public static LessDistinctSmallFootpathConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new LessDistinctSmallFootpath_507(GetPathFrom(omapObject.TypedCoords))];
+            [new LessDistinctSmallFootpath_507(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class NarrowRideConstructor : IConstructor
     {
         public static NarrowRideConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NarrowRide_508(GetPathFrom(omapObject.TypedCoords))];
+            [new NarrowRide_508(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class NarrowRideEasyConstructor : IConstructor
     {
         public static NarrowRideEasyConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NarrowRideEasy_508_1(GetPathFrom(omapObject.TypedCoords))];
+            [new NarrowRideEasy_508_1(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
         
 
     }
@@ -1006,49 +950,49 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static NarrowRideNormalConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NarrowRideNormal_508_2(GetPathFrom(omapObject.TypedCoords))];
+            [new NarrowRideNormal_508_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class NarrowRideSlowConstructor : IConstructor
     {
         public static NarrowRideSlowConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NarrowRideSlow_508_3(GetPathFrom(omapObject.TypedCoords))];
+            [new NarrowRideSlow_508_3(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class NarrowRideWalkConstructor : IConstructor
     {
         public static NarrowRideWalkConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NarrowRideWalk_508_4(GetPathFrom(omapObject.TypedCoords))];
+            [new NarrowRideWalk_508_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class RailwayConstructor : IConstructor
     {
         public static RailwayConstructor  Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Railway_509(GetPathFrom(omapObject.TypedCoords))];
+            [new Railway_509(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class PowerLineConstructor : IConstructor
     {
         public static PowerLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new PowerLine_510(GetPathFrom(omapObject.TypedCoords))];
+            [new PowerLine_510(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class MajorPowerLineMinWidthConstructor : IConstructor
     {
         public static MajorPowerLineMinWidthConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new MajorPowerLineMinWidth_511(GetPathFrom(omapObject.TypedCoords))];
+            [new MajorPowerLineMinWidth_511(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class MajorPowerLineConstructor : IConstructor
     {
         public static MajorPowerLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new MajorPowerLine_511_1(GetPathFrom(omapObject.TypedCoords))];
+            [new MajorPowerLine_511_1(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class MajorPowerLineLargeCarryingMastConstructor : IConstructor
     {
         public static MajorPowerLineLargeCarryingMastConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new MajorPowerLineLargeCarryingMasts_511_2(GetPathFrom(omapObject.TypedCoords))];
+            [new MajorPowerLineLargeCarryingMasts_511_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class BridgeTunnelConstructor : IConstructor
     {
@@ -1072,37 +1016,37 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static WallConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Wall_513(GetPathFrom(omapObject.TypedCoords))];
+            [new Wall_513(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class RuinedWallConstructor : IConstructor
     {
         public static RuinedWallConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new RuinedWall_514(GetPathFrom(omapObject.TypedCoords))];
+            [new RuinedWall_514(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ImpassableWallConstructor : IConstructor
     {
         public static ImpassableWallConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ImpassableWall_515(GetPathFrom(omapObject.TypedCoords))];
+            [new ImpassableWall_515(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class FenceConstructor : IConstructor
     {
         public static FenceConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Fence_516(GetPathFrom(omapObject.TypedCoords))];
+            [new Fence_516(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class RuinedFenceConstructor : IConstructor
     {
         public static RuinedFenceConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new RuinedFence_517(GetPathFrom(omapObject.TypedCoords))];
+            [new RuinedFence_517(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ImpassableFenceConstructor : IConstructor
     {
         public static ImpassableFenceConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ImpassableFence_518(GetPathFrom(omapObject.TypedCoords))];
+            [new ImpassableFence_518(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class CrossingPointConstructor : IConstructor
     {
@@ -1114,31 +1058,31 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static NotEnterableAreaConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NotEnterableArea_520(GetPolygonFrom(omapObject.TypedCoords))];
+            [new NotEnterableArea_520(new Polygon(omapObject.CollectSegments()))];
     }
     private class NotEnterableAreaSolidColourBoundingLineConstructor : IConstructor
     {
         public static NotEnterableAreaSolidColourBoundingLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NotEnterableAreaSolidColourBoundingLine_520_1(GetPathFrom(omapObject.TypedCoords))];
+            [new NotEnterableAreaSolidColourBoundingLine_520_1(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class NotEnterableAreaStripesConstructor : IConstructor
     {
         public static NotEnterableAreaStripesConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NotEnterableAreaStripes_520_2(GetPolygonFrom(omapObject.TypedCoords))];
+            [new NotEnterableAreaStripes_520_2(new Polygon(omapObject.CollectSegments()))];
     }
     private class NotEnterableAreaStripesBoundingLineConstructor : IConstructor
     {
         public static NotEnterableAreaStripesBoundingLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NotEnterableAreaStripesBoundingLine_520_3(GetPathFrom(omapObject.TypedCoords))];
+            [new NotEnterableAreaStripesBoundingLine_520_3(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class BuildingConstructor : IConstructor
     {
         public static BuildingConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Building_521(GetPolygonFrom(omapObject.TypedCoords))];
+            [new Building_521(new Polygon(omapObject.CollectSegments()))];
     }
     private class BuildingMinSizeConstructor : IConstructor
     {
@@ -1150,45 +1094,45 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static LargeBuildingWithOutlineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new LargeBuilding_521_3(GetPolygonFrom(omapObject.TypedCoords)),
-            new LargeBuildingOutline_521_4(GetPathFrom(omapObject.TypedCoords))];
+            [new LargeBuilding_521_3(new Polygon(omapObject.CollectSegments())),
+            new LargeBuildingOutline_521_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class LargeBuildingConstructor : IConstructor
     {
         public static LargeBuildingConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new LargeBuilding_521_3(GetPolygonFrom(omapObject.TypedCoords))];
+            [new LargeBuilding_521_3(new Polygon(omapObject.CollectSegments()))];
     }
     private class LargeBuildingOutlineConstructor : IConstructor
     {
         public static LargeBuildingOutlineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new LargeBuildingOutline_521_4(GetPathFrom(omapObject.TypedCoords))];
+            [new LargeBuildingOutline_521_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class CanopyWithOutlineConstructor : IConstructor
     {
         public static CanopyWithOutlineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Canopy_522_1(GetPolygonFrom(omapObject.TypedCoords)),
-            new CanopyOutline_522_2(GetPathFrom(omapObject.TypedCoords))];
+            [new Canopy_522_1(new Polygon(omapObject.CollectSegments())),
+            new CanopyOutline_522_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class CanopyConstructor : IConstructor
     {
         public static CanopyConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Canopy_522_1(GetPolygonFrom(omapObject.TypedCoords))];
+            [new Canopy_522_1(new Polygon(omapObject.CollectSegments()))];
     }
     private class CanopyOutlineConstructor : IConstructor
     {
         public static CanopyOutlineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new CanopyOutline_522_2(GetPathFrom(omapObject.TypedCoords))];
+            [new CanopyOutline_522_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class RuinConstructor : IConstructor
     {
         public static RuinConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Ruin_523(GetPathFrom(omapObject.TypedCoords))];
+            [new Ruin_523(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class RuinMinSizeConstructor : IConstructor
     {
@@ -1224,13 +1168,13 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static ProminentLineFeatureConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ProminentLineFeature_528(GetPathFrom(omapObject.TypedCoords))];
+            [new ProminentLineFeature_528(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ProminentImpassableLineFeatureConstructor : IConstructor
     {
         public static ProminentImpassableLineFeatureConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new ProminentImpassableLineFeature_529(GetPathFrom(omapObject.TypedCoords))];
+            [new ProminentImpassableLineFeature_529(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class ProminentManMadeFeatureRingConstructor : IConstructor
     {
@@ -1248,37 +1192,37 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     {
         public static StairwayConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new Stairway_532(GetPathFrom(omapObject.TypedCoords))];
+            [new Stairway_532(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class StairWayWithoutBorderLinesConstructor : IConstructor
     {
         public static StairWayWithoutBorderLinesConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new StairWayWithoutBorderLines_532_1(GetPathFrom(omapObject.TypedCoords))];
+            [new StairWayWithoutBorderLines_532_1(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class MagneticNorthLineConstructor : IConstructor
     {
         public static MagneticNorthLineConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new MagneticNorthLine_601_1(GetPathFrom(omapObject.TypedCoords))];
+            [new MagneticNorthLine_601_1(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class NorthLinesPatternConstructor : IConstructor
     {
         public static NorthLinesPatternConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NorthLinesPattern_601_2(GetPathFrom(omapObject.TypedCoords))];
+            [new NorthLinesPattern_601_2(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class MagneticNorthLineBlueConstructor : IConstructor
     {
         public static MagneticNorthLineBlueConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new MagneticNorthLineBlue_601_3(GetPathFrom(omapObject.TypedCoords))];
+            [new MagneticNorthLineBlue_601_3(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class NorthLinesPatternBlueConstructor : IConstructor
     {
         public static NorthLinesPatternBlueConstructor Instance_ { get; } = new();
         public IGraphicObject[] Construct(OmapMap.Object omapObject) =>
-            [new NorthLinesPatternBlue_601_4(GetPathFrom(omapObject.TypedCoords))];
+            [new NorthLinesPatternBlue_601_4(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))];
     }
     private class RegistrationMarkConstructor : IConstructor
     {
@@ -1308,11 +1252,11 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
 
         public IGraphicObject[] Construct(OmapMap.Object omapObject)
         { 
-            Utils.Shapes.Path courseShape = GetPathFrom(omapObject.TypedCoords);
+            Utils.Shapes.Path courseShape = new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments());
             List<Leg> trackLegs = [new Leg(courseShape.StartPoint, courseShape.Segments[0].LastPoint)];
             for (int i = 0; i + 1 < courseShape.Segments.Count; ++i)
                 trackLegs.Add(new Leg(courseShape.Segments[i].LastPoint, courseShape.Segments[i + 1].LastPoint));
-            return CreateOjects(trackLegs).Concat([new CourseLine_705(GetPathFrom(omapObject.TypedCoords))]).ToArray();
+            return CreateOjects(trackLegs).Concat([new CourseLine_705(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))]).ToArray();
         }
 
         public IGraphicObject[] Construct(IList<MapCoordinates> courseCoordinatesList)
@@ -1326,7 +1270,8 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
             }
             for (int i = 0; i + 1 < courseCoordinatesList.Count; ++i)
                 trackLegs.Add(new Leg(courseCoordinatesList[i], courseCoordinatesList[i + 1]));
-            return CreateOjects(trackLegs).Concat([new CourseLine_705(GetPathFrom(courseCoordinatesList.Select(coord => (coord, (byte) 0)).ToArray()))]).ToArray();
+            var omapObject = new OmapMap.Object(courseCoordinatesList.Select(coord => (coord, (byte)0)).ToArray(), 0);
+            return CreateOjects(trackLegs).Concat([new CourseLine_705(new Utils.Shapes.Path(omapObject.TypedCoords[0].coords, omapObject.CollectSegments()))]).ToArray();
         }
 
         private IEnumerable<IGraphicObject>CreateOjects(List<Leg> trackLegs)
