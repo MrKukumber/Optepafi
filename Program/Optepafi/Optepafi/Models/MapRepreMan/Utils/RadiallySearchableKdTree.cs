@@ -72,7 +72,7 @@ public class RadiallySearchableKdTree<TValue> :
         }
     }
 
-    public bool TryFindAt(TValue value, out TValue foundValue)
+    public bool TryFindAtPositionOf(TValue value, out TValue foundValue)
     {
         var valueCoords = _toCoordsDelegate(value);
         return _kdTree.TryFindValueAt([valueCoords.Item1, valueCoords.Item2], out foundValue);

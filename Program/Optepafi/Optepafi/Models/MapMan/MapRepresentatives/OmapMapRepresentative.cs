@@ -306,9 +306,9 @@ public static class OmapMapParser
     }
 
     private static bool TryParseCoords(string strAllCoords, CancellationToken? cancellationToken, ref int readsOrParsesSinceLastCheck,
-        out (MapCoordinates, byte)[] coords, out (MapCoordinates nc, MapCoordinates sc, MapCoordinates wc, MapCoordinates ec) extremeCoords)
+        out (MapCoordinates, byte)[] typedCoords, out (MapCoordinates nc, MapCoordinates sc, MapCoordinates wc, MapCoordinates ec) extremeCoords)
     {
-        coords = [];
+        typedCoords = [];
         extremeCoords = (new MapCoordinates(0, int.MinValue), new MapCoordinates(0, int.MaxValue), new MapCoordinates(int.MaxValue,0), new MapCoordinates(int.MinValue, 0));
         
         List<(MapCoordinates, byte)> coordsList = [];
@@ -338,7 +338,7 @@ public static class OmapMapParser
             coordsList.Add((new MapCoordinates(x,y), type));
         }
         if (coordsList.Count == 0) return false; //empty coords list is not valid
-        coords = coordsList.ToArray();
+        typedCoords = coordsList.ToArray();
         return true;
     }
 
@@ -405,7 +405,6 @@ public static class OmapMapParser
 
     private static (List<OmapMap.Symbol>, Dictionary<decimal, List<OmapMap.Object>>) GetNewSymbolsAndObjects(int size, CancellationToken? cancellationToken, List<OmapMap.Symbol> symbols, Dictionary<decimal, List<OmapMap.Object>> objects, out bool wholeMapReturned)
     {
-        wholeMapReturned = false;
         List<OmapMap.Symbol> newSymbols = new ();
         foreach (var symbol in symbols) newSymbols.Add(symbol);
         
@@ -421,23 +420,24 @@ public static class OmapMapParser
         int sinceLastCancelCheck = 0;
         int currentSymbolIndex = 0;
         int currentObjectIndex = 0;
-        while (size-- > 0)
+        while (--size >= -1)
         {
             if (sinceLastCancelCheck >= _cancellationCheckInterval)
             {
-                if (cancellationToken is not null && !cancellationToken.Value.IsCancellationRequested) return (newSymbols, newObjects);
+                if (cancellationToken is not null && !cancellationToken.Value.IsCancellationRequested) { wholeMapReturned = false; return (newSymbols, newObjects);}
                 sinceLastCancelCheck = 0;
             }
 
             if (currentObjectIndex >= objects[symbols[currentSymbolIndex].Code].Count)
             {
                 currentObjectIndex = 0;
-                if (++currentSymbolIndex >= symbols.Count) { wholeMapReturned = true; break; }
+                if (++currentSymbolIndex == symbols.Count) { wholeMapReturned = true; return (newSymbols, newObjects); }
                 while (objects[symbols[currentSymbolIndex].Code].Count == 0)
-                    if (++currentSymbolIndex >= symbols.Count) { wholeMapReturned = true; break; }
+                    if (++currentSymbolIndex == symbols.Count) { wholeMapReturned = true; return (newSymbols, newObjects); }
             }
-            newObjects[symbols[currentSymbolIndex].Code].Add(objects[symbols[currentSymbolIndex].Code][currentObjectIndex++]);
+            if (size >= 0) newObjects[symbols[currentSymbolIndex].Code].Add(objects[symbols[currentSymbolIndex].Code][currentObjectIndex++]);
         }
+        wholeMapReturned = false;
         return (newSymbols, newObjects);
     }
 }

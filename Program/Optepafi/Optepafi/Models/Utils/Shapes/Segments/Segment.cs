@@ -7,4 +7,5 @@ public abstract record class Segment
     public abstract void Accept<TOtherParams>(ISegmentVisitor<TOtherParams> segmentVisitor, TOtherParams otherParams);
     public abstract MapCoordinates LastPoint { get; }
     public abstract MapCoordinates PositionAt(double t, MapCoordinates point0);
+    public abstract MapCoordinates d(double t, MapCoordinates point0);
 }

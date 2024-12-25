@@ -13,4 +13,6 @@ public record class LineSegment(MapCoordinates Point1) : Segment
         if (t < 0 || t > 1) throw new ArgumentOutOfRangeException(nameof(t));
         return point0 + t * (Point1 - point0); 
     }
+
+    public override MapCoordinates d(double t, MapCoordinates point0) => Point1 - point0;
 }

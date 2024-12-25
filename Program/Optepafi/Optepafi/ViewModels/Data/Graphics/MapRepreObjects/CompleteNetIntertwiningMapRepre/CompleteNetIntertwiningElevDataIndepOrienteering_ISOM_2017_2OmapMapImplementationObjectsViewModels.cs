@@ -8,11 +8,14 @@ namespace Optepafi.ViewModels.Data.Graphics.MapRepreObjects.CompleteNetIntertwin
 
 public class VertexObjectViewModel(VertexObject obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
-    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex) - new CanvasCoordinate(290, 290);
+    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex) - new CanvasCoordinate(25, 25);
     public override int Priority { get; } = 36;
-    public int Diameter { get; } = 500;
+    public int XCoord { get; } = obj.Position.XPos;
+    public int YCoord { get; } = obj.Position.YPos;
+    public float FontSize { get; } = 0.5f;
+    public int Diameter { get; } = 50;
     
-    public int LineThickness { get; } = 80;
+    public int LineThickness { get; } = 10;
 }
 public class EdgeObjectViewModel : GraphicObjectViewModel
 {
@@ -22,8 +25,8 @@ public class EdgeObjectViewModel : GraphicObjectViewModel
     public CanvasCoordinate StartPoint { get; }
     
     public CanvasCoordinate EndPoint { get; } 
-    public int TopLineThickness { get; } = 75;
-    public int BottomLineThickness { get; } = 125;
+    public int TopLineThickness { get; } = 40;
+    public int BottomLineThickness { get; } = 50;
 
     public EdgeObjectViewModel(EdgeObject obj, MapCoordinates mapsTopLeftVertex)
     {
@@ -106,7 +109,6 @@ public class EdgeObjectViewModel : GraphicObjectViewModel
         PathsColor = lines.path switch
         {
             Orienteering_ISOM_2017_2.Paths.WideRoad_502 => Colors.BurlyWood,
-            Orienteering_ISOM_2017_2.Paths.Road_503 => Colors.BurlyWood,
             null => Colors.Transparent,
             _ => Colors.Black
         };

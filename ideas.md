@@ -146,8 +146,9 @@
 - zlepsit graficku stranku aplikacie
 - podpora pluginov
 - zlepsit uzivatelsku privetivost
-- pridat spravne spracovavanie dier v polygonoch v omap file-och - nateraz diery v polygonoch ignorujem - upravit aj vykreslovanie map aj vytvaranie mapovych reprezentacii 
+- pridat spravne spracovavanie dier v polygonoch v omap file-och - nateraz diery v polygonoch ignorujem - upravit aj vykreslovanie map aj vytvaranie mapovych reprezentacii + pri vytvarani chainov spracovavat nove vytvorene diery vzniknute specifickym zapletenim polygonu objektu
 - nechat nech mapovu reprezentaciu moze implementovat viac grafov, ktore budu mat rozne vlastnosti a teda bude mozne otestovat viac moznosti vo vyhladavcom algoritme, ci aspon jedna z grafovych reprezentacii je pouzitelna. Vsetky grafove reprezentacie pritom budu dodrzovat podstatu mapovej reprezentacie.
+- spracovat vinohrady a jednosmernu vegetaciu
 
 ## DONE
 
@@ -202,3 +203,8 @@ Předpokládá se možnost parametrizace vyhledávácích algoritmů např. úda
 
 
 - asfalt -> open terrain, dashed paths, -> rough open terrain, forrest -> 
+
+
+- TODO:
+  - doriesit edge case-y s prekryvom vrocholov a hran a vrcholov
+  - zmenit to vytvaranie retiazky pre prekazky a znak 410_4 tak, aby sa obidve bocne retiazky vytvarali subezne - tym sa zabezpeci ze kazdy vrchol v lavej retiazke bude mat suseda v pravej - pre znak 410_4 to nieje az tak treba ale preco mat dve metody z ktorych jedna robi v podstate menej prace + lomena ciara objektu s bude spracovavat len raz, tak to zlepsi aj vykon troska :)

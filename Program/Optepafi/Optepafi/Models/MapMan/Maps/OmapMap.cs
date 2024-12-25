@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.Utils;
@@ -25,9 +26,22 @@ public abstract class OmapMap : IMap, IPartitionableMap
     public abstract List<Symbol> Symbols { get; }
     public record struct Symbol(decimal Code);
 
-    public record struct Object((MapCoordinates coords, byte type)[] TypedCoords, float SymbolRotation)
+    // public record struct Object((MapCoordinates coords, byte type)[] TypedCoords, float SymbolRotation)
+    public struct Object
     {
-        public List<Segment> CollectSegments()
+        public (MapCoordinates coords, byte type)[] TypedCoords { get; set; }
+
+        public float SymbolRotation { get; set; }
+        public Object((MapCoordinates coords, byte type)[] typedCoords, float symbolRotation)
+        {
+            TypedCoords = typedCoords;
+            SymbolRotation = symbolRotation;
+            if (typedCoords is null)
+            {
+                Console.WriteLine();
+            }
+        }
+        public List<Segment> CollectSegments(bool asPolygon)
         {
             List<Segment> collectedSegments = new();
             if (TypedCoords.Length == 1)
@@ -41,21 +55,23 @@ public abstract class OmapMap : IMap, IPartitionableMap
                 switch (TypedCoords[i].type % 32)
                 {
                     case 0:
-                        if (i + 1 >= TypedCoords.Length) return collectedSegments;
+                        if (i + 1 >= TypedCoords.Length) { i = TypedCoords.Length; break; }
                         collectedSegments.Add(ResolveLineSegment(TypedCoords[i].coords, TypedCoords[++i].coords));
                         break;
                     case 1:
-                        if (i + 3 >= TypedCoords.Length) return collectedSegments;
+                        if (i + 3 >= TypedCoords.Length) { i = TypedCoords.Length; break; }
                         collectedSegments.Add(ResolveCubicBezierSegment(TypedCoords[i].coords, TypedCoords[++i].coords, TypedCoords[++i].coords, TypedCoords[++i].coords));
                         break;
                     case 2:
                     case 16:    
                     case 18:
-                        return collectedSegments;
+                        i = TypedCoords.Length; break;
                     default:
-                        return collectedSegments;
-                } ;
+                        i = TypedCoords.Length; break;
+                }
             }
+            if (asPolygon && TypedCoords[0].coords != TypedCoords.Last().coords)
+                collectedSegments.Add(new LineSegment(TypedCoords[0].coords));
             return collectedSegments;
         }
         

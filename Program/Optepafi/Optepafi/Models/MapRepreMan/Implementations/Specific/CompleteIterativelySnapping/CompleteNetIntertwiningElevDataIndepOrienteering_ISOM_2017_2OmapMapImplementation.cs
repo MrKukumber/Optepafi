@@ -12,10 +12,13 @@ using Optepafi.Models.Utils;
 namespace Optepafi.Models.MapRepreMan.Implementations.Specific.CompleteIterativelySnapping;
 
 //TODO: comment
-public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(INearestNeighborsSearchableDataStructure<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> searchableVertices, int scale) : 
+public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(INearestNeighborsSearchableDataStructure<ICompleteNetIntertwiningGraph< Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> searchableVertices, int scale) : 
     ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>, IEnumerable<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>
 {
     public string Name { get; } = "Complete snapping map repre. elev. data independent implementation for Orienteering (ISOM 2017-2) and Omap file format.";
+
+    // public IEditableRadiallySearchableDataStruct<ICompleteNetIntertwiningGraph< Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> SearchableVertices { get; } = searchableVertices; //for debugging
+
     public void RestoreConsistency()
     {
         foreach (var vertex in searchableVertices)

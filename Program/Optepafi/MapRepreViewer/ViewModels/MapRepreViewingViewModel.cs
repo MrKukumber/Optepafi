@@ -170,10 +170,10 @@ public class MapRepreViewingViewModel : ViewModelBase
     {
         if (graphics is not null)
         {
-            MapGraphicsSource = graphics.Value.Item1;
+            // MapGraphicsSource = graphics.Value.Item1;
             MapRepreGraphicsSource = graphics.Value.Item2;
-            GraphicsWidth = MapGraphicsSource.GraphicsWidth;
-            GraphicsHeight = MapGraphicsSource.GraphicsHeight;
+            GraphicsWidth = graphics.Value.Item2.GraphicsWidth;
+            GraphicsHeight = graphics.Value.Item2.GraphicsHeight;
         }
     }
 

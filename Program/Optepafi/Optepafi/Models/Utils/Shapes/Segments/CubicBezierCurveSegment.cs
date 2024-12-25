@@ -13,4 +13,8 @@ public record class CubicBezierCurveSegment(MapCoordinates Point1, MapCoordinate
         if (t < 0 || t > 1) throw new ArgumentOutOfRangeException(nameof(t));
         return Math.Pow(1 - t, 3) * point0 + 3 * Math.Pow(1 - t, 2) * t * Point1 + 3 * (1 - t) * Math.Pow(t, 2) * Point2 + Math.Pow(t, 3) * Point3;
     }
+
+    public override MapCoordinates d(double t, MapCoordinates point0) => 3 * Math.Pow(1 - t, 2) * (Point1 - point0)
+                                                                         + 6 * (1 - t) * t * (Point2 - Point1)
+                                                                         + 3 * t * t * (Point3 - Point2);
 }

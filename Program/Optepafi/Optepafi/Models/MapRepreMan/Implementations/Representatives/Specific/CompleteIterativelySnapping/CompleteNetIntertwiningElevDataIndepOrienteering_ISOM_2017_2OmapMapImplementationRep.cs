@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Threading;
 using Avalonia;
 using DynamicData;
@@ -42,9 +44,11 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
 
     private class GraphCreator
     {
-        private const int microspocicEdgeLength = 20;
         public static GraphCreator Instance { get; } = new();
         private GraphCreator() { }
+        
+        public int processedObjectsCount; 
+        // public int debugLimit = 1334; // for debugging
         public CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation Create(OmapMap map,
             CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
             CancellationToken? cancellationToken)
@@ -54,7 +58,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             
             IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders = new RadiallySearchableKdTree<VertexBuilder>(netVertices, vb => (vb.Position.XPos, vb.Position.YPos));
             int allObjectsCount = 0;
-            foreach (var crossablePolygonalSymbolCode in OrderedCrossablePolygonalSymbolsCodes)
+            foreach (var crossablePolygonalSymbolCode in OrderedPolygonalSymbolsCodes)
                 if (map.Symbols.Contains(new OmapMap.Symbol(crossablePolygonalSymbolCode)))
                     allObjectsCount += map.Objects[crossablePolygonalSymbolCode].Count;
             foreach (var pathSymbolCode in OrderedPathsSymbolsCodes)
@@ -63,52 +67,57 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             foreach (var linearobstacleSymbolCode in OrderedLinearObstacleSymbolsCodes)
                 if (map.Symbols.Contains(new OmapMap.Symbol(linearobstacleSymbolCode)))
                     allObjectsCount += map.Objects[linearobstacleSymbolCode].Count;
-            foreach (var uncrossablePolygonalSymbolCode in OrderedUncrossablePolygonalSymbolsCodes)
-                if (map.Symbols.Contains(new OmapMap.Symbol(uncrossablePolygonalSymbolCode)))
-                    allObjectsCount += map.Objects[uncrossablePolygonalSymbolCode].Count;
-            // Console.WriteLine(allObjectsCount);
-            int processedObjectsCount = 0;
-            foreach (var crossablePolygonalSymbolCode in OrderedCrossablePolygonalSymbolsCodes)
-                if (map.Symbols.Contains(new OmapMap.Symbol(crossablePolygonalSymbolCode)))
-                    foreach (var obj in map.Objects[crossablePolygonalSymbolCode])
+            Console.WriteLine(allObjectsCount);
+            processedObjectsCount = 0;
+            foreach (var polygonalSymbolCode in OrderedPolygonalSymbolsCodes)
+            {
+                Console.WriteLine(polygonalSymbolCode);
+                if (map.Symbols.Contains(new OmapMap.Symbol(polygonalSymbolCode)))
+                    foreach (var obj in map.Objects[polygonalSymbolCode])
                     {
-                        ProcessCrossablePolygonalObject(obj, crossablePolygonalSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (progress is not null && ++processedObjectsCount % (allObjectsCount/100) == 0) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
+                        // if (processedObjectsCount > debugLimit) break; // for debugging
+                        if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
+                        // if (processedObjectsCount == debugLimit) // for debugging
+                            ProcessCrossablePolygonalObject(obj, polygonalSymbolCode, vertexBuilders, configuration, cancellationToken);
+                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount / 100) == 0 && progress is not null) progress.Report( new MapRepreConstructionReport(processedObjectsCount / (float)allObjectsCount));
+                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation( new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph< Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
+            }
             foreach (var pathSymbolCode in OrderedPathsSymbolsCodes)
+            {
+                Console.WriteLine(pathSymbolCode);
                 if (map.Symbols.Contains(new OmapMap.Symbol(pathSymbolCode)))
                     foreach (var obj in map.Objects[pathSymbolCode])
                     {
-                        ProcessPathObject(obj, pathSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (progress is not null && ++processedObjectsCount % (allObjectsCount/100) == 0) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
+                        // if (processedObjectsCount > debugLimit) break; // for debugging
+                        if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
+                        // if (processedObjectsCount == debugLimit) // for debugging
+                            ProcessPathObject(obj, pathSymbolCode, vertexBuilders, configuration, cancellationToken);
+                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount/100) == 0  && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
                         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
+            }
             foreach (var linearObstacleSymbolCode in OrderedLinearObstacleSymbolsCodes)
                 if (map.Symbols.Contains(new OmapMap.Symbol(linearObstacleSymbolCode)))
                     foreach (var obj in map.Objects[linearObstacleSymbolCode])
                     {
-                        ProcessLinearObstacleObject(obj, linearObstacleSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (progress is not null && ++processedObjectsCount % (allObjectsCount/100) == 0) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
+                        // if (processedObjectsCount > debugLimit) break; // for debugging
+                        if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
+                        // if (processedObjectsCount == debugLimit) // for debugging
+                            ProcessLinearObstacleObject(obj, linearObstacleSymbolCode, vertexBuilders, configuration, cancellationToken);
+                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount/100) == 0 && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
                         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
-            foreach (var uncrossablePolygonalSymbolCode in OrderedUncrossablePolygonalSymbolsCodes)
-                if (map.Symbols.Contains(new OmapMap.Symbol(uncrossablePolygonalSymbolCode)))
-                    foreach (var obj in map.Objects[uncrossablePolygonalSymbolCode])
-                    {
-                        ProcessUncrossablePolygonalObject(obj, uncrossablePolygonalSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (progress is not null && ++processedObjectsCount % (allObjectsCount/100) == 0) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
-                    }
-            RadiallySearchableKdTree<BuildableVertex> vertices = new RadiallySearchableKdTree<BuildableVertex>(vertexBuilders.Select(vb => vb.Build()), v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos));
+            RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> vertices = new (vertexBuilders.Select(vb => vb.Build()), v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos));
             foreach (var vertexBuilder in vertexBuilders) vertexBuilder.ConnectAfterBuild(); 
             return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(vertices, map.Scale);
         }
         
-        private List<decimal> OrderedCrossablePolygonalSymbolsCodes =
+        private List<decimal> OrderedPolygonalSymbolsCodes =
         [
             403, 404, 404.1m, 413.1m, 213, 414.1m, 401, 402, 402.1m, 413, 412, 414, 407, 409, 406, 406.1m, 408, 408.1m, 408.2m,
-            410, 410.1m, 410.2m, 410.3m, 410.4m, 214, 405, 302, 302.1m, 302.5m, 308, 310, 501, 501.1m, 113, 114, 210, 205, 211, 209, 212
+            410, 410.1m, 410.2m, 410.3m, 410.4m, 214, 405, 310, 308, 302, 302.1m, 302.5m, 113, 114, 210, 211, 212, 208, 209, 501, 501.1m,
+            520, 307, 307.1m, 301, 301.1m, 301.2m, 301.3m, 206, 521, 521.2m, 521.3m, 520.2m
         ];
 
         private List<decimal> OrderedPathsSymbolsCodes =
@@ -120,12 +129,6 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         [
             104, 105, 107, 304, 201, 201.3m, 202, 202.2m, 215, 513, 515, 516, 518, 528, 529
         ];
-
-        private List<decimal> OrderedUncrossablePolygonalSymbolsCodes =
-        [
-            520, 307, 307.1m, 301, 301.1m, 301.3m, 521, 521.3m, 206, 520.2m
-        ];
-        
 
         private List<NetVertexBuilder> CreateNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration) 
             => configuration.typeOfNet.AllValues[configuration.typeOfNet.IndexOfSelectedValue] switch
@@ -143,8 +146,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             List<NetVertexBuilder> vertices = new ();
             List<NetVertexBuilder> lastRow = new ();
             List<NetVertexBuilder> currentRow = new ();
-            (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?)justForest =  (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null);
-
+            (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?) justForest =  (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null);
+            (Orienteering_ISOM_2017_2.NaturalLinearObstacles?, Orienteering_ISOM_2017_2.Paths?, Orienteering_ISOM_2017_2.ManMadeLinearObstacles?) blankLinearFeatures = (null, null, null);
             for (int coll = 0; coll < colls; ++coll)
                 lastRow.Add(new NetVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( new MapCoordinates(boundaries.left + coll * edgeLength, boundaries.top)))
                     {Surroundings = justForest});
@@ -155,12 +158,12 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 {
                     NetVertexBuilder vertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates( boundaries.left + edgeLength/2 + coll * edgeLength , (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
                         {Surroundings = justForest};
-                    vertex.NonBoundaryEdges.Add(lastRow[coll]);
-                    lastRow[coll].NonBoundaryEdges.Add(vertex) ;
-                    vertex.NonBoundaryEdges.Add(lastRow[coll + 1]) ;
-                    lastRow[coll + 1].NonBoundaryEdges.Add(vertex) ;
-                    lastRow[coll + 1].NonBoundaryEdges.Add(lastRow[coll]);
-                    lastRow[coll].NonBoundaryEdges.Add(lastRow[coll + 1]);
+                    vertex.NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures ;
+                    lastRow[coll].NonBoundaryEdges[vertex] = blankLinearFeatures;
+                    vertex.NonBoundaryEdges[lastRow[coll + 1]] = blankLinearFeatures ;
+                    lastRow[coll + 1].NonBoundaryEdges[vertex] = blankLinearFeatures ;
+                    lastRow[coll + 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
+                    lastRow[coll].NonBoundaryEdges[lastRow[coll + 1]] = blankLinearFeatures;
                     currentRow.Add(vertex);
                 }
                 
@@ -172,23 +175,25 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 
                 NetVertexBuilder leftVertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates(boundaries.left, (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
                     {Surroundings = justForest};
-                leftVertex.NonBoundaryEdges.Add(lastRow[0]);
+                leftVertex.NonBoundaryEdges[lastRow[0]] = blankLinearFeatures;
+                lastRow[0].NonBoundaryEdges[leftVertex] = blankLinearFeatures;
                 currentRow.Add(leftVertex);
                 for (int coll = 1; coll < colls - 1; ++coll)
                 {
                     NetVertexBuilder vertex =  new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates( boundaries.left + coll * edgeLength , (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2)))) 
                         {Surroundings = justForest};
-                    vertex.NonBoundaryEdges.Add(lastRow[coll - 1]);
-                    lastRow[coll - 1].NonBoundaryEdges.Add(vertex);
-                    vertex.NonBoundaryEdges.Add(lastRow[coll]);
-                    lastRow[coll].NonBoundaryEdges.Add(vertex);
-                    lastRow[coll].NonBoundaryEdges.Add(lastRow[coll-1]);
-                    lastRow[coll - 1].NonBoundaryEdges.Add(lastRow[coll]);
+                    vertex.NonBoundaryEdges[lastRow[coll - 1]] = blankLinearFeatures;
+                    lastRow[coll - 1].NonBoundaryEdges[vertex] = blankLinearFeatures;
+                    vertex.NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
+                    lastRow[coll].NonBoundaryEdges[vertex] = blankLinearFeatures;
+                    lastRow[coll].NonBoundaryEdges[lastRow[coll-1]] = blankLinearFeatures;
+                    lastRow[coll - 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
                     currentRow.Add(vertex);
                 }
                 NetVertexBuilder rightVertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates(boundaries.left + (colls - 1) * edgeLength, (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
                     {Surroundings = justForest};
-                rightVertex.NonBoundaryEdges.Add(lastRow[colls - 2]);
+                rightVertex.NonBoundaryEdges[lastRow[colls - 2]] = blankLinearFeatures;
+                lastRow[colls - 2].NonBoundaryEdges[rightVertex] = blankLinearFeatures;
                 currentRow.Add(rightVertex);
                 
                 vertices.AddRange(lastRow);
@@ -200,8 +205,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             for (int coll = 1; coll < colls; ++coll)
             {
                 lastRow[coll].IsStationary = true;
-                lastRow[coll].NonBoundaryEdges.Add(lastRow[coll - 1]);
-                lastRow[coll - 1].NonBoundaryEdges.Add(lastRow[coll]);
+                lastRow[coll].NonBoundaryEdges[lastRow[coll - 1]] = blankLinearFeatures;
+                lastRow[coll - 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
             }
             vertices.AddRange(lastRow);
             return vertices;
@@ -212,178 +217,135 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         private void ProcessCrossablePolygonalObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
             CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
         {
-            var potentiallyEntangledChain = GetBlankBoundaryChainOfPolygonalObject(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
+            // if(processedObjectsCount == debugLimit) {} // for debugging
+            // 0
+            // symbol of code 410.4m is line symbol that represents very thin polygonal object so it has to be processed separately
+            var potentiallyEntangledChain = symbolCode != 410.4m
+                ? PolygonalObjectsProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value)
+                : PolygonalObjectsProcessing.GetBlankBoundaryChainOfSymbol410_4(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
             if (potentiallyEntangledChain is null) return;
-            var chains = SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(potentiallyEntangledChain);
+            // 1
+            var chains = PolygonalObjectsProcessing.SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(potentiallyEntangledChain, configuration.standardEdgeLength.Value);
             foreach(var chain in chains)
             {
-                var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = CutAllCrossedEdges(chain, allVertices, configuration.standardEdgeLength.Value, true);
-                var (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices) = FindNodesInsideThePolygonByDfs(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, chain); 
-                UpdateAttributesOfInnerEdges(allInnerVertices, symbolCode);
-
-                var chainListForNewVerticesAddition = chain.ToList();
-                ProcessCutBoundaryEdgesByChain(chainListForNewVerticesAddition, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCode);
-                var chainEnrichedByNewCrossSectionVertices = chainListForNewVerticesAddition.ToArray();
-
-                ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, innerVerticesOfCutEdges, allVertices, configuration.standardEdgeLength.Value, true);
-                SetAttributesOfChainsEdges(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, symbolCode);
-                SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chainEnrichedByNewCrossSectionVertices);
-                AddChainVerticesToTheGraph(chainEnrichedByNewCrossSectionVertices, allVertices);
+                // 2
+                var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PolygonalObjectsProcessing.CutAllCrossedEdges(chain, allVertices, configuration.standardEdgeLength.Value);
+                // 3
+                var (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices) = PolygonalObjectsProcessing.FindNodesInsideThePolygonByDfs(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, chain); 
+                // 4
+                // if(processedObjectsCount == debugLimit) // for debugging
+                PolygonalObjectsProcessing.UpdateAttributesOfInnerEdges(allInnerVertices, symbolCode);
+                // 5
+                var chainEnrichedByNewCrossSectionVertices = 
+                    // processedObjectsCount == debugLimit ? chain : // for debugging
+                        PolygonalObjectsProcessing.ProcessCutBoundaryEdgesByChain(chain, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCode);
+                // 6
+                // if(processedObjectsCount != debugLimit) // for debugging
+                PolygonalObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, innerVerticesOfCutEdges, allVertices, configuration.standardEdgeLength.Value);
+                // 7
+                PolygonalObjectsProcessing.SetAttributesOfChainsEdges(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, symbolCode);
+                // 8
+                PolygonalObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chainEnrichedByNewCrossSectionVertices);
+                // 9
+                PolygonalObjectsProcessing.AddChainVerticesToTheGraph(chainEnrichedByNewCrossSectionVertices, allVertices);
             }
-            //TODO:
         }
         
         private void ProcessPathObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
             CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
         {
-            //TODO:
+            // 0
+            var potentiallyEntangledMultiOccuringVerticesChain = PathObjectsProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
+            if (potentiallyEntangledMultiOccuringVerticesChain is null) return;
+            // 1
+            var potentiallyMultiOccuringVerticesChain = PathObjectsProcessing.AddCrossSectionVerticesIfItIsEntangled(potentiallyEntangledMultiOccuringVerticesChain);
+            // 2
+            var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PathObjectsProcessing.CutAllCrossedEdges(potentiallyMultiOccuringVerticesChain, allVertices, configuration.standardEdgeLength.Value);
+            // 3
+            var potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices = PathObjectsProcessing.ProcessCutBoundaryEdgesByChain(potentiallyMultiOccuringVerticesChain, verticesOfCutBoundaryEdges);
+            // 4
+            PathObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices , verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, allVertices, configuration.standardEdgeLength.Value);
+            // 5
+            PathObjectsProcessing.SetAttributesOfChainsEdges(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, symbolCode);
+            // 6
+            PathObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices);
+            // 7
+            PathObjectsProcessing.AddChainVerticesToTheGraph(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, allVertices);
         }
         
         private void ProcessLinearObstacleObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
             CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
         {
-            //TODO:
+            // 0
+            var chain = LinearObstaclesProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
+            if (chain is null) return;
+            // 1
+            var (verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges) = LinearObstaclesProcessing.FindAllCrossedEdges(chain, allVertices, configuration.standardEdgeLength.Value);
+            // 2
+            LinearObstaclesProcessing.SetLinearObstacleAttributesToAllCrossedEdges(verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges, symbolCode);
         }
-        
-        private void ProcessUncrossablePolygonalObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
-            CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
-        {
-            //TODO:
-        }
+    }
 
-        // 0 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static class PolygonalObjectsProcessing
+    {
+        #region 0 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         
-        private BoundaryVertexBuilder[]? GetBlankBoundaryChainOfPolygonalObject(OmapMap.Object obj, int standardEdgeLength, float minBoundaryEdgeRatio)
+        public static BoundaryVertexBuilder[]? GetBlankBoundaryChain(OmapMap.Object obj, int standardEdgeLength, float minBoundaryEdgeRatio)
         {
-            var segments = obj.CollectSegments();
+            var segments = obj.CollectSegments(true);
             // last and first vertices will be on the same position
-            var boundaryChain = GetBlankChainOfSegmentedLine(segments.Last().LastPoint, segments, standardEdgeLength, minBoundaryEdgeRatio);
+            var boundaryChain = Utils.GetBlankChainOfSegmentedLine(segments.Last().LastPoint, segments, standardEdgeLength, minBoundaryEdgeRatio);
             if (boundaryChain.Count <= 2) return null;
             //connects last and second vertex of chain for polygonal shape, removes first one
             boundaryChain.Last().BoundaryEdges[boundaryChain[1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
             boundaryChain[1].BoundaryEdges[boundaryChain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
             boundaryChain[1].BoundaryEdges.Remove(boundaryChain[0]);
             boundaryChain.RemoveAt(0);
+            if (boundaryChain.Count <= 2) return null;
             return boundaryChain.ToArray();
         }
-
-        private IList<VertexBuilder> GetBlankChainOfLinearObject(OmapMap.Object obj, int standardEdgeLength, float minBoundaryEdgeRatio)
+        
+        public static BoundaryVertexBuilder[]? GetBlankBoundaryChainOfSymbol410_4(OmapMap.Object obj,
+            int standardEdgeLength, float minBoundaryEdgeRatio)
         {
-            //TODO: uses GetBlankBoundaryChainOfSegmentedLine
-            throw new NotImplementedException();
+            var segments = obj.CollectSegments(false);
+            var leftBoundaryChain = Utils.GetBlankShiftedChainOfSegmentedLine(obj.TypedCoords[0].coords, segments, standardEdgeLength, minBoundaryEdgeRatio, true, 125);
+            var rightBoundaryChain = Utils.GetBlankShiftedChainOfSegmentedLine(obj.TypedCoords[0].coords, segments, standardEdgeLength, minBoundaryEdgeRatio, false, 125);   
+            if (leftBoundaryChain.Count + rightBoundaryChain.Count <= 2) return null;
+            // connect left and right boundary chain
+            leftBoundaryChain[0].BoundaryEdges[rightBoundaryChain[0]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            rightBoundaryChain[0].BoundaryEdges[leftBoundaryChain[0]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            leftBoundaryChain.Last().BoundaryEdges[rightBoundaryChain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            rightBoundaryChain.Last().BoundaryEdges[leftBoundaryChain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            //return left boundary chain together with reversed right boundary chain
+            rightBoundaryChain.Reverse();
+            leftBoundaryChain.AddRange(rightBoundaryChain);
+            return leftBoundaryChain.ToArray();
         }
         
-        private (IList<VertexBuilder>,IList<VertexBuilder>) GetBlankBoundaryChainOfLineObject()
-        {
-            //TODO:
-            throw new NotImplementedException();
-        }
+        #endregion
         
-        private List<BoundaryVertexBuilder> GetBlankChainOfSegmentedLine(MapCoordinates firstPosition, IList<Segment> segments, int standardEdgeLength, float minBoundaryEdgeRatio)
-        {
-            List<BoundaryVertexBuilder> chain = [new (new Orienteering_ISOM_2017_2.VertexAttributes(firstPosition))];
-            // incrementally adds new vertices to chain for each segment of objects boundary 
-            foreach (var segment in segments)
-            {
-                AddBlankChainForSegment(segment, chain, standardEdgeLength, minBoundaryEdgeRatio);
-            }
-            // removes edges that are microscopic 
-            for (int i = 1; i < chain.Count; ++i)
-            {
-                if ((chain[i-1].Position - chain[i].Position).Length() < microspocicEdgeLength)
-                {
-                    chain[i-1].BoundaryEdges.Remove(chain[i]);
-                    chain[i].BoundaryEdges.Remove(chain[i-1]);
-                    if (i + 1 < chain.Count)
-                    {
-                        chain[i + 1].BoundaryEdges.Remove(chain[i]);
-                        chain[i].BoundaryEdges.Remove(chain[i + 1]);
-                        chain[i - 1].BoundaryEdges[chain[i + 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                        chain[i + 1].BoundaryEdges[chain[i - 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                    }
-                    chain.RemoveAt(i);
-                }
-            }
-            return chain;
-        }
-
-        private void AddBlankChainForSegment(Segment segment, List<BoundaryVertexBuilder> chain, int standardEdgeLength, float minBoundaryEdgeRatio)
-        {
-            // if segment is too small, following method will process it
-            if (HandleSmallSegment(segment, chain, standardEdgeLength, minBoundaryEdgeRatio)) return;
-            // remembering segments Point0
-            MapCoordinates point0 = chain.Last().Position;
-            // discovers count of edges to which should be segment split, so that all edges had approximately same length not bigger than standard edge length
-            // edges will not have the same length
-            // with increasing edge count, the variance of length of all edges will be still smaller and smaller
-            int edgesCount = 3;
-            while ((segment.PositionAt(1 / (double)++edgesCount, point0) - point0).Length() > standardEdgeLength) { }
-            // iteratively creating edges from uniformly chosen parts of segment
-            for (int i = 1; i <= edgesCount; ++i)
-            {
-                BoundaryVertexBuilder newVertex = new( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(i / (double)edgesCount, point0)));
-                newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                chain.Last().BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                chain.Add(newVertex);
-            }
-        }
-
-        private bool HandleSmallSegment(Segment segment, List<BoundaryVertexBuilder> chain, int standardEdgeLength, float minBoundaryEdgeRatio)
-        {
-            BoundaryVertexBuilder[]? newVertices;
-            // Tries to fit small segment by as many edges as it can.
-            // If more than 3 edges can be fit into the segment, return false indicating, that segment is not small one.
-            if ((segment.PositionAt(0.25, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.PositionAt(0.5, chain.Last().Position) - segment.PositionAt(0.25, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.PositionAt(0.75, chain.Last().Position) - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.LastPoint - segment.PositionAt(0.75, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                if ((segment.PositionAt(1 / (double)3, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                    (segment.PositionAt(2 / (double)3, chain.Last().Position) - segment.PositionAt(1 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                    (segment.LastPoint - segment.PositionAt(2 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                    if ((segment.PositionAt(0.5, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                        (segment.LastPoint - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                        newVertices = [
-                            new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
-                        ];        
-                    else newVertices = [ 
-                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( segment.PositionAt(1 / (double)2, chain.Last().Position))), 
-                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
-                        ];
-                else newVertices = [
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(1 / (double)3, chain.Last().Position))), 
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(2 / (double)3, chain.Last().Position))),
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
-                    ];
-            else return false;
-            foreach (var newVertex in newVertices)
-            {
-                newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                chain.Last().BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                chain.Add(newVertex);
-            }
-            return true;
-        }
-                                
-        // 1 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private List<BoundaryVertexBuilder[]> SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(BoundaryVertexBuilder[] potentiallyEntangledChain)
+        #region 1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static List<BoundaryVertexBuilder[]> SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(BoundaryVertexBuilder[] potentiallyEntangledChain, int standardEdgeLength)
         {
             var(indicesOfCutEdgesWithCorrespondingTemporaryVertices, allTemporaryVertices) = CreateTemporaryVertices(potentiallyEntangledChain);
             // if no cross-sections of edges are found, chain is not entangled so we can return it whole
             // we just have to check its orientation
             if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.Count == 0)
-                if (!IsRightSideInner(potentiallyEntangledChain[0], potentiallyEntangledChain.Last().Position, potentiallyEntangledChain[1].Position, potentiallyEntangledChain)) 
+                if (!Utils.IsRightSideInner(potentiallyEntangledChain[0], potentiallyEntangledChain.Last().Position, potentiallyEntangledChain[1].Position, potentiallyEntangledChain)) 
                     return [potentiallyEntangledChain.Reverse().ToArray()];
                 else return [potentiallyEntangledChain];
             DisconnectCrossingEdgesInChain(potentiallyEntangledChain, indicesOfCutEdgesWithCorrespondingTemporaryVertices);
             InterconnectTemporaryVertices(indicesOfCutEdgesWithCorrespondingTemporaryVertices, potentiallyEntangledChain);
             ProcessTemporaryVertices(allTemporaryVertices);
-            return CollectRightTurningChains(potentiallyEntangledChain.ToHashSet());
+            return CollectRightTurningChains(potentiallyEntangledChain.ToHashSet(), standardEdgeLength);
         }
+        
 
-        private (Dictionary<int, List<ChainEntanglementTemporaryVertexBuilder>>, List<ChainEntanglementTemporaryVertexBuilder>) CreateTemporaryVertices(BoundaryVertexBuilder[] potentiallyEntangledChain)
+        private static (SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>>, List<ChainEntanglementTemporaryVertexBuilder>) CreateTemporaryVertices(BoundaryVertexBuilder[] potentiallyEntangledChain)
         {
-            Dictionary<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfCutEdgesWithCorrespondingTemporaryVertices = new();
+            SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfCutEdgesWithCorrespondingTemporaryVertices = new();
             List<ChainEntanglementTemporaryVertexBuilder> allCreatedTemporaryVertices = new();
             // For each cross-section of chain edges is created new temporary vertex
             // this vertex is then added to lists of created temporary vertices which are hold in dictionary under the indices of crossed edges
@@ -392,7 +354,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 {
                     if (i == 0 && j == potentiallyEntangledChain.Length - 1) continue;
                     int js = j == potentiallyEntangledChain.Length - 1 ? 0 : j + 1;
-                    MapCoordinates? crossSectionCoords = GetLineSegmentsCrossSectionCoords(potentiallyEntangledChain[i].Position, potentiallyEntangledChain[i + 1].Position, potentiallyEntangledChain[j].Position, potentiallyEntangledChain[js].Position)  ;
+                    MapCoordinates? crossSectionCoords = Utils.GetLineSegmentsCrossSectionCoordsParallelCrossSectionIncluded(potentiallyEntangledChain[i].Position, potentiallyEntangledChain[i + 1].Position, potentiallyEntangledChain[j].Position, potentiallyEntangledChain[js].Position)  ;
                     if (crossSectionCoords is not null)
                     {
                         var newTemporaryVertex = new ChainEntanglementTemporaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords.Value));
@@ -406,55 +368,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             return (indicesOfCutEdgesWithCorrespondingTemporaryVertices, allCreatedTemporaryVertices);
         }
 
-        private MapCoordinates? GetLineSegmentsCrossSectionCoords(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2)
-        {
-            var ft = GetNumeratorAndDenominatorOfT(p1, p2, q1, q2);
-            var fu = GetNumeratorAndDenominatorOfU(p1, p2, q1, q2);
-            if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return null;
-            if (!IsFractionInO1IntervalAndDefined(fu.numerator, fu.denominator)) return null;
-            //TODO: osetrenie pripadov, kedy t,u = 0,1
-            if(ft.numerator == ft.denominator || fu.numerator == fu.denominator || ft.numerator == 0 || fu.numerator == 0)Console.WriteLine("ERROR!!!!!");
-            double t = ft.numerator / (double)ft.denominator;
-            return new MapCoordinates((int)(p1.XPos + t * (p2.XPos - p1.XPos)), (int)(p1.YPos + t * (p2.YPos - p1.YPos)));
-        }
         
-            // if (TryComputeCrossSection(p1, p2, q1, q2, out var coords))
-            // {
-                // whole code works under the assumption that p1, p2, q1 and q2 never equals x. It resolves issues with vertices right upon edges. !!!!!!!!!
-                // if (p1.XPos < p2.XPos && p1.XPos <= coords.x && coords.x <= p2.XPos && q1.XPos < q2.XPos && q1.XPos <= coords.x && coords.x <= q2.XPos) return new MapCoordinates((int)coords.x, (int)coords.y);
-                // if (p1.XPos < p2.XPos && p1.XPos <= coords.x && coords.x <= p2.XPos && q1.XPos > q2.XPos && q1.XPos >= coords.x && coords.x >= q2.XPos) return new MapCoordinates((int)coords.x, (int)coords.y);;
-                // if (p1.XPos > p2.XPos && p1.XPos >= coords.x && coords.x >= p2.XPos && q1.XPos < q2.XPos && q1.XPos <= coords.x && coords.x <= q2.XPos) return new MapCoordinates((int)coords.x, (int)coords.y);;
-                // if (p1.XPos > p2.XPos && p1.XPos >= coords.x && coords.x >= p2.XPos && q1.XPos > q2.XPos && q1.XPos >= coords.x && coords.x >= q2.XPos) return new MapCoordinates((int)coords.x, (int)coords.y);;
-            // }
-            // return null;
-
-        // private bool TryComputeCrossSection(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2, out (double x, double y) coords)
-        // {
-            // if (p1 == p2 || q1 == q2) return false;
-            // double a = (p2.YPos - p1.YPos) / (double)(p2.XPos - p1.XPos) * p1.XPos + p1.YPos;
-            // double b = (p2.YPos - p1.YPos) / (double)(p2.XPos - p1.XPos);
-            // double c = (q2.YPos - q1.YPos) / (double)(q2.XPos - q1.XPos) * q1.XPos + q1.YPos;
-            // double d = (q2.YPos - q1.YPos) / (double)(q2.XPos - q1.XPos);
-            // happens, when lines are parallel to each other
-            // if ( -0.00000001 < d - b && d - b < 0.00000001) return false;
-            // coords.x = (a - c) / (d - b);
-            // coords.y = a + b * coords.x(;
-        // }
-            
-        private (int numerator , int denominator) GetNumeratorAndDenominatorOfT(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2)
-            => ((p1.XPos - q1.XPos) * (q1.YPos - q2.YPos) - (p1.YPos - q1.YPos) * (q1.XPos - q2.XPos),
-                (p1.XPos - p2.XPos) * (q1.YPos - q2.YPos) - (p1.YPos - p2.YPos) * (q1.XPos - q2.XPos));
-        private (int numerator, int denominator) GetNumeratorAndDenominatorOfU(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2)
-            => (- ((p1.XPos - p2.XPos) * (p1.YPos - q1.YPos) - (p1.YPos - p2.YPos) * (p1.XPos - q1.XPos)),
-                   (p1.XPos - p2.XPos) * (q1.YPos - q2.YPos) - (p1.YPos - p2.YPos) * (q1.XPos - q2.XPos));
-
-        private bool IsFractionInO1IntervalAndDefined(int numerator, int denominator)
-            => (numerator >= 0 && denominator > 0 && denominator >= numerator) || (numerator <= 0 && denominator < 0 && denominator <= numerator);
-
-        private bool IsFractionGreaterOrEqualToZeroAndDefined(int numerator, int denominator)
-            => (numerator >= 0 && denominator > 0) || (numerator <= 0 && denominator < 0);
-        
-        private void DisconnectCrossingEdgesInChain(BoundaryVertexBuilder[] potentiallyEntangledChain, Dictionary<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices)
+        private static void DisconnectCrossingEdgesInChain(BoundaryVertexBuilder[] potentiallyEntangledChain, SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices)
         {
             // every edge, that was crossing some other edge will be removed from chain
             foreach (var index in indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices.Keys)
@@ -465,42 +380,28 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             }
         }
 
-        private void InterconnectTemporaryVertices( Dictionary<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices, BoundaryVertexBuilder[] chainWithoutEntangledEdges)
+        private static void InterconnectTemporaryVertices(SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices, BoundaryVertexBuilder[] chainWithoutEntangledEdges)
         {
             // temporary vertices are one by one correctly interconnected, so then new edges of chains could be correctly deduced
             foreach (var (chainVertexIndex, correspondingTemporaryVertices) in indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices)
             {
                 int chainVertexIndexSuccessor = chainVertexIndex == chainWithoutEntangledEdges.Length - 1 ? 0 : chainVertexIndex + 1;
                 // at first, we need to order created temporary vertices in the way they are positioned on cut edge 
-                SortVerticesCorrectly(chainWithoutEntangledEdges[chainVertexIndex], chainWithoutEntangledEdges[chainVertexIndexSuccessor], correspondingTemporaryVertices);
+                var correspondingSortedTemporaryVertices = Utils.SortVerticesCorrectly(chainWithoutEntangledEdges[chainVertexIndex], chainWithoutEntangledEdges[chainVertexIndexSuccessor], correspondingTemporaryVertices);
                 var lastVertex = chainWithoutEntangledEdges[chainVertexIndex];
                 // iteratively we set income and outcome neighbors of temporary vertices
                 // logic of temporary vertices will ensure correct coupling of income and outcome neighbors
-                for (int i = 0; i < correspondingTemporaryVertices.Count - 1; i++)
+                for (int i = 0; i < correspondingSortedTemporaryVertices.Count - 1; i++)
                 {
-                    correspondingTemporaryVertices[i].SetFromToVertex(lastVertex, correspondingTemporaryVertices[i + 1]);
-                    lastVertex = correspondingTemporaryVertices[i];
+                    correspondingSortedTemporaryVertices[i].SetFromToVertex(lastVertex, correspondingSortedTemporaryVertices[i + 1]);
+                    lastVertex = correspondingSortedTemporaryVertices[i];
                 }
-                correspondingTemporaryVertices.Last().SetFromToVertex(lastVertex, chainWithoutEntangledEdges[chainVertexIndexSuccessor]);
+                correspondingSortedTemporaryVertices.Last().SetFromToVertex(lastVertex, chainWithoutEntangledEdges[chainVertexIndexSuccessor]);
             }
         }
         
-        private void SortVerticesCorrectly<TVertexBuilder>(BoundaryVertexBuilder vertex1, BoundaryVertexBuilder vertex2, List<TVertexBuilder> vertices) where TVertexBuilder : BoundaryVertexBuilder
-        {
-            // we will sort vertices based on axis, in which is edge given by vertex1 and vertex2 longer
-            if (Math.Abs(vertex1.Position.XPos - vertex2.Position.XPos) > Math.Abs(vertex1.Position.YPos - vertex2.Position.YPos))
-            {
-                if (vertex1.Position.XPos < vertex2.Position.XPos) vertices.Sort((v1, v2) => v1.Position.XPos - v2.Position.XPos);
-                else vertices.Sort((v1, v2) => v2.Position.XPos - v1.Position.XPos);
-            }
-            else
-            {
-                if (vertex1.Position.YPos < vertex2.Position.YPos) vertices.Sort((v1, v2) => v1.Position.YPos - v2.Position.YPos);
-                else vertices.Sort((v1, v2) => v2.Position.YPos - v1.Position.YPos);
-            }
-        }
 
-        private void ProcessTemporaryVertices(List<ChainEntanglementTemporaryVertexBuilder> allTemporaryVertices)
+        private static void ProcessTemporaryVertices(List<ChainEntanglementTemporaryVertexBuilder> allTemporaryVertices)
         {
             // most important step in resolving of chains entanglement
             // temporary vertices are one by one cut of from other ones what concludes in interconnecting of correct pairs of chain vertices, so that there were no edge crossings whatsoever
@@ -508,7 +409,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 temporaryVertex.ProcessByDisconnecting();
         }
 
-        private List<BoundaryVertexBuilder[]> CollectRightTurningChains(HashSet<BoundaryVertexBuilder> choppedChain)
+        private static List<BoundaryVertexBuilder[]> CollectRightTurningChains(HashSet<BoundaryVertexBuilder> choppedChain, int standardEdgeLength)
         {
             List<BoundaryVertexBuilder[]> chains = new ();
             // while there are some non-processed vertices in "chopped" chain, components are looked for and added to list of newly created chains
@@ -516,19 +417,22 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             {
                 List<BoundaryVertexBuilder> chain = [choppedChain.First()];
                 choppedChain.Remove(chain[0]);
-                // if first vertex added to chain has less then two neighbors, it means it is part of component with less than 3 vertices 
-                // such components are not returned as chains
+                // if first vertex added to chain has less then two neighbors, it means it is end of the not cyclic component
+                // we will cut such vertex off
                 if (chain[0].BoundaryEdges.Count < 2)
                 {
-                    // if it is part of component of size two, second vertex must be removed from chopped chain as well
-                    if (chain[0].BoundaryEdges.Count == 1) 
-                        choppedChain.Remove(chain[0].BoundaryEdges.First().Key);
+                    // if it has a neighbor, it is disconnected from it
+                    if (chain[0].BoundaryEdges.Count == 1)
+                        chain[0].BoundaryEdges.First().Key.BoundaryEdges.Remove(chain[0]);
                     continue;
                 }
                 var vertex = chain[0].BoundaryEdges.First().Key;
                 while (vertex != chain[0])
                 {
                     choppedChain.Remove(vertex);
+                    // we have to check edge whether they are not too long.
+                    // too long edges could be created by unraveling of the entangled chain
+                    CheckWhetherLastEdgeIsNotTooLong(vertex, chain, standardEdgeLength);
                     foreach (var (neighbor, _) in vertex.BoundaryEdges)
                     {
                         if(neighbor == chain.Last()) continue;
@@ -537,245 +441,146 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         break;
                     }
                 }
+                // there could emerge new microscopic edges after chains copping
+                RemoveMicroscopicEdges(chain);
+                // if found component has less than three vertices it is not returned as chain
+                if (chain.Count <= 2)
+                    continue;
                 // if chain is turning left, it is reversed
-                if (!IsRightSideInner(chain[0], chain.Last().Position, chain[1].Position, chain.ToArray())) chain.Reverse(); 
+                if (!Utils.IsRightSideInner(chain[0], chain.Last().Position, chain[1].Position, chain.ToArray())) chain.Reverse(); 
                 chains.Add(chain.ToArray());
             }
             return chains;
         }
-        private bool IsRightSideInner(VertexBuilder vertex, MapCoordinates prevVertexPosition, MapCoordinates nextVertexPosition, BoundaryVertexBuilder[] longEnoughChain)
-        {
-            int crossesCount = 0;
-            // in following two lines there is computed vector whose direction is in half between vector from vertex to previous vertex and vertex to next vertex
-            // it is essentially previous vertex rotated around vertex by half of an angle between previous vertex and next vertex
-            double angle = ComputeLeftHandedAngleBetween(vertex.Position, prevVertexPosition, vertex.Position, nextVertexPosition);
-            var prevVertexPositionRotatedAroundVertexPosition = prevVertexPosition.Rotate(angle/2, vertex.Position);
-            // if count of crossed edges by ray in direction of computed vector is odd, vertex, from which ray started had its right side turned into the polygon, so the result is true
-            for (int i = 1; i < longEnoughChain.Length; i++)
-                if (vertex != longEnoughChain[i-1] && vertex != longEnoughChain[i] && AreLineSegmentAndRayCrossing(longEnoughChain[i - 1].Position, longEnoughChain[i].Position, vertex.Position, prevVertexPositionRotatedAroundVertexPosition )) ++crossesCount;
-            if (vertex != longEnoughChain.Last() && vertex != longEnoughChain[0] && AreLineSegmentAndRayCrossing(longEnoughChain.Last().Position, longEnoughChain[0].Position, vertex.Position, prevVertexPositionRotatedAroundVertexPosition)) ++crossesCount;
-            return crossesCount % 2 == 1;
-        }
-        
-        private bool AreLineSegmentAndRayCrossing(MapCoordinates ls1, MapCoordinates ls2, MapCoordinates r1, MapCoordinates r2)
-        {
-            var ft = GetNumeratorAndDenominatorOfT(ls1, ls2, r1, r2);
-            var fu = GetNumeratorAndDenominatorOfU(ls1, ls2, r1, r2);
-            if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return false;
-            if (!IsFractionGreaterOrEqualToZeroAndDefined(fu.numerator, fu.denominator)) return false;
-            //TODO: osetrenie pripadov, kedy t = 0,1 a u = 0
-            if(ft.numerator == ft.denominator || fu.numerator == fu.denominator || ft.numerator == 0 || fu.numerator == 0)Console.WriteLine("ERROR!!!!!");
-            return true;
-        }
-            // if (ls0 == ls1 && ls1 == r0 && r0 == r1) return true;
-            // if (ls0 == ls1 && r0 == r1) return false;
-            // if (ls0 == ls1) return ls0.YPos == (int)((r1.YPos - r0.YPos) / (double)(r1.XPos - r1.YPos) * (ls0.XPos - r0.XPos) + r0.YPos) && 
-                                 // ((r0.XPos < r1.XPos && r0.XPos < ls0.XPos) || (r0.XPos > r1.XPos && r0.XPos > ls0.XPos));
-            // if (r0 == r1) return r0.YPos == (int)((ls1.YPos - ls0.YPos) / (double)(ls1.XPos - ls1.YPos) * (r0.XPos - ls0.XPos) + ls0.YPos) && 
-                                 // ((ls0.XPos < ls1.XPos && ls0.XPos < r0.XPos && r0.XPos <= ls1.XPos) || (ls0.XPos > ls1.XPos && ls0.XPos > r0.XPos && r0.XPos >= ls1.XPos));
-                                 
-            // if (TryComputeCrossSection(ls0, ls1, r0, r1, out var coords))
-            // {
-                // whole code works under the assumption that p1, p2, q1 and q2 (almost) never equals to computed coords. It resolves issues with vertices being right over edges. !!!!!!!!!
-                // test bellow ensures, that line segment and ray are crossing at their ranges
-                // if (ls0.XPos < ls1.XPos && ls0.XPos <= coords.x && coords.x <= ls1.XPos && r0.XPos < r1.XPos && r0.XPos <= coords.x) return true;
-                // if (ls0.XPos < ls1.XPos && ls0.XPos <= coords.x && coords.x <= ls1.XPos && r0.XPos > r1.XPos && r0.XPos >= coords.x) return true;
-                // if (ls0.XPos > ls1.XPos && ls0.XPos >= coords.x && coords.x >= ls1.XPos && r0.XPos < r1.XPos && r0.XPos <= coords.x) return true;
-                // if (ls0.XPos > ls1.XPos && ls0.XPos >= coords.x && coords.x >= ls1.XPos && r0.XPos > r1.XPos && r0.XPos >= coords.x) return true;
-            // }
-            // return false;
 
-         private class ChainEntanglementTemporaryVertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes) : BoundaryVertexBuilder(attributes)
-         {
-             private BoundaryVertexBuilder? from1;
-             private BoundaryVertexBuilder? to1;
-             private BoundaryVertexBuilder? from2;
-             private BoundaryVertexBuilder? to2;
-             public void SetFromToVertex(BoundaryVertexBuilder from, BoundaryVertexBuilder to)
-             {
-                 // corresponding income and outcome edges are switched, this ensures correct coupling for future processing of vertex
-                 if (from1 is null)
-                 {
-                     from1 = from;
-                     to2 = to;
-                 }
-                 else if (from2 is null)
-                 {
-                     from2 = from;
-                     to1 = to;
-                 }
-             }
-             public void ProcessByDisconnecting()
-             {
-                 if(from1 is null || from2 is null || to1 is null || to2 is null) return;
-                 // if some of the hold vertices are temporary, couple them with their corresponding counterparts  
-                 if (from1 is ChainEntanglementTemporaryVertexBuilder temporaryFrom1)
-                 {
-                     temporaryFrom1.to1 = to1;
-                 }
-                 if (to1 is ChainEntanglementTemporaryVertexBuilder temporaryTo1)
-                 {
-                    temporaryTo1.from1 = from1;    
-                 }
-                 if (from2 is ChainEntanglementTemporaryVertexBuilder temporaryFrom2)
-                 {
-                     temporaryFrom2.to2 = to2;
-                 }
-                 if (to2 is ChainEntanglementTemporaryVertexBuilder temporaryTo2)
-                 {
-                    temporaryTo2.from2 = from2;    
-                 }
-                 // if both vertices are original chain vertices, couple them by edges
-                 if (from1 is not ChainEntanglementTemporaryVertexBuilder && to1 is not ChainEntanglementTemporaryVertexBuilder)
-                 {
-                     from1.BoundaryEdges[to1] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                     to1.BoundaryEdges[from1] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                 }
-                 if (from2 is not ChainEntanglementTemporaryVertexBuilder && to2 is not ChainEntanglementTemporaryVertexBuilder)
-                 {
-                     from2.BoundaryEdges[to2] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                     to2.BoundaryEdges[from2] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                 }
-             }
-             public override bool IsStationary { get; set; } = true;
-         }
-         
-        
-        // 2 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
-        private (Dictionary<(VertexBuilder, VertexBuilder), int>, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<int> crossedChainEdgesIndeces)>) 
-            CutAllCrossedEdges(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength, bool polygonalChain)
+        private static void CheckWhetherLastEdgeIsNotTooLong(BoundaryVertexBuilder vertex, List<BoundaryVertexBuilder> chain, int standardEdgeLength)
         {
-            Dictionary<(VertexBuilder, VertexBuilder),  int> verticesOfCutNonBoundaryEdges = new();
-            Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<int>)> verticesOfCutBoundaryEdges = new();
-            // at first collects all edges, which are crossed by this chain
-            for (int i = 0; i < chain.Length - 1; ++i)
-                AddCutEdgesBy(chain[i].Position, chain[i + 1].Position, i, allVertices, verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, standardEdgeLength);
-            if (polygonalChain)
-                AddCutEdgesBy(chain.Last().Position, chain[0].Position, chain.Length - 1, allVertices, verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, standardEdgeLength);
-            
-            // at second cut out all crossed edges from the graph
-            foreach (var ((vertex1, vertex2), _) in verticesOfCutNonBoundaryEdges)
+            int countOfEdgesToBeAdded = (int)((vertex.Position - chain.Last().Position).Length() / standardEdgeLength);
+            var lastVertex = chain.Last();
+            for (int i = 0; i < countOfEdgesToBeAdded; i++)
             {
-                if(vertex1 is BoundaryVertexBuilder boundaryVertex1) boundaryVertex1.NonBoundaryEdges.Remove(vertex2);
-                else if (vertex1 is NetVertexBuilder netVertex1) netVertex1.NonBoundaryEdges.Remove(vertex2);
-                if(vertex2 is BoundaryVertexBuilder boundaryVertex2) boundaryVertex2.NonBoundaryEdges.Remove(vertex1);
-                else if (vertex2 is NetVertexBuilder netVertex2) netVertex2.NonBoundaryEdges.Remove(vertex1);
+                BoundaryVertexBuilder newVertex = new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( lastVertex.Position + 1 / (float)(countOfEdgesToBeAdded + 1 - i) * (vertex.Position - lastVertex.Position)));
+                vertex.BoundaryEdges.Remove(lastVertex);
+                lastVertex.BoundaryEdges.Remove(vertex);
+                lastVertex.BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                newVertex.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                vertex.BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                newVertex.BoundaryEdges[vertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Add(newVertex);
+                lastVertex = newVertex;
             }
-            
-            foreach (var ((vertex1, vertex2), _) in verticesOfCutBoundaryEdges)
-            {
-                vertex1.BoundaryEdges.Remove(vertex2);
-                vertex2.BoundaryEdges.Remove(vertex1);
-            }
-            return (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges);
         }
-
-        private void AddCutEdgesBy(MapCoordinates point0, MapCoordinates point1, int edgeIndex, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, Dictionary<(VertexBuilder, VertexBuilder), int> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<int> crossedChainEdgesIndeces)> verticesOfCutBoundaryEdges, int standardEdgeLength)
+        
+        private static void RemoveMicroscopicEdges(List<BoundaryVertexBuilder> chain)
         {
-            HashSet<VertexBuilder> closeVertices = new();
-            // find all vertices, which are closer than standard edge length to vertices of chain edge
-            // these vertices are the only ones whose that could be crossed by this edge
-            foreach (var vertex in allVertices.FindInEuclideanDistanceFrom((point0.XPos, point0.YPos), standardEdgeLength))
-                closeVertices.Add(vertex);
-            foreach (var vertex in allVertices.FindInEuclideanDistanceFrom((point1.XPos, point1.YPos), standardEdgeLength))
-                closeVertices.Add(vertex);
-            // test all edges of found vertices, wheter they are not crossed by tested edge
-            HashSet<(VertexBuilder, VertexBuilder)> processedEdgesAlready = new();
-            foreach (var vertex in closeVertices)
+            // removes edges that are microscopic 
+            for (int i = 0; i < chain.Count; ++i)
             {
-
-                if (vertex is BoundaryVertexBuilder boundaryVertex)
+                var iP = i == 0 ? chain.Count - 1 : i - 1;
+                var iS = i == chain.Count - 1 ? 0 : i + 1;
+                if ((chain[iP].Position - chain[i].Position).Length() < Utils.microscopicEdgeLength)
                 {
-                    foreach (var (neighbor,_) in boundaryVertex.NonBoundaryEdges)
-                    {
-                        if ((boundaryVertex.Position.XPos + boundaryVertex.Position.YPos < neighbor.Position.XPos + neighbor.Position.YPos && processedEdgesAlready.Contains((boundaryVertex, neighbor))) || processedEdgesAlready.Contains((neighbor, boundaryVertex))) continue;
-                        if (AreLineSegmentsCrossing(point0, point1, boundaryVertex.Position, neighbor.Position))
-                            AddSortedNonBoundaryVerticesTo(verticesOfCutNonBoundaryEdges, boundaryVertex, neighbor);
-                        processedEdgesAlready.Add(boundaryVertex.Position.XPos + boundaryVertex.Position.YPos < neighbor.Position.XPos + neighbor.Position.YPos ? (boundaryVertex, neighbor) : (neighbor, boundaryVertex));
-                    }
-                    foreach (var (neighbor, _) in boundaryVertex.BoundaryEdges)
-                    {
-                        if ((boundaryVertex.Position.XPos + boundaryVertex.Position.YPos < neighbor.Position.XPos + neighbor.Position.YPos && processedEdgesAlready.Contains((boundaryVertex, neighbor))) || processedEdgesAlready.Contains((neighbor, boundaryVertex))) continue;
-                        if (AreLineSegmentsCrossing(point0, point1, boundaryVertex.Position, neighbor.Position))
-                            AddSortedBoundaryVerticesTo(verticesOfCutBoundaryEdges, boundaryVertex, neighbor, edgeIndex);
-                        processedEdgesAlready.Add( boundaryVertex.Position.XPos + boundaryVertex.Position.YPos < neighbor.Position.XPos + neighbor.Position.YPos ? (boundaryVertex, neighbor) : (neighbor, boundaryVertex));
-                    }
+                    chain[iP].BoundaryEdges.Remove(chain[i]);
+                    chain[i].BoundaryEdges.Remove(chain[iP]);
+                    chain[iS].BoundaryEdges.Remove(chain[i]);
+                    chain[i].BoundaryEdges.Remove(chain[iS]);
+                    chain[iP].BoundaryEdges[chain[iS]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    chain[iS].BoundaryEdges[chain[iP]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    chain.RemoveAt(i);
                 }
-                else if (vertex is NetVertexBuilder netVertex)
-                {
-                    foreach (var neighbor in netVertex.NonBoundaryEdges)
-                    {
-                        if ((netVertex.Position.XPos + netVertex.Position.YPos < neighbor.Position.XPos + neighbor.Position.YPos && processedEdgesAlready.Contains((netVertex, neighbor))) || processedEdgesAlready.Contains((neighbor, netVertex))) continue;
-                        if (AreLineSegmentsCrossing(point0, point1, netVertex.Position, neighbor.Position))
-                            AddSortedNonBoundaryVerticesTo(verticesOfCutNonBoundaryEdges, netVertex, neighbor);
-                        processedEdgesAlready.Add(netVertex.Position.XPos + netVertex.Position.YPos < neighbor.Position.XPos + neighbor.Position.YPos ? (netVertex, neighbor) : (neighbor, netVertex));
-                    }
-                }
-
             }
-
-        }
-
-        private bool AreLineSegmentsCrossing(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2)
-        {
-            var ft = GetNumeratorAndDenominatorOfT(p1, p2, q1, q2);
-            var fu = GetNumeratorAndDenominatorOfU(p1, p2, q1, q2);
-            if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return false;
-            if (!IsFractionInO1IntervalAndDefined(fu.numerator, fu.denominator)) return false;
-            //TODO: osetrenie pripadov, kedy t,u = 0,1
-            if(ft.numerator == ft.denominator || fu.numerator == fu.denominator || ft.numerator == 0 || fu.numerator == 0)Console.WriteLine("ERROR!!!!!");
-            return true;
         }
         
-            // if (p1 == p2 && p2 == q1 && q1 == q2) return true;
-            // if (p1 == p2 && q1 == q2) return false;
-            // if (p1 == p2) return p1.YPos == (int)((q2.YPos - q1.YPos) / (double)(q2.XPos - q2.YPos) * (p1.XPos - q1.XPos) + q1.YPos) && 
-                                 // ((q1.XPos < q2.XPos && q1.XPos < p1.XPos && p1.XPos < q2.XPos) || (q1.XPos > q2.XPos && q1.XPos > p1.XPos && p1.XPos > q2.XPos));
-            // if (q1 == q2) return q1.YPos == (int)((p2.YPos - p1.YPos) / (double)(p2.XPos - p2.YPos) * (q1.XPos - p1.XPos) + p1.YPos) && 
-                                 // ((p1.XPos < p2.XPos && p1.XPos < q1.XPos && q1.XPos <= p2.XPos) || (p1.XPos > p2.XPos && p1.XPos > q1.XPos && q1.XPos >= p2.XPos));
-                                 
-            // if (TryComputeCrossSection(p1, p2, q1, q2, out var coords))
-            // {
-                // whole code works under the assumption that p1, p2, q1 and q2 never equals x. It resolves issues with vertices right upon edges. !!!!!!!!!
-                // test bellow ensures, that line segments are crossing at their ranges
-                // if (p1.XPos < p2.XPos && p1.XPos <= coords.x && coords.x <= p2.XPos && q1.XPos < q2.XPos && q1.XPos <= coords.x && coords.x <= q2.XPos) return true;
-                // if (p1.XPos < p2.XPos && p1.XPos <= coords.x && coords.x <= p2.XPos && q1.XPos > q2.XPos && q1.XPos >= coords.x && coords.x >= q2.XPos) return true;
-                // if (p1.XPos > p2.XPos && p1.XPos >= coords.x && coords.x >= p2.XPos && q1.XPos < q2.XPos && q1.XPos <= coords.x && coords.x <= q2.XPos) return true;
-                // if (p1.XPos > p2.XPos && p1.XPos >= coords.x && coords.x >= p2.XPos && q1.XPos > q2.XPos && q1.XPos >= coords.x && coords.x >= q2.XPos) return true;
-            // }
-            // return false;
-
-        private void AddSortedNonBoundaryVerticesTo(Dictionary<(VertexBuilder, VertexBuilder),  int> verticesOfCutNonBoundaryEdges, VertexBuilder vertex1, VertexBuilder vertex2)
+        private class ChainEntanglementTemporaryVertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes) : BoundaryVertexBuilder(attributes)
         {
-            // dictionary is indexed by couples of vertices in specific order, first vertex of couple has always lower sum of its position axis values than the other one
-            // this ensures, that edges defined by couples of vertices are in the dictionary always present only one time
-            // it should be mentioned that in this sense edges are thought as not oriented
-            if (vertex1.Position.XPos + vertex1.Position.YPos < vertex2.Position.XPos + vertex2.Position.YPos)
-                if (verticesOfCutNonBoundaryEdges.ContainsKey((vertex1, vertex2))) ++verticesOfCutNonBoundaryEdges[(vertex1, vertex2)];
-                else verticesOfCutNonBoundaryEdges[(vertex1, vertex2)] = 1;
-            else
-                if (verticesOfCutNonBoundaryEdges.ContainsKey((vertex2, vertex1))) ++verticesOfCutNonBoundaryEdges[(vertex2, vertex1)];
-                else verticesOfCutNonBoundaryEdges[(vertex2, vertex1)] = 1;
+            private BoundaryVertexBuilder? from1;
+            private BoundaryVertexBuilder? to1;
+            private BoundaryVertexBuilder? from2;
+            private BoundaryVertexBuilder? to2;
+            public void SetFromToVertex(BoundaryVertexBuilder from, BoundaryVertexBuilder to)
+            {
+                // corresponding income and outcome edges are switched, this ensures correct coupling for future processing of vertex
+                if (from1 is null)
+                {
+                    from1 = from;
+                    to2 = to;
+                }
+                else if (from2 is null)
+                {
+                    from2 = from;
+                    to1 = to;
+                }
+            }
+            public void ProcessByDisconnecting()
+            {
+                if(from1 is null || from2 is null || to1 is null || to2 is null) return;
+                // if some of the hold vertices are temporary, couple them with their corresponding counterparts  
+                if (from1 is ChainEntanglementTemporaryVertexBuilder temporaryFrom1)
+                {
+                    if (temporaryFrom1.to1 == this)
+                        temporaryFrom1.to1 = to1;
+                    else
+                        temporaryFrom1.to2 = to1;
+                }
+                if (to1 is ChainEntanglementTemporaryVertexBuilder temporaryTo1)
+                {
+                    if (temporaryTo1.from1 == this)
+                        temporaryTo1.from1 = from1;
+                    else
+                        temporaryTo1.from2 = from1;
+                }
+                if (from2 is ChainEntanglementTemporaryVertexBuilder temporaryFrom2)
+                {
+                    if (temporaryFrom2.to1 == this)
+                        temporaryFrom2.to1 = to2;
+                    else
+                        temporaryFrom2.to2 = to2;
+                }
+                if (to2 is ChainEntanglementTemporaryVertexBuilder temporaryTo2)
+                {
+                    if (temporaryTo2.from1 == this)
+                        temporaryTo2.from1 = from2;    
+                    else
+                        temporaryTo2.from2 = from2;
+                }
+                // if both vertices are original chain vertices, couple them by edges
+                if (from1 is not ChainEntanglementTemporaryVertexBuilder && to1 is not ChainEntanglementTemporaryVertexBuilder)
+                {
+                    from1.BoundaryEdges[to1] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    to1.BoundaryEdges[from1] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    //TODO: vyriesit prilis dlhe hrany
+                }
+                if (from2 is not ChainEntanglementTemporaryVertexBuilder && to2 is not ChainEntanglementTemporaryVertexBuilder)
+                {
+                    from2.BoundaryEdges[to2] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    to2.BoundaryEdges[from2] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    //TODO: vyriesit prilis dlhe hrany
+                }
+            }
+            public override bool IsStationary { get; set; } = true;
         }
         
-        private void AddSortedBoundaryVerticesTo( Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<int> crossedChainEdgesIndices)> verticesOfCutBoundaryEdges, BoundaryVertexBuilder vertex1, BoundaryVertexBuilder vertex2, int edgeIndex)
+        #endregion
+        
+        #region 2 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static (Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>>, Dictionary<(
+                BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes
+                cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)>)
+            CutAllCrossedEdges(BoundaryVertexBuilder[] chain,
+                IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength)
         {
-            // dictionary is indexed by couples of vertices in specific order, first vertex of couple has always lower sum of its position axis values than the other one
-            // this ensures, that edges defined by couples of vertices are in the dictionary always present only one time
-            // it should be mentioned that in this sense edges are thought as not oriented
-            if (vertex1.Position.XPos + vertex1.Position.YPos < vertex2.Position.XPos + vertex2.Position.YPos)
-                if (verticesOfCutBoundaryEdges.ContainsKey((vertex1, vertex2))) verticesOfCutBoundaryEdges[(vertex1, vertex2)].crossedChainEdgesIndices.Add(edgeIndex);
-                else verticesOfCutBoundaryEdges[(vertex1, vertex2)] = (vertex1.BoundaryEdges[vertex2], [edgeIndex]);
-            else
-                if (verticesOfCutBoundaryEdges.ContainsKey((vertex2, vertex1))) verticesOfCutBoundaryEdges[(vertex2, vertex1)].crossedChainEdgesIndices.Add(edgeIndex);
-                else verticesOfCutBoundaryEdges[(vertex2, vertex1)] = (vertex2.BoundaryEdges[vertex1], [edgeIndex]);
+           var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = Utils.FindAllCrossedEdges(chain, allVertices, standardEdgeLength, true);   
+           Utils.CutAllFoundCrossedEdges(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges);
+           return (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges);
         }
         
-        // 3 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+        
+        #region 3 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        private (List<VertexBuilder> outerVerticesOfCutEdges, List<VertexBuilder> innerVerticesOfCutEdges, List<VertexBuilder> allInnerVertices) 
-            FindNodesInsideThePolygonByDfs(Dictionary<(VertexBuilder, VertexBuilder), int> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<int>)> verticesOfCutBoundaryEdges, BoundaryVertexBuilder[] chain)
+        public static (List<VertexBuilder> outerVerticesOfCutEdges, List<VertexBuilder> innerVerticesOfCutEdges, List<VertexBuilder> allInnerVertices) 
+            FindNodesInsideThePolygonByDfs(Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges, BoundaryVertexBuilder[] chain)
         {
             var outerVerticesOfCutEdges = new List<VertexBuilder>();
             var innerVerticesOfCutEdges = new List<VertexBuilder>();
@@ -783,12 +588,12 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             
             Dictionary<VertexBuilder, List<(int edgeCutsCount, VertexBuilder neighbor)>> verticesOfCutEdgesWithNeighbors = new ();
             // refactor dictionaries indexed by edges to dictionaries indexed by vertices
-            foreach (var ((vertex1, vertex2), edgeCutsCount) in verticesOfCutNonBoundaryEdges)
+            foreach (var ((vertex1, vertex2), crossSections) in verticesOfCutNonBoundaryEdges)
             {
-                if(verticesOfCutEdgesWithNeighbors.ContainsKey(vertex1)) verticesOfCutEdgesWithNeighbors[vertex1].Add((edgeCutsCount, vertex2));
-                else verticesOfCutEdgesWithNeighbors[vertex1] = [(edgeCutsCount, vertex2)];
-                if(verticesOfCutEdgesWithNeighbors.ContainsKey(vertex2)) verticesOfCutEdgesWithNeighbors[vertex2].Add((edgeCutsCount, vertex1));
-                else verticesOfCutEdgesWithNeighbors[vertex2] = [(edgeCutsCount, vertex1)];
+                if(verticesOfCutEdgesWithNeighbors.ContainsKey(vertex1)) verticesOfCutEdgesWithNeighbors[vertex1].Add((crossSections.Count, vertex2));
+                else verticesOfCutEdgesWithNeighbors[vertex1] = [(crossSections.Count, vertex2)];
+                if(verticesOfCutEdgesWithNeighbors.ContainsKey(vertex2)) verticesOfCutEdgesWithNeighbors[vertex2].Add((crossSections.Count, vertex1));
+                else verticesOfCutEdgesWithNeighbors[vertex2] = [(crossSections.Count, vertex1)];
             }
             foreach (var ((vertex1, vertex2), (_, crossedChainEdgesIndices)) in verticesOfCutBoundaryEdges)
             {
@@ -805,7 +610,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             return (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices);
         }
 
-        private void SortEdgesByDfs(
+        private static void SortEdgesByDfs(
             Dictionary<VertexBuilder, List<(int edgeCutsCount, VertexBuilder neighbor)>> verticesOfCutEdgesWithNeighbors,
             List<VertexBuilder> outerVerticesOfCutEdges, List<VertexBuilder> innerVerticesOfCutEdges, 
             List<VertexBuilder> allInnerVertices, BoundaryVertexBuilder[] chain)
@@ -818,14 +623,18 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 if (vertex is null)
                 {
                     outerVerticesOfCutEdges.AddRange(verticesOfCutEdgesWithNeighbors.Select(kv => kv.Key)); 
+                    verticesOfCutEdgesWithNeighbors.Clear();
                     return;
                 }
                 Stack<VertexBuilder> stack = new();
                 HashSet<VertexBuilder> visited = new HashSet<VertexBuilder>();
                 stack.Push(vertex);
                 // dfs will not run out from polygon defined by chain, because edges from inner vertices to outer space were cut out by edges of chain
+                int searchCount = 0;
+                // while (stack.Count > 0 && (GraphCreator.Instance.processedObjectsCount != GraphCreator.Instance.debugLimit || searchCount < 7)) // for debuging
                 while (stack.Count > 0)
                 {
+                    searchCount++;
                     vertex = stack.Pop();
                     if (visited.Contains(vertex)) continue;
                     allInnerVertices.Add(vertex);
@@ -845,15 +654,15 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                                 stack.Push(neighbor);
                     }
                     else if (vertex is NetVertexBuilder netVertex)
-                        foreach (var neighbor in netVertex.NonBoundaryEdges)
+                        foreach (var (neighbor,_) in netVertex.NonBoundaryEdges)
                             if (!visited.Contains(neighbor))
                                 stack.Push(neighbor);
-                        
+
                 }
             }
         }
 
-        private VertexBuilder? FindSomeInnerVertex(Dictionary<VertexBuilder, List<(int, VertexBuilder)>> verticesOfCutEdgesWithNeighbors, BoundaryVertexBuilder[] chain)
+        private static VertexBuilder? FindSomeInnerVertex(Dictionary<VertexBuilder, List<(int, VertexBuilder)>> verticesOfCutEdgesWithNeighbors, BoundaryVertexBuilder[] chain)
         {
             foreach (var (vertex, _) in verticesOfCutEdgesWithNeighbors)
             {
@@ -862,7 +671,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             return null;
         }
 
-        private void AreNeighborsOfVertexInnerAndProcessVertex_Recursive(VertexBuilder vertex, bool isVertexInner,
+        private static void AreNeighborsOfVertexInnerAndProcessVertex_Recursive(VertexBuilder vertex, bool isVertexInner,
             Dictionary<VertexBuilder, List<(int edgeCutsCount, VertexBuilder vertex)>> verticesOfCutEdgesWithNeighbors,
             List<VertexBuilder> outerVerticesOfCutEdges, List<VertexBuilder> innerVerticesOfCutEdges,
             Stack<VertexBuilder> stack, HashSet<VertexBuilder> visited)
@@ -891,149 +700,78 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         }
 
 
-        private bool IsInnerVertex(VertexBuilder vertex, BoundaryVertexBuilder[] chain)
+        private static bool IsInnerVertex(VertexBuilder vertex, BoundaryVertexBuilder[] chain)
         {
-            int crossesCount = 0;
             // if count of crossed chain edges by ray is odd, vertex, from which ray started is inside of polygon defined by chain
-            for (int i = 1; i < chain.Length; i++)
-                if (AreLineSegmentAndRayCrossing(chain[i - 1].Position, chain[i].Position, vertex.Position, vertex.Position + new MapCoordinates(1, 1))) ++crossesCount;
-            if (AreLineSegmentAndRayCrossing(chain.Last().Position, chain[0].Position, vertex.Position, vertex.Position + new MapCoordinates(1, 1))) ++crossesCount;
-            return crossesCount % 2 == 1;
+            int crossSectionsCount = 0;
+            for (int i = 0; i < chain.Length - 1; i++)
+                if (Utils.AreLineSegmentAndRayCrossingWithMagic(chain[i].Position, chain[i+1].Position, vertex.Position, vertex.Position + new MapCoordinates(1, 1), (chain[i - 1 >= 0 ? i  - 1 : chain.Length - 1].Position, chain[i + 2 <= chain.Length - 1 ? i + 2 : 0].Position)) ) crossSectionsCount++;
+            if (Utils.AreLineSegmentAndRayCrossingWithMagic(chain.Last().Position, chain[0].Position, vertex.Position, vertex.Position + new MapCoordinates(1, 1), (chain[chain.Length - 2].Position, chain[1].Position)) ) crossSectionsCount++;
+            return crossSectionsCount % 2 == 1;
         }
-
         
-        // 4 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+        
+        #region 4 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        private void UpdateAttributesOfInnerEdges(List<VertexBuilder> innerVertices, decimal symbolCodeOfAddedObject)
+        public static void UpdateAttributesOfInnerEdges(List<VertexBuilder> innerVertices, decimal symbolCodeOfAddedObject)
         {
             // attributes of every edge of every inner vertex are updated according to symbol of object, that is inserted to the graph
             foreach (var vertex in innerVertices)
             {
                 if (vertex is NetVertexBuilder netVertex)
-                    netVertex.Surroundings = GetUpdatedSurroundingsOfEdgeAttributes(netVertex.Surroundings, symbolCodeOfAddedObject);
+                    netVertex.Surroundings = Utils.GetUpdatedSurroundingsOfEdgeAttributes(netVertex.Surroundings, symbolCodeOfAddedObject);
                 else if (vertex is BoundaryVertexBuilder boundaryVertex)
                 {
                     foreach (var (neighbor, oldEdgeAttributes) in boundaryVertex.NonBoundaryEdges)
-                        boundaryVertex.NonBoundaryEdges[neighbor] = GetUpdatedInnerEdgeAttributes(oldEdgeAttributes, symbolCodeOfAddedObject);
+                        boundaryVertex.NonBoundaryEdges[neighbor] = Utils.UpdateBothSurroundingsOfEdgeAttributes(oldEdgeAttributes, symbolCodeOfAddedObject);
                     foreach (var (neighbor, oldEdgeAttributes) in boundaryVertex.BoundaryEdges)
-                        boundaryVertex.BoundaryEdges[neighbor] = GetUpdatedInnerEdgeAttributes(oldEdgeAttributes, symbolCodeOfAddedObject);
+                        boundaryVertex.BoundaryEdges[neighbor] = Utils.UpdateBothSurroundingsOfEdgeAttributes(oldEdgeAttributes, symbolCodeOfAddedObject);
                 }
             }
         }
 
-        private Orienteering_ISOM_2017_2.EdgeAttributes GetUpdatedInnerEdgeAttributes( Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
-        {
-            // both surroundings and second surroundings of edge attributes are updated
-            UpdateSurroundingsOfEdgeAttributes(ref edge, symbolCodeOfAddedObject);
-            UpdateSecondSurroundingsOfEdgeAttributes(ref edge, symbolCodeOfAddedObject);
-            return edge;
-        }
-
-        private void UpdateSurroundingsOfEdgeAttributes(ref Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
-            => edge = new Orienteering_ISOM_2017_2.EdgeAttributes( GetUpdatedSurroundingsOfEdgeAttributes(edge.Surroundings, symbolCodeOfAddedObject), edge.LineFeatures, edge.SecondSurroundings);
+        #endregion
         
-        private void UpdateSecondSurroundingsOfEdgeAttributes(ref Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
-            => edge = new Orienteering_ISOM_2017_2.EdgeAttributes(edge.Surroundings, edge.LineFeatures, GetUpdatedSurroundingsOfEdgeAttributes(edge.SecondSurroundings, symbolCodeOfAddedObject));
-        private void UpdateLinearFeaturesOfEdgeAttributes(ref Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
-            => edge = new Orienteering_ISOM_2017_2.EdgeAttributes(edge.Surroundings, GetUpdatedLinearFeatureOfEdgeAttributes(edge.LineFeatures, symbolCodeOfAddedObject), edge.SecondSurroundings);
+        #region 5 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        private (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)
-            GetUpdatedSurroundingsOfEdgeAttributes((Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis) surroundings, decimal symbolCodeOfAddedObject)
-        {
-            switch (symbolCodeOfAddedObject)
-            {
-                case 403:
-                    return (surroundings.ground, surroundings.boulders, surroundings.stones, surroundings.water, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOpenLand_403, surroundings.vegetationGoodVis);
-                //TODO:
-                default:
-                    // Console.WriteLine($"Symbol code {symbolCodeOfAddedObject} is not handled in method for updating of edge attributes surrounding property.");
-                    return (surroundings.ground, surroundings.boulders, surroundings.stones, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis);
-            }
-        }
-
-        private (Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle)
-            GetUpdatedLinearFeatureOfEdgeAttributes((Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle) linearFeaturs, decimal symbolCodeOfAddedObject)
-        {
-            switch (symbolCodeOfAddedObject)
-            {
-                //TODO:
-                default:
-                    // Console.WriteLine($"Symbol code {symbolCodeOfAddedObject} is not handled in method for updating of edge attributes linear features property.");
-                    return (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle);
-            }
-            
-        }
-        
-        
-        // 5 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void ProcessCutBoundaryEdgesByChain(List<BoundaryVertexBuilder> chain, 
-            Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<int> crossedChainEdgesIndices)> verticesOfCutBoundaryEdges, 
+        public static BoundaryVertexBuilder[] ProcessCutBoundaryEdgesByChain(BoundaryVertexBuilder[] chain, 
+            Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCutBoundaryEdges, 
             List<VertexBuilder> outerVerticesOfCutEdges, decimal symbolCodeOfAddedObject)
         {
             // at first create vertex for every cross-section, then connect them correctly to the vertices of cut boundary edges and to the vertices of chain and in the end add the vertices to the chain
-            var (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, allNewVertices) = 
-                CreateCrossSectionVertices(chain, verticesOfCutBoundaryEdges);
-            ConnectNewVerticesToVerticesOfCutBoundaryEdges(verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCodeOfAddedObject, allNewVertices);
-            ConnectAndAddNewVerticesToChain(chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, chain, allNewVertices);
+            var listChain = chain.ToList();
+            var (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices) = 
+                Utils.CreateCrossSectionVertices(listChain, verticesOfCutBoundaryEdges);
+            ConnectNewVerticesToVerticesOfCutBoundaryEdges(verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCodeOfAddedObject);
+            Utils.ConnectAndAddNewVerticesToChain(chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, listChain);
+            return listChain.ToArray();
         }
-
-        private (Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>>, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>>, HashSet<BoundaryVertexBuilder>) 
-            CreateCrossSectionVertices( List<BoundaryVertexBuilder> chain, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<int>)> verticesOfCutBoundaryEdges)
-        {
-            Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices = new();
-            Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices = new();
-            HashSet<BoundaryVertexBuilder> allNewVertices = new();
-            // process every boundary vertex couple whose edge was cut by the chain
-            foreach (var ((vertex1, vertex2), (_, crossedChainEdgesIndices)) in verticesOfCutBoundaryEdges)
-            {
-                foreach (var crossedChainEdgeIndex in crossedChainEdgesIndices)
-                {
-                    var chainVertex1 = chain[crossedChainEdgeIndex];
-                    var chainVertex2 = crossedChainEdgeIndex == chain.Count - 1 ? chain[0] : chain[crossedChainEdgeIndex + 1];
-                    // retrieves coordinates of chain edge and cut boundary edge
-                    // this coords should be retrieved successfully, because this cross-section was found once already , when cutting of boundary edge occured
-                    MapCoordinates? crossSectionCoords = GetLineSegmentsCrossSectionCoords(chainVertex1.Position, chainVertex2.Position,  vertex1.Position, vertex2.Position);
-                    if (crossSectionCoords is not null)
-                    {
-                        // creation of cross-section vertex and its addition to list of added vertices and list of added vertices for given cut boundary edge and chain edge
-                        var newVertex = new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords.Value));
-                        if (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices.ContainsKey((chainVertex1, chainVertex2))) chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices[(chainVertex1, chainVertex2)].Add(newVertex);
-                        else chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices[(chainVertex1, chainVertex2)] = [newVertex];
-                        if (verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices.ContainsKey((vertex1, vertex2))) verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices[(vertex1, vertex2)].Add(newVertex);
-                        else verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices[(vertex1, vertex2)] = [newVertex];
-                        allNewVertices.Add(newVertex);
-                    }
-                }
-            }
-            return (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, allNewVertices);
-        }
-
-        private void ConnectNewVerticesToVerticesOfCutBoundaryEdges(Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<int>)> verticesOfCutBoundaryEdges, List<VertexBuilder> outerVerticesOfCutEdges, decimal symbolCodeOfAddedObject, HashSet<BoundaryVertexBuilder> allNewVertices)
+        
+        public static void ConnectNewVerticesToVerticesOfCutBoundaryEdges(Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges, List<VertexBuilder> outerVerticesOfCutEdges, decimal symbolCodeOfAddedObject)
         {
             foreach(var ((vertex1, vertex2), newVertices) in verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices)
             {
                 // at first, whe have to sort cross-section vertices which corresponds to some cut boundary edge, so they could be correctly connected with vertices of this edge
-                SortVerticesCorrectly(vertex1, vertex2, newVertices);
+                var newSortedVertices = Utils.SortVerticesCorrectly(vertex1, vertex2, newVertices);
                 var outerEdgeAttributesFromV1ToV2 = verticesOfCutBoundaryEdges[(vertex1, vertex2)].Item1;
-                var innerEdgeAttributesFromV1ToV2 = GetUpdatedInnerEdgeAttributes(outerEdgeAttributesFromV1ToV2, symbolCodeOfAddedObject);
+                var innerEdgeAttributesFromV1ToV2 = Utils.UpdateBothSurroundingsOfEdgeAttributes(outerEdgeAttributesFromV1ToV2, symbolCodeOfAddedObject);
                 bool edgeToBeAddedIsOuter = outerVerticesOfCutEdges.Contains(vertex1);
                 var lastVertex = vertex1;
                 // we iteratively connect new vertices with each other and with vertices of cut boundary edge
-                foreach (var newVertex in newVertices)
+                foreach (var newVertex in newSortedVertices)
                 {
                     // we have to check if newly added vertex does not overlap with the one that is going to be connected with
                     // in case of overlap, last vertex is removed and is replaced by new vertex
                     // when new vertex overlap with one of the vertices of cut edge, the vertex of cut edge is removed and replaced by newly added vertex
-                    BoundaryVertexBuilder? overlappedVertex = newVertex.Position == lastVertex.Position 
-                        ? lastVertex 
+                    BoundaryVertexBuilder? overlappedVertex = newVertex.Position == lastVertex.Position ? lastVertex 
                         : newVertex.Position == vertex2.Position 
-                            ? vertex2 
-                            : null;
+                            ? vertex2 : null;
                     if (overlappedVertex is not null)
                     {
                         foreach (var (neighbor, edgeAttributesWithNeighbor) in overlappedVertex.NonBoundaryEdges)
                         {
+                            if (neighbor == overlappedVertex) continue; // TODO: resolve issue with self-pointing edges
                             newVertex.NonBoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
                             if (neighbor is BoundaryVertexBuilder boundaryNeighbor)
                             {
@@ -1042,19 +780,19 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                             }
                             else if (neighbor is NetVertexBuilder netNeighbor)
                             {
-                                netNeighbor.NonBoundaryEdges.Add(newVertex);
+                                netNeighbor.NonBoundaryEdges[newVertex] = netNeighbor.NonBoundaryEdges[overlappedVertex];
                                 netNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
                             }
-                            overlappedVertex.NonBoundaryEdges.Remove(neighbor);
                         }
+                        overlappedVertex.NonBoundaryEdges.Clear();
                         foreach (var (neighbor, edgeAttributesWithNeighbor) in overlappedVertex.BoundaryEdges)
                         {
+                            if (neighbor == overlappedVertex) continue; // TODO: resolve issue with self-pointing edges
                             newVertex.BoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
                             neighbor.BoundaryEdges[newVertex] = neighbor.BoundaryEdges[overlappedVertex];
                             neighbor.BoundaryEdges.Remove(overlappedVertex);
-                            overlappedVertex.BoundaryEdges.Remove(neighbor);
                         }
-                        allNewVertices.Remove(overlappedVertex);
+                        overlappedVertex.BoundaryEdges.Clear();
                         lastVertex = newVertex;
                         continue;
                     }
@@ -1078,18 +816,1313 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         }
 
 
-        private void ConnectAndAddNewVerticesToChain( Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, List<BoundaryVertexBuilder> chain, HashSet<BoundaryVertexBuilder> allnewVertices)
+        
+        #endregion
+        
+        #region 6 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder[] chain, List<VertexBuilder> outerVerticesOfCutEdges, List<VertexBuilder> innerVerticesOfCutEdges, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength)
+            => Utils.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chain, chain.Concat(outerVerticesOfCutEdges).Concat(innerVerticesOfCutEdges), allVertices, standardEdgeLength); 
+        
+        #endregion
+        
+        #region 7 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static void SetAttributesOfChainsEdges(BoundaryVertexBuilder[] chain, List<VertexBuilder> outerVertices, decimal symbolCodeOfAddedObject)
+        {
+            // at first, we will obtain indices of new cross-section vertices added to chain, together with their closest outer neighbor angle-wise
+            // these vertices will be used for determining of correct attribute setting of chains edges 
+            var indicesAndOuterBoundaryNeighborsOfCrossSectionVertices = GetIndicesAndTheClosestOuterNeighborsOfVerticesOfCrossedBoundaryEdges(chain);
+            // if count of cross-section vertices is less than 2, it means that all edges of the chain has surly the same attributes
+            if (indicesAndOuterBoundaryNeighborsOfCrossSectionVertices.Count < 2)
+                SetAttributesOfChainBoundaryEdgesUniformly(chain, outerVertices, symbolCodeOfAddedObject);
+            else
+                SetAttributesOfChainBoundaryEdgesNonUniformly(chain, indicesAndOuterBoundaryNeighborsOfCrossSectionVertices, symbolCodeOfAddedObject);
+        }
+        
+        private static List<(int, BoundaryVertexBuilder)> GetIndicesAndTheClosestOuterNeighborsOfVerticesOfCrossedBoundaryEdges(BoundaryVertexBuilder[] chain)
+        {
+            List<(int, BoundaryVertexBuilder)> indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries = new();
+            
+            // we will iteratively determine the closest left-handed boundary neighbor of each vertex
+            for (int i = 0; i < chain.Length; i++)
+            {
+                int iP = i == 0 ? chain.Length - 1 : i - 1; 
+                int iS = i == chain.Length - 1 ? 0 : i + 1;
+                // closest left-handed neighbor is set at first to the previous chain vertex
+                // this will ensure, that found closest left-handed boundary vertex will be outer vertex  
+                var angleOfTheClosestNeighborToNextEdgeSoFar = Utils.ComputeLeftHandedAngleBetween(chain[i].Position, chain[iS].Position, chain[i].Position, chain[iP].Position);
+                var closestNeighbor = chain[iP];
+                foreach (var (neighbor, _) in chain[i].BoundaryEdges)
+                {
+                    if (neighbor == chain[iS]) continue;
+                    double angleOfTheNeighborToNextEdge = Utils.ComputeLeftHandedAngleBetween(chain[i].Position, chain[iS].Position, chain[i].Position, neighbor.Position);
+                    if (angleOfTheNeighborToNextEdge < angleOfTheClosestNeighborToNextEdgeSoFar)
+                    {
+                        angleOfTheClosestNeighborToNextEdgeSoFar = angleOfTheNeighborToNextEdge;
+                        closestNeighbor = neighbor;
+                    }
+                }
+                // if the closest left-handed vertex is the previous chain vertex, current vertex is not added into final collection
+                if(closestNeighbor != chain[iP]) indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries.Add((i, closestNeighbor));
+            }
+            return indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries;
+        }
+
+
+        private static void SetAttributesOfChainBoundaryEdgesUniformly(BoundaryVertexBuilder[] chain, List<VertexBuilder> outerVertices, decimal symbolCodeOfAddedObject)
+        {
+            // attributes are determined from any outer net vertex
+            var outerEdgeSurroundingsForWholeChain = TryFindEdgeAttributesOfSomeOuterNetVertexConnectedToChainInGivenInterval(chain, outerVertices, 0, chain.Length - 1) ?? (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null);
+            Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForWholeChain, symbolCodeOfAddedObject, 0, chain.Length - 1);
+            var innerSurroundings = Utils.GetUpdatedSurroundingsOfEdgeAttributes(outerEdgeSurroundingsForWholeChain, symbolCodeOfAddedObject);
+            chain.Last().BoundaryEdges[chain[0]] = new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeSurroundingsForWholeChain, innerSurroundings);
+            chain[0].BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes(innerSurroundings, outerEdgeSurroundingsForWholeChain); 
+        }
+
+        private static void SetAttributesOfChainBoundaryEdgesNonUniformly(BoundaryVertexBuilder[] chain,  List<(int index, BoundaryVertexBuilder neighbor)> indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices, decimal symbolCodeOfAddedObject)
+        {
+            for (int i = 0; i < indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Count - 1; i++)
+            {
+                var outerEdgeSurroundingsForIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].neighbor].SecondSurroundings;
+                Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForIntervalOfChain, symbolCodeOfAddedObject, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i+1].index);
+            } 
+            var outerEdgeSurroundingsForLastIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().neighbor].SecondSurroundings;
+            Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().index, chain.Length-1);
+            Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject, 0, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[0].index);
+            var innerSurroundings = Utils.GetUpdatedSurroundingsOfEdgeAttributes(outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject);
+            chain.Last().BoundaryEdges[chain[0]] = new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeSurroundingsForLastIntervalOfChain, innerSurroundings);
+            chain[0].BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes(innerSurroundings, outerEdgeSurroundingsForLastIntervalOfChain); 
+        }
+
+        private static(Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?)? 
+            TryFindEdgeAttributesOfSomeOuterNetVertexConnectedToChainInGivenInterval(BoundaryVertexBuilder[] chain, List<VertexBuilder> outerVertices, int startIndex, int endIndex)
+        {
+            if (startIndex >= endIndex || startIndex < 0 || endIndex >= chain.Length) return null;
+            for(int i = startIndex; i <= endIndex; ++i)
+                foreach (var (neighbor, edgeAttributes) in chain[i].NonBoundaryEdges)
+                    if (neighbor is NetVertexBuilder && outerVertices.Contains(neighbor))
+                        return edgeAttributes.Surroundings;
+            return null;
+        }
+        
+        #endregion
+
+        #region 8 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(BoundaryVertexBuilder[] chain)
+            => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chain);
+
+        #endregion 
+        
+        #region 9 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+            public static void AddChainVerticesToTheGraph(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices)
+                => Utils.AddChainVerticesToTheGraph(chain, allVertices);
+        
+        #endregion
+    }
+
+    private static class PathObjectsProcessing
+    {
+        #region 0 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static List<BoundaryVertexBuilder>? GetBlankBoundaryChain(OmapMap.Object obj, int standardEdgeLength, float minBoundaryEdgeRatio)
+        {
+            var segments = obj.CollectSegments(false);
+            var boundaryChain = Utils.GetBlankChainOfSegmentedLine(obj.TypedCoords[0].coords, segments, standardEdgeLength, minBoundaryEdgeRatio);
+            if (boundaryChain.Count <= 1) return null;
+            // it could happen that path has polygonal shape - it is closed segmented line
+            // then we have to ensure correct cutting edges in first / last vertex of the chain
+            // therefore we replace first vertex for the last one, and it will occur in chain two times - at last and first position
+            if (boundaryChain[0].Position == boundaryChain.Last().Position)
+            {
+                boundaryChain.Last().BoundaryEdges[boundaryChain[1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                boundaryChain[1].BoundaryEdges[boundaryChain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                boundaryChain[1].BoundaryEdges.Remove(boundaryChain[0]);
+                boundaryChain.RemoveAt(0);
+                boundaryChain.Insert(0, boundaryChain.Last());
+            }
+            if (boundaryChain.Count <= 1) return null;
+            return boundaryChain;
+        }
+        
+        #endregion
+        
+        #region 1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static BoundaryVertexBuilder[] AddCrossSectionVerticesIfItIsEntangled(List<BoundaryVertexBuilder> potentiallyEntangledChain)
+        {
+            for (int i = 0; i < potentiallyEntangledChain.Count - 2; ++i)
+                for (int j = i + 2; j < potentiallyEntangledChain.Count - 1; ++j)
+                {
+                    if (potentiallyEntangledChain[i] == potentiallyEntangledChain[j] || potentiallyEntangledChain[i] == potentiallyEntangledChain[j+1]) continue;
+                    MapCoordinates? crossSectionCoords = Utils.GetLineSegmentsCrossSectionCoordsP2Q2Excluded(potentiallyEntangledChain[i].Position, potentiallyEntangledChain[i + 1].Position, potentiallyEntangledChain[j].Position, potentiallyEntangledChain[j + 1].Position)  ;
+                    if (crossSectionCoords is not null)
+                    {
+                        var newVertex = new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords.Value));
+                        ConnectVertexToChain(newVertex, potentiallyEntangledChain, i, j);
+                        AddVertexToChain(newVertex, potentiallyEntangledChain, ref i, ref j);
+                    }
+                }
+            return potentiallyEntangledChain.ToArray();
+        }
+
+
+        private static void ConnectVertexToChain(BoundaryVertexBuilder newVertex, List<BoundaryVertexBuilder> chain, int firstEdgeIndex, int secondEdgeIndex)
+        {
+            chain[firstEdgeIndex].BoundaryEdges.Remove(chain[firstEdgeIndex+1]);
+            chain[firstEdgeIndex+1].BoundaryEdges.Remove(chain[firstEdgeIndex]);
+            chain[secondEdgeIndex].BoundaryEdges.Remove(chain[secondEdgeIndex+1]);
+            chain[secondEdgeIndex+1].BoundaryEdges.Remove(chain[secondEdgeIndex]);
+            
+            chain[firstEdgeIndex].BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            newVertex.BoundaryEdges[chain[firstEdgeIndex]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            chain[firstEdgeIndex+1].BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            newVertex.BoundaryEdges[chain[firstEdgeIndex+1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            
+            chain[secondEdgeIndex].BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            newVertex.BoundaryEdges[chain[secondEdgeIndex]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            chain[secondEdgeIndex+1].BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+            newVertex.BoundaryEdges[chain[secondEdgeIndex+1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+        }
+
+        private static void AddVertexToChain(BoundaryVertexBuilder newVertex, List<BoundaryVertexBuilder> chain, ref int i, ref int j)
+        {
+            if(newVertex.Position == chain[i].Position)
+                if (newVertex.Position == chain[j].Position)
+                {
+                    // vertex at position j at chain will never be cross-section vertex
+                    chain[i].BoundaryEdges.Remove(newVertex);
+                    newVertex.BoundaryEdges.Remove(chain[i]);
+                    foreach (var (newVertexNeighbor, _) in newVertex.BoundaryEdges)
+                    {
+                        chain[i].BoundaryEdges[newVertexNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        newVertexNeighbor.BoundaryEdges[chain[i]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        newVertexNeighbor.BoundaryEdges.Remove(newVertex);
+                    }
+                    newVertex.BoundaryEdges.Clear();
+                    foreach (var (vertexAtJInChainNeighbor, _) in chain[j].BoundaryEdges)
+                    {
+                        chain[i].BoundaryEdges[vertexAtJInChainNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        vertexAtJInChainNeighbor.BoundaryEdges[chain[i]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        vertexAtJInChainNeighbor.BoundaryEdges.Remove(chain[j]);
+                    }
+                    chain[j].BoundaryEdges.Clear();
+                    chain.RemoveAt(j);
+                    chain.Insert(j, chain[i]);
+                }
+                else if (newVertex.Position == chain[j + 1].Position)
+                {
+                    // vertex at position j + 1 in chain will never be cross-section vertex
+                    chain[i].BoundaryEdges.Remove(newVertex);
+                    newVertex.BoundaryEdges.Remove(chain[i]);
+                    foreach (var (newVertexNeighbor, _) in newVertex.BoundaryEdges)
+                    {
+                        chain[i].BoundaryEdges[newVertexNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        newVertexNeighbor.BoundaryEdges[chain[i]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        newVertexNeighbor.BoundaryEdges.Remove(newVertex);
+                    }
+                    newVertex.BoundaryEdges.Clear();
+                    foreach (var (vertexAtJPlusOneInChainNeighbor, _) in chain[j+1].BoundaryEdges)
+                    {
+                        chain[i].BoundaryEdges[vertexAtJPlusOneInChainNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        vertexAtJPlusOneInChainNeighbor.BoundaryEdges[chain[i]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        vertexAtJPlusOneInChainNeighbor.BoundaryEdges.Remove(chain[j+1]);
+                    }
+                    chain[j+1].BoundaryEdges.Clear();
+                    chain.RemoveAt(j+1);
+                    chain.Insert(++j, chain[i]);
+                }
+                else
+                {
+                    chain[i].BoundaryEdges.Remove(newVertex);
+                    newVertex.BoundaryEdges.Remove(chain[i]);
+                    foreach (var (newVertexNeighbor, _) in newVertex.BoundaryEdges)
+                    {
+                        chain[i].BoundaryEdges[newVertexNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        newVertexNeighbor.BoundaryEdges[chain[i]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                        newVertexNeighbor.BoundaryEdges.Remove(newVertex);
+                    }
+                    newVertex.BoundaryEdges.Clear();
+                    chain.Insert(++j, chain[i]);
+                }
+            else if (newVertex.Position == chain[j].Position)
+            {
+                // vertex at position j in chain will never be cross-section vertex
+                chain[j].BoundaryEdges.Remove(newVertex);
+                newVertex.BoundaryEdges.Remove(chain[j]);
+                foreach (var (newVertexNeighbor, _) in newVertex.BoundaryEdges)
+                {
+                    chain[j].BoundaryEdges[newVertexNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    newVertexNeighbor.BoundaryEdges[chain[j]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    newVertexNeighbor.BoundaryEdges.Remove(newVertex);
+                }
+                newVertex.BoundaryEdges.Clear();
+                chain.Insert(i + 1, chain[j]);
+            }
+            else if (newVertex.Position == chain[j + 1].Position)
+            {
+                // vertex at position j + 1 in chain will never be cross-section vertex
+                chain[j+1].BoundaryEdges.Remove(newVertex);
+                newVertex.BoundaryEdges.Remove(chain[j+1]);
+                foreach (var (newVertexNeighbor, _) in newVertex.BoundaryEdges)
+                {
+                    chain[j+1].BoundaryEdges[newVertexNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    newVertexNeighbor.BoundaryEdges[chain[j+1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                    newVertexNeighbor.BoundaryEdges.Remove(newVertex);
+                }
+                newVertex.BoundaryEdges.Clear();
+                chain.Insert(i+1, chain[j+1]);
+                ++j;
+            }
+            else
+            {
+                chain.Insert(i + 1, newVertex);
+                ++j;
+                chain.Insert(++j, newVertex);
+            }
+        }
+        
+        #endregion
+        
+        #region 2 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static (Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>>, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)>)
+            CutAllCrossedEdges(BoundaryVertexBuilder[] potentiallyMultiOccuringVerticesChain,
+            IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength)
+        {
+           var (verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges) = Utils.FindAllCrossedEdges(potentiallyMultiOccuringVerticesChain, allVertices, standardEdgeLength, false);   
+           Utils.CutAllFoundCrossedEdges(verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges);
+           return (verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges);
+        }
+
+        #endregion
+        
+        #region 3 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static BoundaryVertexBuilder[] ProcessCutBoundaryEdgesByChain(BoundaryVertexBuilder[] potentiallyMultiOccuringVerticesChain, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges)
+        {
+            // at first create vertex for every cross-section, then connect them correctly to the vertices of cut boundary edges and to the vertices of chain and in the end add the vertices to the chain
+            var listChain = potentiallyMultiOccuringVerticesChain.ToList();
+            var (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices) = 
+                Utils.CreateCrossSectionVertices(listChain, verticesOfCutBoundaryEdges);
+            ConnectNewVerticesToVerticesOfCutBoundaryEdges(verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, verticesOfCutBoundaryEdges);
+            Utils.ConnectAndAddNewVerticesToChain(chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, listChain);
+            return listChain.ToArray();
+            
+        }
+        
+        public static void ConnectNewVerticesToVerticesOfCutBoundaryEdges(Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates,int)>)> verticesOfCutBoundaryEdges)
+        {
+            foreach(var ((vertex1, vertex2), newVertices) in verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices)
+            {
+                // at first, we have to sort cross-section vertices which corresponds to some cut boundary edge, so they could be correctly connected with vertices of this edge
+                var newSortedVertices = Utils.SortVerticesCorrectly(vertex1, vertex2, newVertices);
+                var edgeAttributesFromV1ToV2 = verticesOfCutBoundaryEdges[(vertex1, vertex2)].Item1;
+                var lastVertex = vertex1;
+                // we iteratively connect new vertices with each other and with vertices of cut boundary edge
+                foreach (var newVertex in newSortedVertices)
+                {
+                    // we have to check if newly added vertex does not overlap with the one that is going to be connected with
+                    // in case of overlap, last vertex is removed and is replaced by new vertex
+                    // when new vertex overlap with one of the vertices of cut edge, the vertex of cut edge is removed and replaced by newly added vertex
+                    BoundaryVertexBuilder? overlappedVertex = newVertex.Position == lastVertex.Position ? lastVertex 
+                        : newVertex.Position == vertex2.Position 
+                            ? vertex2 : null;
+                    if (overlappedVertex is not null)
+                    {
+                        foreach (var (neighbor, edgeAttributesWithNeighbor) in overlappedVertex.NonBoundaryEdges)
+                        {
+                            if (neighbor == overlappedVertex) continue; // TODO: resolve issue with self-pointing edges
+                            newVertex.NonBoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
+                            if (neighbor is BoundaryVertexBuilder boundaryNeighbor)
+                            {
+                                boundaryNeighbor.NonBoundaryEdges[newVertex] = boundaryNeighbor.NonBoundaryEdges[overlappedVertex];
+                                boundaryNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
+                            }
+                            else if (neighbor is NetVertexBuilder netNeighbor)
+                            {
+                                netNeighbor.NonBoundaryEdges[newVertex] = netNeighbor.NonBoundaryEdges[overlappedVertex];
+                                netNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
+                            }
+                        }
+                        overlappedVertex.NonBoundaryEdges.Clear();
+                        foreach (var (neighbor, edgeAttributesWithNeighbor) in overlappedVertex.BoundaryEdges)
+                        {
+                            if (neighbor == overlappedVertex) continue; // TODO: resolve issue with self-pointing edges
+                            newVertex.BoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
+                            neighbor.BoundaryEdges[newVertex] = neighbor.BoundaryEdges[overlappedVertex];
+                            neighbor.BoundaryEdges.Remove(overlappedVertex);
+                        }
+                        overlappedVertex.BoundaryEdges.Clear();
+                        lastVertex = newVertex;
+                        continue;
+                    }
+                    lastVertex.BoundaryEdges[newVertex] =  edgeAttributesFromV1ToV2;
+                    newVertex.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(edgeAttributesFromV1ToV2.SecondSurroundings, edgeAttributesFromV1ToV2.Surroundings); 
+                    lastVertex = newVertex;
+                }
+                if (lastVertex != vertex2)
+                {
+                    lastVertex.BoundaryEdges[vertex2] = edgeAttributesFromV1ToV2; vertex2.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(edgeAttributesFromV1ToV2.SecondSurroundings, edgeAttributesFromV1ToV2.Surroundings);
+                }
+            }
+        }
+        
+        #endregion
+        
+        #region 4 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder[] chain, Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength)
+        {
+            HashSet<VertexBuilder> verticesOfCutEdges = new();
+            foreach (var ((vertex1, vertex2), _) in verticesOfCutNonBoundaryEdges) { verticesOfCutEdges.Add(vertex1); verticesOfCutEdges.Add(vertex2); }
+            foreach (var ((vertex1, vertex2), _) in verticesOfCutBoundaryEdges) { verticesOfCutEdges.Add(vertex1); verticesOfCutEdges.Add(vertex2); }
+            Utils.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chain, verticesOfCutEdges, allVertices, standardEdgeLength);
+        }
+        
+        #endregion
+        
+        #region 5 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static void SetAttributesOfChainsEdges(BoundaryVertexBuilder[] chain, decimal symbolCodeOfAddedObject)
+        {
+            // at first, we will obtain indices of new cross-section vertices added to chain, together with their closest outer neighbor angle-wise
+            // these vertices will be used for determining of correct attribute setting of chains edges 
+            var (indicesAndLeftHandedBoundaryNeighborsOfCrossSectionVertices, leftHandedNeighborOfFirstCrossSectionVertexInOtherDirection) = GetIndicesAndTheClosestLeftHandedNeighborsOfVerticesOfCrossedBoundaryEdges(chain);
+            // if count of cross-section vertices is less than 2, it means that all edges of the chain has surly the same attributes
+            if (indicesAndLeftHandedBoundaryNeighborsOfCrossSectionVertices.Count < 2 )
+                SetAttributesOfChainBoundaryEdgesUniformly(chain, symbolCodeOfAddedObject);
+            else
+                SetAttributesOfChainBoundaryEdgesNonUniformly(chain, indicesAndLeftHandedBoundaryNeighborsOfCrossSectionVertices, leftHandedNeighborOfFirstCrossSectionVertexInOtherDirection!, symbolCodeOfAddedObject);
+        }
+        
+        private static (List<(int, BoundaryVertexBuilder)>, BoundaryVertexBuilder?) GetIndicesAndTheClosestLeftHandedNeighborsOfVerticesOfCrossedBoundaryEdges(BoundaryVertexBuilder[] chain)
+        {
+            List<(int, BoundaryVertexBuilder)> indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries = new();
+            
+            // we will iteratively determine the closest left-handed boundary neighbor of each vertex
+            for (int i = 1; i < chain.Length - 1; i++)
+            {
+                // closest left-handed neighbor is set at first to the previous chain vertex
+                // this will ensure, that found closest left-handed boundary vertex will be outer vertex  
+                var angleOfTheClosestNeighborToNextEdgeSoFar = Utils.ComputeLeftHandedAngleBetween(chain[i].Position, chain[i + 1].Position, chain[i].Position, chain[i - 1].Position);
+                var closestNeighbor = chain[i - 1];
+                foreach (var (neighbor, _) in chain[i].BoundaryEdges)
+                {
+                    if (neighbor == chain[i + 1]) continue;
+                    double angleOfTheNeighborToNextEdge = Utils.ComputeLeftHandedAngleBetween(chain[i].Position, chain[i + 1].Position, chain[i].Position, neighbor.Position);
+                    if (angleOfTheNeighborToNextEdge < angleOfTheClosestNeighborToNextEdgeSoFar)
+                    {
+                        angleOfTheClosestNeighborToNextEdgeSoFar = angleOfTheNeighborToNextEdge;
+                        closestNeighbor = neighbor;
+                    }
+                }
+                // if the closest left-handed vertex is the previous chain vertex, current vertex is not added into final collection
+                if(closestNeighbor != chain[i - 1]) indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries.Add((i, closestNeighbor));
+            }
+            if (indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries.Count > 0)
+            {
+                // we have to find out, what attributes will have first interval of the chain
+                // we will determine these attributes by finding the closest left-handed neighbor in opposite direction of first vertex of crossed boundaries, which was found in previous cycle
+                var firstIndex = indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries.First().Item1;
+                var angleOfTheClosestNeighborToNextEdgeSoFar = Utils.ComputeLeftHandedAngleBetween(chain[firstIndex].Position, chain[firstIndex - 1].Position, chain[firstIndex].Position, chain[firstIndex + 1].Position);
+                var closestNeighbor = chain[firstIndex + 1];
+                foreach (var (neighbor, _) in chain[firstIndex].BoundaryEdges)
+                {
+                    if (neighbor == chain[firstIndex - 1]) continue;
+                    double angleOfTheNeighborToNextEdge = Utils.ComputeLeftHandedAngleBetween(chain[firstIndex].Position, chain[firstIndex - 1].Position, chain[firstIndex].Position, neighbor.Position);
+                    if (angleOfTheNeighborToNextEdge < angleOfTheClosestNeighborToNextEdgeSoFar)
+                    {
+                        angleOfTheClosestNeighborToNextEdgeSoFar = angleOfTheNeighborToNextEdge;
+                        closestNeighbor = neighbor;
+                    }
+                }
+                // we can see that we will leave the closest neighbor be also a next vertex from the chain, because
+                // if no other closer boundary vertex is found, it means that next vertex from the chain will hold 
+                // desired attributes
+                return (indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries, closestNeighbor);
+            }
+            return (indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries, null);
+        }
+        
+        private static void SetAttributesOfChainBoundaryEdgesUniformly(BoundaryVertexBuilder[] chain, decimal symbolCodeOfAddedObject)
+        {
+            // attributes are determined from any net vertex
+            var outerEdgeSurroundingsForWholeChain = TryFindEdgeAttributesOfSomeNetVertexConnectedToChainInGivenInterval(chain, 0, chain.Length - 1) ?? (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null);
+            Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForWholeChain, symbolCodeOfAddedObject, 0, chain.Length - 1);
+        }
+        
+        private static void SetAttributesOfChainBoundaryEdgesNonUniformly(BoundaryVertexBuilder[] chain,  List<(int index, BoundaryVertexBuilder neighbor)> indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices, BoundaryVertexBuilder  leftHandedNeigborOfFirstCrossSectionVertexInOtherDirection, decimal symbolCodeOfAddedObject)
+        {
+            for (int i = 0; i < indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Count - 1; i++)
+            {
+                var outerEdgeSurroundingsForIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].neighbor].SecondSurroundings;
+                Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForIntervalOfChain, symbolCodeOfAddedObject, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i+1].index);
+            } 
+            var outerEdgeSurroundingsForFirstIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.First().index].BoundaryEdges[leftHandedNeigborOfFirstCrossSectionVertexInOtherDirection].SecondSurroundings;
+            // we can use underling method directly with chain even tough provided edge surroundings is intentioned for 
+            // setting edges of chain in opposite direction - we can do this thanks to the assumption that
+            // both surroundings in edge attributes of path chain are the same so there is no difference between left
+            // and right side of the edge
+            Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForFirstIntervalOfChain, symbolCodeOfAddedObject, 0, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.First().index);
+        }
+        
+        private static(Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?)? 
+            TryFindEdgeAttributesOfSomeNetVertexConnectedToChainInGivenInterval(BoundaryVertexBuilder[] chain, int startIndex, int endIndex)
+        {
+            if (startIndex >= endIndex || startIndex < 0 || endIndex >= chain.Length) return null;
+            for(int i = startIndex; i <= endIndex; ++i)
+                foreach (var (neighbor, edgeAttributes) in chain[i].NonBoundaryEdges)
+                    if (neighbor is NetVertexBuilder)
+                        return edgeAttributes.Surroundings;
+            return null;
+        }
+        
+        #endregion
+
+        #region 6 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(BoundaryVertexBuilder[] chain)
+            => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chain);
+
+        #endregion
+
+        #region 7 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static void AddChainVerticesToTheGraph(BoundaryVertexBuilder[] potentiallyMultiOccuringVerticesChain,
+            IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices)
+        {
+            var chain = potentiallyMultiOccuringVerticesChain.ToHashSet();
+            Utils.AddChainVerticesToTheGraph(chain, allVertices);
+        }
+        #endregion
+    }
+
+    private static class LinearObstaclesProcessing
+    {
+        #region 0 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static BoundaryVertexBuilder[]? GetBlankBoundaryChain(OmapMap.Object obj, int standardEdgeLength,
+            float minBoundaryEdgeRatio)
+        {
+            var segments = obj.CollectSegments(false);
+            var boundaryChain = Utils.GetBlankChainOfSegmentedLine(obj.TypedCoords[0].coords, segments, standardEdgeLength, minBoundaryEdgeRatio);
+            if (boundaryChain.Count <= 1) return null;
+            // it could happen that linear obstacle has polygonal shape - it is closed segmented line
+            // then we have to ensure correct cutting edges in first / last vertex of the chain
+            // therefore we replace first vertex for last one, and it will occur in chain two times - at last and first position
+            if (boundaryChain[0].Position == boundaryChain.Last().Position)
+            {
+                boundaryChain.Last().BoundaryEdges[boundaryChain[1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                boundaryChain[1].BoundaryEdges[boundaryChain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                boundaryChain[1].BoundaryEdges.Remove(boundaryChain[0]);
+                boundaryChain.RemoveAt(0);
+                // if linear obstacle is around some polygon, it is better, when crossed edges by this obstacle will be the same one as edges crossed by chain of that polygon
+                // so we need to ensure that "inner" side of the linear obstacle is the right one
+                if (!Utils.IsRightSideInner(boundaryChain[0], boundaryChain.Last().Position, boundaryChain[1].Position, boundaryChain.ToArray()))
+                { boundaryChain.Reverse(); boundaryChain.Add(boundaryChain[0]); }
+                else boundaryChain.Insert(0, boundaryChain.Last());
+                
+            }
+            if (boundaryChain.Count <= 1) return null;
+            return boundaryChain.ToArray();
+        }
+        
+        #endregion
+        
+        #region 1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static (Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>>, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)>)
+            
+            FindAllCrossedEdges(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength) 
+            => Utils.FindAllCrossedEdges(chain, allVertices, standardEdgeLength, false);
+        
+        #endregion
+        
+        #region 2 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static void SetLinearObstacleAttributesToAllCrossedEdges(Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>> verticesOfCrossedNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCrossedBoundaryEdges, decimal symbolCodeOfAddedObject)
+        {
+            foreach (var ((vertex1, vertex2), _) in verticesOfCrossedNonBoundaryEdges)
+            {
+                if (vertex1 is BoundaryVertexBuilder boundaryVertex1)
+                {
+                    boundaryVertex1.NonBoundaryEdges[vertex2] = Utils.UpdateLinearFeaturesOfEdgeAttributes(boundaryVertex1.NonBoundaryEdges[vertex2], symbolCodeOfAddedObject);
+                    if (vertex2 is BoundaryVertexBuilder boundaryVertex2)
+                        boundaryVertex2.NonBoundaryEdges[boundaryVertex1] = Utils.UpdateLinearFeaturesOfEdgeAttributes(boundaryVertex2.NonBoundaryEdges[boundaryVertex1], symbolCodeOfAddedObject);
+                    else if (vertex2 is NetVertexBuilder netVertex2)
+                        netVertex2.NonBoundaryEdges[boundaryVertex1] = Utils.GetUpdatedLinearFeaturesOfEdgeAttributes(netVertex2.NonBoundaryEdges[boundaryVertex1], netVertex2.Surroundings, netVertex2.Surroundings, symbolCodeOfAddedObject, out _, out _);
+                }
+                else if (vertex1 is NetVertexBuilder netVertex1)
+                {
+                    netVertex1.NonBoundaryEdges[vertex2] = Utils.GetUpdatedLinearFeaturesOfEdgeAttributes(netVertex1.NonBoundaryEdges[vertex2], netVertex1.Surroundings, netVertex1.Surroundings, symbolCodeOfAddedObject, out _, out _);
+                    if (vertex2 is BoundaryVertexBuilder boundaryVertex2)
+                        boundaryVertex2.NonBoundaryEdges[netVertex1] = Utils.UpdateLinearFeaturesOfEdgeAttributes(boundaryVertex2.NonBoundaryEdges[netVertex1], symbolCodeOfAddedObject);
+                    else if (vertex2 is NetVertexBuilder netVertex2)
+                        netVertex2.NonBoundaryEdges[netVertex1] = Utils.GetUpdatedLinearFeaturesOfEdgeAttributes(netVertex2.NonBoundaryEdges[netVertex1], netVertex2.Surroundings, netVertex2.Surroundings, symbolCodeOfAddedObject, out _, out _);
+                }
+            }
+
+            foreach (var ((vertex1, vertex2), _) in verticesOfCrossedBoundaryEdges)
+            {
+                vertex1.BoundaryEdges[vertex2] = Utils.UpdateLinearFeaturesOfEdgeAttributes(vertex1.BoundaryEdges[vertex2], symbolCodeOfAddedObject);
+                vertex2.BoundaryEdges[vertex1] = Utils.UpdateLinearFeaturesOfEdgeAttributes(vertex2.BoundaryEdges[vertex1], symbolCodeOfAddedObject);
+            }
+        }
+        
+        #endregion
+    }
+    
+    private static class Utils
+    {
+        #region Blank chain or shifted blank chain of segmented line retrieval \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public const int microscopicEdgeLength = 100;
+        public static List<BoundaryVertexBuilder> GetBlankChainOfSegmentedLine(MapCoordinates firstPosition, IList<Segment> segments, int standardEdgeLength, float minBoundaryEdgeRatio)
+        {
+            List<BoundaryVertexBuilder> chain = [new (new Orienteering_ISOM_2017_2.VertexAttributes(firstPosition))];
+            // incrementally adds new vertices to chain for each segment of objects boundary 
+            foreach (var segment in segments)
+            {
+                AddBlankChainForSegment(segment, chain, standardEdgeLength, minBoundaryEdgeRatio);
+            }
+            // RemoveMicroscopicEdges(chain);
+            return chain;
+        }
+
+
+        private static void AddBlankChainForSegment(Segment segment, List<BoundaryVertexBuilder> chain, int standardEdgeLength, float minBoundaryEdgeRatio)
+        {
+            // if segment is too small, following method will process it
+            if (HandleSmallSegment(segment, chain, standardEdgeLength, minBoundaryEdgeRatio)) return;
+            // remembering segments Point0
+            MapCoordinates point0 = chain.Last().Position;
+            // discovers count of edges to which should be segment split, so that all edges had approximately same length not bigger than standard edge length
+            // edges will not have the same length
+            // with increasing edge count, the variance of length of all edges will be still smaller and smaller
+            int edgesCount = 3;
+            while ((segment.PositionAt(1 / (double)++edgesCount, point0) - point0).Length() > standardEdgeLength ||
+                   (segment.PositionAt((edgesCount / 2 + 1) / (double)edgesCount, point0) - segment.PositionAt(edgesCount / 2 / (double)edgesCount, point0)).Length() > standardEdgeLength ||
+                   (segment.PositionAt(edgesCount / (double)edgesCount, point0) - segment.PositionAt((edgesCount - 1) / (double)edgesCount, point0)).Length() > standardEdgeLength) { }
+            // iteratively creating edges from uniformly chosen parts of segment
+            for (int i = 1; i <= edgesCount; ++i)
+            {
+                BoundaryVertexBuilder newVertex = new( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(i / (double)edgesCount, point0)));
+                newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Last().BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Add(newVertex);
+            }
+        }
+
+        private static bool HandleSmallSegment(Segment segment, List<BoundaryVertexBuilder> chain, int standardEdgeLength, float minBoundaryEdgeRatio)
+        {
+            BoundaryVertexBuilder[]? newVertices;
+            // Tries to fit small segment by as many edges as it can.
+            // If more than 3 edges can be fit into the segment, return false indicating, that segment is not small one.
+            if ((segment.PositionAt(0.25, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                (segment.PositionAt(0.5, chain.Last().Position) - segment.PositionAt(0.25, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                (segment.PositionAt(0.75, chain.Last().Position) - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                (segment.LastPoint - segment.PositionAt(0.75, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
+                if ((segment.PositionAt(1 / (double)3, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                    (segment.PositionAt(2 / (double)3, chain.Last().Position) - segment.PositionAt(1 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                    (segment.LastPoint - segment.PositionAt(2 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
+                    if ((segment.PositionAt(0.5, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                        (segment.LastPoint - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
+                        if((segment.LastPoint - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio || 
+                           (segment.LastPoint - chain.Last().Position).Length() < microscopicEdgeLength) 
+                            newVertices = [];
+                        else newVertices = [
+                            new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
+                        ];        
+                    else newVertices = [ 
+                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( segment.PositionAt(1 / (double)2, chain.Last().Position))), 
+                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
+                        ];
+                else newVertices = [
+                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(1 / (double)3, chain.Last().Position))), 
+                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(2 / (double)3, chain.Last().Position))),
+                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
+                    ];
+            else return false;
+            foreach (var newVertex in newVertices)
+            {
+                newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Last().BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Add(newVertex);
+            }
+            return true;
+        }
+
+        public static List<BoundaryVertexBuilder> GetBlankShiftedChainOfSegmentedLine(MapCoordinates firstPosition, IList<Segment> segments,
+            int standardEdgeLength, float minBoundaryEdgeRatio, bool leftShift, int shiftSize)
+        {
+            var tangentVectorToFirstSegmentAt0 = segments[0].d(0, firstPosition);
+            var normalVectorOfShiftSizeOfFirstSegmentAt0 = leftShift 
+                ? new MapCoordinates((int)(-tangentVectorToFirstSegmentAt0.YPos * shiftSize / tangentVectorToFirstSegmentAt0.Length()), (int)(tangentVectorToFirstSegmentAt0.XPos * 125 / tangentVectorToFirstSegmentAt0.Length()))
+                : new MapCoordinates((int)(tangentVectorToFirstSegmentAt0.YPos * shiftSize / tangentVectorToFirstSegmentAt0.Length()), (int)(-tangentVectorToFirstSegmentAt0.XPos * 125 / tangentVectorToFirstSegmentAt0.Length()));
+            List<BoundaryVertexBuilder> chain = [new (new Orienteering_ISOM_2017_2.VertexAttributes(firstPosition + normalVectorOfShiftSizeOfFirstSegmentAt0))];
+            // incrementally adds new vertices to chain for each segment of objects boundary 
+            foreach (var segment in segments)
+            {
+                AddBlankShiftedChainForSegment(segment, chain, standardEdgeLength, minBoundaryEdgeRatio, leftShift, shiftSize);
+            }
+            // RemoveMicroscopicEdges(chain);
+            return chain;
+        }
+
+        private static void AddBlankShiftedChainForSegment(Segment segment, List<BoundaryVertexBuilder> chain, int standardEdgeLength, float minBoundaryEdgeRatio, bool leftShift, int shiftSize)
+        {
+            // if segment is too small, following method will process it
+            if (HandleSmallSegmentUsingShifting(segment, chain, standardEdgeLength, minBoundaryEdgeRatio, leftShift, shiftSize)) return;
+            // remembering segments Point0
+            MapCoordinates point0 = chain.Last().Position;
+            // discovers count of edges to which should be segment split, so that all edges had approximately same length not bigger than standard edge length
+            // edges will not have the same length
+            // with increasing edge count, the variance of length of all edges will be still smaller and smaller
+            int edgesCount = 3;
+            while ((segment.PositionAt(1 / (double)++edgesCount, point0) - point0).Length() > standardEdgeLength) { }
+            // iteratively creating edges from uniformly chosen parts of segment
+            for (int i = 1; i <= edgesCount; ++i)
+            {
+                var tangentVectorToSegment = segment.d(i / (double)edgesCount, point0);
+                var normalVectorOfShiftSize = leftShift 
+                    ? new MapCoordinates((int)(-tangentVectorToSegment.YPos * shiftSize / tangentVectorToSegment.Length()), (int)(tangentVectorToSegment.XPos * 125 / tangentVectorToSegment.Length()))
+                    : new MapCoordinates((int)(tangentVectorToSegment.YPos * shiftSize / tangentVectorToSegment.Length()), (int)(-tangentVectorToSegment.XPos * 125 / tangentVectorToSegment.Length()));
+                BoundaryVertexBuilder newVertex = new( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(i / (double)edgesCount, point0) + normalVectorOfShiftSize));
+                newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Last().BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Add(newVertex);
+            }
+            
+        }
+
+        private static bool HandleSmallSegmentUsingShifting(Segment segment, List<BoundaryVertexBuilder> chain, int standardEdgeLength, float minBoundaryEdgeRatio, bool leftShift, int shiftSize)
+        {
+            var tangentVectorToSegmentInOne = segment.d(1, chain.Last().Position);
+            var normalVectorOfShiftSizeInOne = leftShift 
+                ? new MapCoordinates((int)(-tangentVectorToSegmentInOne.YPos * shiftSize / tangentVectorToSegmentInOne.Length()), (int)(tangentVectorToSegmentInOne.XPos * shiftSize / tangentVectorToSegmentInOne.Length()))
+                : new MapCoordinates((int)(tangentVectorToSegmentInOne.YPos * shiftSize / tangentVectorToSegmentInOne.Length()), (int)(-tangentVectorToSegmentInOne.XPos * shiftSize / tangentVectorToSegmentInOne.Length()));
+            var tangentVectorToSegmentIn1Half = segment.d(1 / (double)2, chain.Last().Position);
+            var normalVectorOfShiftSizeIn1Half = leftShift 
+                ? new MapCoordinates((int)(-tangentVectorToSegmentIn1Half.YPos * shiftSize / tangentVectorToSegmentIn1Half.Length()), (int)(tangentVectorToSegmentIn1Half.XPos * shiftSize / tangentVectorToSegmentIn1Half.Length()))
+                : new MapCoordinates((int)(tangentVectorToSegmentIn1Half.YPos * shiftSize / tangentVectorToSegmentIn1Half.Length()), (int)(-tangentVectorToSegmentIn1Half.XPos * shiftSize / tangentVectorToSegmentIn1Half.Length()));
+            var tangentVectorToSegmentIn1Third = segment.d(1 / (double)3, chain.Last().Position);
+            var normalVectorOfShiftSizeIn1Third = leftShift 
+                ? new MapCoordinates((int)(-tangentVectorToSegmentIn1Third.YPos * shiftSize / tangentVectorToSegmentIn1Third.Length()), (int)(tangentVectorToSegmentIn1Third.XPos * shiftSize / tangentVectorToSegmentIn1Third.Length()))
+                : new MapCoordinates((int)(tangentVectorToSegmentIn1Third.YPos * shiftSize / tangentVectorToSegmentIn1Third.Length()), (int)(-tangentVectorToSegmentIn1Third.XPos * shiftSize / tangentVectorToSegmentIn1Third.Length()));
+            var tangentVectorToSegmentIn2Thirds = segment.d(2 / (double)3, chain.Last().Position);
+            var normalVectorOfShiftSizeIn2Thirds = leftShift 
+                ? new MapCoordinates((int)(-tangentVectorToSegmentIn2Thirds.YPos * shiftSize / tangentVectorToSegmentIn2Thirds.Length()), (int)(tangentVectorToSegmentIn2Thirds.XPos * shiftSize / tangentVectorToSegmentIn2Thirds.Length()))
+                : new MapCoordinates((int)(tangentVectorToSegmentIn2Thirds.YPos * shiftSize / tangentVectorToSegmentIn2Thirds.Length()), (int)(-tangentVectorToSegmentIn2Thirds.XPos * shiftSize / tangentVectorToSegmentIn2Thirds.Length()));
+            BoundaryVertexBuilder[]? newVertices;
+            // Tries to fit small segment by as many edges as it can.
+            // If more than 3 edges can be fit into the segment, return false indicating, that segment is not small one.
+            if ((segment.PositionAt(0.25, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                (segment.PositionAt(0.5, chain.Last().Position) - segment.PositionAt(0.25, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                (segment.PositionAt(0.75, chain.Last().Position) - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                (segment.LastPoint - segment.PositionAt(0.75, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
+                if ((segment.PositionAt(1 / (double)3, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                    (segment.PositionAt(2 / (double)3, chain.Last().Position) - segment.PositionAt(1 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                    (segment.LastPoint - segment.PositionAt(2 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
+                    if ((segment.PositionAt(0.5, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                        (segment.LastPoint - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
+                        if((segment.LastPoint - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
+                           (segment.LastPoint - chain.Last().Position).Length() < microscopicEdgeLength) 
+                            newVertices = [];
+                        else newVertices = [ 
+                            new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint + normalVectorOfShiftSizeInOne))
+                        ];        
+                    else newVertices = [ 
+                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( segment.PositionAt(1 / (double)2, chain.Last().Position) + normalVectorOfShiftSizeIn1Half)), 
+                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint + normalVectorOfShiftSizeInOne))
+                        ];
+                else newVertices = [
+                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(1 / (double)3, chain.Last().Position) + normalVectorOfShiftSizeIn1Third)), 
+                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(2 / (double)3, chain.Last().Position) + normalVectorOfShiftSizeIn2Thirds)),
+                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint + normalVectorOfShiftSizeInOne))
+                    ];
+            else return false;
+            foreach (var newVertex in newVertices)
+            {
+                newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Last().BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                chain.Add(newVertex);
+            }
+            return true;
+        }
+        
+        #endregion
+
+        #region Sorting of vertices between vertices \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static List<TVertexBuilder> SortVerticesCorrectly<TVertexBuilder>(BoundaryVertexBuilder vertex1, BoundaryVertexBuilder vertex2, List<TVertexBuilder> vertices) where TVertexBuilder : BoundaryVertexBuilder
+        {
+            // we will preferably sort vertices based on axis, in which is edge given by vertex1 and vertex2 longer
+            // order by ensures stable sort
+            return vertices.OrderBy(vertex => vertex.Position, new MapCoordsComparerForSortCorrectlyMethods(
+                Math.Abs(vertex1.Position.XPos - vertex2.Position.XPos) > Math.Abs(vertex1.Position.YPos - vertex2.Position.YPos),
+                vertex1.Position.XPos < vertex2.Position.XPos,
+                vertex1.Position.YPos < vertex2.Position.YPos )).ToList();
+        }
+
+        private class MapCoordsComparerForSortCorrectlyMethods(bool isEdgeInXAxisLonger, bool isXPosOfV1LessThenV2, bool isYPosOfV1LessThenV2) : IComparer<MapCoordinates>
+        {
+            public int Compare(MapCoordinates p1, MapCoordinates p2)
+            {
+                if(isEdgeInXAxisLonger)
+                    if(isXPosOfV1LessThenV2)
+                        if (isYPosOfV1LessThenV2) return p1.XPos - p2.XPos != 0 ? p1.XPos - p2.XPos : p1.YPos - p2.YPos;
+                        else return p1.XPos - p2.XPos != 0 ? p1.XPos - p2.XPos : p2.YPos - p1.YPos;
+                    else if (isYPosOfV1LessThenV2) return p2.XPos - p1.XPos != 0 ? p2.XPos - p1.XPos : p1.YPos - p2.YPos;
+                    else return p2.XPos - p1.XPos != 0 ? p2.XPos - p1.XPos : p2.YPos - p1.YPos; 
+                if(isYPosOfV1LessThenV2)
+                    if (isXPosOfV1LessThenV2) return p1.YPos - p2.YPos != 0 ? p1.YPos - p2.YPos : p1.XPos - p2.XPos;
+                    else return p1.YPos - p2.YPos != 0 ? p1.YPos - p2.YPos : p2.XPos - p1.XPos;
+                if (isXPosOfV1LessThenV2) return p2.YPos - p1.YPos != 0 ? p2.YPos - p1.YPos : p1.XPos - p2.XPos;
+                return p2.YPos - p1.YPos != 0 ? p2.YPos - p1.YPos : p2.XPos - p1.XPos;
+            }
+        }
+
+        #endregion
+        
+        #region Is right side inner \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static bool IsRightSideInner(VertexBuilder vertex, MapCoordinates prevVertexPosition, MapCoordinates nextVertexPosition, BoundaryVertexBuilder[] longEnoughChain)
+        {
+            // in following two lines there is computed vector whose direction is in half between vector from vertex to previous vertex and vertex to next vertex
+            // it is essentially previous vertex rotated around vertex by half of an angle between previous vertex and next vertex
+            double angle = Utils.ComputeLeftHandedAngleBetween(vertex.Position, prevVertexPosition, vertex.Position, nextVertexPosition);
+            var prevVertexPositionRotatedAroundVertexPosition = prevVertexPosition.Rotate(angle/2, vertex.Position);
+            // if count of crossed edges by ray in direction of computed vector is odd, vertex, from which ray started had its right side turned into the polygon, so the result is true
+            int crossSectionsCount = 0;
+            for (int i = 1; i < longEnoughChain.Length; i++)
+                if (vertex != longEnoughChain[i-1] && vertex != longEnoughChain[i] && AreLineSegmentAndRayCrossingWithMagic(longEnoughChain[i - 1].Position, longEnoughChain[i].Position, vertex.Position, prevVertexPositionRotatedAroundVertexPosition, (longEnoughChain[i - 2 >= 0 ? i - 2 : longEnoughChain.Length - 1].Position, longEnoughChain[i + 1 <= longEnoughChain.Length - 1 ? i - 2 : 0].Position))) crossSectionsCount++;
+            if (vertex != longEnoughChain.Last() && vertex != longEnoughChain[0] && AreLineSegmentAndRayCrossingWithMagic(longEnoughChain.Last().Position, longEnoughChain[0].Position, vertex.Position, prevVertexPositionRotatedAroundVertexPosition, (longEnoughChain[longEnoughChain.Length - 2].Position, longEnoughChain[1].Position))) crossSectionsCount++; 
+            return crossSectionsCount % 2 == 1;
+        }
+        
+        #endregion
+        
+        #region Finding and cutting all crossed edges by chain \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static (Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>>, Dictionary<( BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)>) 
+            FindAllCrossedEdges(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength, bool polygonalChain)
+        {
+            Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>> verticesOfCutNonBoundaryEdges = new();
+            Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges = new();
+            // at first collects all edges, which are crossed by this chain
+            for (int i = 0; i < chain.Length - 1; ++i)
+                AddCrossedEdgesBy(chain[i].Position, chain[i + 1].Position, chain[i -  1 >= 0 ? i - 1 : chain.Length - 1].Position,  chain[i + 2 <= chain.Length - 1 ? i + 2 : 0].Position, i, allVertices, verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, standardEdgeLength);
+            if (polygonalChain)
+                AddCrossedEdgesBy(chain.Last().Position, chain[0].Position, chain[chain.Length - 2].Position, chain[1].Position, chain.Length - 1, allVertices, verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, standardEdgeLength);
+            return (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges);
+        }
+        
+        public static void
+            CutAllFoundCrossedEdges(Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<( BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCutBoundaryEdges)
+        {
+            // at second cut out all crossed edges from the graph
+            foreach (var ((vertex1, vertex2), _) in verticesOfCutNonBoundaryEdges)
+            {
+                if(vertex1 is BoundaryVertexBuilder boundaryVertex1) boundaryVertex1.NonBoundaryEdges.Remove(vertex2);
+                else if (vertex1 is NetVertexBuilder netVertex1) netVertex1.NonBoundaryEdges.Remove(vertex2);
+                if(vertex2 is BoundaryVertexBuilder boundaryVertex2) boundaryVertex2.NonBoundaryEdges.Remove(vertex1);
+                else if (vertex2 is NetVertexBuilder netVertex2) netVertex2.NonBoundaryEdges.Remove(vertex1);
+            }
+            
+            foreach (var ((vertex1, vertex2), _) in verticesOfCutBoundaryEdges)
+            {
+                vertex1.BoundaryEdges.Remove(vertex2);
+                vertex2.BoundaryEdges.Remove(vertex1);
+            }
+        }
+
+
+        private static void AddCrossedEdgesBy(MapCoordinates point0, MapCoordinates point1, MapCoordinates prevPoint, MapCoordinates nextPoint,int edgeIndex, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, Dictionary<(VertexBuilder, VertexBuilder), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCutBoundaryEdges, int standardEdgeLength)
+        {
+            HashSet<VertexBuilder> closeVertices = new();
+            // find all vertices, which are closer than standard edge length to vertices of chain edge
+            // these vertices are the only ones whose that could be crossed by this edge
+            foreach (var vertex in allVertices.FindInEuclideanDistanceFrom((point0.XPos, point0.YPos), standardEdgeLength))
+                closeVertices.Add(vertex);
+            foreach (var vertex in allVertices.FindInEuclideanDistanceFrom((point1.XPos, point1.YPos), standardEdgeLength))
+                closeVertices.Add(vertex);
+            // test all edges of found vertices, whether they are not crossed by tested edge
+            HashSet<(VertexBuilder, VertexBuilder)> processedEdges = new();
+            foreach (var closeVertex in closeVertices)
+            {
+                if (closeVertex is BoundaryVertexBuilder closeBoundaryVertex)
+                {
+                    foreach (var (neighbor,_) in closeBoundaryVertex.NonBoundaryEdges)
+                    {
+                        if (processedEdges.Contains((neighbor, closeBoundaryVertex))) continue;
+                        if (GetLineSegmentsCrossSectionCoordsWithMagic(point0, point1, closeBoundaryVertex.Position, neighbor.Position, (prevPoint, nextPoint)) is MapCoordinates crossSection)
+                            AddSortedNonBoundaryVerticesTo(verticesOfCutNonBoundaryEdges, closeBoundaryVertex, neighbor, crossSection);
+                        processedEdges.Add((closeBoundaryVertex, neighbor));
+                    }
+                    foreach (var (neighbor, _) in closeBoundaryVertex.BoundaryEdges)
+                    {
+                        if (processedEdges.Contains((neighbor, closeBoundaryVertex))) continue;
+                        if (GetLineSegmentsCrossSectionCoordsWithMagic(point0, point1, closeBoundaryVertex.Position, neighbor.Position, (prevPoint, nextPoint)) is MapCoordinates crossSection)
+                            AddSortedBoundaryVerticesTo(verticesOfCutBoundaryEdges, closeBoundaryVertex, neighbor, edgeIndex, crossSection);
+                        processedEdges.Add((closeBoundaryVertex, neighbor));
+                    }
+                }
+                else if (closeVertex is NetVertexBuilder closeNetVertex)
+                {
+                    // we do not have to take care of linear features of crossed edge, because if it has some non-trivial linear features attributes
+                    // we are already at the phase of processing linear obstacles, so the edge will not be cut out from graph, its features will be only augmented
+                    foreach (var (neighbor, _) in closeNetVertex.NonBoundaryEdges)
+                    {
+                        if (processedEdges.Contains((neighbor, closeNetVertex))) continue;
+                        if (GetLineSegmentsCrossSectionCoordsWithMagic(point0, point1, closeNetVertex.Position, neighbor.Position, (prevPoint, nextPoint)) is MapCoordinates crossSection)
+                            AddSortedNonBoundaryVerticesTo(verticesOfCutNonBoundaryEdges, closeNetVertex, neighbor, crossSection);
+                        processedEdges.Add((closeNetVertex, neighbor));
+                    }
+                }
+            }
+        }
+
+        private static void AddSortedNonBoundaryVerticesTo(Dictionary<(VertexBuilder, VertexBuilder),  List<MapCoordinates>> verticesOfCutNonBoundaryEdges, VertexBuilder vertex1, VertexBuilder vertex2, MapCoordinates crossSectionCoords)
+        {
+            // dictionary is indexed by couples of vertices in specific order, first vertex of couple has always lower sum of its position axis values than the other one
+            // this ensures, that edges defined by couples of vertices are in the dictionary always present only one time
+            // it should be mentioned that in this sense edges are thought as not oriented
+            if (vertex1.Position.XPos < vertex2.Position.XPos || (vertex1.Position.XPos == vertex2.Position.XPos && vertex1.Position.YPos < vertex2.Position.YPos))  
+                if (verticesOfCutNonBoundaryEdges.ContainsKey((vertex1, vertex2))) verticesOfCutNonBoundaryEdges[(vertex1, vertex2)].Add(crossSectionCoords);
+                else verticesOfCutNonBoundaryEdges[(vertex1, vertex2)] = [crossSectionCoords];
+            else 
+                if (verticesOfCutNonBoundaryEdges.ContainsKey((vertex2, vertex1))) verticesOfCutNonBoundaryEdges[(vertex2, vertex1)].Add(crossSectionCoords);
+                else verticesOfCutNonBoundaryEdges[(vertex2, vertex1)] = [crossSectionCoords];
+        }
+        
+        private static void AddSortedBoundaryVerticesTo(Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCutBoundaryEdges, BoundaryVertexBuilder vertex1, BoundaryVertexBuilder vertex2, int edgeIndex, MapCoordinates crossSectionCoords)
+        {
+            // dictionary is indexed by couples of vertices in specific order, first vertex of couple has always lower sum of its position axis values than the other one
+            // this ensures, that edges defined by couples of vertices are in the dictionary always present only one time
+            // it should be mentioned that in this sense edges are thought as not oriented
+            if (vertex1.Position.XPos < vertex2.Position.XPos || (vertex1.Position.XPos == vertex2.Position.XPos && vertex1.Position.YPos < vertex2.Position.YPos))
+                if (verticesOfCutBoundaryEdges.ContainsKey((vertex1, vertex2))) verticesOfCutBoundaryEdges[(vertex1, vertex2)].crossSectionsWithChainEdgesIndices.Add((crossSectionCoords, edgeIndex));
+                else verticesOfCutBoundaryEdges[(vertex1, vertex2)] = (vertex1.BoundaryEdges[vertex2], new List<(MapCoordinates, int)>{(crossSectionCoords, edgeIndex)});
+            else if (verticesOfCutBoundaryEdges.ContainsKey((vertex2, vertex1))) verticesOfCutBoundaryEdges[(vertex2, vertex1)].crossSectionsWithChainEdgesIndices .Add((crossSectionCoords, edgeIndex));
+                else verticesOfCutBoundaryEdges[(vertex2, vertex1)] = (vertex2.BoundaryEdges[vertex1], new List<(MapCoordinates, int)>{(crossSectionCoords, edgeIndex)});
+        }
+        
+        #endregion
+        
+        #region Crossections determining and retrieving \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static MapCoordinates? GetLineSegmentsCrossSectionCoordsWithMagic(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2, (MapCoordinates prev, MapCoordinates next) sP)
+        {
+            var ft = GetNumeratorAndDenominatorOfT(p1, p2, q1, q2);
+            var fu = GetNumeratorAndDenominatorOfU(p1, p2, q1, q2);
+            if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return null;
+            if (!IsFractionInO1IntervalAndDefined(fu.numerator, fu.denominator)) return null;
+            if (!ApplyMagicFor(MagicFor.TwoSegments, ft, p1, p2, fu, q1, q2, sP)) return null;
+            if (ft.numerator == 0) return p1;
+            if (ft.numerator == ft.denominator) return p2;
+            if (fu.numerator == 0) return q1;
+            if (fu.numerator == fu.denominator) return q2;
+            double t = ft.numerator / (double)ft.denominator;
+            return new MapCoordinates((int)(p1.XPos + t * (p2.XPos - p1.XPos)), (int)(p1.YPos + t * (p2.YPos - p1.YPos)));
+        }
+        
+        public static MapCoordinates? GetLineSegmentsCrossSectionCoordsParallelCrossSectionIncluded(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2)
+        {
+            var ft = GetNumeratorAndDenominatorOfT(p1, p2, q1, q2);
+            var fu = GetNumeratorAndDenominatorOfU(p1, p2, q1, q2);
+            if (!IsDefined(ft.numerator, ft.denominator))
+                return ProcessParallelCrossSection(p1, p2, q1, q2);
+            if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return null;
+            if (!IsFractionInO1IntervalAndDefined(fu.numerator, fu.denominator)) return null;
+            if (ft.numerator == 0) return p1;
+            if (ft.numerator == ft.denominator) return p2;
+            if (fu.numerator == 0) return q1;
+            if (fu.numerator == fu.denominator) return q2;
+            double t = ft.numerator / (double)ft.denominator;
+            return new MapCoordinates((int)(p1.XPos + t * (p2.XPos - p1.XPos)), (int)(p1.YPos + t * (p2.YPos - p1.YPos)));
+        }
+        
+        public static MapCoordinates? GetLineSegmentsCrossSectionCoordsP2Q2Excluded(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2)
+        {
+            var ft = GetNumeratorAndDenominatorOfT(p1, p2, q1, q2);
+            var fu = GetNumeratorAndDenominatorOfU(p1, p2, q1, q2);
+            if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return null;
+            if (!IsFractionInO1IntervalAndDefined(fu.numerator, fu.denominator)) return null;
+            if (ft.numerator == ft.denominator || fu.numerator == fu.denominator) return null;
+            if (ft.numerator == 0) return p1;
+            if (fu.numerator == 0) return q1;
+            double t = ft.numerator / (double)ft.denominator;
+            return new MapCoordinates((int)(p1.XPos + t * (p2.XPos - p1.XPos)), (int)(p1.YPos + t * (p2.YPos - p1.YPos)));
+        }
+        
+        public static bool AreLineSegmentsCrossingEndPointsExcluded(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2)
+        {
+            var ft = GetNumeratorAndDenominatorOfT(p1, p2, q1, q2);
+            var fu = GetNumeratorAndDenominatorOfU(p1, p2, q1, q2);
+            if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return false;
+            if (!IsFractionInO1IntervalAndDefined(fu.numerator, fu.denominator)) return false;
+            if (ft.numerator == 0 || ft.numerator == ft.denominator || fu.numerator == 0 || fu.numerator == fu.denominator) return false;
+            return true;
+        }
+        
+        public static bool AreLineSegmentAndRayCrossingWithMagic(MapCoordinates ls1, MapCoordinates ls2, MapCoordinates r1, MapCoordinates r2, (MapCoordinates prev, MapCoordinates next) sP)
+        {
+            var ft = GetNumeratorAndDenominatorOfT(ls1, ls2, r1, r2);
+            var fu = GetNumeratorAndDenominatorOfU(ls1, ls2, r1, r2);
+            if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return false;
+            if (!IsFractionGreaterOrEqualToZeroAndDefined(fu.numerator, fu.denominator)) return false;
+            return ApplyMagicFor(MagicFor.SegmentAndRay, ft, ls1, ls2, fu, r1, r2, sP);
+        }
+        private enum MagicFor{TwoSegments, SegmentAndRay}
+        private static bool ApplyMagicFor(MagicFor what, (int numerator, int denominator) ft, MapCoordinates p1, MapCoordinates p2, (int numerator, int denominator) fu, MapCoordinates q1, MapCoordinates q2, (MapCoordinates prev, MapCoordinates next) sP)
+        {
+            if (ft.numerator == 0)
+                if (fu.numerator == 0)
+                    if ((p1 - sP.prev).RightHandNormalVector() * (p2 - p1) > 0)
+                        return (p1 - sP.prev).RightHandNormalVector() * (q2 - q1) > 0 && (p2 - p1).RightHandNormalVector() * (q2 - q1) > 0;
+                    else return (p1 - sP.prev).RightHandNormalVector() * (q2 - q1) > 0 || (p2 - p1).RightHandNormalVector() * (q2 - q1) > 0;
+                else if(what is MagicFor.TwoSegments && fu.numerator == fu.denominator)
+                    if ((p1 - sP.prev).RightHandNormalVector() * (p2 - p1) > 0)
+                        return (p1 - sP.prev).RightHandNormalVector() * (q1 - q2) > 0 && (p2 - p1).RightHandNormalVector() * (q1 - q2) > 0;
+                    else return (p1 - sP.prev).RightHandNormalVector() * (q1 - q2) > 0 || (p2 - p1).RightHandNormalVector() * (q1 - q2) > 0;
+                else 
+                    if ((p1 - sP.prev).RightHandNormalVector() * (p2 - p1) >= 0)
+                        return (((p1 - sP.prev).RightHandNormalVector() * (q1 - q2) > 0 && (p2 - p1).RightHandNormalVector() * (q1 - q2) > 0) &&
+                                !((p1 - sP.prev).RightHandNormalVector() * (q2 - q1) > 0 && (p2 - p1).RightHandNormalVector() * (q2 - q1) > 0)) ||
+                               (!((p1 - sP.prev).RightHandNormalVector() * (q1 - q2) > 0 && (p2 - p1).RightHandNormalVector() * (q1 - q2) > 0) &&
+                                 ((p1 - sP.prev).RightHandNormalVector() * (q2 - q1) > 0 && (p2 - p1).RightHandNormalVector() * (q2 - q1) > 0));
+                    else return (((p1 - sP.prev).RightHandNormalVector() * (q1 - q2) > 0 || (p2 - p1).RightHandNormalVector() * (q1 - q2) > 0) && 
+                                 !((p1 - sP.prev).RightHandNormalVector() * (q2 - q1) > 0 || (p2 - p1).RightHandNormalVector() * (q2 - q1) > 0)) || 
+                                (!((p1 - sP.prev).RightHandNormalVector() * (q1 - q2) > 0 || (p2 - p1).RightHandNormalVector() * (q1 - q2) > 0) && 
+                                  ((p1 - sP.prev).RightHandNormalVector() * (q2 - q1) > 0 || (p2 - p1).RightHandNormalVector() * (q2 - q1) > 0));
+            if (ft.numerator == ft.denominator)
+                if ((sP.next - p2).LeftHandNormalVector() * (q2 - q1) == 0)
+                    if (fu.numerator == 0 )
+                        return (sP.next - p2) * (q2 - q1) < 0 && (sP.next - p2) * (p2 - p1).LeftHandNormalVector() > 0;
+                    else if (what is MagicFor.TwoSegments && fu.numerator == fu.denominator )
+                        return (sP.next - p2) * (q1 - q2) < 0 && (sP.next - p2) * (p2 - p1).LeftHandNormalVector() > 0;
+                    else return (sP.next - p2) * (p2 - p1).LeftHandNormalVector() > 0;
+                else return false;
+            if (fu.numerator == 0)
+                return (p2 - p1).LeftHandNormalVector() * (q2 - q1) < 0;
+            if (fu.numerator == ft.denominator)
+                return (p2 - p1).LeftHandNormalVector() * (q1 - q2) < 0;
+            return true;
+        }
+        
+        private static MapCoordinates? ProcessParallelCrossSection(MapCoordinates p1, MapCoordinates p2, MapCoordinates q1, MapCoordinates q2)
+        {
+            if ((q2 - p1 != new MapCoordinates(0, 0) ? q2 - p1 : q1 - p1) * (p2 - p1).LeftHandNormalVector() == 0)
+            {
+                var sortedCoordinates = SortCoordsCorrectly(p1, p2, [p1, p2, q1, q2]);
+                if (sortedCoordinates[0] == p1 || sortedCoordinates[0] == p2)
+                    if (sortedCoordinates[1] == q1 || sortedCoordinates[1] == q2)
+                        return (sortedCoordinates[1] + sortedCoordinates[2]) / 2;
+                    else return null;
+                if (sortedCoordinates[1] == p1 || sortedCoordinates[1] == p2)
+                    return (sortedCoordinates[1] + sortedCoordinates[2]) / 2;
+                return null;
+            }
+            return null;
+        }
+        
+        private static List<MapCoordinates> SortCoordsCorrectly(MapCoordinates p1, MapCoordinates p2, List<MapCoordinates> coords) 
+        {
+            // we will preferably sort vertices based on axis, in which is edge given by vertex1 and vertex2 longer
+            // order by ensures stable sort
+            return coords.OrderBy(pos => pos, new MapCoordsComparerForSortCorrectlyMethods(
+                Math.Abs(p1.XPos - p2.XPos) > Math.Abs(p1.YPos - p2.YPos),
+                p1.XPos < p2.XPos,
+                p1.YPos < p2.YPos )).ToList();
+        }
+            
+        private static (int numerator , int denominator) GetNumeratorAndDenominatorOfT(MapCoordinates p1, MapCoordinates p2, MapCoordinates p3, MapCoordinates p4)
+            => ((p1.XPos - p3.XPos) * (p3.YPos - p4.YPos) - (p1.YPos - p3.YPos) * (p3.XPos - p4.XPos),
+                (p1.XPos - p2.XPos) * (p3.YPos - p4.YPos) - (p1.YPos - p2.YPos) * (p3.XPos - p4.XPos));
+        private static (int numerator, int denominator) GetNumeratorAndDenominatorOfU(MapCoordinates p1, MapCoordinates p2, MapCoordinates p3, MapCoordinates p4)
+            => (- ((p1.XPos - p2.XPos) * (p1.YPos - p3.YPos) - (p1.YPos - p2.YPos) * (p1.XPos - p3.XPos)),
+                   (p1.XPos - p2.XPos) * (p3.YPos - p4.YPos) - (p1.YPos - p2.YPos) * (p3.XPos - p4.XPos));
+
+        private static bool IsDefined(int numerator, int denominator)
+            => denominator != 0;
+        private static bool IsFractionInO1IntervalAndDefined(int numerator, int denominator)
+            => (numerator >= 0 && denominator > 0 && denominator >= numerator) || (numerator <= 0 && denominator < 0 && denominator <= numerator);
+        private static bool IsFractionGreaterOrEqualToZeroAndDefined(int numerator, int denominator)
+            => (numerator >= 0 && denominator > 0) || (numerator <= 0 && denominator < 0);
+        
+        #endregion
+
+        #region Attributes updating \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static Orienteering_ISOM_2017_2.EdgeAttributes UpdateLinearFeaturesOfEdgeAttributes( Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
+        {
+            var newLinearFeatures = GetUpdatedLinearFeaturesOfEdgeAttributes(edge.LineFeatures,  edge.Surroundings, edge.SecondSurroundings, symbolCodeOfAddedObject, out var newSurroundings, out var newSecondSurroundings);
+            return new Orienteering_ISOM_2017_2.EdgeAttributes(newSurroundings, newLinearFeatures, newSecondSurroundings);
+        }
+        
+        public static Orienteering_ISOM_2017_2.EdgeAttributes UpdateBothSurroundingsOfEdgeAttributes(Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
+        {
+            // both surroundings and second surroundings of edge attributes are updated
+            var newSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.Surroundings, symbolCodeOfAddedObject); 
+            var newSecondSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.SecondSurroundings, symbolCodeOfAddedObject); 
+            return new Orienteering_ISOM_2017_2.EdgeAttributes(newSurroundings, newSecondSurroundings);
+        }
+        
+        public static (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)
+            GetUpdatedSurroundingsOfEdgeAttributes((Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis) surroundings, decimal symbolCodeOfAddedObject)
+            => symbolCodeOfAddedObject switch 
+            {
+                403 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOpenLand_403, null),
+                404 or 404.1m => (null , null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOpenLandWithTrees_404, null),
+                413.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOrchard_413, null),
+                213 => (null, null, Orienteering_ISOM_2017_2.Stones.Sandyground_213, null, null, null),
+                414.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughVineyard_414, null),
+                401 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401, null),
+                402 or 402.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLandWithTrees_402, null),
+                413 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Orchard_413, null),
+                412 => (Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412, null, null, null, null, null),
+                414 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Vineyard_414, null),
+                407 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213)
+                            return surroundings;
+                        return (null, null, null, null, surroundings.vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis.VegetationSlowGoodVis_407); })(),
+                409 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213)
+                            return surroundings;
+                        return (null, null, null, null, surroundings.vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis.VegetationWalkGoodVis_409); })(),
+                406 or 406.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.VegetationSlow_406, null),
+                408 or 408.1m or 408.2m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.VegetationWalk_408, null),
+                410 or 410.1m or 410.2m or 410.3m or 410.4m =>    (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.VegetationFight_410, null),
+                214 => (null, null, Orienteering_ISOM_2017_2.Stones.BareRock_214, null, null, null),
+                405 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null),
+                310 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214)
+                            return surroundings;
+                        return (null, null, null, Orienteering_ISOM_2017_2.Water.IndistinctMarsh_310, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
+                308 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214)
+                            return surroundings;
+                        return (null, null, null, Orienteering_ISOM_2017_2.Water.Marsh_308, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
+                302 or 302.1m or 302.5m => (null, null, null, Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302, null, null),
+                113 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
+                            surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302)
+                            return surroundings;
+                        return (Orienteering_ISOM_2017_2.Grounds.BrokenGround_113, null, null, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
+                114 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
+                            surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLandWithTrees_402 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Orchard_413 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Vineyard_414)
+                            return surroundings;
+                        return (Orienteering_ISOM_2017_2.Grounds.VeryBrokenGround_114, null, null, null, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
+                210 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>( () => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
+                            surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLandWithTrees_402 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Orchard_413 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Vineyard_414)
+                            return surroundings;
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.VeryBrokenGround_114)
+                            return (null, null, Orienteering_ISOM_2017_2.Stones.StonyGroundSlow_210, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis);
+                        return (surroundings.ground, null, Orienteering_ISOM_2017_2.Stones.StonyGroundSlow_210, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
+                211 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if ( surroundings.ground == Orienteering_ISOM_2017_2.Grounds.VeryBrokenGround_114 ||
+                            surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
+                            surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLandWithTrees_402 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Orchard_413 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Vineyard_414)
+                            return surroundings;
+                        return (surroundings.ground, null, Orienteering_ISOM_2017_2.Stones.StonyGroundWalk_211, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
+                212 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.VeryBrokenGround_114 ||
+                            surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
+                            surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLandWithTrees_402 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Orchard_413 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Vineyard_414)
+                            return surroundings;
+                        return (surroundings.ground, null, Orienteering_ISOM_2017_2.Stones.StonyGroundFight_212, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
+                208 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
+                            surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302)
+                            return surroundings;
+                        return (surroundings.ground, Orienteering_ISOM_2017_2.Boulders.BoulderField_208, surroundings.stones, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
+                209 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
+                            surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLandWithTrees_402 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Orchard_413 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Vineyard_414)
+                            return surroundings;
+                        return (null, Orienteering_ISOM_2017_2.Boulders.DenseBoulderField_209, null, surroundings.water, surroundings.vegetationAndManMade, null); })(),
+                501 or 501.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.PavedArea_501, null),
+                
+                520 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.AreaThatShallNotBeEntered_520, null),
+                307 or 307.1m => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.AreaThatShallNotBeEntered_520 ||
+                            surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.PavedArea_501)
+                            return surroundings;
+                        return (null, null, null, Orienteering_ISOM_2017_2.Water.UncrossableMarsh_307, null, null); })(),
+                301 or 301.1m or 301.2m or 301.3m => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
+                        if (surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.PavedArea_501)
+                            return surroundings;
+                        return (null, null, null, Orienteering_ISOM_2017_2.Water.UncrossableBodyOfWater_301, null, null); })(),
+                206 => (null, Orienteering_ISOM_2017_2.Boulders.GiganticBoulder_206, null, null, null, null),
+                521 or 521.2m or 521.3m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Building_521, null),
+                520.2m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.AreaThatShallNotBeEntered_520, null),
+                _ => surroundings
+            };
+        
+        public static (Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle)
+            GetUpdatedLinearFeaturesOfEdgeAttributes((Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle)  linearFeaturs, (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis) surroundings, (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis) secondSurroundings, decimal symbolCodeOfAddedObject, out (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis) newSurroundings, out (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis) newSecondSurroundings)
+        {
+            var updatedLineFeatures = symbolCodeOfAddedObject switch 
+            {
+                508 => (null, Orienteering_ISOM_2017_2.Paths.NarrowRide_508, null),
+                508.2m => new Func<(Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle)>(() => {
+                    surroundings = GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, surroundings);
+                    secondSurroundings = GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, secondSurroundings);
+                    return (null, Orienteering_ISOM_2017_2.Paths.NarrowRide_508, null); })(),
+                508.3m => new Func<(Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle)>(() => {
+                    surroundings = GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade.VegetationSlow_406, surroundings);
+                    secondSurroundings = GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade.VegetationSlow_406, secondSurroundings);
+                    return (null, Orienteering_ISOM_2017_2.Paths.NarrowRide_508, null); })(),
+                508.4m => new Func<(Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle)>(() => {
+                    surroundings = GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade.VegetationWalk_408, surroundings);
+                    secondSurroundings = GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade.VegetationWalk_408, secondSurroundings);
+                    return (null, Orienteering_ISOM_2017_2.Paths.NarrowRide_508, null); })(),
+                508.1m => new Func<(Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle)>(() => { 
+                    surroundings = GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401, surroundings);
+                    secondSurroundings = GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401, secondSurroundings);
+                    return (null, Orienteering_ISOM_2017_2.Paths.NarrowRide_508, null); })(),
+                507 => (null, Orienteering_ISOM_2017_2.Paths.LessDistinctSmallFootpath_507 ,null),
+                506 => (null, Orienteering_ISOM_2017_2.Paths.SmallFootpath_506, null),
+                505 => (null, Orienteering_ISOM_2017_2.Paths.Footpath_505, null),
+                504 => (null, Orienteering_ISOM_2017_2.Paths.VehicleTrack_504, null),
+                503 => (null, Orienteering_ISOM_2017_2.Paths.Road_503, null),
+                502 or 502.2m =>  (null, Orienteering_ISOM_2017_2.Paths.WideRoad_502, null),
+                532 => (null, null, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.Stairway_532),
+                104 or 104.2m => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.EarthBank_104, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                105 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.EarthWall_105, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                107 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.ErosionGully_107, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                304 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.CrossableWatercourse_304, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                201 or 201.3m => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.ImapssableCliff_201, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                202 or 202.2m => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.Cliff_202, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                215 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.Trench_215, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                513 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.Wall_513),   
+                515 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.ImpassableWall_515),   
+                516 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.Fence_516),     
+                518 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.ImpassableFence_518), 
+                528 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.ProminentLineFeature_528),
+                529 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.ImpassableProminentLineFeature_529),
+                _ => linearFeaturs
+            };
+            newSurroundings = surroundings;
+            newSecondSurroundings = secondSurroundings;
+            return updatedLineFeatures;
+        }
+
+        private static (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)
+            GetSurroundingsForEdgeWithNarrowRide(Orienteering_ISOM_2017_2.VegetationAndManMade narrowRideSurroundings, (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis) originalSurroundings)
+        {
+            if (!(originalSurroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
+                  originalSurroundings.boulders == Orienteering_ISOM_2017_2.Boulders.GiganticBoulder_206 ||
+                  originalSurroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                  originalSurroundings.water == Orienteering_ISOM_2017_2.Water.UncrossableMarsh_307 ||
+                  originalSurroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
+                  originalSurroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.PavedArea_501 ||
+                  originalSurroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.AreaThatShallNotBeEntered_520 ||
+                  originalSurroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.Building_521)) 
+                return (originalSurroundings.ground, originalSurroundings.boulders, originalSurroundings.stones, originalSurroundings.water, narrowRideSurroundings, null);
+            return originalSurroundings;
+        }
+        
+        #endregion
+        
+        #region Computing of left handed angle between two edges \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static double ComputeLeftHandedAngleBetween(MapCoordinates v1s, MapCoordinates v1e, MapCoordinates v2s, MapCoordinates v2e)
+        {
+            var v1 = v1e - v1s;
+            var v2 = v2e - v2s;
+            double angle = Math.Acos((v1 * v2)/(v1.Length()*v2.Length()));
+            // if scalar product of vector 2 and right side normal vector of vector 1 is positive, computed angle is inverted 
+            var v1RightNorm = v1.RightHandNormalVector(); 
+            return v1RightNorm * v2 > 0 ? 2*Math.PI - angle : angle;
+        }
+        
+        #endregion
+        
+        #region Cross-section of chain and boundary edges vertices retrieving and their connection to chain vertices \\\
+        
+        public static (Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>>, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>>) 
+            CreateCrossSectionVertices( List<BoundaryVertexBuilder> chain, Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges)
+        {
+            Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices = new();
+            Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices = new();
+            // process every boundary vertex couple whose edge was cut by the chain
+            foreach (var ((vertex1, vertex2), (_, crossSectionsWithChainEdgesIndices)) in verticesOfCutBoundaryEdges)
+            {
+                foreach (var (crossSectionCoords, crossedChainEdgeIndex) in crossSectionsWithChainEdgesIndices)
+                {
+                    var chainVertex1 = chain[crossedChainEdgeIndex];
+                    // crossed chain edge index will never be equal to chain.Count - 1, if chain is segmented line and not polygon
+                    var chainVertex2 = crossedChainEdgeIndex == chain.Count - 1 ? chain[0] : chain[crossedChainEdgeIndex + 1];
+                    // creation of cross-section vertex and its addition to list of added vertices and list of added vertices for given cut boundary edge and chain edge
+                    var newVertex = new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords));
+                    if (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices.ContainsKey((chainVertex1, chainVertex2))) chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices[(chainVertex1, chainVertex2)].Add(newVertex);
+                    else chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices[(chainVertex1, chainVertex2)] = [newVertex];
+                    if (verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices.ContainsKey((vertex1, vertex2))) verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices[(vertex1, vertex2)].Add(newVertex);
+                    else verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices[(vertex1, vertex2)] = [newVertex];
+                }
+            }
+            return (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices);
+        }
+        
+
+
+        public static void ConnectAndAddNewVerticesToChain( Dictionary<(BoundaryVertexBuilder, BoundaryVertexBuilder), List<BoundaryVertexBuilder>> chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, List<BoundaryVertexBuilder> chain)
         {
             foreach (var ((vertex1, vertex2), newVertices) in chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices)
             {
                 // at first, we have to sort cross-section vertices so they could be correctly connected to the chain vertices
-                SortVerticesCorrectly(vertex1, vertex2, newVertices);
-                ConnectNewVerticesToChain(newVertices, vertex1, vertex2);
-                AddNewVerticesToChain(newVertices, vertex1, vertex2, chain, allnewVertices);
+                var newSortedVertices = SortVerticesCorrectly(vertex1, vertex2, newVertices);
+                ConnectNewVerticesToChain(newSortedVertices,  vertex1, vertex2);
+                AddNewVerticesToChain(newSortedVertices, vertex1, vertex2, chain);
             }
         }
 
-        private void ConnectNewVerticesToChain(List<BoundaryVertexBuilder> sortedVertices, BoundaryVertexBuilder vertex1, BoundaryVertexBuilder vertex2)
+        private static void ConnectNewVerticesToChain(List<BoundaryVertexBuilder> sortedVertices, BoundaryVertexBuilder vertex1, BoundaryVertexBuilder vertex2)
         {
             // at first, edge between two crossed chain vertices must be removed
             vertex1.BoundaryEdges.Remove(vertex2);
@@ -1106,7 +2139,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             vertex2.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
         }
 
-        private void AddNewVerticesToChain(List<BoundaryVertexBuilder> sortedVertices, BoundaryVertexBuilder vertex1, BoundaryVertexBuilder vertex2, List<BoundaryVertexBuilder> chain, HashSet<BoundaryVertexBuilder> allNewVertices)
+        private static void AddNewVerticesToChain(List<BoundaryVertexBuilder> sortedVertices, BoundaryVertexBuilder vertex1, BoundaryVertexBuilder vertex2, List<BoundaryVertexBuilder> chain)
         {
             int chainIndex = chain.IndexOf(vertex1); 
             var lastVertex = vertex1;
@@ -1133,67 +2166,58 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         }
                         else if (neighbor is NetVertexBuilder netNeighbor)
                         {
-                            netNeighbor.NonBoundaryEdges.Add(overlappedVertex);
+                            netNeighbor.NonBoundaryEdges[overlappedVertex] = netNeighbor.NonBoundaryEdges[vertex];
                             netNeighbor.NonBoundaryEdges.Remove(vertex);
                         }
-                        vertex.NonBoundaryEdges.Remove(neighbor);
                     }
+                    vertex.NonBoundaryEdges.Clear();
                     foreach (var (neighbor, edgeAttributesWithNeighbor) in vertex.BoundaryEdges)
                     {
                         overlappedVertex.BoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
                         neighbor.BoundaryEdges[overlappedVertex] = neighbor.BoundaryEdges[vertex];
                         neighbor.BoundaryEdges.Remove(vertex);
-                        vertex.BoundaryEdges.Remove(neighbor);
                     }
-                    if (overlappedVertex == vertex2)
+                    vertex.BoundaryEdges.Clear();
+                    if (overlappedVertex == vertex2 && lastVertex != vertex2)
                     {
                         lastVertex = vertex2;
                         chainIndex++;
                     }
-                    allNewVertices.Remove(vertex);
                 }
                 else
                     chain.Insert(++chainIndex, vertex);
             }
         }
-
         
-        // 6 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder[] chain, List<VertexBuilder> outerVerticesOfCutEdges, List<VertexBuilder> innerVerticesOfCutEdges, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength, bool polygonalChain)
+        #endregion
+        
+        #region Connecting of chain vertices to vertices of cut edges and to itself by non boundary edges \\\\\\\\\\\\\\
+        public static void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder[] chain, IEnumerable<VertexBuilder> verticesOfCutEdges, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices, int standardEdgeLength)
         {
-            // connectable vertices consists of chain vertices and outer and inner vertices of edges, which were cut by chain
-            IEditableRadiallySearchableDataStruct<VertexBuilder> connectableVertices = new RadiallySearchableKdTree<VertexBuilder>(chain.Concat(outerVerticesOfCutEdges).Concat(innerVerticesOfCutEdges), vertexBuilder => (vertexBuilder.Position.XPos, vertexBuilder.Position.YPos));
+            // connectable vertices consists of chain vertices and all vertices of edges, which were cut by chain
+            IEditableRadiallySearchableDataStruct<VertexBuilder> connectableVertices = new RadiallySearchableKdTree<VertexBuilder>(chain.Concat(verticesOfCutEdges), vertexBuilder => (vertexBuilder.Position.XPos, vertexBuilder.Position.YPos));
+            
             // at first, we have to find all boundary vertices in standard edge length distance from vertices of chain
             // these boundary vertices will also include chain vertices
-            // we will need them so we could test, whether newly added edges does not cross some boundary edge of previously added objects
+            // we will need them so we could test, whether newly added edges does not cross some boundary edge of previously added objects or currently processed object
             var closeBoundaryVerticesToChainsVertices = FindCloseBoundaryVerticesToChain(chain, allVertices, standardEdgeLength);
             for (int i = 0; i < chain.Length; ++i)
             {
                 var closeVertices = connectableVertices.FindInEuclideanDistanceFrom((chain[i].Position.XPos, chain[i].Position.YPos), standardEdgeLength);
-                int iP = i == 0 ? chain.Length - 1 : i - 1;
-                int iS = i == chain.Length - 1 ? 0 : i + 1;
                 foreach (var closeVertex in closeVertices)
                     // we do not connect vertices by non boundary edges to vertices which are connected to current vertex by boundary edge already 
                     if (closeVertex is not BoundaryVertexBuilder boundaryCloseVertex || !chain[i].BoundaryEdges.ContainsKey(boundaryCloseVertex))
-                    {
                         // check, if created edge does not cut any boundary edge 
                         if (DoesNotCrossSomeBoundaryEdge(chain[i], closeVertex, closeBoundaryVerticesToChainsVertices[i]))
-                        {
                             if (closeVertex is NetVertexBuilder closeNetVertex)
-                            {
                                 ConnectBoundaryVertexAndNetVertex(chain[i], closeNetVertex);
-                            }
                             else if (closeVertex is BoundaryVertexBuilder closeBoundaryVertex && !chain[i].BoundaryEdges.ContainsKey(closeBoundaryVertex))
-                            {
                                 ConnectTwoBoundaryVerticesWithNonBoundaryEdge(chain[i], closeBoundaryVertex);
-                            }
-                        }
-                    }
             }
+            
         }
-
-        private List<List<BoundaryVertexBuilder>> FindCloseBoundaryVerticesToChain(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,  int standardEdgeLength)
+        
+        private static List<List<BoundaryVertexBuilder>> FindCloseBoundaryVerticesToChain(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,  int standardEdgeLength)
         {
             List<List<BoundaryVertexBuilder>> closeBoundaryVerticesToChainsVertices = new List<List<BoundaryVertexBuilder>>();
             IRadiallySearchableDataStruct<BoundaryVertexBuilder> searchableChain = new RadiallySearchableKdTree<BoundaryVertexBuilder>(chain, vertexBuilder => (vertexBuilder.Position.XPos, vertexBuilder.Position.YPos));
@@ -1207,31 +2231,31 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             return closeBoundaryVerticesToChainsVertices;
         }
 
-        private bool DoesNotCrossSomeBoundaryEdge(BoundaryVertexBuilder chainVertex, VertexBuilder closeVertex, List<BoundaryVertexBuilder> closeBoundaryVerticesToBeChecked)
+        private static bool DoesNotCrossSomeBoundaryEdge(BoundaryVertexBuilder chainVertex, VertexBuilder closeVertex, List<BoundaryVertexBuilder> closeBoundaryVerticesToBeChecked)
         {
             foreach (var closeBoundaryVertex in closeBoundaryVerticesToBeChecked)
             {
                 // if close boundary vertex is tested close vertex or tested chain vertex, we do not test them
                 if (closeVertex == closeBoundaryVertex || chainVertex == closeBoundaryVertex) continue;
-                foreach (var neighborOfCloseBoundaryVertex in closeBoundaryVertex.BoundaryEdges.Keys)
+                foreach (var boundaryNeighborOfCloseBoundaryVertex in closeBoundaryVertex.BoundaryEdges.Keys)
                 {
                     // same think holds in case of neighbor of close boundary vertex
-                    if (closeVertex == neighborOfCloseBoundaryVertex || chainVertex == neighborOfCloseBoundaryVertex) continue;
-                    if (AreLineSegmentsCrossing(chainVertex.Position, closeVertex.Position, closeBoundaryVertex.Position, neighborOfCloseBoundaryVertex.Position)) return false;
+                    if (closeVertex == boundaryNeighborOfCloseBoundaryVertex || chainVertex == boundaryNeighborOfCloseBoundaryVertex) continue;
+                    if (AreLineSegmentsCrossingEndPointsExcluded( closeBoundaryVertex.Position, boundaryNeighborOfCloseBoundaryVertex.Position, chainVertex.Position, closeVertex.Position )) return false;
                 }
             }
             return true;
         }
 
-        private void ConnectBoundaryVertexAndNetVertex(BoundaryVertexBuilder boundaryVertex, NetVertexBuilder netVertex)
+        private static void ConnectBoundaryVertexAndNetVertex(BoundaryVertexBuilder boundaryVertex, NetVertexBuilder netVertex)
         {
             // net vertices are connected by edges whose attributes are correctly selected based on attributes of another edge of net vertex
             // here is used the assumption, that edges of net vertices have same attributes
             boundaryVertex.NonBoundaryEdges[netVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(netVertex.Surroundings);
-            netVertex.NonBoundaryEdges.Add(boundaryVertex);
+            netVertex.NonBoundaryEdges[boundaryVertex] = (null, null, null);
         }
 
-        private void ConnectTwoBoundaryVerticesWithNonBoundaryEdge(BoundaryVertexBuilder boundaryVertex1, BoundaryVertexBuilder boundaryVertex2)
+        private static void ConnectTwoBoundaryVerticesWithNonBoundaryEdge(BoundaryVertexBuilder boundaryVertex1, BoundaryVertexBuilder boundaryVertex2)
         {
             // edges between boundary edges will be assigned with blank attributes
             // correct attributes will be assigned to these edges in the future
@@ -1239,112 +2263,35 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             boundaryVertex2.NonBoundaryEdges[boundaryVertex1] = new Orienteering_ISOM_2017_2.EdgeAttributes();
         }
         
-        // 7 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void SetAttributesOfChainsEdges(BoundaryVertexBuilder[] chain, List<VertexBuilder> outerVertices, decimal symbolCodeOfAddedObject)
-        {
-            // at first, we will obtain indices of new cross-section vertices added to chain, together with their closest outer neighbor angle-wise
-            // these vertices will be used for determining of correct attribute setting of chains edges 
-            var indicesAndOuterBoundaryNeighborsOfCrossSectionVertices = GetIndicesAndTheClosestOuterNeighborsOfVerticesOfCrossedBoundaryEdges(chain);
-            // if count of cross-section vertices is less than 2, it means that all edges of the chain has surly the same attributes
-            if (indicesAndOuterBoundaryNeighborsOfCrossSectionVertices.Count < 2)
-                SetAttributesOfChainBoundaryEdgesUniformly(chain, outerVertices, symbolCodeOfAddedObject);
-            else
-                SetAttributesOfChainBoundaryEdgesNonUniformly(chain, indicesAndOuterBoundaryNeighborsOfCrossSectionVertices, symbolCodeOfAddedObject);
-        }
+        #endregion
         
-        private List<(int, BoundaryVertexBuilder)> GetIndicesAndTheClosestOuterNeighborsOfVerticesOfCrossedBoundaryEdges(BoundaryVertexBuilder[] chain)
-        {
-            List<(int, BoundaryVertexBuilder)> indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries = new();
-            
-            // we will iteratively determine the closest left-handed boundary neighbor of each vertex
-            for (int i = 0; i < chain.Length; i++)
-            {
-                int iP = i == 0 ? chain.Length - 1 : i - 1; 
-                int iS = i == chain.Length - 1 ? 0 : i + 1;
-                // closest left-handed neighbor is set at first to the previous chain vertex
-                // this will ensure, that found closest left-handed boundary vertex will be outer vertex  
-                var angleOfTheClosestNeighborToNextEdgeSoFar = ComputeLeftHandedAngleBetween(chain[i].Position, chain[iS].Position, chain[i].Position, chain[iP].Position);
-                var closestNeighbor = chain[iP];
-                foreach (var (neighbor, _) in chain[i].BoundaryEdges)
-                {
-                    if (neighbor == chain[iS]) continue;
-                    double angleOfTheNeighborToNextEdge = ComputeLeftHandedAngleBetween(chain[i].Position, chain[iS].Position, chain[i].Position, neighbor.Position);
-                    if (angleOfTheNeighborToNextEdge < angleOfTheClosestNeighborToNextEdgeSoFar)
-                    {
-                        angleOfTheClosestNeighborToNextEdgeSoFar = angleOfTheNeighborToNextEdge;
-                        closestNeighbor = neighbor;
-                    }
-                }
-                // if the closest left-handed vertex is the previous chain vertex, current vertex is not added into final collection
-                if(closestNeighbor != chain[iP]) indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries.Add((i, closestNeighbor));
-            }
-            return indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries;
-        }
-
-        private double ComputeLeftHandedAngleBetween(MapCoordinates v1s, MapCoordinates v1e, MapCoordinates v2s, MapCoordinates v2e)
-        {
-            var v1 = v1e - v1s;
-            var v2 = v2e - v2s;
-            double angle = Math.Acos((v1.XPos * v2.XPos + v1.YPos * v2.YPos)/(v1.Length()*v2.Length()));
-            // if scalar product of vector 2 and right side normal vector of vector 1 is positive, computed angle is inverted 
-            var v1RightNorm = new MapCoordinates(v1.YPos, -v1.XPos); 
-            return v1RightNorm.XPos * v2.XPos + v1RightNorm.YPos * v2.YPos > 0 ? 2*Math.PI - angle : angle;
-        }
-
-        private void SetAttributesOfChainBoundaryEdgesUniformly(BoundaryVertexBuilder[] chain, List<VertexBuilder> outerVertices, decimal symbolCodeOfAddedObject)
-        {
-            // attributes are determined from any outer 
-            var outerEdgeSurroundingsForWholeChain = TryFindEdgeAttributesOfSomeOuterNetVertexConnectedToChainInGivenInterval(chain, outerVertices, 0, chain.Length - 1) ?? (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null);
-            SetAttributesOfChainBoundaryEdgesBasedOnGivenOuterSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForWholeChain, symbolCodeOfAddedObject, 0, chain.Length - 1);
-            var innerSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(outerEdgeSurroundingsForWholeChain, symbolCodeOfAddedObject);
-            chain.Last().BoundaryEdges[chain[0]] = new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeSurroundingsForWholeChain, innerSurroundings);
-            chain[0].BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes(innerSurroundings, outerEdgeSurroundingsForWholeChain); 
-        }
-
-        private void SetAttributesOfChainBoundaryEdgesNonUniformly(BoundaryVertexBuilder[] chain,  List<(int index, BoundaryVertexBuilder neighbor)> indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices, decimal symbolCodeOfAddedObject)
-        {
-            for (int i = 0; i < indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Count - 1; i++)
-            {
-                var outerEdgeSurroundingsForIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].neighbor].SecondSurroundings;
-                SetAttributesOfChainBoundaryEdgesBasedOnGivenOuterSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForIntervalOfChain, symbolCodeOfAddedObject, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i+1].index);
-            } 
-            var outerEdgeSurroundingsForLastIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().neighbor].SecondSurroundings;
-            SetAttributesOfChainBoundaryEdgesBasedOnGivenOuterSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().index, chain.Length-1);
-            SetAttributesOfChainBoundaryEdgesBasedOnGivenOuterSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject, 0, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[0].index);
-            var innerSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject);
-            chain.Last().BoundaryEdges[chain[0]] = new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeSurroundingsForLastIntervalOfChain, innerSurroundings);
-            chain[0].BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes(innerSurroundings, outerEdgeSurroundingsForLastIntervalOfChain); 
-        }
-
-        private(Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?)? 
-            TryFindEdgeAttributesOfSomeOuterNetVertexConnectedToChainInGivenInterval(BoundaryVertexBuilder[] chain, List<VertexBuilder> outerVertices, int startIndex, int endIndex)
-        {
-            if (startIndex >= endIndex || startIndex < 0 || endIndex >= chain.Length) return null;
-            for(int i = startIndex; i <= endIndex; ++i)
-                foreach (var (neighbor, edgeAttributes) in chain[i].NonBoundaryEdges)
-                    if (neighbor is NetVertexBuilder && outerVertices.Contains(neighbor))
-                        return edgeAttributes.Surroundings;
-            return null;
-        }
-
-        private void SetAttributesOfChainBoundaryEdgesBasedOnGivenOuterSurroundingsOnGivenInterval( BoundaryVertexBuilder[] chain, (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?) outerSurroundings, decimal symbolCodeOfAddedObject, int startIndex, int endIndex)
+        #region Setting of chain edges \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static void SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(BoundaryVertexBuilder[] chain, (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?) outerSurroundings, decimal symbolCodeOfAddedObject, int startIndex, int endIndex)
+            => SetLeftSurroundingsUpdatedRightSurroundingsAndUpdatedLinearFeaturesOfChainBoundaryEdgesOnGivenInterval(chain, outerSurroundings, (null, null, null), symbolCodeOfAddedObject, startIndex, endIndex);
+        
+        //private for the time being
+        private static void SetLeftSurroundingsUpdatedRightSurroundingsAndUpdatedLinearFeaturesOfChainBoundaryEdgesOnGivenInterval(BoundaryVertexBuilder[] chain, (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?) leftSurroundings, (Orienteering_ISOM_2017_2.NaturalLinearObstacles? naturalLinearObstacle, Orienteering_ISOM_2017_2.Paths? path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles? manMadeLinearObstacle) linearFeatures, decimal symbolCodeOfAddedObject, int startIndex, int endIndex)
         {
             if (startIndex >= endIndex || startIndex < 0 || endIndex >= chain.Length) return;
-            var innerSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(outerSurroundings, symbolCodeOfAddedObject);
+            var rightSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(leftSurroundings, symbolCodeOfAddedObject);
+            var linearFeaturesInDirection = GetUpdatedLinearFeaturesOfEdgeAttributes(linearFeatures, leftSurroundings, rightSurroundings, symbolCodeOfAddedObject, out leftSurroundings, out rightSurroundings);
+            var linearFeaturesInOppositeDirection = GetUpdatedLinearFeaturesOfEdgeAttributes(linearFeatures, rightSurroundings, leftSurroundings, symbolCodeOfAddedObject, out rightSurroundings, out leftSurroundings);
             
-            chain[startIndex].BoundaryEdges[chain[startIndex + 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes(outerSurroundings, innerSurroundings);
+            chain[startIndex].BoundaryEdges[chain[startIndex + 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes(leftSurroundings, rightSurroundings);
             for (int i = startIndex + 1; i < endIndex; ++i)
             {
-                chain[i].BoundaryEdges[chain[i - 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes( innerSurroundings, outerSurroundings);
-                chain[i].BoundaryEdges[chain[i + 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes( outerSurroundings, innerSurroundings);
+                chain[i].BoundaryEdges[chain[i + 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes( leftSurroundings, linearFeaturesInDirection, rightSurroundings);
+                chain[i].BoundaryEdges[chain[i - 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes( rightSurroundings, linearFeaturesInOppositeDirection, leftSurroundings);
             }
-            chain[endIndex].BoundaryEdges[chain[endIndex - 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes(innerSurroundings, outerSurroundings); 
+            chain[endIndex].BoundaryEdges[chain[endIndex - 1]] = new Orienteering_ISOM_2017_2.EdgeAttributes(rightSurroundings, leftSurroundings); 
         }
-
-        // 8 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices( BoundaryVertexBuilder[] chain)
+        
+        #endregion
+        
+        #region Setting non boundary attributes between chain and boundary vertices \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices( BoundaryVertexBuilder[] chain)
         {
             foreach (var chainVertex in chain)
             {
@@ -1352,23 +2299,23 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             }
         }
 
-        private void SetAttributesOfNonBoundaryEdgesDirectedToBoundaryVertices(BoundaryVertexBuilder chainVertex)
+        private static void SetAttributesOfNonBoundaryEdgesDirectedToBoundaryVertices(BoundaryVertexBuilder chainVertex)
         {
             foreach (var (neighbor, edgeAttributes) in chainVertex.NonBoundaryEdges)
             {
                 if (neighbor is BoundaryVertexBuilder boundaryNeighbor && edgeAttributes == new Orienteering_ISOM_2017_2.EdgeAttributes())
                 {
-                    var attributesOfTheClosesLefHandedEdge = FindAttributesOfClosestBoundaryEdgeOfChainVertexTo(boundaryNeighbor, chainVertex);
+                    var attributesOfTheClosesLefHandedEdge = FindAttributesOfClosestLeftHandedBoundaryEdgeOfChainVertexTo(boundaryNeighbor, chainVertex);
                     chainVertex.NonBoundaryEdges[boundaryNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosesLefHandedEdge.SecondSurroundings);
                     boundaryNeighbor.NonBoundaryEdges[chainVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosesLefHandedEdge.SecondSurroundings);
                 }
             }
         }
 
-        private Orienteering_ISOM_2017_2.EdgeAttributes FindAttributesOfClosestBoundaryEdgeOfChainVertexTo(
+        private static Orienteering_ISOM_2017_2.EdgeAttributes FindAttributesOfClosestLeftHandedBoundaryEdgeOfChainVertexTo(
             VertexBuilder neighbor, BoundaryVertexBuilder chainVertex)
         {
-            var angleOfTheClosestLefHandedBoundaryNeighborSoFar = 2 * Math.PI;
+            var angleOfTheClosestLefHandedBoundaryNeighborSoFar = 10.0; // greater than 2 * Math.Pi
             // by default set to forest attributes, will be surly overwritten 
             Orienteering_ISOM_2017_2.EdgeAttributes attributesOfTheClosestLeftHandedEdge = new Orienteering_ISOM_2017_2.EdgeAttributes((null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null));
             foreach (var (boundaryNeighbor, edgeAttributes) in chainVertex.BoundaryEdges)
@@ -1383,54 +2330,94 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             return attributesOfTheClosestLeftHandedEdge;
         }
         
-        // 9 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void AddChainVerticesToTheGraph(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices)
+        #endregion
+        
+        #region Adding chain to the graph collection \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
+        public static void AddChainVerticesToTheGraph(IEnumerable<BoundaryVertexBuilder> chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices)
         {
             foreach (var chainVertex in chain)
             {
-                if (allVertices.TryFindAt(chainVertex, out var foundVertex))
+                if (allVertices.TryFindAtPositionOf(chainVertex, out var foundOverlappedVertex))
                 {
-                    ResolveOverlappingOfChainVertexWithVertexInGraph(chainVertex, foundVertex);
-                    allVertices.Delete(foundVertex);
+                    ResolveAndDisconnectOverlappedGraphVertex(chainVertex, foundOverlappedVertex);
+                    allVertices.Delete(foundOverlappedVertex);
                 }
                 allVertices.Insert(chainVertex);
             }
         }
 
-        private void ResolveOverlappingOfChainVertexWithVertexInGraph(BoundaryVertexBuilder chainVertex, VertexBuilder overlappedVertex)
+        private static void ResolveAndDisconnectOverlappedGraphVertex(BoundaryVertexBuilder chainVertex, VertexBuilder overlappedVertex)
         {
+            // if overlapped vertex is boundary vertex, we disconnect all of its non boundary edges, and
+            // we add all of its boundary edges to the chain vertex (if the chain vertex does not contain given edge already)
             if (overlappedVertex is BoundaryVertexBuilder overlappedBoundaryVertex)
             {
                 foreach (var (overlappedBoundaryVertexNeighbor, edgeAttributes) in overlappedBoundaryVertex.BoundaryEdges)
                 {
+                    if (overlappedBoundaryVertexNeighbor == overlappedBoundaryVertex) continue; // TODO: resolve issue with self-pointing edges
                     if (!chainVertex.BoundaryEdges.ContainsKey(overlappedBoundaryVertexNeighbor))
                     {
                         chainVertex.BoundaryEdges[overlappedBoundaryVertexNeighbor] = edgeAttributes;
                         overlappedBoundaryVertexNeighbor.BoundaryEdges[chainVertex] = overlappedBoundaryVertexNeighbor.BoundaryEdges[overlappedBoundaryVertex];
                     }
-                    overlappedBoundaryVertex.BoundaryEdges.Remove(overlappedBoundaryVertexNeighbor);
                     overlappedBoundaryVertexNeighbor.BoundaryEdges.Remove(overlappedBoundaryVertex);
                 }
-                foreach (var (overlappedBoundaryVertexNeighbor,_) in overlappedBoundaryVertex.NonBoundaryEdges)
+                overlappedBoundaryVertex.BoundaryEdges.Clear();
+                foreach (var (overlappedBoundaryVertexNeighbor, edgeAttributes) in overlappedBoundaryVertex.NonBoundaryEdges)
                 {
+                    if (overlappedBoundaryVertexNeighbor == overlappedBoundaryVertex) continue; // TODO: resolve issue with self-pointing edges
                     if (overlappedBoundaryVertexNeighbor is BoundaryVertexBuilder overlappedBoundaryVertexBoundaryNeighbor)
+                    {
+                        if (!chainVertex.NonBoundaryEdges.ContainsKey(overlappedBoundaryVertexBoundaryNeighbor))
+                        {
+                            chainVertex.NonBoundaryEdges[overlappedBoundaryVertexBoundaryNeighbor] = edgeAttributes;
+                            overlappedBoundaryVertexBoundaryNeighbor.NonBoundaryEdges[chainVertex] = overlappedBoundaryVertexBoundaryNeighbor.NonBoundaryEdges[overlappedBoundaryVertex];
+                        }
                         overlappedBoundaryVertexBoundaryNeighbor.NonBoundaryEdges.Remove(overlappedBoundaryVertex);
-                    else if (overlappedBoundaryVertexNeighbor is NetVertexBuilder overlappedBoundaryVertexNetNeighbor) 
+                    }
+                    else if (overlappedBoundaryVertexNeighbor is NetVertexBuilder overlappedBoundaryVertexNetNeighbor)
+                    {
+                        if (!chainVertex.NonBoundaryEdges.ContainsKey(overlappedBoundaryVertexNetNeighbor))
+                        {
+                            chainVertex.NonBoundaryEdges[overlappedBoundaryVertexNetNeighbor] = edgeAttributes;
+                            overlappedBoundaryVertexNetNeighbor.NonBoundaryEdges[chainVertex] = edgeAttributes.LineFeatures;
+                        }
                         overlappedBoundaryVertexNetNeighbor.NonBoundaryEdges.Remove(overlappedBoundaryVertex);
-                    overlappedBoundaryVertex.NonBoundaryEdges.Remove(overlappedBoundaryVertexNeighbor);
+                    }
                 }
+                overlappedBoundaryVertex.NonBoundaryEdges.Clear();
             }
+            // if overlapped vertex is net vertex, we just disconnect it from other vertices of the graph
             else if (overlappedVertex is NetVertexBuilder overlappedNetVertex)
-                foreach (var overlappedNetVertexNeighbor in overlappedNetVertex.NonBoundaryEdges)
+            {
+                foreach (var (overlappedNetVertexNeighbor, linearFeatures) in overlappedNetVertex.NonBoundaryEdges)
                 {
-                    if (overlappedNetVertexNeighbor is BoundaryVertexBuilder overlappedNetVertexBoundaryNeighbor) 
-                        overlappedNetVertexBoundaryNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
-                    else if (overlappedNetVertexNeighbor is NetVertexBuilder overlappedNetVertexNetNeighbor) 
-                        overlappedNetVertexNetNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
-                    overlappedNetVertex.NonBoundaryEdges.Remove(overlappedNetVertexNeighbor);
+                    if (overlappedNetVertexNeighbor == overlappedNetVertex) continue; // TODO: resolve issue with self-pointing edges
+                    if (overlappedNetVertexNeighbor is BoundaryVertexBuilder overlappedNetVertexBoundaryNeighbor)
+                    {
+                        if (!chainVertex.NonBoundaryEdges.ContainsKey(overlappedNetVertexBoundaryNeighbor))
+                        {
+                            chainVertex.NonBoundaryEdges[overlappedNetVertexBoundaryNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes(overlappedNetVertex.Surroundings, linearFeatures);
+                            overlappedNetVertexBoundaryNeighbor.NonBoundaryEdges[chainVertex] = overlappedNetVertexBoundaryNeighbor.NonBoundaryEdges[overlappedNetVertex];
+                        }
+                        overlappedNetVertexBoundaryNeighbor.NonBoundaryEdges.Remove(overlappedNetVertex);
+                    }
+                    else if (overlappedNetVertexNeighbor is NetVertexBuilder overlappedNetVertexNetNeighbor)
+                    {
+                        if (!chainVertex.NonBoundaryEdges.ContainsKey(overlappedNetVertexNetNeighbor))
+                        {
+                            chainVertex.NonBoundaryEdges[overlappedNetVertexNetNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes(overlappedNetVertex.Surroundings, linearFeatures);
+                            overlappedNetVertexNetNeighbor.NonBoundaryEdges[chainVertex] = linearFeatures;
+                        }
+                        overlappedNetVertexNetNeighbor.NonBoundaryEdges.Remove(overlappedNetVertex);
+                    }
                 }
+                overlappedNetVertex.NonBoundaryEdges.Clear();
+            }
         }
+        
+        #endregion
     }
     
 
@@ -1482,7 +2469,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
 
     private class NetVertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes): VertexBuilder(attributes)
     {
-        public HashSet<VertexBuilder> NonBoundaryEdges { get; } = new();
+        public Dictionary<VertexBuilder, (Orienteering_ISOM_2017_2.NaturalLinearObstacles?, Orienteering_ISOM_2017_2.Paths?, Orienteering_ISOM_2017_2.ManMadeLinearObstacles?)> NonBoundaryEdges { get; } = new();
 
         public (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?)
             Surroundings = (null, null, null, null, null, null);
@@ -1490,11 +2477,11 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         public override void ConnectAfterBuild()
         {
             if (BuiltVertex is null) return;
-            foreach (var builder in NonBoundaryEdges)
+            foreach (var (builder, linearFeatures) in NonBoundaryEdges)
             {
                 BuildableVertex? vertex = builder.BuiltVertex;
                 if (vertex is null) continue;
-                BuiltVertex.AddEdge(new (new Orienteering_ISOM_2017_2.EdgeAttributes(Surroundings), vertex));
+                BuiltVertex.AddEdge(new (new Orienteering_ISOM_2017_2.EdgeAttributes(Surroundings, linearFeatures), vertex));
             }
         }
 

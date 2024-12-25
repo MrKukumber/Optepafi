@@ -16,21 +16,17 @@ namespace Optepafi.Models.Utils;
 public record struct MapCoordinates(int XPos, int YPos)
 {
     public static MapCoordinates operator -(MapCoordinates coordinate1, MapCoordinates coordinate2)
-    {
-        return new MapCoordinates(coordinate1.XPos - coordinate2.XPos, coordinate1.YPos - coordinate2.YPos);
-    }
+        => new MapCoordinates(coordinate1.XPos - coordinate2.XPos, coordinate1.YPos - coordinate2.YPos);
     public static MapCoordinates operator +(MapCoordinates coordinate1, MapCoordinates coordinate2)
-    {
-        return new MapCoordinates(coordinate1.XPos + coordinate2.XPos, coordinate1.YPos + coordinate2.YPos);
-    }
+        => new MapCoordinates(coordinate1.XPos + coordinate2.XPos, coordinate1.YPos + coordinate2.YPos);
+    public static MapCoordinates operator /(MapCoordinates coordinate, double scalar)
+        => new MapCoordinates((int)(coordinate.XPos / scalar), (int)(coordinate.YPos / scalar));
     public static MapCoordinates operator *(MapCoordinates coordinate, double scalar)
-    {
-        return new MapCoordinates((int)(coordinate.XPos * scalar), (int)(coordinate.YPos * scalar));
-    }
+        => new MapCoordinates((int)(coordinate.XPos * scalar), (int)(coordinate.YPos * scalar));
     public static MapCoordinates operator *(double scalar, MapCoordinates coordinate)
-    {
-        return new MapCoordinates((int)(coordinate.XPos * scalar), (int)(coordinate.YPos * scalar));
-    }
+        => new MapCoordinates((int)(coordinate.XPos * scalar), (int)(coordinate.YPos * scalar));
+    public static long operator *(MapCoordinates coords1, MapCoordinates coords2)
+        => coords1.XPos * (long)coords2.XPos + coords1.YPos * (long)coords2.YPos;
 
     public double Length() => Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2));
 
@@ -43,6 +39,11 @@ public record struct MapCoordinates(int XPos, int YPos)
         int rotatedTransposedY = (int)(translatedX * Math.Sin(angle) + translatedY * Math.Cos(angle));
         return new MapCoordinates(rotatedTransposedX + center.XPos, rotatedTransposedY + center.YPos);
     }
+
+    public MapCoordinates LeftHandNormalVector()
+        => new MapCoordinates(-YPos, XPos);
+    public MapCoordinates RightHandNormalVector()
+        => new MapCoordinates(YPos, -XPos);
     
     //TODO: comment
     public GeoCoordinates ToGeoCoordinates(GeoCoordinates referencePoint, int scale)
