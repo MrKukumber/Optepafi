@@ -14,7 +14,7 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 /// <typeparam name="TEdge">Type of edges used by graph.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of attributes used in vertices of a graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of attributes used in edges of a graph.</typeparam>
-public interface IPredecessorRemembering<out TVertex, out TEdge> : ISearchable<TVertex, TEdge>
+public interface ISearchablePredecessorRemembering<out TVertex, out TEdge> : ISearchable<TVertex, TEdge>
     where TVertex : IPredecessorRememberingVertex, IEdgesContainingVertex<TEdge>
     where TEdge : IDestVertexContainingEdge<TVertex>
 {

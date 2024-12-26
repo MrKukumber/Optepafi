@@ -10,7 +10,7 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 //TODO: comment + add functionalities
 public interface ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>: 
     ICompleteNetIntertwiningMapRepre,
-    IPredecessorRemembering<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge>,
+    ISearchablePredecessorRemembering<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge>,
     IScaled<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge> 
     where TVertexAttributes: IVertexAttributes
     where TEdgeAttributes: IEdgeAttributes

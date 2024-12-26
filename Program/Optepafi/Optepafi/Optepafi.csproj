@@ -130,7 +130,6 @@
       <Compile Remove="ViewModels\ModelCreating\**" />
       <Compile Remove="Views\ModelCreating\**" />
       <Compile Remove="Models\SearchingAlgorithmMan\Paths\Specific\ClassicColoredPath.cs" />
-      <Compile Remove="Models\SearchingAlgorithmMan\SearchingAlgorithms\Specific\AStar.cs" />
       <Compile Remove="ViewModels\PathFinding\RelevanceFeedbackViewModel.cs" />
       <Compile Remove="Views\PathFinding\RelevanceFeedbackView.axaml.cs" />
       <Compile Update="Views\PathFinding\Windows\PathFindingSessionWindow.axaml.cs">

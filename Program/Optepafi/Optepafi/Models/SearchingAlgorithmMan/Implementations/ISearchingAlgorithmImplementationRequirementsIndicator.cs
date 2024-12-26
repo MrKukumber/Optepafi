@@ -26,9 +26,9 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// This test has to correspond to test provided by <see cref="IsUsableGraph{TVertexAttributes,TEdgeAttributes}"/> method.  
         /// Test is done on no particular vertex-edge attribute types.  
         /// </summary>
-        /// <param name="mapRepreCreator">Representative of graph type whose functionalities are tested.</param>
+        /// <param name="graphRepresentative">Representative of graph type whose functionalities are tested.</param>
         /// <returns>True if all requirements are satisfied. Otherwise, false.</returns>
-        bool DoesRepresentUsableGraph<TVertex, TEdge>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> mapRepreCreator) 
+        bool DoesRepresentUsableGraph<TVertex, TEdge>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRepresentative) 
             where TVertex : IVertex
             where TEdge : IEdge;
     

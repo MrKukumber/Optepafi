@@ -1,15 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
 using System.Threading;
-using Avalonia;
-using DynamicData;
-using DynamicData.Kernel;
-using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.Maps;
@@ -19,10 +12,7 @@ using Optepafi.Models.MapRepreMan.Implementations.Specific.CompleteIterativelySn
 using Optepafi.Models.MapRepreMan.Utils;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.Utils;
-using Optepafi.Models.Utils.Configurations;
 using Optepafi.Models.Utils.Shapes.Segments;
-using Optepafi.ViewModels.Main;
-using Splat.ApplicationPerformanceMonitoring;
 
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.CompleteIterativelySnapping;
 
@@ -548,13 +538,11 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 {
                     from1.BoundaryEdges[to1] = new Orienteering_ISOM_2017_2.EdgeAttributes();
                     to1.BoundaryEdges[from1] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                    //TODO: vyriesit prilis dlhe hrany
                 }
                 if (from2 is not ChainEntanglementTemporaryVertexBuilder && to2 is not ChainEntanglementTemporaryVertexBuilder)
                 {
                     from2.BoundaryEdges[to2] = new Orienteering_ISOM_2017_2.EdgeAttributes();
                     to2.BoundaryEdges[from2] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-                    //TODO: vyriesit prilis dlhe hrany
                 }
             }
             public override bool IsStationary { get; set; } = true;
@@ -1778,6 +1766,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         private enum MagicFor{TwoSegments, SegmentAndRay}
         private static bool ApplyMagicFor(MagicFor what, (int numerator, int denominator) ft, MapCoordinates p1, MapCoordinates p2, (int numerator, int denominator) fu, MapCoordinates q1, MapCoordinates q2, (MapCoordinates prev, MapCoordinates next) sP)
         {
+            // magic:
+            // if vertex q1 or q2 falls under (chain) edge <p1, p2>, it is processed as it felt on the left side of this edge
             if (ft.numerator == 0)
                 if (fu.numerator == 0)
                     if ((p1 - sP.prev).RightHandNormalVector() * (p2 - p1) > 0)
@@ -1797,6 +1787,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                                  !((p1 - sP.prev).RightHandNormalVector() * (q2 - q1) > 0 || (p2 - p1).RightHandNormalVector() * (q2 - q1) > 0)) || 
                                 (!((p1 - sP.prev).RightHandNormalVector() * (q1 - q2) > 0 || (p2 - p1).RightHandNormalVector() * (q1 - q2) > 0) && 
                                   ((p1 - sP.prev).RightHandNormalVector() * (q2 - q1) > 0 || (p2 - p1).RightHandNormalVector() * (q2 - q1) > 0));
+            // if first edge (chain edge) is cut in p2, cut is processed only if the next edge is parallel with [q1,q2] edge
+            // this cut would not be processed in next edge processing, because of parallelism of next edge and edge [q1, q2] 
             if (ft.numerator == ft.denominator)
                 if ((sP.next - p2).LeftHandNormalVector() * (q2 - q1) == 0)
                     if (fu.numerator == 0 )
@@ -2349,8 +2341,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
 
         private static void ResolveAndDisconnectOverlappedGraphVertex(BoundaryVertexBuilder chainVertex, VertexBuilder overlappedVertex)
         {
-            // if overlapped vertex is boundary vertex, we disconnect all of its non boundary edges, and
-            // we add all of its boundary edges to the chain vertex (if the chain vertex does not contain given edge already)
+            // we disconnect all overlapped vertex edges, and we add them to the chain vertex (if the chain vertex does not contain given edge already)
             if (overlappedVertex is BoundaryVertexBuilder overlappedBoundaryVertex)
             {
                 foreach (var (overlappedBoundaryVertexNeighbor, edgeAttributes) in overlappedBoundaryVertex.BoundaryEdges)
@@ -2388,7 +2379,6 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 }
                 overlappedBoundaryVertex.NonBoundaryEdges.Clear();
             }
-            // if overlapped vertex is net vertex, we just disconnect it from other vertices of the graph
             else if (overlappedVertex is NetVertexBuilder overlappedNetVertex)
             {
                 foreach (var (overlappedNetVertexNeighbor, linearFeatures) in overlappedNetVertex.NonBoundaryEdges)

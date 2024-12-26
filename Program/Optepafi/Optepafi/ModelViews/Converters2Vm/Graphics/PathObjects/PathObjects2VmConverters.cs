@@ -17,6 +17,7 @@ public static class PathObjects2VmConverters
     /// </summary>
     public static Dictionary<Type, IGraphicObjects2VmConverter> Converters =
         new Dictionary<Type, IGraphicObjects2VmConverter>()
+            .Concat(SegmentedLinePathObjects2VmConverters.Converters)
             .Concat(SmileyFacePathObjects2VmConverters.Converters)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 }

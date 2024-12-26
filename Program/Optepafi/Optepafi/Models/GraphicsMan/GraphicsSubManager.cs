@@ -6,6 +6,7 @@ using Optepafi.Models.GraphicsMan.Aggregators.Path;
 using Optepafi.Models.GraphicsMan.Aggregators.SearchingState;
 using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;
+using Optepafi.Models.SearchingAlgorithmMan.Paths.Specific;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingStates;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
@@ -40,7 +41,7 @@ public class GraphicsSubManager<TVertexAttributes, TEdgeAttributes>
     /// Collection of aggregators for specific path types. It is searched through when path graphics is to be aggregated.
     /// </summary>
     public IReadOnlySet<IGraphicsAggregator> PathGraphicsAggregators { get; } =
-        ImmutableHashSet.Create<IGraphicsAggregator>(SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance);
+        ImmutableHashSet.Create<IGraphicsAggregator>(SegmentedLinePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance, SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance);
     
     /// <summary>
     /// Collection of aggregators for specific searching state types. It is searched when searching state is to be aggregated.

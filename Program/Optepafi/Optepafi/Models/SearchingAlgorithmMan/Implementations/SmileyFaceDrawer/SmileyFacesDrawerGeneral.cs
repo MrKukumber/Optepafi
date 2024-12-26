@@ -37,10 +37,10 @@ public class SmileyFacesDrawerGeneral : ISearchingAlgorithmImplementation<NullCo
     /// <remarks>
     /// Used graph does not have to provide no special functionality.
     /// </remarks>
-    public bool DoesRepresentUsableGraph<TVertex, TEdge>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> mapRepreCreator) 
+    public bool DoesRepresentUsableGraph<TVertex, TEdge>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRepresentative) 
         where TVertex : IVertex where TEdge : IEdge
     {
-        if (mapRepreCreator is IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge>) 
+        if (graphRepresentative is IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge>) 
             return true;
         return false;
     }

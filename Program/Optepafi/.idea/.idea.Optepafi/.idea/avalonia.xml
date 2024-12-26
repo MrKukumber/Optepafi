@@ -28,6 +28,7 @@
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapRepreObjects/CompleteNetIntertwiningMapRepre/CompleteNetIntertwiningMapRepreObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapRepreObjects/MapRepreObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/PathObjects/PathObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/DataTemplates/Graphics/PathObjects/SegmentedLineObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/PathObjects/SmileyFacePathObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/SearchingReportObjects/SearchingReportObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/SearchingReportObjects/SmileyFaceSearchingReportObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />

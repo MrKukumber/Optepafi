@@ -27,3 +27,7 @@ public interface IPredecessorRememberingVertex : IVertex
 {
     IPredecessorRememberingVertex? Predecessor { get; set; }
 }
+
+public interface IEdgesContainingPredecessorRememberingVertex<TEdge> :
+    IEdgesContainingVertex<TEdge>, IPredecessorRememberingVertex
+    where TEdge : IEdge;
