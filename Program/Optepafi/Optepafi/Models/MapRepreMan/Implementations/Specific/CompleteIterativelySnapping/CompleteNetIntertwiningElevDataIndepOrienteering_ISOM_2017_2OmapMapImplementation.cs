@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Optepafi.Models.MapRepreMan.Configurations;
 using Optepafi.Models.MapRepreMan.Graphs;
+using Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 using Optepafi.Models.MapRepreMan.Graphs.Specific;
 using Optepafi.Models.MapRepreMan.Utils;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
@@ -30,7 +31,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             }
         }
     }
-    public ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex GetVertexFor(MapCoordinates coords)
+    public IBasicEdgeCoupledPredecessorRememberingVertex<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes> GetVertexFor(MapCoordinates coords)
     {
         var nearestVertices = searchableVertices.GetNearestNeighbors((coords.XPos, coords.YPos), 1);
         if (nearestVertices.Length == 0) throw new InvalidDataException("No vertices in graph found."); 

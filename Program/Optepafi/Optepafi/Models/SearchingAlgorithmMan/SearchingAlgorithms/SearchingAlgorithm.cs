@@ -49,11 +49,14 @@ public abstract class SearchingAlgorithm<TConfiguration> : ISearchingAlgorithm w
 
     /// <inheritdoc cref="ISearchingAlgorithm.DefaultConfigurationDeepCopy"/>
     IConfiguration ISearchingAlgorithm.DefaultConfigurationDeepCopy => DefaultConfiguration.DeepCopy();
-    
+
     /// <inheritdoc cref="ISearchingAlgorithm.DoesRepresentUsableGraphUserModelCombination{TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/>
-    public bool DoesRepresentUsableGraphUserModelCombination<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRep, IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) 
+    public bool DoesRepresentUsableGraphUserModelCombination<TVertex, TEdge, TTemplate, TVertexAttributes,
+        TEdgeAttributes>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRep,
+        IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> userModelType)
         where TVertex : IVertex
         where TEdge : IEdge
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertexAttributes : IVertexAttributes 
         where TEdgeAttributes : IEdgeAttributes
     {

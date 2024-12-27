@@ -31,6 +31,7 @@ public class BlankGraphRep<TVertexAttributes, TEdgeAttributes> : GraphRepresenta
     ///<inheritdoc cref="GraphRepresentative{TGraph,TVertex,TEdge}.CreateableImplementationsIndicators"/>
     public override IImplementationIndicator<ITemplate, IMap, IMapRepre>[] CreateableImplementationsIndicators { get; } = [BlankElevDataDepBlankTemplateTextMapImplementationRep.Instance, BlankElevDataIndepBlankTemplateOmapMapImplementationRep.Instance];
 
-    public override bool RevelationForSearchingAlgorithmMan<TUserModelVertexAttributes, TUserModelEdgeAttributes>(SearchingAlgorithmManager searchingAlgorithmMan, IUserModelType<IComputing<ITemplate<TUserModelVertexAttributes, TUserModelEdgeAttributes>, TUserModelVertexAttributes, TUserModelEdgeAttributes>, ITemplate<TUserModelVertexAttributes, TUserModelEdgeAttributes>> userModelType, ISearchingAlgorithm algorithm) => searchingAlgorithmMan.AcceptGraphCreatorsRevelation(this, userModelType, algorithm);
+    public override bool RevelationForSearchingAlgorithmMan<TUserModelTemplate, TUserModelVertexAttributes, TUserModelEdgeAttributes>(SearchingAlgorithmManager searchingAlgorithmMan, IUserModelType<IComputing<TUserModelTemplate, TUserModelVertexAttributes, TUserModelEdgeAttributes>, TUserModelTemplate> userModelType, ISearchingAlgorithm algorithm) 
+        => searchingAlgorithmMan.AcceptGraphCreatorsRevelation(this, userModelType, algorithm);
 
 }

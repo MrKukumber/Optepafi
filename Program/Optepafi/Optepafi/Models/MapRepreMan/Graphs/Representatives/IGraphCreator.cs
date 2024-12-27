@@ -78,10 +78,11 @@ public interface IGraphCreator<out TMapRepre>
         where TEdgeAttributes : IEdgeAttributes;
 
     //TODO: comment
-    bool RevelationForSearchingAlgorithmMan<TVertexAttributes, TEdgeAttributes>(
+    bool RevelationForSearchingAlgorithmMan<TTemplate, TVertexAttributes, TEdgeAttributes>(
         SearchingAlgorithmManager searchingAlgorithmMan, 
-        IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType,
+        IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> userModelType,
         ISearchingAlgorithm algorithm)
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 

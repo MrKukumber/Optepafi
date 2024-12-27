@@ -57,14 +57,16 @@ public interface ISearchingAlgorithm
     /// <param name="userModelType">Represents computing user model type that is checked.</param>
     /// <typeparam name="TVertex">Type of vertices used in tested graph.</typeparam>
     /// <typeparam name="TEdge">Type of edges used in tested graph.</typeparam>
+    /// <typeparam name="TTemplate">Type of template bounded to tested user model type.</typeparam>
     /// <typeparam name="TVertexAttributes">Type of vertex attributes bounded to tested user model type.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes bounded to tested user model type.</typeparam>
     /// <returns>True if any of implementations can use both represented map representation type and user model type. False otherwise</returns>
-    bool DoesRepresentUsableGraphUserModelCombination<TVertex, TEdge,TVertexAttributes, TEdgeAttributes>(
+    bool DoesRepresentUsableGraphUserModelCombination<TVertex, TEdge, TTemplate, TVertexAttributes, TEdgeAttributes>(
         IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRep,
-        IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType)
+        IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> userModelType)
         where TVertex : IVertex
         where TEdge : IEdge
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
 

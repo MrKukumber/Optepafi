@@ -39,10 +39,14 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// Test is done on particular vertex-edge attribute types.  
         /// </summary>
         /// <param name="userModelType">Representative of user model type whose functionalities are tested.</param>
-        /// <typeparam name="TVertexAttributes">Type of vertex attributes used in represented user model type.</typeparam>
-        /// <typeparam name="TEdgeAttributes">Type of edge attributes used in represented user model type.</typeparam>
+        /// <typeparam name="TTemplate">Type of template used in tested user model type</typeparam>
+        /// <typeparam name="TVertexAttributes">Type of vertex attributes used in tested user model type.</typeparam>
+        /// <typeparam name="TEdgeAttributes">Type of edge attributes used in tested user model type.</typeparam>
         /// <returns>True, if all requirements are satisfied. False otherwise.</returns>
-        bool DoesRepresentUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes;
+        bool DoesRepresentUsableUserModel<TTemplate, TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> userModelType) 
+            where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
+            where TVertexAttributes : IVertexAttributes 
+            where TEdgeAttributes : IEdgeAttributes;
     
         /// <summary>
         /// Checks whether provided graphs functionality satisfies implementations requirements.

@@ -49,8 +49,8 @@ public class SmileyFacesDrawerGeneral : ISearchingAlgorithmImplementation<NullCo
     /// <remarks>
     /// Used user model does not have to provide no special functionality.
     /// </remarks>
-    public bool DoesRepresentUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType)
-        where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
+    public bool DoesRepresentUsableUserModel<TTemplate, TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> userModelType)
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         if (userModelType is IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>>)
             return true;

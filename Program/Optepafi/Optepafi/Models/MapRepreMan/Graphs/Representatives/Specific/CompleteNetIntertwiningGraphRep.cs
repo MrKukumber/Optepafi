@@ -22,5 +22,6 @@ public class CompleteNetIntertwiningGraphRep<TVertexAttributes, TEdgeAttributes>
     
     public override IImplementationIndicator<ITemplate, IMap, IMapRepre>[] CreateableImplementationsIndicators { get; } = [CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep.Instance];
 
-    public override bool RevelationForSearchingAlgorithmMan<TUserModelVertexAttributes, TUserModelEdgeAttributes>(SearchingAlgorithmManager searchingAlgorithmMan, IUserModelType<IComputing<ITemplate<TUserModelVertexAttributes, TUserModelEdgeAttributes>, TUserModelVertexAttributes, TUserModelEdgeAttributes>, ITemplate<TUserModelVertexAttributes, TUserModelEdgeAttributes>> userModelType, ISearchingAlgorithm algorithm) => searchingAlgorithmMan.AcceptGraphCreatorsRevelation(this, userModelType, algorithm);
+    public override bool RevelationForSearchingAlgorithmMan<TUserModelTemplate, TUserModelVertexAttributes, TUserModelEdgeAttributes>(SearchingAlgorithmManager searchingAlgorithmMan, IUserModelType<IComputing<TUserModelTemplate, TUserModelVertexAttributes, TUserModelEdgeAttributes>, TUserModelTemplate> userModelType, ISearchingAlgorithm algorithm) 
+        => searchingAlgorithmMan.AcceptGraphCreatorsRevelation(this, userModelType, algorithm);
 }

@@ -5,12 +5,23 @@ using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 
+
+/// <summary>
+/// Represents searchable graph. 
+/// This interface should not be implemented. Its successor <see cref="ISearchable{TVertex,TEdge}"/> should be implemented instead.
+/// </summary>
+public interface ICanBeSearched<out TVertex, out TEdge> : IGraph<TVertex, TEdge> 
+    where TVertex : IVertex
+    where TEdge : IEdge
+{ }
+
+
 /// <summary>
 /// Represents searchable graph. 
 /// </summary>
 /// <typeparam name="TVertex">Type of vertices used by graph.</typeparam>
 /// <typeparam name="TEdge">Type of edges used by graph.</typeparam>
-public interface ISearchable<out TVertex, out TEdge> : IGraph<TVertex, TEdge>
+public interface ISearchable<out TVertex, out TEdge> : ICanBeSearched<TVertex, TEdge>, IGraph<TVertex, TEdge>
     where TVertex : IEdgesContainingVertex<TEdge>
     where TEdge : IDestVertexContainingEdge<TVertex>
 {

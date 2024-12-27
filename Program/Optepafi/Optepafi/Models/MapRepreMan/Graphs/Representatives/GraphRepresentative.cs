@@ -84,10 +84,11 @@ public abstract class GraphRepresentative<TGraph, TVertex, TEdge> :
             "There is no constructor for given template and map which requires elevation data.");
     }
 
-    public abstract bool RevelationForSearchingAlgorithmMan<TVertexAttributes, TEdgeAttributes>(
+    public abstract bool RevelationForSearchingAlgorithmMan<TTemplate, TVertexAttributes, TEdgeAttributes>(
         SearchingAlgorithmManager searchingAlgorithmMan,
-        IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> userModelType,
+        IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> userModelType,
         ISearchingAlgorithm algorithm)
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes;
         

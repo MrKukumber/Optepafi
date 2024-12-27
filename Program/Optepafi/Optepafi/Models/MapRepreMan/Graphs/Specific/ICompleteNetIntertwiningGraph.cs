@@ -10,33 +10,32 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 //TODO: comment + add functionalities
 public interface ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>: 
     ICompleteNetIntertwiningMapRepre,
-    ISearchablePredecessorRemembering<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge>,
+    IPredecessorRemembering<TVertexAttributes, TEdgeAttributes>,
     IScaled<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge> 
     where TVertexAttributes: IVertexAttributes
     where TEdgeAttributes: IEdgeAttributes
 {
 
 
-    public class Vertex(TVertexAttributes attributes, IEnumerable<Edge> outgoingEdges) : 
-        IBasicVertex<Edge, TVertexAttributes>,
-        IPredecessorRememberingVertex
+    public class Vertex(TVertexAttributes attributes, IEnumerable<IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes>> outgoingEdges) : 
+        IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>
     {
-        protected Dictionary<Edge, int?> _outgoingWeightedEdges = outgoingEdges.ToDictionary( edge => edge, _ => (int?) null);
+        protected Dictionary<IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes>, int?> _outgoingWeightedEdges = outgoingEdges.ToDictionary( edge => edge, _ => (int?) null);
         protected TVertexAttributes _attributes = attributes;
         
         public TVertexAttributes Attributes => _attributes;
-        public IEnumerable<Edge> GetEdges() => _outgoingWeightedEdges.Keys;
-        public void SetWeight(int? weight, Edge edge) => _outgoingWeightedEdges[edge] = weight;
-        public int? GetWeight(Edge edge) => _outgoingWeightedEdges[edge];
+        public IEnumerable<IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes>> GetEdges() => _outgoingWeightedEdges.Keys;
+        public void SetWeight(int? weight, IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes> edge) => _outgoingWeightedEdges[edge] = weight;
+        public int? GetWeight(IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes> edge) => _outgoingWeightedEdges[edge];
 
         public IPredecessorRememberingVertex? Predecessor { get; set; }
     }
 
-    public struct Edge(TEdgeAttributes attributes, Vertex destination) : 
-        IBasicEdge<Vertex, TEdgeAttributes>
+    public class Edge(TEdgeAttributes attributes, Vertex destination) : 
+        IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes>
     {
         public TEdgeAttributes Attributes { get; } = attributes;
         
-        public Vertex To { get; } = destination;
+        public IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes> To { get; } = destination;
     }
 }

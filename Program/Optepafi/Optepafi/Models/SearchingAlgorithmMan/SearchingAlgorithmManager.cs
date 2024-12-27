@@ -113,7 +113,7 @@ public class SearchingAlgorithmManager :
     bool ITemplateGenericVisitor<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm) otherParams)
     {
         var (mapRepreRep, userModelType, algorithm) = otherParams;
-        if (userModelType is IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> , ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
+        if (userModelType is IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes> , TTemplate> computingUserModelType)
         {
             var graphCreator = mapRepreRep.GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>();
             graphCreator.RevelationForSearchingAlgorithmMan(this, computingUserModelType, algorithm);
@@ -121,12 +121,13 @@ public class SearchingAlgorithmManager :
         return false;
     }
 
-    public bool AcceptGraphCreatorsRevelation<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(
+    public bool AcceptGraphCreatorsRevelation<TVertex, TEdge, TTemplate, TVertexAttributes, TEdgeAttributes>(
         IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> revealedGraphRep,
-        IUserModelType<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType,
+        IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> computingUserModelType,
         ISearchingAlgorithm algorithm)
         where TVertex : IVertex
         where TEdge : IEdge
+        where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
