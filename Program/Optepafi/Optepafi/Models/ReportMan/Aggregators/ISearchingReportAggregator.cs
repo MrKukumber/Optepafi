@@ -34,5 +34,5 @@ public interface ISearchingReportAggregator<in TSearchingState, TVertexAttribute
     /// <param name="userModel">User model which can be asked for some information extraction.</param>
     /// <param name="cancellationToken">Cancellation token for cancelling aggregation.</param>
     /// <returns>Aggregated searching report.</returns>
-    ISearchingReport AggregateReport(TSearchingState searchingState, IComputing< ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken = null);
+    ISearchingReport AggregateReport(TSearchingState searchingState, IUserModel< ITemplate<TVertexAttributes, TEdgeAttributes>> userModel, CancellationToken? cancellationToken = null);
 }

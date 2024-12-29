@@ -46,7 +46,7 @@ public abstract class ElevDataIndepImplementationRep<TTemplate, TMap, TUsableSub
     where TUsableSubMap : TMap, IMap
     where TGraph : IGraph<TVertex, TEdge>
     where TConfiguration : IConfiguration
-    where TVertex : IAttributeBearingVertex<TVertexAttributes>
+    where TVertex : IAttributesBearingVertex<TVertexAttributes>
     where TEdge : IAttributesBearingEdge<TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes

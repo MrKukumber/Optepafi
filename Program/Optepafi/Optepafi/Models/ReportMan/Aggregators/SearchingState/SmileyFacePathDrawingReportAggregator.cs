@@ -33,7 +33,7 @@ public class SmileyFacePathDrawingReportAggregator<TVertexAttributes, TEdgeAttri
     /// <remarks>
     /// Creates collecting graphic source to which collector graphics of searching state will be collected. Returns report which includes created graphics and indication of most recently drawn object.
     /// </remarks>
-    public ISearchingReport AggregateReport(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, CancellationToken? cancellationToken = null)
+    public ISearchingReport AggregateReport(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel, CancellationToken? cancellationToken = null)
     {
         CollectingGraphicsSource collectingGraphicsSource = new();
         _ = GraphicsSubManager<TVertexAttributes, TEdgeAttributes>.Instance.AggregateSearchingStateGraphics(searchingState,

@@ -35,6 +35,6 @@ public interface ISearchingStateGraphicsAggregator<in TSearchingState, TVertexAt
     /// <param name="collectorForAggregatedObjects">Collector for aggregated graphic objects.</param>
     /// <param name="cancellationToken">Cancellation token for cancelling aggregation.</param>
     public void AggregateGraphics(TSearchingState searchingState,
-        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel,
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken);
 }

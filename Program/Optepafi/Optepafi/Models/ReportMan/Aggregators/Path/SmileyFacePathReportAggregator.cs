@@ -42,8 +42,7 @@ public class SmileyFacePathReportAggregator<TVertexAttributes, TEdgeAttributes> 
     {
         CollectingGraphicsSource collectingGraphicsSource = new();
         var graphicsAggregationTask = Task.Run(() =>
-            GraphicsSubManager<TVertexAttributes, TEdgeAttributes>.Instance.AggregatePathGraphics(path, userModel,
-                collectingGraphicsSource.Collector, cancellationToken));
+            GraphicsSubManager<TVertexAttributes, TEdgeAttributes>.Instance.AggregatePathGraphics(path, userModel, collectingGraphicsSource.Collector, cancellationToken));
         int horizontallySquishedFacesCount = 0;
         int verticallySquishedFacesCount = 0;
         int notSquishedFacesCount = 0;

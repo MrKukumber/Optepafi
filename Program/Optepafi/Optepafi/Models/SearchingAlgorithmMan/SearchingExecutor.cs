@@ -54,16 +54,18 @@ public interface ISearchingExecutor : IDisposable
 /// <typeparam name="TConfiguration">Type of executed algorithms configuration.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of vertex attributes used in vertices of a graph.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes used in edges of a graph.</typeparam>
-public class SearchingExecutor<TConfiguration, TVertexAttributes, TEdgeAttributes> :
+public class SearchingExecutor<TConfiguration, TVertexAttributes, TEdgeAttributes, TVertex, TEdge> :
     ISearchingExecutor
     where TConfiguration : IConfiguration
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
+    where TVertex : IVertex
+    where TEdge : IEdge
 {
     public delegate IPath? AlgorithmSearchingDelegate(
         Leg[] track,
-        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
-        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IGraph<TVertex, TEdge> graph,
+        IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel,
         TConfiguration configuration,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken);
     
@@ -78,12 +80,12 @@ public class SearchingExecutor<TConfiguration, TVertexAttributes, TEdgeAttribute
     private bool _disposed;
     
     private readonly AlgorithmSearchingDelegate _algorithmSearchingDelegate;
-    private readonly IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> _userModel;
-    private readonly IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> _graph;
+    private readonly IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> _userModel;
+    private readonly IGraph<TVertex, TEdge> _graph;
     private readonly TConfiguration _configuration;
     
 
-    public SearchingExecutor(IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel, AlgorithmSearchingDelegate algorithmSearchingDelegate, TConfiguration configuration)
+    public SearchingExecutor(IGraph<TVertex, TEdge> graph, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel, AlgorithmSearchingDelegate algorithmSearchingDelegate, TConfiguration configuration)
     {
         _graph = graph;
         _userModel = userModel;

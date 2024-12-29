@@ -22,5 +22,5 @@ public interface
     /// <param name="from">Origin vertex attributes of computed heuristics.</param>
     /// <param name="to">Destination vertex attributes of computed heuristics.</param>
     /// <returns>Value of heuristics.</returns>
-    int GetWeightFromHeuristics(TVertexAttributes from, TVertexAttributes to);
+    float GetWeightFromHeuristics(TVertexAttributes from, TVertexAttributes to);
 }

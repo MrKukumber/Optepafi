@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.Templates;
-using Optepafi.Models.UserModelMan.UserModelAdjustables;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 
 namespace Optepafi.Models.UserModelMan.UserModels.Specific;
@@ -45,7 +44,7 @@ public class BlankUserModel :
     }
 
     /// <inheritdoc cref="IWeightComputing{TTemplate,TVertexAttributes,TEdgeAttributes}.ComputeWeight"/>
-    public int ComputeWeight(BlankTemplate.VertexAttributes from, BlankTemplate.EdgeAttributes through, BlankTemplate.VertexAttributes to)
+    public float ComputeWeight(BlankTemplate.VertexAttributes from, BlankTemplate.EdgeAttributes through, BlankTemplate.VertexAttributes to)
     {
         return VoidAdjust.Value * 13;
     }
@@ -97,7 +96,7 @@ public class BlankUserModel :
         
         /// <inheritdoc cref="IUserModelAdjustable.ValueUnit"/>
         [JsonIgnore]
-        public string ValueUnit { get; } = "light years"; //TODO: localize
+        public string? Unit { get; } = "light years"; //TODO: localize
         
         /// <summary>
         /// Value of void adjustable.

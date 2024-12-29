@@ -6,6 +6,7 @@ using Optepafi.Models.MapRepreMan.VertecesAndEdges;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
+using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 using Optepafi.Models.Utils;
 
@@ -28,9 +29,11 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// </summary>
         /// <param name="graphRepresentative">Representative of graph type whose functionalities are tested.</param>
         /// <returns>True if all requirements are satisfied. Otherwise, false.</returns>
-        bool DoesRepresentUsableGraph<TVertex, TEdge>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRepresentative) 
+        bool DoesRepresentUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRepresentative) 
             where TVertex : IVertex
-            where TEdge : IEdge;
+            where TEdge : IEdge
+            where TVertexAttributes : IVertexAttributes
+            where TEdgeAttributes : IEdgeAttributes;
     
         /// <summary>
         /// For provided user model type resolves whether represented user model type satisfies implementations functionality requirements.
@@ -54,11 +57,13 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// This test has to correspond to test provided by <see cref="DoesRepresentUsableGraph"/> method.
         /// </summary>
         /// <param name="graph">Graph to be tested for its functionalities.</param>
-        /// <typeparam name="TVertexAttributes">Type of vertex attributes used in vertices of graph.</typeparam>
-        /// <typeparam name="TEdgeAttributes">Type of edge attributes used in edges of graph.</typeparam>
+        /// <typeparam name="TVertex">Type of vertieces used in graph graph.</typeparam>
+        /// <typeparam name="TEdge">Type of edges used in graph.</typeparam>
         /// <returns>True if all requirements are satisfied. Otherwise false.</returns>
-        bool IsUsableGraph<TVertexAttributes, TEdgeAttributes>(
-            IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph)
+        bool IsUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(
+            IGraph<TVertex, TEdge> graph)
+            where TVertex : IVertex
+            where TEdge : IEdge
             where TVertexAttributes : IVertexAttributes
             where TEdgeAttributes : IEdgeAttributes;
     
@@ -72,7 +77,7 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// <typeparam name="TEdgeAttributes">Type of edge attributes used by user model.</typeparam>
         /// <returns>True, if all requirements are satisfied. False otherwise.</returns>
         bool IsUsableUserModel<TVertexAttributes, TEdgeAttributes>(
-            IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
+            IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel)
             where TVertexAttributes : IVertexAttributes
             where TEdgeAttributes : IEdgeAttributes;
     
@@ -86,7 +91,7 @@ public interface ISearchingAlgorithmImplementationRequirementsIndicator
         /// <typeparam name="TEdgeAttributes">Type of edge attributes used by user model.</typeparam>
         /// <returns>True, if all requirements for all user models are satisfied. False otherwise.</returns>
         bool AreUsableUserModels<TVertexAttributes, TEdgeAttributes>(
-            IEnumerable<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> userModels)
+            IEnumerable<IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>> userModels)
             where TVertexAttributes : IVertexAttributes
             where TEdgeAttributes : IEdgeAttributes
         {

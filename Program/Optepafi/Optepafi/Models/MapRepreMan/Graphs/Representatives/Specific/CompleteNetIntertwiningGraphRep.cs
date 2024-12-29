@@ -13,7 +13,8 @@ using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 namespace Optepafi.Models.MapRepreMan.Graphs.Representatives.Specific;
 
 //TODO: comment
-public class CompleteNetIntertwiningGraphRep<TVertexAttributes, TEdgeAttributes> : GraphRepresentative<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge>
+public class CompleteNetIntertwiningGraphRep<TVertexAttributes, TEdgeAttributes> : 
+    GraphRepresentative<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {

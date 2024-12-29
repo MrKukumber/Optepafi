@@ -13,6 +13,7 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModelReps;
+using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Configurations;
@@ -61,30 +62,35 @@ public abstract class SearchingAlgorithm<TConfiguration> : ISearchingAlgorithm w
         where TEdgeAttributes : IEdgeAttributes
     {
         foreach (var implementation in Implementations)
-            if (implementation.DoesRepresentUsableGraph(graphRep) && implementation.DoesRepresentUsableUserModel(userModelType))
+            if (implementation.DoesRepresentUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(graphRep) && implementation.DoesRepresentUsableUserModel(userModelType))
                 return true;
         return false;
     }
 
     /// <inheritdoc cref="ISearchingAlgorithm.ExecuteSearch{TVertexAttributes,TEdgeAttributes}"/>
-    public IPath<TVertexAttributes, TEdgeAttributes>[] ExecuteSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
-        IList<IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>,TVertexAttributes, TEdgeAttributes>> userModels,
+    public IPath<TVertexAttributes, TEdgeAttributes>[] ExecuteSearch<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(Leg[] track,
+        IGraph<TVertex, TEdge> graph,
+        IList<IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>> userModels,
         IConfiguration configuration,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
+        where TVertex : IVertex
+        where TEdge : IEdge
     {
         foreach (var implementation in Implementations)
         {
-            if (implementation is ISearchingAlgorithmImplementation<TConfiguration> impl && implementation.IsUsableGraph(graph) && implementation.AreUsableUserModels(userModels))
+            if (implementation is ISearchingAlgorithmImplementation<TConfiguration> impl && implementation.IsUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(graph) && implementation.AreUsableUserModels(userModels))
             {
                 lock (graph)
                 {
+                    IPath<TVertexAttributes, TEdgeAttributes>[] result;
                     if(configuration is TConfiguration config)
-                        return impl.SearchForPaths(track, graph, userModels, config, progress, cancellationToken);
+                        result = impl.SearchForPaths(track, graph, userModels, config, progress, cancellationToken);
                     //TODO: log wrong configuration type
-                    return impl.SearchForPaths(track, graph, userModels, DefaultConfiguration, progress, cancellationToken);
+                    else result = impl.SearchForPaths(track, graph, userModels, DefaultConfiguration, progress, cancellationToken);
+                    graph.RestoreConsistency();
+                    return result;
                 }
             }
         }
@@ -92,16 +98,18 @@ public abstract class SearchingAlgorithm<TConfiguration> : ISearchingAlgorithm w
     }
 
     /// <inheritdoc cref="ISearchingAlgorithm.GetExecutor{TVertexAttributes,TEdgeAttributes}"/>
-    public ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
-        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
-        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+    public ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(
+        IGraph<TVertex, TEdge> graph,
+        IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel,
         IConfiguration configuration)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
+        where TVertex : IVertex
+        where TEdge : IEdge
     {
         foreach (var implementation in Implementations)
         {
-            if (implementation is ISearchingAlgorithmImplementation<TConfiguration> impl && implementation.IsUsableGraph(graph) && implementation.IsUsableUserModel(userModel))
+            if (implementation is ISearchingAlgorithmImplementation<TConfiguration> impl && implementation.IsUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(graph) && implementation.IsUsableUserModel(userModel))
             {
                 if(configuration is TConfiguration config)
                     return impl.GetExecutor(graph, userModel, config);

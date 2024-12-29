@@ -686,3 +686,16 @@ IMPORTANT!!
 
 - dokonceny predbezny nacrt vytvarania mapovej reprezentacie
 - vytvorena prva metoda pre vytvaranie trojuholnikovej siete
+
+## 26.12
+
+- dokoncena implementacia mapovej reprezentacie
+- mozne buggy - niekedy sa pri malych objektoch objeavia hrany s ich atributmi aj mimo danych objektov - nerozleje sa to do celej mapy - priklad zahorie, SEL = 3000, v lavom dolnom rohu luky
+- poznamky ku implementacii:
+  - rozdelena do 3 casti - spracovanie polygonov, spracovanie ciest a spracovanie liniovych prekazok
+  - spracovanie priechodnych a nepriechodnych polygonov je naraz, zatial tam nechavam aj hrany pri nepriechodnych objektoch ako su budovy, sukromne pozemky, skaly a podobne - pomocou post prunningu by sa mohli hrany takychto objektov odstranit
+  - liniove prekazky su na teraz implementovane tak, ze sa hranam, ktore krizuju len pridaju atributy danej prekazky...nemusi byt 100% koser, pretoze ked je jedna hrana krizovana viacerymi prekazkami, tak sa tam prekazka jedneho typu vyskytne len raz
+  - v rozoznavani priesekov useciek pri spracovavani polygonov je uplatnovana takzvana magia, ktora zarucuje pouzitielnu identifikaciu prisekov tychto liniovych utvarov - teda pokial sa vrchol nachadza priamo pod vrcholom alebo hranou vkladanej hrany noveho objektu, je s nim zaobchadzane tak, ako by bol na lavej strane od danej vkladanej hrany/vrcholu - tym ze zabezpecujem, ze vsetky polygony su pravo-tocive, tak lava strana je vzdy vonkajsia strana hrany polygonu
+    - magiu zabezpecuje jedna funkcia plna linearnej algebry - na prvy pohlad vcelku nezrozumitelna hrstka skalarnych sucinov vsak reprezentuje hrstku vcelku priamociarych myslienok z linearnej algebry
+    - klasicke prieseky sa pocitaju za pomoci bezierovej formy pre usecky - vypocitaju sa parametre t a u, ktore indikuju miesto prekrivu danych dvoch krivie
+  - v kroku 1 spracovania polygonov je riesene krizenie hran jedneho polygonu - teda takzvana zauzlovanost objektov - prekryvy objektov su dostranene

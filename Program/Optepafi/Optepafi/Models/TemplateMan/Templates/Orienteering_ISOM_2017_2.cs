@@ -50,11 +50,11 @@ public class Orienteering_ISOM_2017_2 : ITemplate<Orienteering_ISOM_2017_2.Verte
     public enum VegetationGoodVis {VegetationSlowGoodVis_407 = 1, VegetationWalkGoodVis_409}
     
     // 3 bits
-    public enum NaturalLinearObstacles {EarthBank_104 = 1, EarthWall_105, ErosionGully_107, ImapssableCliff_201, Cliff_202, Trench_215, CrossableWatercourse_304}
+    public enum NaturalLinearObstacles {EarthBank_104 = 1, EarthWall_105, ErosionGully_107, ImpassableCliff_201, Cliff_202, CrossableWatercourse_304, SmallCrossableWatercourse_305}
+    // 4 bits
+    public enum Paths {WideRoad_502 = 1, Road_503, VehicleTrack_504, Footpath_505, SmallFootpath_506, LessDistinctSmallFootpath_507, NarrowRide_508, Stairway_532}
     // 3 bits
-    public enum Paths {WideRoad_502 = 1, Road_503, VehicleTrack_504, Footpath_505, SmallFootpath_506, LessDistinctSmallFootpath_507, NarrowRide_508}
-    // 3 bits
-    public enum ManMadeLinearObstacles {Wall_513 = 1, RuinedWall_514, ImpassableWall_515, Fence_516, ImpassableFence_518, ProminentLineFeature_528, ImpassableProminentLineFeature_529, Stairway_532}
+    public enum ManMadeLinearObstacles {Trench_215 = 1, Wall_513, ImpassableWall_515, Fence_516, ImpassableFence_518, ProminentLineFeature_528, ImpassableProminentLineFeature_529}
 
     public struct VertexAttributes(MapCoordinates position, short elevation = 0) : IVertexAttributes
     {
@@ -89,7 +89,7 @@ public class Orienteering_ISOM_2017_2 : ITemplate<Orienteering_ISOM_2017_2.Verte
                                                                   (int)(secondSurrounding.vegetationAndManMade ?? 0)) << 2) + 
                                                                 (int)(secondSurrounding.vegetationGoodVis ?? 0));
         
-        private readonly ushort _linearFeatures = (ushort)(((((int)(linearFeatures.naturalLinearObstacle ?? 0) << 3) + 
+        private readonly ushort _linearFeatures = (ushort)(((((int)(linearFeatures.naturalLinearObstacle ?? 0) << 4) + 
                                                            (int)(linearFeatures.path ?? 0)) << 3) + 
                                                          (int)(linearFeatures.manMadeLinearObstacle ?? 0));
         public (Grounds? ground, Boulders? boulders, Stones? stones, Water? water, 
@@ -128,8 +128,8 @@ public class Orienteering_ISOM_2017_2 : ITemplate<Orienteering_ISOM_2017_2.Verte
             get
             {
                 ManMadeLinearObstacles? manMadeLinearObstacles = (_linearFeatures & 0b111) != 0 ? (ManMadeLinearObstacles?)(_linearFeatures & 0b111) : null;
-                Paths? paths = ((_linearFeatures >> 3) & 0b111) != 0 ? (Paths?)((_linearFeatures >> 3) & 0b111) : null;
-                NaturalLinearObstacles? naturalLinearObstacle = ((_linearFeatures >> 6) & 0b111) != 0 ? (NaturalLinearObstacles?)((_linearFeatures >> 6) & 0b111) : null;
+                Paths? paths = ((_linearFeatures >> 3) & 0b1111) != 0 ? (Paths?)((_linearFeatures >> 3) & 0b1111) : null;
+                NaturalLinearObstacles? naturalLinearObstacle = ((_linearFeatures >> 7) & 0b111) != 0 ? (NaturalLinearObstacles?)((_linearFeatures >> 7) & 0b111) : null;
                 return (naturalLinearObstacle, paths, manMadeLinearObstacles);
             }
         }

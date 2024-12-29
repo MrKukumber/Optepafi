@@ -41,7 +41,7 @@ public class GraphicsSubManager<TVertexAttributes, TEdgeAttributes>
     /// Collection of aggregators for specific path types. It is searched through when path graphics is to be aggregated.
     /// </summary>
     public IReadOnlySet<IGraphicsAggregator> PathGraphicsAggregators { get; } =
-        ImmutableHashSet.Create<IGraphicsAggregator>(SegmentedLinePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance, SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance);
+        ImmutableHashSet.Create<IGraphicsAggregator>(SegmentedLinesPathGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance, SmileyFacePathGraphicsAggregator<TVertexAttributes, TEdgeAttributes>.Instance);
     
     /// <summary>
     /// Collection of aggregators for specific searching state types. It is searched when searching state is to be aggregated.
@@ -96,7 +96,7 @@ public class GraphicsSubManager<TVertexAttributes, TEdgeAttributes>
     /// <typeparam name="TSearchingState">Type of searching state which graphics is to be aggregated. It is used for appropriate aggregator searching.</typeparam>
     /// <returns>Result of aggregation.</returns>
     public AggregationResult AggregateSearchingStateGraphics<TSearchingState>(TSearchingState searchingState,
-        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+        IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel,
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken = null)
         where TSearchingState : ISearchingState<TVertexAttributes, TEdgeAttributes>
     {

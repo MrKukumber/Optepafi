@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Optepafi.Models.MapRepreMan.Graphs.Functionalities;
@@ -10,32 +11,45 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
 //TODO: comment + add functionalities
 public interface ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>: 
     ICompleteNetIntertwiningMapRepre,
-    IPredecessorRemembering<TVertexAttributes, TEdgeAttributes>,
-    IScaled<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge> 
+    IPredecessorRemembering<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge, TVertexAttributes, TEdgeAttributes>,
+    IScaled<ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<TVertexAttributes, TEdgeAttributes>.Edge>
     where TVertexAttributes: IVertexAttributes
     where TEdgeAttributes: IEdgeAttributes
 {
 
 
-    public class Vertex(TVertexAttributes attributes, IEnumerable<IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes>> outgoingEdges) : 
-        IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes>
+    public class Vertex(TVertexAttributes attributes, IEnumerable<Edge> outgoingEdges) : 
+        IBasicVertex<Edge, TVertexAttributes>,
+        IPredecessorRememberingVertex<TVertexAttributes>
     {
-        protected Dictionary<IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes>, int?> _outgoingWeightedEdges = outgoingEdges.ToDictionary( edge => edge, _ => (int?) null);
+        protected Dictionary<Edge, float> _outgoingWeightedEdges = outgoingEdges.ToDictionary( edge => edge, _ => float.NaN);
         protected TVertexAttributes _attributes = attributes;
         
         public TVertexAttributes Attributes => _attributes;
-        public IEnumerable<IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes>> GetEdges() => _outgoingWeightedEdges.Keys;
-        public void SetWeight(int? weight, IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes> edge) => _outgoingWeightedEdges[edge] = weight;
-        public int? GetWeight(IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes> edge) => _outgoingWeightedEdges[edge];
+        public IEnumerable<Edge> GetEdges() => _outgoingWeightedEdges.Keys;
+        public void SetWeight(float weight, Edge edge) => _outgoingWeightedEdges[edge] = weight;
 
-        public IPredecessorRememberingVertex? Predecessor { get; set; }
+        public bool TryGetWeight(Edge edge, out float weight)
+        {
+            if (!_outgoingWeightedEdges.ContainsKey(edge))
+            {
+                weight = float.NaN;
+                return false;
+            }
+            weight = _outgoingWeightedEdges[edge];
+            return _outgoingWeightedEdges[edge] is not float.NaN;
+        }
+
+        public IPredecessorRememberingVertex<TVertexAttributes>? Predecessor { get; set; }
     }
 
-    public class Edge(TEdgeAttributes attributes, Vertex destination) : 
-        IPredecessorRememberingVertexCoupledBasicEdge<TEdgeAttributes, TVertexAttributes>
+    // TODO: podivne chovanie, ked to bola struktura - ked som chcel priradit CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation
+    // do Graph<IVertex, IEdge> tak to neslo prave preto, ze Edge bola struktura
+public class Edge(TEdgeAttributes attributes, Vertex destination) : 
+        IBasicEdge<Vertex, TEdgeAttributes>
     {
         public TEdgeAttributes Attributes { get; } = attributes;
         
-        public IBasicEdgeCoupledPredecessorRememberingVertex<TVertexAttributes, TEdgeAttributes> To { get; } = destination;
+        public Vertex To { get; } = destination;
     }
 }

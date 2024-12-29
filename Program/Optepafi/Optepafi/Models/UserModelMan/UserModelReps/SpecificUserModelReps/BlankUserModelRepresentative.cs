@@ -56,6 +56,7 @@ public class BlankUserModelRepresentative : UserModelRepresentative<BlankUserMod
         if (deserUserModel is not null)
         {
             deserUserModel.FilePath = serializationWithPath.Item2;
+            ChangeConfiguration(deserUserModel, configuration);
             result = UserModelManager.UserModelLoadResult.Ok;
         }
         else 

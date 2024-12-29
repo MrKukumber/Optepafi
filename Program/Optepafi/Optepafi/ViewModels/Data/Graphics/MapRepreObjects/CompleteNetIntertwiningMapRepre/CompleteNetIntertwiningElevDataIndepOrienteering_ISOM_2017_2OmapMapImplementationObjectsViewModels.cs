@@ -99,10 +99,10 @@ public class EdgeObjectViewModel : GraphicObjectViewModel
             Orienteering_ISOM_2017_2.NaturalLinearObstacles.EarthBank_104 => Colors.Chocolate,
             Orienteering_ISOM_2017_2.NaturalLinearObstacles.EarthWall_105 => Colors.Chocolate,
             Orienteering_ISOM_2017_2.NaturalLinearObstacles.ErosionGully_107 => Colors.Chocolate,
-            Orienteering_ISOM_2017_2.NaturalLinearObstacles.ImapssableCliff_201 => Colors.Black,
+            Orienteering_ISOM_2017_2.NaturalLinearObstacles.ImpassableCliff_201 => Colors.Black,
             Orienteering_ISOM_2017_2.NaturalLinearObstacles.Cliff_202 => Colors.Black,
-            Orienteering_ISOM_2017_2.NaturalLinearObstacles.Trench_215 => Colors.Black,
             Orienteering_ISOM_2017_2.NaturalLinearObstacles.CrossableWatercourse_304 => Colors.DodgerBlue,
+            Orienteering_ISOM_2017_2.NaturalLinearObstacles.SmallCrossableWatercourse_305 => Colors.DodgerBlue,
             null => Colors.Transparent
         };
 

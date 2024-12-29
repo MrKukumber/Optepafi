@@ -30,7 +30,7 @@ public class SmileyFacePathDrawingStateGraphicsAggregator<TVertexAttributes, TEd
     /// <c>SmileyFacePathDrawingState</c> provides information about which parts of drawing were already drawn.  
     /// Aggregator will create graphic object for each such part and submit it into collector.   
     /// </remarks>
-    public void AggregateGraphics(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+    public void AggregateGraphics(SmileyFacePathDrawingState<TVertexAttributes, TEdgeAttributes> searchingState, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel,
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
         foreach (var ((legStart, legFinish), smileyFaceObjects) in searchingState.DrawnObjects)

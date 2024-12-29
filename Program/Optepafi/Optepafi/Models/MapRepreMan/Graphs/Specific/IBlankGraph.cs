@@ -18,7 +18,7 @@ public interface IBlankGraph<TVertexAttributes, TEdgeAttributes> :
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    public class Vertex(TVertexAttributes vertexAttributes) : IAttributeBearingVertex<TVertexAttributes>
+    public class Vertex(TVertexAttributes vertexAttributes) : IAttributesBearingVertex<TVertexAttributes>
     {
         public TVertexAttributes Attributes { get; } = vertexAttributes;
     }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Optepafi.Models.UserModelMan.UserModelAdjustables;
 
 namespace Optepafi.Models.UserModelMan.UserModels.Functionalities;
 

@@ -122,7 +122,7 @@ public class IntValueConfigItem(string name, int value, string? unit) : IConfigI
 /// <param name="unit">Unit of values in this config. item.</param>
 public class FloatValueConfigItem(string name, float value, string? unit) : IConfigItem
 {
-     public string Name => name;
+    public string Name => name;
     public float Value { get; set; } = value;
     public string? Unit => unit;
         

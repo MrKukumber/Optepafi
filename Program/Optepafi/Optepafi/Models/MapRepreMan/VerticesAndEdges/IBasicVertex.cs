@@ -23,7 +23,7 @@ public interface IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes
 /// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
 public interface IBasicVertex<TEdge, out TVertexAttributes> :
     IEdgesContainingVertex<TEdge>,
-    IAttributeBearingVertex<TVertexAttributes>
+    IAttributesBearingVertex<TVertexAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdge : IEdge;
 
@@ -47,21 +47,21 @@ public interface IEdgesContainingVertex<TEdge> : IVertex
     /// </summary>
     /// <param name="weight">Weight to be set for edge.</param>
     /// <param name="edge">Edge the weight is going to be set for.</param>
-    void SetWeight(int? weight, TEdge edge);
+    void SetWeight(float weight, TEdge edge);
     
     /// <summary>
     /// Method for getting the weight of some edge. If edges wight is not computed yet or it is not present in vertex, returns null.
     /// </summary>
     /// <param name="edge">Edge which weight is proposed.</param>
-    /// <returns>Weight of given edge. Null, if given edges weight is not computed yet or it is not present in vertex.</returns>
-    int? GetWeight(TEdge edge);
+    /// <returns>Weight of given edge. Float.Nan, if given edges weight is not computed yet or it is not present in vertex.</returns>
+    bool TryGetWeight(TEdge edge, out float weight);
 }
 
 /// <summary>
 /// Vertex that can bear some attributes of defined type.
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
-public interface IAttributeBearingVertex<out TVertexAttributes> : IVertex
+public interface IAttributesBearingVertex<out TVertexAttributes> : IVertex
     where TVertexAttributes : IVertexAttributes
 {
     TVertexAttributes Attributes { get; }

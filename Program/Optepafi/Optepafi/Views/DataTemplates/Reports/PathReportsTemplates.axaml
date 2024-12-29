@@ -12,5 +12,7 @@
                            IsVisible="{Binding NotSquishedFacesCountInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
             </StackPanel>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type prVm:SegmentedLinesPathReportViewModel}">
+        </DataTemplate>
     </DataTemplates>
 </ResourceDictionary>

@@ -37,7 +37,7 @@ public class ReportSubManager<TVertexAttributes, TEdgeAttributes>
     /// Collection of aggregators for specific path types. It is searched through when path report is to be aggregated.
     /// </summary>
     public ISet<IReportAggregator> PathReportAggregators { get; } =
-        ImmutableHashSet.Create<IReportAggregator>(SmileyFacePathReportAggregator<TVertexAttributes,TEdgeAttributes>.Instance);
+        ImmutableHashSet.Create<IReportAggregator>(SegmentedLinesPathReportAggregator<TVertexAttributes, TEdgeAttributes>.Instance, SmileyFacePathReportAggregator<TVertexAttributes,TEdgeAttributes>.Instance);
 
     /// <summary>
     /// Collection of aggregators for specific searching state types. It is searched through when searching state report is to be aggregated.
@@ -85,7 +85,7 @@ public class ReportSubManager<TVertexAttributes, TEdgeAttributes>
     /// <typeparam name="TSearchingState">Type of searching state which report is to be aggregated. It is used for finding appropriate aggregator.</typeparam>
     /// <returns>Aggregated searching state report. Null, if no suitable aggregator is found.</returns>
     public ISearchingReport? AggregateSearchingReport<TSearchingState>(
-        TSearchingState searchingState, IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel)
+        TSearchingState searchingState, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel)
         where TSearchingState : ISearchingState<TVertexAttributes, TEdgeAttributes> 
     {
         foreach (var searchingReportAggregator in SearchingReportAggregators)

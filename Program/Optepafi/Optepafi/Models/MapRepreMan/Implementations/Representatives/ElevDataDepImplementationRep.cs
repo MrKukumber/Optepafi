@@ -27,7 +27,7 @@ public abstract class ElevDataDepImplementationRep<TTemplate, TMap, TUsableSubMa
     where TUsableSubMap : TMap, IGeoLocatedMap
     where TGraph : IGraph<TVertex, TEdge>
     where TConfiguration : IConfiguration
-    where TVertex : IAttributeBearingVertex<TVertexAttributes>
+    where TVertex : IAttributesBearingVertex<TVertexAttributes>
     where TEdge : IAttributesBearingEdge<TEdgeAttributes>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes

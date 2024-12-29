@@ -44,7 +44,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             CancellationToken? cancellationToken)
         {
             List<NetVertexBuilder> netVertices = CreateNet(map, configuration);
-            if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
+            if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
             
             IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders = new RadiallySearchableKdTree<VertexBuilder>(netVertices, vb => (vb.Position.XPos, vb.Position.YPos));
             int allObjectsCount = 0;
@@ -69,8 +69,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
                         // if (processedObjectsCount == debugLimit) // for debugging
                             ProcessCrossablePolygonalObject(obj, polygonalSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount / 100) == 0 && progress is not null) progress.Report( new MapRepreConstructionReport(processedObjectsCount / (float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation( new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph< Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
+                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount / 100) == 0 && progress is not null) progress.Report( new MapRepreConstructionReport(processedObjectsCount / (float)allObjectsCount * 100));
+                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation( new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             }
             foreach (var pathSymbolCode in OrderedPathsSymbolsCodes)
@@ -83,8 +83,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
                         // if (processedObjectsCount == debugLimit) // for debugging
                             ProcessPathObject(obj, pathSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount/100) == 0  && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
+                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount/100) == 0  && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
+                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             }
             foreach (var linearObstacleSymbolCode in OrderedLinearObstacleSymbolsCodes)
@@ -95,10 +95,10 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
                         // if (processedObjectsCount == debugLimit) // for debugging
                             ProcessLinearObstacleObject(obj, linearObstacleSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount/100) == 0 && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
+                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount/100) == 0 && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
+                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
-            RadiallySearchableKdTree<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> vertices = new (vertexBuilders.Select(vb => vb.Build()), v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos));
+            RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex> vertices = new (vertexBuilders.Select(vb => vb.Build()), v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos));
             foreach (var vertexBuilder in vertexBuilders) vertexBuilder.ConnectAfterBuild(); 
             return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(vertices, map.Scale);
         }
@@ -117,7 +117,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         
         private List<decimal> OrderedLinearObstacleSymbolsCodes =
         [
-            104, 105, 107, 304, 201, 201.3m, 202, 202.2m, 215, 513, 515, 516, 518, 528, 529
+            104, 105, 107, 305, 304, 201, 201.3m, 202, 202.2m, 215, 513, 515, 516, 518, 528, 529
         ];
 
         private List<NetVertexBuilder> CreateNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration) 
@@ -275,7 +275,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             LinearObstaclesProcessing.SetLinearObstacleAttributesToAllCrossedEdges(verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges, symbolCode);
         }
     }
-
+    
     private static class PolygonalObjectsProcessing
     {
         #region 0 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -2023,14 +2023,15 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 504 => (null, Orienteering_ISOM_2017_2.Paths.VehicleTrack_504, null),
                 503 => (null, Orienteering_ISOM_2017_2.Paths.Road_503, null),
                 502 or 502.2m =>  (null, Orienteering_ISOM_2017_2.Paths.WideRoad_502, null),
-                532 => (null, null, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.Stairway_532),
+                532 => (null, Orienteering_ISOM_2017_2.Paths.Stairway_532,null),
                 104 or 104.2m => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.EarthBank_104, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
                 105 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.EarthWall_105, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
                 107 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.ErosionGully_107, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                305 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.SmallCrossableWatercourse_305, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
                 304 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.CrossableWatercourse_304, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
-                201 or 201.3m => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.ImapssableCliff_201, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                201 or 201.3m => (ImapssableCliff_201: Orienteering_ISOM_2017_2.NaturalLinearObstacles.ImpassableCliff_201, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
                 202 or 202.2m => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.Cliff_202, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
-                215 => (Orienteering_ISOM_2017_2.NaturalLinearObstacles.Trench_215, linearFeaturs.path, linearFeaturs.manMadeLinearObstacle),
+                215 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.Trench_215),
                 513 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.Wall_513),   
                 515 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.ImpassableWall_515),   
                 516 => (linearFeaturs.naturalLinearObstacle, linearFeaturs.path, Orienteering_ISOM_2017_2.ManMadeLinearObstacles.Fence_516),     
@@ -2478,11 +2479,13 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         public override bool IsStationary { get; set;} = false;
     }
 
-    private class BuildableVertex : ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex
+    private class BuildableVertex : CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex
     {
         public BuildableVertex(Orienteering_ISOM_2017_2.VertexAttributes attributes) : base(attributes, new List<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge>()) { }
-        public void AddEdge(ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge) 
-            => _outgoingWeightedEdges[edge] = null;
+        public override void AddEdge(ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge) 
+            => _outgoingWeightedEdges[edge] = float.NaN;
+        public override void RemoveEdge(ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge)
+            => _outgoingWeightedEdges.Remove(edge);
     }
 
 }

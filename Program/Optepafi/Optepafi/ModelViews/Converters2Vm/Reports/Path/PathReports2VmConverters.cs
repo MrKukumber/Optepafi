@@ -21,7 +21,8 @@ public static class PathReports2VmConverters
     /// </summary>
     public static Dictionary<Type, IPathReport2VmConverter> Converters { get; } = new()
     {
-        [typeof(SmileyFacePathReport)] = SmileyFacePathReport2VmConverter.Instance
+        [typeof(SmileyFacePathReport)] = SmileyFacePathReport2VmConverter.Instance,
+        [typeof(SegmentedLinesPathReport)] = SegmentedLinesPathReport2VmConverter.Instance
     };
 }
 
@@ -56,5 +57,17 @@ public class SmileyFacePathReport2VmConverter : IPathReport2VmConverter<SmileyFa
                     : $"There are {pathReport.NotSquishedFacesCount} normally looking smiley faces." ; //TODO: Localize 
 
         return new SmileyFacePathReportViewModel(pathGraphicsSourceViewModel, horizontallySquishedFacesCountInfo, verticallySquishedFacesCountInfo, notSquishedFacesCountInfo);
+    }
+}
+
+//TODO: comment
+public class SegmentedLinesPathReport2VmConverter : IPathReport2VmConverter<SegmentedLinesPathReport>
+{
+    public static SegmentedLinesPathReport2VmConverter Instance { get; } = new();
+    private SegmentedLinesPathReport2VmConverter () { }
+    public PathReportViewModel ConvertToViewModel(SegmentedLinesPathReport pathReport, IGroundGraphicsSource relatedMapGraphics)
+    {
+        GraphicsSourceViewModel pathGraphicsSourceViewModel = new GraphicsSourceViewModel(pathReport.PathGraphics, relatedMapGraphics);
+        return new SegmentedLinesPathReportViewModel(pathGraphicsSourceViewModel);
     }
 }

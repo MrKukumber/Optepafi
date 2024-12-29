@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:poVm="clr-namespace:Optepafi.ViewModels.Data.Graphics.PathObjects">
+    <DataTemplates x:Key="SegmentedLineObjectsTemplates">
+        <DataTemplate DataType="{x:Type poVm:SegmentedLineObjectViewModel}">
+            <Path Stroke="Red"
+                  Opacity="{Binding Opacity}"
+                  StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}"
+                  Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+    </DataTemplates>
+</ResourceDictionary>

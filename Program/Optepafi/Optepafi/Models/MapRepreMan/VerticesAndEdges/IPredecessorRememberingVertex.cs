@@ -23,7 +23,8 @@ namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
 /// </summary>
 /// <typeparam name="TEdge">Type of hold edges originating in this vertex.</typeparam>
 /// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
-public interface IPredecessorRememberingVertex : IVertex
+public interface IPredecessorRememberingVertex<TVertexAttributes> : IAttributesBearingVertex<TVertexAttributes>
+    where TVertexAttributes : IVertexAttributes
 {
-    IPredecessorRememberingVertex? Predecessor { get; set; }
+    IPredecessorRememberingVertex<TVertexAttributes>? Predecessor { get; set; }
 }

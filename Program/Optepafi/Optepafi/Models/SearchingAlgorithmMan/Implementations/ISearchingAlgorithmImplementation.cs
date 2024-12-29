@@ -8,6 +8,7 @@ using Optepafi.Models.SearchingAlgorithmMan.Paths;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
+using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Configurations;
@@ -38,13 +39,15 @@ public interface ISearchingAlgorithmImplementation<in TConfiguration> : ISearchi
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <returns>Collection of resulting found paths. Merged paths for legs of track are returned in order of corresponding user models.</returns>
-    IPath<TVertexAttributes, TEdgeAttributes>[] SearchForPaths<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
-        IList<IComputing<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>> userModels,
+    IPath<TVertexAttributes, TEdgeAttributes>[] SearchForPaths<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(
+        Leg[] track, IGraph<TVertex, TEdge> graph,
+        IList<IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>> userModels,
         TConfiguration configuration,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
-        where TEdgeAttributes : IEdgeAttributes;
+        where TEdgeAttributes : IEdgeAttributes
+        where TVertex : IVertex
+        where TEdge : IEdge;
 
     /// <summary>
     /// Method for retrieving searching algorithm executor of this implementation.
@@ -57,14 +60,16 @@ public interface ISearchingAlgorithmImplementation<in TConfiguration> : ISearchi
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They  are used for retrieving weights of edges from user models.</typeparam>
     /// <returns>Executor of this implementation.</returns>
-    ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes>(
-        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
-        IComputing<ITemplate<TVertexAttributes,TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+    ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(
+        IGraph<TVertex, TEdge> graph,
+        IUserModel<ITemplate<TVertexAttributes,TEdgeAttributes>> userModel,
         TConfiguration configuration)
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
+        where TVertex : IVertex
+        where TEdge : IEdge
     {
-        return new SearchingExecutor<TConfiguration, TVertexAttributes, TEdgeAttributes>(graph, userModel, ExecutorSearch, configuration);
+        return new SearchingExecutor<TConfiguration, TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(graph, userModel, ExecutorSearch, configuration);
     }
 
     /// <summary>
@@ -83,13 +88,15 @@ public interface ISearchingAlgorithmImplementation<in TConfiguration> : ISearchi
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user model.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They are used for retrieving weights of edges from user model.</typeparam>
     /// <returns>Merged paths for legs of track.</returns>
-    protected IPath<TVertexAttributes, TEdgeAttributes> ExecutorSearch<TVertexAttributes, TEdgeAttributes>(Leg[] track,
-        IGraph<IAttributeBearingVertex<TVertexAttributes>, IAttributesBearingEdge<TEdgeAttributes>> graph,
-        IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> userModel,
+    protected IPath<TVertexAttributes, TEdgeAttributes> ExecutorSearch<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(Leg[] track,
+        IGraph<TVertex, TEdge> graph,
+        IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel,
         TConfiguration configuration,
         IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken)
         where TVertexAttributes : IVertexAttributes
-        where TEdgeAttributes : IEdgeAttributes;
+        where TEdgeAttributes : IEdgeAttributes
+        where TVertex : IVertex
+        where TEdge : IEdge;
 
 
 }
