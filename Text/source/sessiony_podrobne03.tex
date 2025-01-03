@@ -1,4 +1,4 @@
-\chaper{Vertikálna štruktúra aplikácie}
+\chapter{Vertikálna štruktúra aplikácie}
 
 V~tejto kapitole uvádzame bližší pohľad na~súčasnú podobu hlavného okna a~session-ov aplikácie. Aktuálne aplikácia disponuje len jedným typom session-u určeným pre~samotné vyhľadávanie ciest v~mapách (\textit{Path finding session}). Viac informácií o~vertikálnej štruktúre aplikácie je možné nájsť v~Sekcii~\ref{sessions_hlavne_okno}.
 
@@ -28,13 +28,13 @@ Možné vylepšenie tejto časti by mohlo zahrňovať vypísanie všetkých aktu
 
 Hlavné nastavenia sú druhou časťou hlavného okna. Zabezpečujú možnosť pre~užívateľa nastaviť parametre, ktoré~sú využívané celou aplikáciou. 
 
-V~aktuálnom stave sú to len dve možnosti konfigurácie: možnosť zmeny lokalizácie aplikácie a~možnosť nastavenia implicitne používaného zdroja výškových dát (presnejšie konkrétnej distribúcie výškových dát daného zdroja). 
+V~aktuálnom stave sú to tri možnosti konfigurácie: možnosť zmeny lokalizácie aplikácie, možnosť konfigurácie typov užívateľských modelov, vytvárania mapových reprezentácií alebo vyhľadávacích algoritmov a~možnosť nastavenia implicitne používaného zdroja výškových dát (presnejšie konkrétnej distribúcie výškových dát daného zdroja). 
 
-Lokalizácia je implementovaná na~základe lokalizačných .resx zdrojových súborov. Avalonia je schopná takéto zdroje využívať aj~na~zmenu pevných nápisov aplikácie. %Ak nestihnem prelozit aplikaciu, tak to tu spomenut...ze z~casovych dovodov
+Lokalizácia je implementovaná na~základe lokalizačných .resx zdrojových súborov. Avalonia je schopná takéto zdroje využívať aj~na~zmenu pevných nápisov aplikácie.
+
+Pre~konfiguráciu konkrétneho typu užívateľského modelu, mapovej reprezentácie či~vyhľadávacieho algoritmu užívateľ vyberie odpovedajúcu položku v~stromovej štruktúre konfigurácií a~na~spodu okna sa zobrazia možné konfiguráčné položky, ktorými~môže užívateľ nastaviť správanie daného objektu.
 
 Zdroj výškových dát je nastavovaný za~pomoci interakcie s~mechanizmom konfigurácie výškových dát. Po~stlačení príslušného tlačidla sa v~hlavnom okne zobrazí view zodpovedajúci tomuto mechanizmu. Užívateľ si v~ňom môže vybrať, ktorú distribúciu dát chce implicitne v~aplikácii využívať. Viac informácií ohľadom konfigurácie výškových dat nájdete v~následujúcej podsekcii.
-
-Do budúcna sa počíta s~rozšírením hlavných nastavení do~takej miery, aby~sa z~nich dali konfigurovať aj~rôzne preferencie vo~vrstve Model. Pre~toto rozšírenie by sa však museli upraviť oblasti vrstvy Model, aby~tieto konfigurácie dokázali prijímať.
 
 \subsection{Konfigurácia výškových dát}\label{konfiguracia_vyskovych_dat}
 
@@ -84,7 +84,7 @@ Vyhľadávanie ciest v~mapách je hlavnou náplňou aplikácie. V~tejto sekcii p
 \end{itemize} 
 V~aktuálnej podobe sa mechanizmus vyhľadávania cesty skladá z~troch častí: 
 \begin{itemize}
-    \item Nastavenie parametrov hľadania cesty (template, mapa, užívateľský model a~vyhľadávací algoritmus).
+    \item Nastavenie parametrov hľadania cesty (template, mapa, užívateľský model, mapová reprezentácia a~vyhľadávací algoritmus).
     \item Vytvorenie mapovej reprezentácie na~základe vybranej mapy a~template-u. Prípadne za~pomoci prítomných výškových dát. Táto časť je navrhnutá pre~použitie v~interakcii. Interakciu iniciuje časť nastavovania parametrov. 
     \item Spúšťanie zvoleného vyhľadávacieho algoritmu na~vytvorenej mapovej reprezentácii za~využitia výpočtov vybraného užívateľského modelu. Zahrňuje prijímanie trate od užívateľa a~vykreslovanie nájdenej cesty.
 \end{itemize} 
@@ -108,12 +108,13 @@ Na začiatku sa predvolia parametre na~tie, ktoré~boli použité v~predchádzaj
 
 Vyberanie parametrov sa musí riadiť istými pravidlami z~dôvodu závislostí jednotlivých typov objektov, popísaných v~podsekciách Sekcie~\ref{Aspekty_hladania}. Danými pravidlami sú:
 \begin{itemize}
-    \item Jednotlivé parametre sa nastavujú postupne. Najprv je nutné, aby~bol vybraný mapový súbor a~template. Následne môže byť vybraný aj~súbor s~užívateľským modelom. Keď sú všetky tri predchádzajúce položky vybrané, je možné vybrať vyhľadávací algoritmus. 
+    \item Jednotlivé parametre sa nastavujú postupne. Najprv je nutné, aby~bol vybraný mapový súbor a~template. Následne môže byť vybraný aj~súbor s~užívateľským modelom a~typ mapovej reprezentácie. Keď sú všetky štyri predchádzajúce položky vybrané, je možné vybrať vyhľadávací algoritmus. 
     \item Pre~zvolenú kombináciu template-u a~formátu mapového súboru musí existovať mapová reprezentácia, ktorá túto kombináciu dokáže spracovať. Taktiež pre~zvolený template musí existovať typ užívateľského modelu, ktorý~dokáže spracovávať atribúty definované týmto template-om. Nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a~užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácia ľubovoľného vyhľadávacieho algoritmu.   
     
     Keď je vybraný buď template alebo~mapový súbor a~výber druhej položky by spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje. Možným vylepšením by bolo zabezpečenie indikácie platných kombinácií template-ov a~formátov mapových súborov.
-    \item Súbor s~užívateľským modelom môže byť vybraný len takého typu, ktorý~dokáže spracovávať atribúty definované zvoleným template-om a~ktorý spolu s~ľubovoľnou mapovou reprezentáciou, ktorá dokáže spracovať aktuálne zvolenú kombináciu template-u a~mapového formátu, je použiteľnou kombináciou pre~aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu. 
-    \item Vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý~dokáže využiť vybraný užívateľský model a~niektorú mapovú reprezentáciu, ktorú je možné vytvoriť z~vybraného template-u a~mapového súboru.
+    \item Súbor s~užívateľským modelom môže byť vybraný len takého typu, ktorý~dokáže spracovávať atribúty definované zvoleným template-om a~ktorý spolu s~vybranou mapovou reprezentáciou je použiteľnou kombináciou pre~aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu. 
+    \item Vybraný typ mapovej reprezentácie musí obsahovať implementáciu, ktorá dokáže spracovať dvojicu vybraného template-u a formát vybranej mapy. Zároveň s vybraným užívateľským modelom musia tvoriť kombináciu, ktorú dokáže využiť aspoň jedna implementácia nejakého vyhľadávacieho algoritmu.
+    \item Vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý~dokáže využiť vybraný užívateľský model a~mapovú reprezentáciu.
 \end{itemize}    
 
 Po výbere mapového súboru sa ihneď z~agregovanej mapy vytvorí jej grafická reprezentácia a~jej náhľad sa zobrazí užívateľovi.

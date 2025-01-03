@@ -62,62 +62,62 @@ public class Orienteering_ISOM_2017_2 : ITemplate<Orienteering_ISOM_2017_2.Verte
         public readonly short Elevation = elevation;
     }
 
-    public struct EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) surrounding, 
+    public struct EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) leftSurrounding, 
                                              (NaturalLinearObstacles? naturalLinearObstacle, Paths? path, ManMadeLinearObstacles? manMadeLinearObstacle) linearFeatures,
-                                             (Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) secondSurrounding) : IEdgeAttributes
+                                             (Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) rightSurrounding) : IEdgeAttributes
     {
-        public static bool operator==(EdgeAttributes left, EdgeAttributes right) => left._surroundings == right._surroundings && left._secondSurroundings == right._secondSurroundings && left._linearFeatures == right._linearFeatures;
+        public static bool operator==(EdgeAttributes left, EdgeAttributes right) => left._leftSurroundings == right._leftSurroundings && left._rightSurroundings == right._rightSurroundings && left._linearFeatures == right._linearFeatures;
         public static bool operator!=(EdgeAttributes left, EdgeAttributes right) => !(left == right);
-        public override int GetHashCode() => (_surroundings, _secondSurroundings, _linearFeatures).GetHashCode();
+        public override int GetHashCode() => (_leftSurroundings, _rightSurroundings, _linearFeatures).GetHashCode();
 
-        public EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) surrounding, (NaturalLinearObstacles? naturalLinearObstacle, Paths? path, ManMadeLinearObstacles? manMadeLinearObstacle) linearFeatures) : this( (surrounding.ground, surrounding.boulders, surrounding.stones, surrounding.water, surrounding.vegetationAndManMade, surrounding.vegetationGoodVis), (linearFeatures.naturalLinearObstacle, linearFeatures.path, linearFeatures.manMadeLinearObstacle), (surrounding.ground, surrounding.boulders, surrounding.stones, surrounding.water, surrounding.vegetationAndManMade, surrounding.vegetationGoodVis)){}
-        public EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) surrounding) : this((surrounding.ground, surrounding.boulders, surrounding.stones, surrounding.water, surrounding.vegetationAndManMade, surrounding.vegetationGoodVis), (null, null, null)){}
-        public EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) surrounding, (Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) secondSurroundings) : this((surrounding.ground, surrounding.boulders, surrounding.stones, surrounding.water, surrounding.vegetationAndManMade, surrounding.vegetationGoodVis), (null, null, null), (secondSurroundings.ground, secondSurroundings.boulders, secondSurroundings.stones, secondSurroundings.water, secondSurroundings.vegetationAndManMade, secondSurroundings.vegetationGoodVis)){}
+        public EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) bothSurroundings, (NaturalLinearObstacles? naturalLinearObstacle, Paths? path, ManMadeLinearObstacles? manMadeLinearObstacle) linearFeatures) : this( (bothSurroundings.ground, bothSurroundings.boulders, bothSurroundings.stones, bothSurroundings.water, bothSurroundings.vegetationAndManMade, bothSurroundings.vegetationGoodVis), (linearFeatures.naturalLinearObstacle, linearFeatures.path, linearFeatures.manMadeLinearObstacle), (bothSurroundings.ground, bothSurroundings.boulders, bothSurroundings.stones, bothSurroundings.water, bothSurroundings.vegetationAndManMade, bothSurroundings.vegetationGoodVis)){}
+        public EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) bothSurroundings) : this((bothSurroundings.ground, bothSurroundings.boulders, bothSurroundings.stones, bothSurroundings.water, bothSurroundings.vegetationAndManMade, bothSurroundings.vegetationGoodVis), (null, null, null)){}
+        public EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) leftSurrounding, (Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) rightSurroundings) : this((leftSurrounding.ground, leftSurrounding.boulders, leftSurrounding.stones, leftSurrounding.water, leftSurrounding.vegetationAndManMade, leftSurrounding.vegetationGoodVis), (null, null, null), (rightSurroundings.ground, rightSurroundings.boulders, rightSurroundings.stones, rightSurroundings.water, rightSurroundings.vegetationAndManMade, rightSurroundings.vegetationGoodVis)){}
         public EdgeAttributes():this((null, null, null, null, null, null), (null, null, null)){}
         
-        private readonly ushort _surroundings = (ushort)(((((((((((int)(surrounding.ground ?? 0) << 2) + 
-                                                                 (int)(surrounding.boulders ?? 0)) << 3) + 
-                                                               (int)(surrounding.stones ?? 0)) << 3) + 
-                                                             (int)(surrounding.water ?? 0)) << 4) + 
-                                                           (int)(surrounding.vegetationAndManMade ?? 0)) << 2) + 
-                                                         (int)(surrounding.vegetationGoodVis ?? 0));
+        private readonly ushort _leftSurroundings = (ushort)(((((((((((int)(leftSurrounding.ground ?? 0) << 2) + 
+                                                                 (int)(leftSurrounding.boulders ?? 0)) << 3) + 
+                                                               (int)(leftSurrounding.stones ?? 0)) << 3) + 
+                                                             (int)(leftSurrounding.water ?? 0)) << 4) + 
+                                                           (int)(leftSurrounding.vegetationAndManMade ?? 0)) << 2) + 
+                                                         (int)(leftSurrounding.vegetationGoodVis ?? 0));
         
-        private readonly ushort _secondSurroundings = (ushort) (((((((((((int)(secondSurrounding.ground ?? 0) << 2) + 
-                                                                        (int)(secondSurrounding.boulders ?? 0)) << 3) + 
-                                                                      (int)(secondSurrounding.stones ?? 0)) << 3) + 
-                                                                    (int)(secondSurrounding.water ?? 0)) << 4) + 
-                                                                  (int)(secondSurrounding.vegetationAndManMade ?? 0)) << 2) + 
-                                                                (int)(secondSurrounding.vegetationGoodVis ?? 0));
+        private readonly ushort _rightSurroundings = (ushort) (((((((((((int)(rightSurrounding.ground ?? 0) << 2) + 
+                                                                        (int)(rightSurrounding.boulders ?? 0)) << 3) + 
+                                                                      (int)(rightSurrounding.stones ?? 0)) << 3) + 
+                                                                    (int)(rightSurrounding.water ?? 0)) << 4) + 
+                                                                  (int)(rightSurrounding.vegetationAndManMade ?? 0)) << 2) + 
+                                                                (int)(rightSurrounding.vegetationGoodVis ?? 0));
         
         private readonly ushort _linearFeatures = (ushort)(((((int)(linearFeatures.naturalLinearObstacle ?? 0) << 4) + 
                                                            (int)(linearFeatures.path ?? 0)) << 3) + 
                                                          (int)(linearFeatures.manMadeLinearObstacle ?? 0));
         public (Grounds? ground, Boulders? boulders, Stones? stones, Water? water, 
-            VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) Surroundings
+            VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) LeftSurroundings
         {
             get
             {
-                VegetationGoodVis? vegetationGoodVis = (_surroundings & 0b11) != 0 ? (VegetationGoodVis)(_surroundings & 0b11) : null;
-                VegetationAndManMade? vegetationAndManMade = ((_surroundings >> 2) & 0b1111) != 0 ? (VegetationAndManMade)((_surroundings >> 2) & 0b1111) : null;
-                Water? water = ((_surroundings >> 6) & 0b111) != 0 ? (Water)((_surroundings >> 6) & 0b111) : null;
-                Stones? stones = ((_surroundings >> 9) & 0b111) != 0 ? (Stones)((_surroundings >> 9) & 0b111) : null;
-                Boulders? boulders = ((_surroundings >> 12) & 0b11) != 0 ? (Boulders)((_surroundings >> 12) & 0b11) : null;
-                Grounds? ground =  ((_surroundings >> 14) & 0b11) != 0 ? (Grounds)((_surroundings >> 14) & 0b11) : null;
+                VegetationGoodVis? vegetationGoodVis = (_leftSurroundings & 0b11) != 0 ? (VegetationGoodVis)(_leftSurroundings & 0b11) : null;
+                VegetationAndManMade? vegetationAndManMade = ((_leftSurroundings >> 2) & 0b1111) != 0 ? (VegetationAndManMade)((_leftSurroundings >> 2) & 0b1111) : null;
+                Water? water = ((_leftSurroundings >> 6) & 0b111) != 0 ? (Water)((_leftSurroundings >> 6) & 0b111) : null;
+                Stones? stones = ((_leftSurroundings >> 9) & 0b111) != 0 ? (Stones)((_leftSurroundings >> 9) & 0b111) : null;
+                Boulders? boulders = ((_leftSurroundings >> 12) & 0b11) != 0 ? (Boulders)((_leftSurroundings >> 12) & 0b11) : null;
+                Grounds? ground =  ((_leftSurroundings >> 14) & 0b11) != 0 ? (Grounds)((_leftSurroundings >> 14) & 0b11) : null;
                 return (ground, boulders, stones, water, vegetationAndManMade, vegetationGoodVis);
             }
         }
 
         public (Grounds? ground, Boulders? boulders, Stones? stones, Water? water,
-            VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) SecondSurroundings
+            VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) RightSurroundings
         {
             get
             {
-                VegetationGoodVis? vegetationGoodVis = (_secondSurroundings & 0b11) != 0 ? (VegetationGoodVis)(_secondSurroundings & 0b11) : null;
-                VegetationAndManMade? vegetationAndManMade = ((_secondSurroundings >> 2) & 0b1111) != 0 ? (VegetationAndManMade)((_secondSurroundings >> 2) & 0b1111) : null;
-                Water? water = ((_secondSurroundings >> 6) & 0b111) != 0 ? (Water)((_secondSurroundings >> 6) & 0b111) : null;
-                Stones? stones = ((_secondSurroundings >> 9) & 0b111) != 0 ? (Stones)((_secondSurroundings >> 9) & 0b111) : null;
-                Boulders? boulders = ((_secondSurroundings >> 12) & 0b11) != 0 ? (Boulders)((_secondSurroundings >> 12) & 0b11) : null;
-                Grounds? ground = ((_secondSurroundings >> 14) & 0b11) != 0 ? (Grounds)((_secondSurroundings >> 14) & 0b11) : null;
+                VegetationGoodVis? vegetationGoodVis = (_rightSurroundings & 0b11) != 0 ? (VegetationGoodVis)(_rightSurroundings & 0b11) : null;
+                VegetationAndManMade? vegetationAndManMade = ((_rightSurroundings >> 2) & 0b1111) != 0 ? (VegetationAndManMade)((_rightSurroundings >> 2) & 0b1111) : null;
+                Water? water = ((_rightSurroundings >> 6) & 0b111) != 0 ? (Water)((_rightSurroundings >> 6) & 0b111) : null;
+                Stones? stones = ((_rightSurroundings >> 9) & 0b111) != 0 ? (Stones)((_rightSurroundings >> 9) & 0b111) : null;
+                Boulders? boulders = ((_rightSurroundings >> 12) & 0b11) != 0 ? (Boulders)((_rightSurroundings >> 12) & 0b11) : null;
+                Grounds? ground = ((_rightSurroundings >> 14) & 0b11) != 0 ? (Grounds)((_rightSurroundings >> 14) & 0b11) : null;
                 return (ground, boulders, stones, water, vegetationAndManMade, vegetationGoodVis);
             }
         }

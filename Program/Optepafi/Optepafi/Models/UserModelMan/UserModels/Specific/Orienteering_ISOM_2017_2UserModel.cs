@@ -35,8 +35,8 @@ public class Orienteering_ISOM_2017_2UserModel :
     private const float topPaceInSecondsPerCentimeter = 0.0024f;
     public float ComputeWeight(Orienteering_ISOM_2017_2.VertexAttributes from, Orienteering_ISOM_2017_2.EdgeAttributes through, Orienteering_ISOM_2017_2.VertexAttributes to)
     {
-        var surroundingsCoef = ComputeCoeficientOfSurroundings(through.Surroundings);
-        var secondSurroundingsCoef = ComputeCoeficientOfSurroundings(through.SecondSurroundings);
+        var surroundingsCoef = ComputeCoeficientOfSurroundings(through.LeftSurroundings);
+        var secondSurroundingsCoef = ComputeCoeficientOfSurroundings(through.RightSurroundings);
         var moreEfficientSurroundingsCoef = Math.Max(surroundingsCoef, secondSurroundingsCoef);
         if (moreEfficientSurroundingsCoef < 0.000000001) return float.PositiveInfinity; 
         

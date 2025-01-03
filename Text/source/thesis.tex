@@ -140,6 +140,7 @@
 \include{architektura_ako_celok02}
 \include{sessiony_podrobne03}
 \include{modely_podrobne04}
+\include{vyhladavanie_ciest_orienteering05}
 
 
 \include{zaver}
@@ -197,6 +198,7 @@ Skladá sa z~dvoch častí: hlavného okna a session-u pre vyhľadávanie ciest 
 \begin{itemize}
     \item spúšťanie jednotlivých session-ov
     \item nastavenie jazyka aplikácie
+    \item nastavenie konfiguráci mapových reprezentácií, vyhľadávacích algoritmov a užívateľských modelov
     \item nastavenie implicitnej distribúcie výškových dát a~konfigurácia výškových dát
     \item ukončenie aplikácie zatvorením okna
 \end{itemize}
@@ -243,6 +245,9 @@ V hlavných nastaveniach môžeme:
 \begin{itemize}
     \item vybrať jazyk, ktorým chceme aby~na~nás aplikácia rozprávala. Je možné zvoliť buď slovenskú alebo anglickú lokalizáciu aplikácie.
     \item prejsť stlačením príslušného tlačidla do~konfigurácie výškových dát. Pod týmto tlačidlom môžeme vidieť aktuálne vybranú, implicitne využívanú distribúciu výškových dát.
+    \item nastaviť konkrétnemu typu mapovej reprezentácie, vyhľadávacieho algoritmu alebo užívateľského modelu parametre, podľa ktorých sa bude pri vyhľadávaní ciest riadiť. V tejto chvíli sú nastaviteľné parametre dostupné iba pre mapovú reprezentáciu \textit{Complete, net intertwining map representation}. 
+    
+    Pre tú je možné nastaviť štandardnú dĺžku hrán vo vytvorenom grafe a pomer najkratších povolených hrán ku štandardnej dĺžke hrany v retiazkach vrcholov hraníc mapových objektov vpletených do siete grafu. Tvar siete grafu je možné v tejto chvíli nastaviť ib na \textit{Triangular}. 
     \item stlačením tlačidla v~pravom dolnom rohu sa opäť vrátiť do~hlavného menu aplikácie.
 \end{itemize}
 
@@ -270,7 +275,7 @@ Konfigurácia výškových dát umožňuje:
     \item Pokiaľ je ku~stiahnutiu výškových dát vybranej distribúcie potrebná autorizácia užívateľa, je nutné zadať užívateľské meno a~heslo. Pomocou týchto údajov bude možné následne získať výškové dáta z danej distribúcie.
     \item Po~dokončení konfigurácie je možné sa pomocou stlačenia tlačidla v~pravom dolnom rohu vrátiť naspäť do~hlavných nastavení. Posledne konfigurovaná distribúcia sa nastaví ako aktuálne implicitne používaná.
 \end{itemize}
-Je možné si vybrať z~dvoch ukážkových zdrojov výškových dát:
+Nakoľko plnohodnotné sťahovanie výškových dát doposiaľ nieje v aplikácii poriadne implementované, je možné si zatiaľ vybrať z~dvoch ukážkových zdrojov výškových dát:
 \begin{itemize}
     \item \textit{Simulating elevation data source} - Zdroj simulujúci prácu sťahovania a~odstraňovania výškových dát. Skladá sa z~dvoch dátových distribúcií:
     \begin{itemize}
@@ -295,11 +300,11 @@ Session pre vyhľadávanie ciest je možné vytvoriť v hlavnom menu hlavného o
 \frame{\includegraphics[width=300px]{usr_img/path_finding_settings}}
 \end{figure}
 
-V nastaveniach parametrov je možné vybrať template, mapový súbor, súbor s~užívateľským modelom a~vyhľadávací algoritmus, ktoré budú použité v procesu vyhľadávania ciest. Na začiatku sú implicitne nastavené parametre posledne použité v~predchádzajúcej inštancii session-u.
+V nastaveniach parametrov je možné vybrať template, mapový súbor, typ mapovej reprezentácie, súbor s~užívateľským modelom a~vyhľadávací algoritmus, ktoré budú použité v procesu vyhľadávania ciest. Na začiatku sú tieto zdroje implicitne nastavené na posledne použité v~predchádzajúcej inštancii session-u.
 
 Nastavovanie parametrov sa riadi určitými pravidlami:
 \begin{itemize}
-    \item najprv sa vyberá template a~mapový súbor, následne súbor s~užívateľským modelom a~na~koniec vyhľadávací algoritmus
+    \item najprv sa vyberá template a~mapový súbor, následne súbor s~užívateľským modelom a typ mapovej reprezentácie, a~na~koniec vyhľadávací algoritmus
     \item pre zvolenú kombináciu template-u a~formátu mapového súboru musí platiť:
     \begin{itemize}
         \item musí existovať mapová reprezentácia, ktorá~túto kombináciu dokáže spracovať,
@@ -307,8 +312,9 @@ Nastavovanie parametrov sa riadi určitými pravidlami:
         \item nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a~užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácie ľubovoľného vyhľadávacieho algoritmu.
     \end{itemize}
     \item keď je vybraný buďto template alebo~mapový súbor a~výber druhej položky by~spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje.
-    \item súbor s~užívateľským modelom môže byť vybraný len takého typu, ktorý dokáže spracovávať atribúty definované zvoleným template-om a~ktorý spolu s~ľubovoľnou mapovou reprezentáciou, ktorá~dokáže spracovať aktuálne zvolenú kombináciu template-u a~mapového formátu, je vhodnou kombináciou pre aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu.
-    \item vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý~podporuje typ vybraného užívateľského modelu a~niektorej mapovej reprezentácie, ktorú~je možné vytvoriť z~vybraného template-u a mapového súboru.
+    \item súbor s~užívateľským modelom môže byť vybraný len takého typu, ktorý dokáže spracovávať atribúty definované zvoleným template-om a~ktorý spolu s~vybranou mapovou reprezentáciou, je vhodnou kombináciou pre aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu.
+    \item typ mapovej reprezentácie musí obsahovať implementáciu, ktorá dokáže spracovať dvojicu vybraného template-u a formát vybranej mapy. Zároveň s vybraným užívateľským modelom musia tvoriť kombináciu, ktorú dokáže využiť aspoň jedna implementácia nejakého vyhľadávacieho algoritmu.
+    \item vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý~podporuje typ vybraného užívateľského modelu a~mapovej reprezentácie.
 \end{itemize}
 
 Na obrazovke je ďalej možné pozorovať názvy vybraných súborov, ako aj grafický náhľad vybranej mapy.
@@ -317,14 +323,25 @@ Po vybraní všetkých parametrov môže užívateľ pomocou stlačenia tlačidl
 
 Je možné vybrať si z~následujúcich parametrov:
 \begin{itemize}
-    \item \textbf{Template} - na~výber sú dva ukážkové template-y:
+    \item \textbf{Template} - pre vyhľadávanie trás v mapách pre orientačný beh je potrebné zvoliť template \textit{Orienteering (ISOM 2017-2)} 
+
+    - náslene sú na~výber dva ukážkové template-y, demonštrujúce mechaniky aplikácie:
     \begin{itemize}
         \item \textit{Blank template} - Template, ktorý reprezentuje prázdne vrcholové a~hranové atribúty. Slúži pre~demonštráciu aplikačných mechanizmov.
         \item \textit{Not usable template} - Demonštračný template, ktorý nie je možné využiť pri tvorbe žiadnej mapovej reprezentácie a~ani preňho neexistuje zodpovedajúci typ užívateľského modelu.
     \end{itemize}
-    \item \textbf{Mapa} - jediný \uv{mapový formát}, ktorý~je možné vybrať je klasický \textit{textový} súbor. Tento \uv{typ mapy} slúži na demonštráciu funkcionality aplikácie. Na obrazovku sú náhodne vypísané všetky slová z~vybraného textového súboru.
-    \item \textbf{Užívateľský model} - súbor s~užívateľským modelom je možné vybrať jedine typu \textit{Blank user model}. Tento užívateľský model je naviazaný na~\textit{blank template} a~taktiež nezabezpečuje žiadnu funkcionalitu. Slúži pre demonštráciu aplikačných mechanizmov.
-    \item \textbf{Vyhľadávací algoritmus} - pre~účely predstavenia aplikácie bol vyvinutý mechanizmus, ktorý nie~je priamo vyhľadávacím algoritmom. Za~to simuluje spôsob, ktorým vyhľadávací algoritmus dodáva nájdené cesty užívateľovi. Tento mechanizmus sa volá \textit{Smiley face drawer} a počas svojho behu postupne vykresluje usmievajúce sa tváre medzi jednotlivými bodmi zadanej trate. Na záver sú všetky tváre vykreslené naraz. 
+    \item \textbf{Mapa} - pre vyhľadávanie trás v mapách pre orientačný beh je potrebné zvoliť mapový súbor formátu \textit{.omap}. Tento mapový súbor by mal mať symbolový set rovnaký ako je základný symbolový novo vytvorenej mapy aplikáciou \textit{OpenOrienteeringMapper}. Pokiaľ sa symbolový set bude líšiť, je možné, že~sa niektoré mapové značky budú nesprávne interpretovať.
+    
+    - pre účely demonštrácie funkcionalít aplikácie je taktiež možné vybrať aj klasický \textit{textový} súbor. Na obrazovku budú následne vypísané náhodne všetky slová z~vybraného textového súboru.
+    \item \textbf{Užívateľský model} - pre vyhľadávanie trás v mapách pre orientačný beh je potrebné vybrať užívateľský model, ktorého suffix tvorí \textit{.ori17UM.json} indikujúci užívateľský model ktorý je viazaný na template \textit{Orienteering (ISOM 2017-2)}. 
+    
+    - pri použití ukážkového templateu \textit{Blank template} je možné taktiež vybrať užívateľský model typu \textit{Blank user model}. Podobne ako naviazaný template, ani tento užívateľský model nezabezpečuje žiadnu funkcionalitu. Slúži pre demonštráciu aplikačných mechanizmov.
+    \item \textbf{Mapová reprezentácia} - pre vyhľadávanie trás v mapách pre orientačný beh je potrebné vybrať mapovú reprezentáciu typu \textit{Complete, net intertwining map representation}.
+
+    - pri použití ukážkového template-u \textit{Blank template} alebo textového mapového formátu je možné využiť aj mapovú reprezentáciu \textit{Blank representation}. Táto mapová reprezentácia slúži pre demonštráciu mechanizmov aplikácie.   
+    \item \textbf{Vyhľadávací algoritmus} - vyhľadávanie trás v mapách pre orientačný beh je sprostredkovávané algoritmom \textit{A*}.
+    
+    - pre~účely demonštrácie funkcionalít aplikácie bol vytvorený taktiež mechanizmus s názvom \textit{Smiley face drawer}. Ten počas svojho behu postupne vykresluje usmievajúce sa tváre medzi jednotlivými bodmi zadanej trate. Na záver sú všetky tváre naraz vykreslené.
 \end{itemize}
 
 \subsubsection{Vytváranie mapovej reprezentácie}
@@ -355,5 +372,101 @@ Vyhľadávanie cesty je cyklus zložený z~troch fáz:
 \end{enumerate}
 
 Pokiaľ užívateľ hodlá session pre~vyhľadávanie ciest opustiť, môže tak učiniť kedykoľvek pomocou stlačenia tlačidla v~pravom hornom rohu obrazovky. 
+
+\section{Príklad parametrizácie užívateľského modelu}\label{uzivatelsky_model}
+
+\textbf{Plošné značky + cesty a schody:}
+
+\begin{itemize}
+    \item koeficient spomalenia: 0 znamená, že plocha/línia je nepriechodná, 1 znamená plná rýchlosť, ktorú bežec dokáže dosiahnuť
+    \item ak ide o kombináciu značiek, použije sa násobok koeficientov
+    \item značky ciest sa nekombinujú so značkami okolitého prostredia s výnimkou značiek 507 a 508
+    \item pri značkách 507 a 508 nie je jedno, v akom prostredí sa tieto značky nachádzajú. Ich koeficienty sú teda nastavené na >1 a sú kombinované s koeficientom okolitého prostredia.
+\end{itemize}
+
+\textit{Terénne útvary}\\
+113 Rozbitý povrch (A): 0.95\\
+114 Veľmi rozbitý povrch (A): 0.80
+
+\textit{Skaly a balvany}\\
+206 Obrovský balvan alebo skalná veža (A): 0\\
+208 Balvanové pole (A): 0.70\\
+209 Husté balvanové pole (A): 0.55\\
+210 Kamenistý povrch, pomalý beh (A): 0.65\\
+211 Kamenistý povrch, chôdza (A): 0.50\\
+212 Kamenistý povrch, boj (A): 0.35\\
+213 Piesočný povrch (A): 0.70\\
+214 Holá skala (A): 0.95
+
+\textit{Voda a močiare}\\
+301 Neprekonateľná vodná plocha (A): 0\\
+302 Plytká vodná plocha (A): 0.50\\
+307 Neprekonateľný močiar (A): 0\\
+308 Močiar (A): 0.80\\
+310 Nevýrazný močiar (A): 0.90
+
+\textit{Vegetácia}\\
+401 Otvorená krajina (A): 0.97\\
+402 Otvorená krajina s rozptýlenými stromami (A): 0.93\\
+403 Drsná otvorená krajina (A): 0.77\\
+404 Drsná otvorená krajina s rozptýlenými stromami (A): 0.70\\
+405 Les (A): 0.90\\
+406 Vegetácia: pomalý beh (A): 0.70\\
+407 Vegetácia (podrast): pomalý beh, dobrá viditeľnosť (A): 0.80\\
+408 Vegetácia: chôdza (A): 0.45\\
+409 Vegetácia (podrast): chôdza, dobrá viditeľnosť (A): 0.60\\
+410 Vegetácia: boj (A): 0.20\\
+412 Obrábaná pôda (A): 0.80\\
+413 Sad (A): 0.93\\
+413 Drsný Sad (A): 0.80\\
+414 Vinohrady alebo podobné (kultúry) (A): 0.80\\
+414 Drsné vinohrady alebo podobné (kultúry) (A): 0.70
+
+\textit{Cesty}\\
+501 Spevnená plocha (A): 1\\
+502 Široká cesta (L): 1\\
+503 Cesta (L): 1\\
+504 Vozová cesta (L): 1\\
+505 Chodník (L): 0.99\\
+506 Malý chodník (L): 0.97\\
+507 Menej výrazný malý chodník (L): 1.07\\
+508 Priesek alebo líniová trasa terénom (L): 1.07
+
+\textit{Umelé objekty}\\
+520 Zakázaný priestor (A): 0\\
+521 Budova (A): 0\\
+532 Schodisko (L): 0.93\\
+709 Neprístupná oblasť (A): 0
+
+\bigskip
+
+\textbf{Líniové prekážky}
+
+\begin{itemize}
+    \item približný čas prekonania v sekundách
+    \item ak je línia neprekonateľná, čas je nastavený na milión sekúnd
+\end{itemize}
+
+\textit{Terénne tvary}\\
+104 Zemný zráz (L): 2\\
+105 Zemný násyp (L): 2\\
+107 Erózna ryha (L): 4
+
+\textit{Skaly a balvany}\\
+201 Neprekonateľný zráz (L): 1 000 000\\
+202 Zráz (L): 5\\
+215 Zákop (L): 1
+
+\textit{Voda a močiare}\\
+304 Prekonateľný vodný tok (L): 3\\
+305 Malý prekonateľný vodný tok (L): 2
+
+\textit{Umelé objekty}\\
+513 Múr (L): 2\\
+515 Neprekonateľný múr (L): 1 000 000\\
+516 Plot (L): 2\\
+518 Neprekonateľný plot (L): 1 000 000\\
+528 Výrazný líniový objekt (L): 1.5\\
+529 Výrazný neprekonateľný líniový objekt (L): 1 000 000
 
 \end{document}

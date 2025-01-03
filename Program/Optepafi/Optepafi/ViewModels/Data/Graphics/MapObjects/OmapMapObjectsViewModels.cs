@@ -956,12 +956,14 @@ public class NotEnterableAreaStripes_520_2_ViewModel(NotEnterableAreaStripes_520
     public override CanvasCoordinate Position { get; } = obj.Shape.Segments.Last().LastPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public float Opacity { get; } = 0.5f;
 }
 public class NotEnterableAreaStripesBoundingLine_520_3_ViewModel(NotEnterableAreaStripesBoundingLine_520_3 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
     public override CanvasCoordinate Position { get; } = obj.Shape.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 32;
     public PathPolygonViewModel Shape { get; } = new PathPolygonViewModel(obj.Shape, mapsTopLeftVertex);
+    public int LineThickness { get; } = 350;
 }
 public class Building_521_ViewModel(Building_521 obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {

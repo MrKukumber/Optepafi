@@ -88,9 +88,9 @@ V~nasledujúcich odsekoch popíšeme objektovú štruktúru mapových reprezent�
 
 Štruktúra dát, ktoré~súvisia s~mapovými reprezentáciami odzrkadľuje dvojakosť významov mapovej reprezentácie a~grafu ako bolo popísané v~Podsekcii~\ref{mapove_reprezentacie}. Každému typu mapovej reprezentácie je prisúdený konkrétny typ grafu.
 
-Mapové reprezentácie/grafy sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IGraph<TVertexAttributes, TEdgeAttributes>}}. Toto rozhranie reprezentuje myšlienku grafu, ktorý~zastupuje konkrétnu mapovú reprezentáciu. Jeho typové parametre definujú atribúty, ktoré~sú používané v~jeho vrcholoch a~hranách. Obsahuje kontrakty, ktoré~musia grafy všetkých typov napĺňať. Aktuálne je to len jedna metóda vracajúca graf do~jeho základného stavu.
+Mapové reprezentácie/grafy sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IGraph<TVertex, TEdge>}}. Toto rozhranie reprezentuje myšlienku grafu, ktorý~zastupuje konkrétnu mapovú reprezentáciu. Jeho typové parametre definujú typy jeho vrcholov a~hrán. Obsahuje kontrakty, ktoré~musia grafy všetkých typov napĺňať. Aktuálne je to len jedna metóda vracajúca graf do~jeho základného stavu.
 
-\texttt{IGraph<TVertexAttributes, TEdgeAttributes>} má za~predchodcu rozhranie \textbf{\texttt{IMapRepre}} reprezentujúce myšlienku samotnej mapovej reprezentácie. Cez toto rozhranie sú mapové reprezentácie/grafy distribuované vonkajšiemu svetu. K~tomuto účelu rozhranie definuje vlastnosti využívané mimo vrstvy Model. Grafová podstata mapových reprezentácií je tým vonkajšiemu svetu ukrytá a~len špecifické oblasti Model vrstvy ju znova nadobúdajú a~využívajú.
+\texttt{IGraph<TVertexAttributes, TEdgeAttributes>} má za~predchodcu rozhranie \textbf{\texttt{IMapRepre}} reprezentujúce myšlienku samotnej mapovej reprezentácie. Cez toto rozhranie sú mapové reprezentácie/grafy distribuované vonkajšiemu svetu. K~tomuto účelu rozhranie definuje vlastnosti využívané mimo vrstvy Model. Grafová podstata mapových reprezentácií je tým vonkajšiemu svetu ukrytá a~len špecifické oblasti Model vrstvy ju znova odhaľujú a~využívajú.
 
 Každá mapová reprezentácia/graf má množinu svojich implementácií. Implementácie sú tvorené pre~konkrétne kombinácie template-ov a~mapových formátov. Konkrétny typ mapovej reprezentácie môže byť vytvorený len pre~takú kombináciu template-u a~mapového formátu, pre~ktorý je vytvorená príslušná implementácia.
 
@@ -102,15 +102,15 @@ Na to aby~mohla byť mapová reprezentácia, graf či~implementácia v~aplikáci
 \begin{itemize}
     \item Zástupcovia typov mapových reprezentácií sú v aplikácii reprezentovaní triedami, ktoré~implementujú rozhranie \textbf{\texttt{IMapRepreRepresentative<out TMapRepre>}}. Tieto triedy sú určené (podobne ako typy mapových reprezentácií) pre~komunikáciu mimo vrstvy Model. Definujú vlastnosti, ktoré~sú využívané vonkajším svetom pre~získanie informácií o~zastupovanej mapovej reprezentácii. 
     
-    Taktiež si držia indikátorovú kolekciu zástupcov všetkých implementácií zastupovanej mapovej reprezentácie. Táto kolekcia sa následne využíva pri~identifikácii použiteľných kombinácií template-ov a~mapových formátov a~pri samotnom vytváraní mapových reprezentácií/grafov.
-    
     Nakoľko typ mapovej reprezentácia je vždy asociovaný s~nejakým typom grafu, zástupca typu mapovej reprezentácia disponuje aj~referenciou na~zástupcu typu daného grafu. Tento zástupca sa následne využíva v~procese vytvárania mapovej reprezentácie/grafu. Taktiež špecifické oblasti vrstvy Model ho môžu využiť k~otestovaniu vlastností zastupovaného grafu.
 
     Taktiež toto rozhranie definuje metódy pre~vytváranie zastupovaného typu mapovej reprezentácie. 
 
     Na~to, aby~bolo možné typ mapovej reprezentácie/grafu využiť v~aplikácii, musí byť jeho zástupca zahrnutý v~príslušnej kolekcii manažéra mapových reprezentácií.
 
-    \item Zástupcovia grafových typov sú reprezentovaní triedami, ktoré~implementujú rozhranie \textbf{\texttt{IGraphRepresentative < out TGraph, TVertexAttributes, TEdgeAttributes>}}. Typové parametre definujú typ zastupovaného grafu a~typy atribútov, ktoré~sú použité v~jeho vrcholoch a~hranách. Tento interface nedefinuje žiadny kontrakt pre~grafových zástupcov. Implementuje iba metódy, ktoré~sú využívané v~procese vytvárania mapovej reprezentácie/grafu. Je využívaný špecifickými oblasťami vrstvy Model k~otestovaniu vlastností zastupovaného grafu.
+    \item Zástupcovia grafových typov sú reprezentovaní triedami, ktoré~implementujú rozhranie \textbf{\texttt{IGraphRepresentative <out TGraph, TVertex, TEdge>}}. Typové parametre definujú typ zastupovaného grafu a~typy vrcholov a hrán, z ktorých je graf tvorený. Tento interface nedefinuje žiadny kontrakt pre~grafových zástupcov. Implementuje iba metódy, ktoré~sú využívané v~procese vytvárania mapovej reprezentácie/grafu. Je využívaný špecifickými oblasťami vrstvy Model k~otestovaniu vlastností zastupovaného grafu.
+
+    Zástupcovia grafových typov si taktiež udržujú indikátorovú kolekciu zástupcov všetkých implementácií grafového typu. Táto kolekcia sa následne využíva pri~identifikácii použiteľných kombinácií template-ov a~mapových formátov a~pri samotnom vytváraní mapových reprezentácií/grafov.
 
     Každý zástupca grafu je asociovaný s~konkrétnym zástupcom mapovej reprezentácie. Ten si na~jeho inštanciu drží referenciu a~využíva ho v~procese vytvárania mapovej reprezentácie/grafu.
 
@@ -123,6 +123,7 @@ Na to aby~mohla byť mapová reprezentácia, graf či~implementácia v~aplikáci
     \begin{itemize}
         \item \texttt{TTemplate} - definuje typ template-u, pre~ktorý je zastupovaná implementácia vytvorená,
         \item \texttt{TGraph} - definuje typ mapovej reprezentácie/grafu, pre~ktorý je zastupovaná implementácia vytvorená,
+        \item \texttt{TVertex, TEdge} - definujú typy vrcholov a hrán z ktorých sa skladá implementácia grafu,
         \item \texttt{TVertexAttributes, TEdgeAttributes} - definujú typy atribútov použitých v~implementovanom grafe,
         \item \texttt{TMap, TUsableSubMap} - tieto parametre sú jemne zavádzajúce. Prvý z~nich hovorí o~tom, aký typ mapy je navonok indikovaný pomocou vlastnosti mapového formátu. Druhý hovorí o~tom, ktorý~typ potomok typu \texttt{TMap} je v~skutočnosti potrebný na~vytvorenie mapovej reprezentácie. Malo by byť zaručené okolitým prostredím, že~pokiaľ je nejaká mapa správneho formátu, tak je určite možné ju použiť pre~vytvorenie mapovej reprezentácie. 
     \end{itemize}
@@ -158,7 +159,7 @@ V~následujúcich odsekoch popíšeme objektovú štruktúru užívateľských m
 
 \bigskip
 
-Užívateľské modely sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IUserModel<out TTemplate>}}.  Prostredníctvom tohto rozhrania sú užívateľské modely využívané mimo vrstvy Model. Z~tohto dôvodu definuje informatívne vlastnosti, ktoré~sú potrebné prevažne vo~vonkajšom svete. Popri tom definuje ešte aj~kontrakty zaručujúce schopnosť serializácie užívateľského modelu. Každý užívateľský model je viazaný na~konkrétny template-u, typu \texttt{TTemplate}. K~tomu si každý užívateľský model nesie aj~referenciu na~inštanciu daného template-u.
+Užívateľské modely sú v~aplikácii reprezentované triedami, ktoré~implementujú rozhranie \textbf{\texttt{IUserModel<out TTemplate>}}.  Prostredníctvom tohto rozhrania sú užívateľské modely využívané mimo vrstvy Model. Z~tohto dôvodu definuje informatívne vlastnosti, ktoré~sú potrebné prevažne vo~vonkajšom svete. Popri tom definuje ešte aj~kontrakty zaručujúce schopnosť serializácie užívateľského modelu. Každý užívateľský model je viazaný na~konkrétny template, typu \texttt{TTemplate}. K~tomu si každý užívateľský model nesie aj~referenciu na~inštanciu daného template-u.
 
 Na to aby~bol užívateľský model použiteľný vo~vyhľadávacích algoritmoch, nestačí aby~implementoval predchádzajúce základné rozhranie. Je potrebné aby~implementoval následnícke rozhranie \textbf{\texttt{IComputingUserModel<out TTemplate, in TVertexAttributes, in TEdgeAttributes>}}. Tento interface sám o~sebe nedefinuje žiadny kontrakt. Až jeho následníci definujú výpočtovú funkcionalitu, ktorú implementujúci užívateľský model vie ponúknuť napríklad vyhľadávaciemu algoritmu. 
 
@@ -175,8 +176,9 @@ V~aplikácii je potrebné, aby~existencia jednotlivých typov užívateľských 
     Taktiež obsahuje referenciu na~template, na~ktorý je zastupovaný užívateľský model viazaný a~definuje metódy slúžiace na~deserializáciu a~vytváranie nových užívateľských modelov. Implementácie deserializácie zástupcu a~serializácie zastupovaného užívateľského modelu sa musia zhodovať. 
     
     Tento interface by nikdy nemal byť priamo implementovaný.
-    \item \textbf{\texttt{IUserModelTemplateBond<in TTemplate>}} - Reprezentuje väzbu užívateľského modelu a~template-u.  Vďaka kontravariantnej povahe jeho template-ového typového parametru bude táto identifikácia fungovať správne aj~pre~prípadných potomkov typu \texttt{TTemplate}. Tento interface by nikdy nemal byť priamo implementovaný.
-    \item \textbf{\texttt{IUserModelRepresentative<TUserModel,TTemplate>}} - Zastupuje jeden konkrétny typ užívateľského modelu viazaného na~jeden konkrétny typ template-u. Je potomkom predošlých dvoch interface-ov - spája ich funkcionality. Tento interface je určený k~tomu, aby~bol priamo implementovaný zástupcami užívateľských modelov.   
+    \item \textbf{\texttt{IUserModelTemplateBond<in TTemplate>}} - Reprezentuje väzbu užívateľského modelu a~template-u. Vďaka kontravariantnej povahe jeho template-ového typového parametru bude táto identifikácia fungovať správne aj~pre~prípadných potomkov typu \texttt{TTemplate}. Tento interface by nikdy nemal byť priamo implementovaný.
+    \item \textbf{\texttt{IUserModelIdentifier<in TUserModel>}} - Identifikuje individuálny užívateľský model alebo~jeho potomkov. Vďaka kontravariantnej povahe jeho typového parametru bude táto identifikácia fungovať správne aj~pre~potomkov typu \texttt{TUserModel}. Tento interface by nikdy nemal byť priamo implementovaný.
+    \item \textbf{\texttt{UserModelRepresentative<TUserModel,TTemplate,TConfiguration>}} - Zastupuje jeden konkrétny typ užívateľského modelu viazaného na~jeden konkrétny typ template-u. Je potomkom predošlých troch interface-ov - spája ich funkcionality. Táto trieda je určený k~tomu, aby~z~nej priamo dedili zástupcovia užívateľských modelov.   
 \end{itemize}
 
 Na to, aby~bolo možné typ užívateľského modelu využiť v~aplikácii, musí byť jeho zástupca zahrnutý v~príslušnej kolekcii triedy \texttt{UserModelManager}. Z~tohto dôvodu je na~mieste, aby~títo zástupcovia boli implementovaný ako singleton-y.

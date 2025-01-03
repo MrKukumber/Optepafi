@@ -37,8 +37,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         public static GraphCreator Instance { get; } = new();
         private GraphCreator() { }
         
-        public int processedObjectsCount; 
-        // public int debugLimit = 1334; // for debugging
+        public int processedObjectsCount;
+        // public int debugLimit = 11;//1334; // for debugging
         public CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation Create(OmapMap map,
             CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
             CancellationToken? cancellationToken)
@@ -68,8 +68,9 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         // if (processedObjectsCount > debugLimit) break; // for debugging
                         if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
                         // if (processedObjectsCount == debugLimit) // for debugging
-                            ProcessCrossablePolygonalObject(obj, polygonalSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount / 100) == 0 && progress is not null) progress.Report( new MapRepreConstructionReport(processedObjectsCount / (float)allObjectsCount * 100));
+                        ProcessCrossablePolygonalObject(obj, polygonalSymbolCode, vertexBuilders, configuration, cancellationToken);
+                        ++processedObjectsCount;
+                        if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount / 100) == 0 && progress is not null) progress.Report( new MapRepreConstructionReport(processedObjectsCount / (float)allObjectsCount * 100));
                         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation( new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             }
@@ -82,8 +83,9 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         // if (processedObjectsCount > debugLimit) break; // for debugging
                         if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
                         // if (processedObjectsCount == debugLimit) // for debugging
-                            ProcessPathObject(obj, pathSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount/100) == 0  && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
+                        ProcessPathObject(obj, pathSymbolCode, vertexBuilders, configuration, cancellationToken);
+                        ++processedObjectsCount;
+                        if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount/100) == 0  && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
                         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             }
@@ -94,8 +96,9 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         // if (processedObjectsCount > debugLimit) break; // for debugging
                         if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
                         // if (processedObjectsCount == debugLimit) // for debugging
-                            ProcessLinearObstacleObject(obj, linearObstacleSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        if (allObjectsCount >= 100 && ++processedObjectsCount % (allObjectsCount/100) == 0 && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
+                        ProcessLinearObstacleObject(obj, linearObstacleSymbolCode, vertexBuilders, configuration, cancellationToken);
+                        ++processedObjectsCount;
+                        if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount/100) == 0 && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
                         if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
                     }
             RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex> vertices = new (vertexBuilders.Select(vb => vb.Build()), v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos));
@@ -112,7 +115,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
 
         private List<decimal> OrderedPathsSymbolsCodes =
         [
-            502, 502.2m, 503, 504, 505, 506, 507, 508, 508.1m, 508.2m, 508.3m, 508.4m, 532 
+            508, 508.2m, 508.3m, 508.4m, 508.1m, 507, 506, 505, 504, 503, 502, 502.2m, 532 
         ];
         
         private List<decimal> OrderedLinearObstacleSymbolsCodes =
@@ -223,7 +226,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 // 3
                 var (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices) = PolygonalObjectsProcessing.FindNodesInsideThePolygonByDfs(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, chain); 
                 // 4
-                // if(processedObjectsCount == debugLimit) // for debugging
+                // if(processedObjectsCount != debugLimit) // for debugging
                 PolygonalObjectsProcessing.UpdateAttributesOfInnerEdges(allInnerVertices, symbolCode);
                 // 5
                 var chainEnrichedByNewCrossSectionVertices = 
@@ -233,8 +236,10 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 // if(processedObjectsCount != debugLimit) // for debugging
                 PolygonalObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, innerVerticesOfCutEdges, allVertices, configuration.standardEdgeLength.Value);
                 // 7
+                // if(processedObjectsCount != debugLimit) // for debugging
                 PolygonalObjectsProcessing.SetAttributesOfChainsEdges(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, symbolCode);
                 // 8
+                // if(processedObjectsCount != debugLimit) // for debugging
                 PolygonalObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chainEnrichedByNewCrossSectionVertices);
                 // 9
                 PolygonalObjectsProcessing.AddChainVerticesToTheGraph(chainEnrichedByNewCrossSectionVertices, allVertices);
@@ -252,12 +257,17 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             // 2
             var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PathObjectsProcessing.CutAllCrossedEdges(potentiallyMultiOccuringVerticesChain, allVertices, configuration.standardEdgeLength.Value);
             // 3
-            var potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices = PathObjectsProcessing.ProcessCutBoundaryEdgesByChain(potentiallyMultiOccuringVerticesChain, verticesOfCutBoundaryEdges);
+            var potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices = 
+                // processedObjectsCount == debugLimit ? potentiallyMultiOccuringVerticesChain : // for debugging
+                PathObjectsProcessing.ProcessCutBoundaryEdgesByChain(potentiallyMultiOccuringVerticesChain, verticesOfCutBoundaryEdges);
             // 4
+            // if(processedObjectsCount != debugLimit) // for debugging
             PathObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices , verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, allVertices, configuration.standardEdgeLength.Value);
             // 5
+            // if(processedObjectsCount != debugLimit) // for debugging
             PathObjectsProcessing.SetAttributesOfChainsEdges(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, symbolCode);
             // 6
+            // if(processedObjectsCount != debugLimit) // for debugging
             PathObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices);
             // 7
             PathObjectsProcessing.AddChainVerticesToTheGraph(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, allVertices);
@@ -788,8 +798,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                     // this behaviour ensures correct attributes assigment to newly created edges
                     lastVertex.BoundaryEdges[newVertex] = edgeToBeAddedIsOuter ? outerEdgeAttributesFromV1ToV2 : innerEdgeAttributesFromV1ToV2;
                     newVertex.BoundaryEdges[lastVertex] = edgeToBeAddedIsOuter 
-                        ? new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeAttributesFromV1ToV2.SecondSurroundings, outerEdgeAttributesFromV1ToV2.Surroundings) 
-                        : new Orienteering_ISOM_2017_2.EdgeAttributes(innerEdgeAttributesFromV1ToV2.SecondSurroundings, innerEdgeAttributesFromV1ToV2.Surroundings);
+                        ? new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeAttributesFromV1ToV2.RightSurroundings, outerEdgeAttributesFromV1ToV2.LeftSurroundings) 
+                        : new Orienteering_ISOM_2017_2.EdgeAttributes(innerEdgeAttributesFromV1ToV2.RightSurroundings, innerEdgeAttributesFromV1ToV2.LeftSurroundings);
                     edgeToBeAddedIsOuter = !edgeToBeAddedIsOuter;
                     lastVertex = newVertex;
                 }
@@ -797,8 +807,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 {
                     lastVertex.BoundaryEdges[vertex2] = edgeToBeAddedIsOuter ? outerEdgeAttributesFromV1ToV2 : innerEdgeAttributesFromV1ToV2;
                     vertex2.BoundaryEdges[lastVertex] = edgeToBeAddedIsOuter 
-                        ? new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeAttributesFromV1ToV2.SecondSurroundings, outerEdgeAttributesFromV1ToV2.Surroundings) 
-                        : new Orienteering_ISOM_2017_2.EdgeAttributes(innerEdgeAttributesFromV1ToV2.SecondSurroundings, innerEdgeAttributesFromV1ToV2.Surroundings);
+                        ? new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeAttributesFromV1ToV2.RightSurroundings, outerEdgeAttributesFromV1ToV2.LeftSurroundings) 
+                        : new Orienteering_ISOM_2017_2.EdgeAttributes(innerEdgeAttributesFromV1ToV2.RightSurroundings, innerEdgeAttributesFromV1ToV2.LeftSurroundings);
                 }
             }
         }
@@ -872,10 +882,10 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         {
             for (int i = 0; i < indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Count - 1; i++)
             {
-                var outerEdgeSurroundingsForIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].neighbor].SecondSurroundings;
+                var outerEdgeSurroundingsForIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].neighbor].RightSurroundings;
                 Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForIntervalOfChain, symbolCodeOfAddedObject, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i+1].index);
             } 
-            var outerEdgeSurroundingsForLastIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().neighbor].SecondSurroundings;
+            var outerEdgeSurroundingsForLastIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().neighbor].RightSurroundings;
             Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Last().index, chain.Length-1);
             Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject, 0, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[0].index);
             var innerSurroundings = Utils.GetUpdatedSurroundingsOfEdgeAttributes(outerEdgeSurroundingsForLastIntervalOfChain, symbolCodeOfAddedObject);
@@ -890,7 +900,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             for(int i = startIndex; i <= endIndex; ++i)
                 foreach (var (neighbor, edgeAttributes) in chain[i].NonBoundaryEdges)
                     if (neighbor is NetVertexBuilder && outerVertices.Contains(neighbor))
-                        return edgeAttributes.Surroundings;
+                        return edgeAttributes.LeftSurroundings;
             return null;
         }
         
@@ -1147,12 +1157,12 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         continue;
                     }
                     lastVertex.BoundaryEdges[newVertex] =  edgeAttributesFromV1ToV2;
-                    newVertex.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(edgeAttributesFromV1ToV2.SecondSurroundings, edgeAttributesFromV1ToV2.Surroundings); 
+                    newVertex.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(edgeAttributesFromV1ToV2.RightSurroundings, edgeAttributesFromV1ToV2.LeftSurroundings); 
                     lastVertex = newVertex;
                 }
                 if (lastVertex != vertex2)
                 {
-                    lastVertex.BoundaryEdges[vertex2] = edgeAttributesFromV1ToV2; vertex2.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(edgeAttributesFromV1ToV2.SecondSurroundings, edgeAttributesFromV1ToV2.Surroundings);
+                    lastVertex.BoundaryEdges[vertex2] = edgeAttributesFromV1ToV2; vertex2.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(edgeAttributesFromV1ToV2.RightSurroundings, edgeAttributesFromV1ToV2.LeftSurroundings);
                 }
             }
         }
@@ -1245,10 +1255,10 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         {
             for (int i = 0; i < indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.Count - 1; i++)
             {
-                var outerEdgeSurroundingsForIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].neighbor].SecondSurroundings;
+                var outerEdgeSurroundingsForIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index].BoundaryEdges[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].neighbor].RightSurroundings;
                 Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForIntervalOfChain, symbolCodeOfAddedObject, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i].index, indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices[i+1].index);
             } 
-            var outerEdgeSurroundingsForFirstIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.First().index].BoundaryEdges[leftHandedNeigborOfFirstCrossSectionVertexInOtherDirection].SecondSurroundings;
+            var outerEdgeSurroundingsForFirstIntervalOfChain = chain[indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices.First().index].BoundaryEdges[leftHandedNeigborOfFirstCrossSectionVertexInOtherDirection].RightSurroundings;
             // we can use underling method directly with chain even tough provided edge surroundings is intentioned for 
             // setting edges of chain in opposite direction - we can do this thanks to the assumption that
             // both surroundings in edge attributes of path chain are the same so there is no difference between left
@@ -1263,7 +1273,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             for(int i = startIndex; i <= endIndex; ++i)
                 foreach (var (neighbor, edgeAttributes) in chain[i].NonBoundaryEdges)
                     if (neighbor is NetVertexBuilder)
-                        return edgeAttributes.Surroundings;
+                        return edgeAttributes.LeftSurroundings;
             return null;
         }
         
@@ -1850,15 +1860,15 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
 
         public static Orienteering_ISOM_2017_2.EdgeAttributes UpdateLinearFeaturesOfEdgeAttributes( Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
         {
-            var newLinearFeatures = GetUpdatedLinearFeaturesOfEdgeAttributes(edge.LineFeatures,  edge.Surroundings, edge.SecondSurroundings, symbolCodeOfAddedObject, out var newSurroundings, out var newSecondSurroundings);
+            var newLinearFeatures = GetUpdatedLinearFeaturesOfEdgeAttributes(edge.LineFeatures,  edge.LeftSurroundings, edge.RightSurroundings, symbolCodeOfAddedObject, out var newSurroundings, out var newSecondSurroundings);
             return new Orienteering_ISOM_2017_2.EdgeAttributes(newSurroundings, newLinearFeatures, newSecondSurroundings);
         }
         
         public static Orienteering_ISOM_2017_2.EdgeAttributes UpdateBothSurroundingsOfEdgeAttributes(Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
         {
             // both surroundings and second surroundings of edge attributes are updated
-            var newSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.Surroundings, symbolCodeOfAddedObject); 
-            var newSecondSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.SecondSurroundings, symbolCodeOfAddedObject); 
+            var newSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.LeftSurroundings, symbolCodeOfAddedObject); 
+            var newSecondSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.RightSurroundings, symbolCodeOfAddedObject); 
             return new Orienteering_ISOM_2017_2.EdgeAttributes(newSurroundings, newSecondSurroundings);
         }
         
@@ -2299,8 +2309,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 if (neighbor is BoundaryVertexBuilder boundaryNeighbor && edgeAttributes == new Orienteering_ISOM_2017_2.EdgeAttributes())
                 {
                     var attributesOfTheClosesLefHandedEdge = FindAttributesOfClosestLeftHandedBoundaryEdgeOfChainVertexTo(boundaryNeighbor, chainVertex);
-                    chainVertex.NonBoundaryEdges[boundaryNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosesLefHandedEdge.SecondSurroundings);
-                    boundaryNeighbor.NonBoundaryEdges[chainVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosesLefHandedEdge.SecondSurroundings);
+                    chainVertex.NonBoundaryEdges[boundaryNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosesLefHandedEdge.RightSurroundings);
+                    boundaryNeighbor.NonBoundaryEdges[chainVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosesLefHandedEdge.RightSurroundings);
                 }
             }
         }

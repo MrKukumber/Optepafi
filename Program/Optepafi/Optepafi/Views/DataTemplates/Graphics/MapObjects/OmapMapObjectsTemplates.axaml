@@ -428,8 +428,12 @@
         <DataTemplate DataType="{x:Type moVm:NotEnterableAreaSolidColourBoundingLine_520_1_ViewModel}">
             <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripes_520_2_ViewModel}"></DataTemplate>
-        <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripesBoundingLine_520_3_ViewModel}"></DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripes_520_2_ViewModel}">
+            <Path Fill="Black" Opacity="{Binding Opacity}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type moVm:NotEnterableAreaStripesBoundingLine_520_3_ViewModel}">
+            <Path Stroke="Black" StrokeThickness="{Binding LineThickness, Converter={StaticResource Micro2DipConverter}}" Data="{Binding Shape.Data}"/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type moVm:Building_521_ViewModel}">
             <Path Fill="Black" Data="{Binding Shape.Data}"/>
         </DataTemplate>

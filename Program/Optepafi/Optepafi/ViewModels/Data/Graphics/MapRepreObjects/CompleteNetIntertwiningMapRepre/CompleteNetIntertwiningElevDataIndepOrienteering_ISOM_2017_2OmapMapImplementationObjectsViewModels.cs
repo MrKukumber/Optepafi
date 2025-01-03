@@ -8,12 +8,12 @@ namespace Optepafi.ViewModels.Data.Graphics.MapRepreObjects.CompleteNetIntertwin
 
 public class VertexObjectViewModel(VertexObject obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
-    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex) - new CanvasCoordinate(25, 25);
+    public override CanvasCoordinate Position { get; } = obj.Position.ToCanvasCoordinate(mapsTopLeftVertex) - new CanvasCoordinate(55, 55);
     public override int Priority { get; } = 36;
     public int XCoord { get; } = obj.Position.XPos;
     public int YCoord { get; } = obj.Position.YPos;
     public float FontSize { get; } = 0.5f;
-    public int Diameter { get; } = 50;
+    public int Diameter { get; } = 100;
     
     public int LineThickness { get; } = 10;
 }
@@ -25,15 +25,15 @@ public class EdgeObjectViewModel : GraphicObjectViewModel
     public CanvasCoordinate StartPoint { get; }
     
     public CanvasCoordinate EndPoint { get; } 
-    public int TopLineThickness { get; } = 40;
-    public int BottomLineThickness { get; } = 50;
+    public int TopLineThickness { get; } = 80;
+    public int BottomLineThickness { get; } = 90;
 
     public EdgeObjectViewModel(EdgeObject obj, MapCoordinates mapsTopLeftVertex)
     {
         Position  = obj.From.ToCanvasCoordinate(mapsTopLeftVertex);
         StartPoint = new CanvasCoordinate(0, 0);
         EndPoint  = obj.To.ToCanvasCoordinate(mapsTopLeftVertex) - obj.From.ToCanvasCoordinate(mapsTopLeftVertex);
-        var surroundings = obj.Attributes.Surroundings;
+        var surroundings = obj.Attributes.LeftSurroundings;
         var lines = obj.Attributes.LineFeatures;
 
         BoulderColor = surroundings.boulders switch
