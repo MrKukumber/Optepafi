@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Optepafi.Models.GraphicsMan.Objects.MapRepre.CompleteNetIntertwiningMapRepre;
+using Optepafi.Models.GraphicsMan.Objects.MapRepre;
 using Optepafi.Models.Utils;
 using Optepafi.ViewModels.Data.Graphics;
-using Optepafi.ViewModels.Data.Graphics.MapRepreObjects.CompleteNetIntertwiningMapRepre;
+using Optepafi.ViewModels.Data.Graphics.MapRepreObjects;
 
-namespace Optepafi.ModelViews.Converters2Vm.Graphics.MapRepreObjects.CompleteNetIntertwiningMapRepre;
+namespace Optepafi.ModelViews.Converters2Vm.Graphics.MapRepreObjects;
 
-public static class CompleteNetIntertwElDatIndepOrient_ISOM_2017_2OmapImplObjects2VmConverters
+public static class CompleteNetIntertwiningMapRepreObjects2VmConverters
 {
     public static Dictionary<Type, IGraphicObjects2VmConverter> Converters = new()
     {

@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceInclude Source="CompleteNetIntertwiningMapRepre/CompleteNetIntertwiningMapRepreObjectsTemplates.axaml"/>
+        <ResourceInclude Source="/Views/DataTemplates/Graphics/MapRepreObjects/CompleteNetIntertwiningMapRepreObjectsTemplates.axaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

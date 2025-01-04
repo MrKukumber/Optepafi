@@ -1,7 +1,7 @@
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.Utils;
 
-namespace Optepafi.Models.GraphicsMan.Objects.MapRepre.CompleteNetIntertwiningMapRepre;
+namespace Optepafi.Models.GraphicsMan.Objects.MapRepre;
 
 
 public record VertexObject(MapCoordinates Position) : IGraphicObject

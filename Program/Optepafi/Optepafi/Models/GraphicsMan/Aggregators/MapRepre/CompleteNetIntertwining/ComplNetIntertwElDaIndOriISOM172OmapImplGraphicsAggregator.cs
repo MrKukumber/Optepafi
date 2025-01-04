@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Optepafi.Models.GraphicsMan.Collectors;
-using Optepafi.Models.GraphicsMan.Objects.MapRepre.CompleteNetIntertwiningMapRepre;
+using Optepafi.Models.GraphicsMan.Objects.MapRepre;
 using Optepafi.Models.MapRepreMan.Implementations.Specific.CompleteIterativelySnapping;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.Utils;

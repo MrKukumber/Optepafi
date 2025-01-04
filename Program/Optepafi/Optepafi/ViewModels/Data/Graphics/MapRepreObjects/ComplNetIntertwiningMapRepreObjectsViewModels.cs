@@ -1,10 +1,10 @@
 using Avalonia.Media;
-using Optepafi.Models.GraphicsMan.Objects.MapRepre.CompleteNetIntertwiningMapRepre;
+using Optepafi.Models.GraphicsMan.Objects.MapRepre;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.Utils;
 using Optepafi.ModelViews.Utils;
 
-namespace Optepafi.ViewModels.Data.Graphics.MapRepreObjects.CompleteNetIntertwiningMapRepre;
+namespace Optepafi.ViewModels.Data.Graphics.MapRepreObjects;
 
 public class VertexObjectViewModel(VertexObject obj, MapCoordinates mapsTopLeftVertex) : GraphicObjectViewModel
 {
