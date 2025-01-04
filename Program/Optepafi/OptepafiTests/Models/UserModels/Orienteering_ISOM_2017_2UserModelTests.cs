@@ -23,7 +23,6 @@ public class Orienteering_ISOM_2017_2UserModelTests
         using (FileStream fs = new FileStream(Path.Combine(_testFilesPath, "Viki_User_Model.ori17UM.json"), FileMode.Open, FileAccess.Read))
         {
             var result = UserModelManager.Instance.TryDeserializeUserModelOfTypeFrom((fs, Path.Combine(_testFilesPath, "Viki_User_Model.ori17UM.json")), Orienteering_ISOM_2017_2UserModelRepresentative.Instance, new Orienteering_ISOM_2017_2UserModelConfiguration(), null, out var vikisUserModel);
-            
         }
     }
     

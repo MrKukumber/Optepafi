@@ -41,7 +41,7 @@ public class Orienteering_ISOM_2017_2 : ITemplate<Orienteering_ISOM_2017_2.Verte
     // 2 bits
     public enum Boulders {GiganticBoulder_206 = 1, BoulderField_208, DenseBoulderField_209}
     // 3 bits
-    public enum Stones {StonyGroundSlow_210 = 1, StonyGroundWalk_211, StonyGroundFight_212, Sandyground_213, BareRock_214}
+    public enum Stones {StonyGroundSlow_210 = 1, StonyGroundWalk_211, StonyGroundFight_212, SandyGround_213, BareRock_214}
     // 3 bits
     public enum Water {UncrossableBodyOfWater_301 = 1, ShallowBodyOfWater_302, UncrossableMarsh_307, Marsh_308, IndistinctMarsh_310}
     // 4 bits

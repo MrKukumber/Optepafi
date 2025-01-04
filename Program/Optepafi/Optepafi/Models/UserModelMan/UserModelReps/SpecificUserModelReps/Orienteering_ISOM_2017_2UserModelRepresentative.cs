@@ -22,7 +22,7 @@ public class Orienteering_ISOM_2017_2UserModelRepresentative : UserModelRepresen
     public override Orienteering_ISOM_2017_2 AssociatedTemplate { get; } = Orienteering_ISOM_2017_2.Instance;
     protected override Orienteering_ISOM_2017_2UserModel GetNewUserModel(Orienteering_ISOM_2017_2UserModelConfiguration configuration)
     {
-        return new Orienteering_ISOM_2017_2UserModel();
+        return new Orienteering_ISOM_2017_2UserModel(true);
     }
 
     protected override Orienteering_ISOM_2017_2UserModel? DeserializeUserModel((Stream, string) serializationWithPath,

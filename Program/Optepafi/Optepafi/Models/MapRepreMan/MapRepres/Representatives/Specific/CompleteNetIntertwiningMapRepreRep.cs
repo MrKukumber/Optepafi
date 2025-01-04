@@ -23,5 +23,5 @@ public class CompleteNetIntertwiningMapRepreRep : MapRepreRepresentative<IComple
     
     ///<inheritdoc cref="IMapRepreRepresentative{TMapRepre}.GetCorrespondingGraphCreator{TVertexAttributes,TEdgeAttributes}"/>
     public override IGraphCreator<ICompleteNetIntertwiningMapRepre> GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>() => CompleteNetIntertwiningGraphRep<TVertexAttributes, TEdgeAttributes>.Instance;
-    protected override CompleteNetIntertwiningMapRepreConfiguration DefaultConfiguration { get; } = new (3000, 0.25f, 0);
+    protected override CompleteNetIntertwiningMapRepreConfiguration DefaultConfiguration { get; } = new (2000, 0.25f, 0);
 }

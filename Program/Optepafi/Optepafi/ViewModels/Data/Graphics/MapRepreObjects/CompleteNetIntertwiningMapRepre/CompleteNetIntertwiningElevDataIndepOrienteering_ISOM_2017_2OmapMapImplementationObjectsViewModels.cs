@@ -57,7 +57,7 @@ public class EdgeObjectViewModel : GraphicObjectViewModel
             Orienteering_ISOM_2017_2.Stones.StonyGroundSlow_210 => Colors.Black,
             Orienteering_ISOM_2017_2.Stones.StonyGroundWalk_211 => Colors.Black,
             Orienteering_ISOM_2017_2.Stones.StonyGroundFight_212 => Colors.Black,
-            Orienteering_ISOM_2017_2.Stones.Sandyground_213 => Colors.NavajoWhite,
+            Orienteering_ISOM_2017_2.Stones.SandyGround_213 => Colors.NavajoWhite,
             Orienteering_ISOM_2017_2.Stones.BareRock_214 => Colors.Gray,
             null => Colors.Transparent
         };

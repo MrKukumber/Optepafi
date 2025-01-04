@@ -44,16 +44,26 @@ public interface IIntervalAdjustable<TValue> : IUserModelAdjustable
 /// 
 /// It should be used in those cases in which it is possible to set one definite value for some user model property.  
 /// </summary>
-public class FloatValueAdjustable(string name, float value, string? unit, string? caption = null) : IValueAdjustable<float>
+public class FloatValueAdjustable : IValueAdjustable<float>
 {
+    public FloatValueAdjustable(string name, string? unit, string? caption = null)
+    {
+        Name = name;
+        Caption = caption is null ? name : caption;
+        Unit = unit;
+    }
+    public FloatValueAdjustable(string name, float value, string? unit, string? caption = null) : this(name, unit, caption)
+    {
+        Value = value;
+    }
     [JsonIgnore]
-    public string Name { get; } = name;
+    public string Name { get; }
     [JsonIgnore]
-    public string Caption { get; } = caption is null ? name : caption;
+    public string Caption { get; }
     [JsonIgnore]
-    public string? Unit { get; } = unit;
+    public string? Unit { get; }
 
-    public float Value { get; set; } = value;
+    public float Value { get; set; }
 }
 
 /// <summary>
@@ -62,17 +72,28 @@ public class FloatValueAdjustable(string name, float value, string? unit, string
 /// Its mean of use is in cases when is not 100% clear what value should some parameter have and because of that interval is more usable option.  
 /// These adjustable properties can then be set more precisely by methods like relevance feedback.  
 /// </summary>
-public class FloatIntervalAdjustable(string name,  (float, float) interval, string? unit, string? caption = null) : IIntervalAdjustable<float>
+public class FloatIntervalAdjustable : IIntervalAdjustable<float>
 {
+    public FloatIntervalAdjustable(string name, string? unit, string? caption = null)
+    {
+        Name = name;
+        Caption = caption is null ? name : caption;
+        Unit = unit;
+    }
+    public FloatIntervalAdjustable(string name, (float, float) interval, string? unit, string? caption = null) : this(name, unit, caption)
+    {
+        StartValue = interval.Item1;
+        EndValue = interval.Item2;
+    }
     [JsonIgnore]
-    public string Name { get; } = name;
+    public string Name { get; }
     [JsonIgnore]
-    public string Caption { get; } = caption is null ? name : caption;
+    public string Caption { get; } 
     [JsonIgnore]
-    public string? Unit { get; } = unit;
+    public string? Unit { get; } 
 
-    public float StartValue { get; set; } = interval.Item1;
-    public float EndValue { get; set; } = interval.Item2;
+    public float StartValue { get; set; }
+    public float EndValue { get; set; } 
 }
 
 /// <summary>
@@ -80,20 +101,31 @@ public class FloatIntervalAdjustable(string name,  (float, float) interval, stri
 /// 
 /// It should be used in those cases in which it is possible to set one definite value for some user model property.  
 /// </summary>
-public class BoundedFloatValueAdjustable(string name, float value, string? unit, float min, float max, string? caption = null) : IValueAdjustable<float>
+public class BoundedFloatValueAdjustable : IValueAdjustable<float>
 {
+    public BoundedFloatValueAdjustable(string name, string? unit, float min, float max, string? caption = null)
+    {
+        Name = name;
+        Unit = unit;
+        Min = min;
+        Max = max;
+        Caption = caption is null ? name : caption;
+    }
+    public BoundedFloatValueAdjustable(string name, float value, string? unit, float min, float max, string? caption = null) : this(name, unit, min, max, caption)
+    {
+        Value = value;
+    }
     [JsonIgnore]
-    public string Name { get; } = name;
+    public string Name { get; } 
     [JsonIgnore]
-    public string Caption { get; } = caption is null ? name : caption;
+    public string Caption { get; }
     [JsonIgnore]
-    public string? Unit { get; } = unit;
-
+    public string? Unit { get; } 
     [JsonIgnore]
-    public float Min { get; } = min;
+    public float Min { get; }
     [JsonIgnore]
-    public float Max { get; } = max;
+    public float Max { get; }
     
-    public float Value { get; set; } = value;
+    public float Value { get; set; }
     
 }

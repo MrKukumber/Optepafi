@@ -1879,7 +1879,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 403 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOpenLand_403, null),
                 404 or 404.1m => (null , null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOpenLandWithTrees_404, null),
                 413.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOrchard_413, null),
-                213 => (null, null, Orienteering_ISOM_2017_2.Stones.Sandyground_213, null, null, null),
+                213 => (null, null, Sandyground_213: Orienteering_ISOM_2017_2.Stones.SandyGround_213, null, null, null),
                 414.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughVineyard_414, null),
                 401 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401, null),
                 402 or 402.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLandWithTrees_402, null),
@@ -1888,12 +1888,12 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 414 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Vineyard_414, null),
                 407 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213)
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213)
                             return surroundings;
                         return (null, null, null, null, surroundings.vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis.VegetationSlowGoodVis_407); })(),
                 409 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213)
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213)
                             return surroundings;
                         return (null, null, null, null, surroundings.vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis.VegetationWalkGoodVis_409); })(),
                 406 or 406.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.VegetationSlow_406, null),
@@ -1903,27 +1903,27 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 405 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null),
                 310 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214)
                             return surroundings;
                         return (null, null, null, Orienteering_ISOM_2017_2.Water.IndistinctMarsh_310, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
                 308 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214)
                             return surroundings;
                         return (null, null, null, Orienteering_ISOM_2017_2.Water.Marsh_308, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
                 302 or 302.1m or 302.5m => (null, null, null, Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302, null, null),
                 113 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
                             surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302)
                             return surroundings;
                         return (Orienteering_ISOM_2017_2.Grounds.BrokenGround_113, null, null, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
                 114 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
                             surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
                             surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
@@ -1934,7 +1934,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         return (Orienteering_ISOM_2017_2.Grounds.VeryBrokenGround_114, null, null, null, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
                 210 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>( () => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
                             surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
                             surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
@@ -1948,7 +1948,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 211 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if ( surroundings.ground == Orienteering_ISOM_2017_2.Grounds.VeryBrokenGround_114 ||
                             surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
                             surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
                             surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
@@ -1960,7 +1960,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 212 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.VeryBrokenGround_114 ||
                             surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
                             surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
                             surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
@@ -1971,14 +1971,14 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         return (surroundings.ground, null, Orienteering_ISOM_2017_2.Stones.StonyGroundFight_212, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
                 208 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
                             surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302)
                             return surroundings;
                         return (surroundings.ground, Orienteering_ISOM_2017_2.Boulders.BoulderField_208, surroundings.stones, surroundings.water, surroundings.vegetationAndManMade, surroundings.vegetationGoodVis); })(),
                 209 => new Func<(Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)>(() => {
                         if (surroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 || 
-                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                            surroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                             surroundings.stones == Orienteering_ISOM_2017_2.Stones.BareRock_214 ||
                             surroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
                             surroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401 ||
@@ -2060,7 +2060,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         {
             if (!(originalSurroundings.ground == Orienteering_ISOM_2017_2.Grounds.CultivatedLand_412 ||
                   originalSurroundings.boulders == Orienteering_ISOM_2017_2.Boulders.GiganticBoulder_206 ||
-                  originalSurroundings.stones == Orienteering_ISOM_2017_2.Stones.Sandyground_213 ||
+                  originalSurroundings.stones == Orienteering_ISOM_2017_2.Stones.SandyGround_213 ||
                   originalSurroundings.water == Orienteering_ISOM_2017_2.Water.UncrossableMarsh_307 ||
                   originalSurroundings.water == Orienteering_ISOM_2017_2.Water.ShallowBodyOfWater_302 ||
                   originalSurroundings.vegetationAndManMade == Orienteering_ISOM_2017_2.VegetationAndManMade.PavedArea_501 ||
