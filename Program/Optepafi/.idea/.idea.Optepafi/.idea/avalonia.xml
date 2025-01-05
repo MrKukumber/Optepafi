@@ -24,8 +24,10 @@
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapObjects/MapObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapObjects/OmapMapObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapObjects/TextMapObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/DataTemplates/Graphics/MapRepreObjects/CompleteNetIntertwiningMapRepre/ComplNetIntertwElDaIndOri172OmapImplObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapRepreObjects/CompleteNetIntertwiningMapRepre/CompleteNetIntertwiningElevDataIndepOrienteering_2017_2OmapMapImplementationObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapRepreObjects/CompleteNetIntertwiningMapRepre/CompleteNetIntertwiningMapRepreObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
+        <entry key="Optepafi/Views/DataTemplates/Graphics/MapRepreObjects/CompleteNetIntertwiningMapRepreObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/MapRepreObjects/MapRepreObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/PathObjects/PathObjectsTemplates.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/DataTemplates/Graphics/PathObjects/SegmentedLineObjectsTemplates.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.Maps;
@@ -38,7 +39,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         private GraphCreator() { }
         
         public int processedObjectsCount;
-        // public int debugLimit = 11;//1334; // for debugging
+        // public int debugLimit = 5000;//1484;//1478;//1334; // for debugging
         public CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation Create(OmapMap map,
             CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
             CancellationToken? cancellationToken)
@@ -239,10 +240,10 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 // if(processedObjectsCount != debugLimit) // for debugging
                 PolygonalObjectsProcessing.SetAttributesOfChainsEdges(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, symbolCode);
                 // 8
+                PolygonalObjectsProcessing.AddChainVerticesToTheGraph(chainEnrichedByNewCrossSectionVertices, allVertices);
+                // 9
                 // if(processedObjectsCount != debugLimit) // for debugging
                 PolygonalObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chainEnrichedByNewCrossSectionVertices);
-                // 9
-                PolygonalObjectsProcessing.AddChainVerticesToTheGraph(chainEnrichedByNewCrossSectionVertices, allVertices);
             }
         }
         
@@ -267,10 +268,10 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             // if(processedObjectsCount != debugLimit) // for debugging
             PathObjectsProcessing.SetAttributesOfChainsEdges(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, symbolCode);
             // 6
+            PathObjectsProcessing.AddChainVerticesToTheGraph(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, allVertices);
+            // 7
             // if(processedObjectsCount != debugLimit) // for debugging
             PathObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices);
-            // 7
-            PathObjectsProcessing.AddChainVerticesToTheGraph(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, allVertices);
         }
         
         private void ProcessLinearObstacleObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
@@ -756,41 +757,19 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 var innerEdgeAttributesFromV1ToV2 = Utils.UpdateBothSurroundingsOfEdgeAttributes(outerEdgeAttributesFromV1ToV2, symbolCodeOfAddedObject);
                 bool edgeToBeAddedIsOuter = outerVerticesOfCutEdges.Contains(vertex1);
                 var lastVertex = vertex1;
+                newSortedVertices.Add(vertex2);
                 // we iteratively connect new vertices with each other and with vertices of cut boundary edge
                 foreach (var newVertex in newSortedVertices)
                 {
                     // we have to check if newly added vertex does not overlap with the one that is going to be connected with
                     // in case of overlap, last vertex is removed and is replaced by new vertex
                     // when new vertex overlap with one of the vertices of cut edge, the vertex of cut edge is removed and replaced by newly added vertex
-                    BoundaryVertexBuilder? overlappedVertex = newVertex.Position == lastVertex.Position ? lastVertex 
-                        : newVertex.Position == vertex2.Position 
-                            ? vertex2 : null;
+                    BoundaryVertexBuilder? overlappedVertex = newVertex.Position == lastVertex.Position ? lastVertex : null;
                     if (overlappedVertex is not null)
                     {
-                        foreach (var (neighbor, edgeAttributesWithNeighbor) in overlappedVertex.NonBoundaryEdges)
-                        {
-                            if (neighbor == overlappedVertex) continue; // TODO: resolve issue with self-pointing edges
-                            newVertex.NonBoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
-                            if (neighbor is BoundaryVertexBuilder boundaryNeighbor)
-                            {
-                                boundaryNeighbor.NonBoundaryEdges[newVertex] = boundaryNeighbor.NonBoundaryEdges[overlappedVertex];
-                                boundaryNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
-                            }
-                            else if (neighbor is NetVertexBuilder netNeighbor)
-                            {
-                                netNeighbor.NonBoundaryEdges[newVertex] = netNeighbor.NonBoundaryEdges[overlappedVertex];
-                                netNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
-                            }
-                        }
-                        overlappedVertex.NonBoundaryEdges.Clear();
-                        foreach (var (neighbor, edgeAttributesWithNeighbor) in overlappedVertex.BoundaryEdges)
-                        {
-                            if (neighbor == overlappedVertex) continue; // TODO: resolve issue with self-pointing edges
-                            newVertex.BoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
-                            neighbor.BoundaryEdges[newVertex] = neighbor.BoundaryEdges[overlappedVertex];
-                            neighbor.BoundaryEdges.Remove(overlappedVertex);
-                        }
-                        overlappedVertex.BoundaryEdges.Clear();
+                        if (newVertex == vertex2) Utils.ReplaceBoundaryVertexForTheOtherOne(newVertex, overlappedVertex);
+                        else Utils.ReplaceBoundaryVertexForTheOtherOne(overlappedVertex, newVertex);
+                        edgeToBeAddedIsOuter = !edgeToBeAddedIsOuter;
                         lastVertex = newVertex;
                         continue;
                     }
@@ -802,13 +781,6 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                         : new Orienteering_ISOM_2017_2.EdgeAttributes(innerEdgeAttributesFromV1ToV2.RightSurroundings, innerEdgeAttributesFromV1ToV2.LeftSurroundings);
                     edgeToBeAddedIsOuter = !edgeToBeAddedIsOuter;
                     lastVertex = newVertex;
-                }
-                if (lastVertex != vertex2)
-                {
-                    lastVertex.BoundaryEdges[vertex2] = edgeToBeAddedIsOuter ? outerEdgeAttributesFromV1ToV2 : innerEdgeAttributesFromV1ToV2;
-                    vertex2.BoundaryEdges[lastVertex] = edgeToBeAddedIsOuter 
-                        ? new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeAttributesFromV1ToV2.RightSurroundings, outerEdgeAttributesFromV1ToV2.LeftSurroundings) 
-                        : new Orienteering_ISOM_2017_2.EdgeAttributes(innerEdgeAttributesFromV1ToV2.RightSurroundings, innerEdgeAttributesFromV1ToV2.LeftSurroundings);
                 }
             }
         }
@@ -906,18 +878,19 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         
         #endregion
 
-        #region 8 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        #region 8 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+            public static void AddChainVerticesToTheGraph(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices)
+                => Utils.AddChainVerticesToTheGraph(chain, allVertices);
+        
+        #endregion
+        
+        #region 9 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(BoundaryVertexBuilder[] chain)
             => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chain);
 
         #endregion 
         
-        #region 9 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
-            public static void AddChainVerticesToTheGraph(BoundaryVertexBuilder[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices)
-                => Utils.AddChainVerticesToTheGraph(chain, allVertices);
-        
-        #endregion
     }
 
     private static class PathObjectsProcessing
@@ -1118,51 +1091,24 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 var newSortedVertices = Utils.SortVerticesCorrectly(vertex1, vertex2, newVertices);
                 var edgeAttributesFromV1ToV2 = verticesOfCutBoundaryEdges[(vertex1, vertex2)].Item1;
                 var lastVertex = vertex1;
+                newSortedVertices.Add(vertex2);
                 // we iteratively connect new vertices with each other and with vertices of cut boundary edge
                 foreach (var newVertex in newSortedVertices)
                 {
                     // we have to check if newly added vertex does not overlap with the one that is going to be connected with
                     // in case of overlap, last vertex is removed and is replaced by new vertex
                     // when new vertex overlap with one of the vertices of cut edge, the vertex of cut edge is removed and replaced by newly added vertex
-                    BoundaryVertexBuilder? overlappedVertex = newVertex.Position == lastVertex.Position ? lastVertex 
-                        : newVertex.Position == vertex2.Position 
-                            ? vertex2 : null;
+                    BoundaryVertexBuilder? overlappedVertex = newVertex.Position == lastVertex.Position ? lastVertex : null;
                     if (overlappedVertex is not null)
                     {
-                        foreach (var (neighbor, edgeAttributesWithNeighbor) in overlappedVertex.NonBoundaryEdges)
-                        {
-                            if (neighbor == overlappedVertex) continue; // TODO: resolve issue with self-pointing edges
-                            newVertex.NonBoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
-                            if (neighbor is BoundaryVertexBuilder boundaryNeighbor)
-                            {
-                                boundaryNeighbor.NonBoundaryEdges[newVertex] = boundaryNeighbor.NonBoundaryEdges[overlappedVertex];
-                                boundaryNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
-                            }
-                            else if (neighbor is NetVertexBuilder netNeighbor)
-                            {
-                                netNeighbor.NonBoundaryEdges[newVertex] = netNeighbor.NonBoundaryEdges[overlappedVertex];
-                                netNeighbor.NonBoundaryEdges.Remove(overlappedVertex);
-                            }
-                        }
-                        overlappedVertex.NonBoundaryEdges.Clear();
-                        foreach (var (neighbor, edgeAttributesWithNeighbor) in overlappedVertex.BoundaryEdges)
-                        {
-                            if (neighbor == overlappedVertex) continue; // TODO: resolve issue with self-pointing edges
-                            newVertex.BoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
-                            neighbor.BoundaryEdges[newVertex] = neighbor.BoundaryEdges[overlappedVertex];
-                            neighbor.BoundaryEdges.Remove(overlappedVertex);
-                        }
-                        overlappedVertex.BoundaryEdges.Clear();
+                        if (newVertex == vertex2) Utils.ReplaceBoundaryVertexForTheOtherOne(newVertex, overlappedVertex);
+                        else Utils.ReplaceBoundaryVertexForTheOtherOne(overlappedVertex, newVertex);
                         lastVertex = newVertex;
                         continue;
                     }
                     lastVertex.BoundaryEdges[newVertex] =  edgeAttributesFromV1ToV2;
                     newVertex.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(edgeAttributesFromV1ToV2.RightSurroundings, edgeAttributesFromV1ToV2.LeftSurroundings); 
                     lastVertex = newVertex;
-                }
-                if (lastVertex != vertex2)
-                {
-                    lastVertex.BoundaryEdges[vertex2] = edgeAttributesFromV1ToV2; vertex2.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(edgeAttributesFromV1ToV2.RightSurroundings, edgeAttributesFromV1ToV2.LeftSurroundings);
                 }
             }
         }
@@ -1281,19 +1227,19 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
 
         #region 6 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(BoundaryVertexBuilder[] chain)
-            => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chain);
-
-        #endregion
-
-        #region 7 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
         public static void AddChainVerticesToTheGraph(BoundaryVertexBuilder[] potentiallyMultiOccuringVerticesChain,
             IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices)
         {
             var chain = potentiallyMultiOccuringVerticesChain.ToHashSet();
             Utils.AddChainVerticesToTheGraph(chain, allVertices);
         }
+        #endregion
+        
+        #region 7 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(BoundaryVertexBuilder[] chain)
+            => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chain);
+
         #endregion
     }
 
@@ -1717,7 +1663,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             var fu = GetNumeratorAndDenominatorOfU(p1, p2, q1, q2);
             if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return null;
             if (!IsFractionInO1IntervalAndDefined(fu.numerator, fu.denominator)) return null;
-            if (!ApplyMagicFor(MagicFor.TwoSegments, ft, p1, p2, fu, q1, q2, sP)) return null;
+            if (!ApplyRightMagicFor(MagicFor.TwoSegments, ft, p1, p2, fu, q1, q2, sP)) return null;
             if (ft.numerator == 0) return p1;
             if (ft.numerator == ft.denominator) return p2;
             if (fu.numerator == 0) return q1;
@@ -1771,10 +1717,50 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             var fu = GetNumeratorAndDenominatorOfU(ls1, ls2, r1, r2);
             if (!IsFractionInO1IntervalAndDefined(ft.numerator, ft.denominator)) return false;
             if (!IsFractionGreaterOrEqualToZeroAndDefined(fu.numerator, fu.denominator)) return false;
-            return ApplyMagicFor(MagicFor.SegmentAndRay, ft, ls1, ls2, fu, r1, r2, sP);
+            return ApplyRightMagicFor(MagicFor.SegmentAndRay, ft, ls1, ls2, fu, r1, r2, sP);
         }
         private enum MagicFor{TwoSegments, SegmentAndRay}
-        private static bool ApplyMagicFor(MagicFor what, (int numerator, int denominator) ft, MapCoordinates p1, MapCoordinates p2, (int numerator, int denominator) fu, MapCoordinates q1, MapCoordinates q2, (MapCoordinates prev, MapCoordinates next) sP)
+        
+        private static bool ApplyRightMagicFor(MagicFor what, (int numerator, int denominator) ft, MapCoordinates p1, MapCoordinates p2, (int numerator, int denominator) fu, MapCoordinates q1, MapCoordinates q2, (MapCoordinates prev, MapCoordinates next) sP)
+        {
+            // magic:
+            // if vertex q1 or q2 falls under (chain) edge <p1, p2>, it is processed as it felt on the right side of this edge
+            if (ft.numerator == 0)
+                if (fu.numerator == 0)
+                    if ((p1 - sP.prev).LeftHandNormalVector() * (p2 - p1) > 0)
+                        return (p1 - sP.prev).LeftHandNormalVector() * (q2 - q1) > 0 && (p2 - p1).LeftHandNormalVector() * (q2 - q1) > 0;
+                    else return (p1 - sP.prev).LeftHandNormalVector() * (q2 - q1) > 0 || (p2 - p1).LeftHandNormalVector() * (q2 - q1) > 0;
+                else if(what is MagicFor.TwoSegments && fu.numerator == fu.denominator)
+                    if ((p1 - sP.prev).LeftHandNormalVector() * (p2 - p1) > 0)
+                        return (p1 - sP.prev).LeftHandNormalVector() * (q1 - q2) > 0 && (p2 - p1).LeftHandNormalVector() * (q1 - q2) > 0;
+                    else return (p1 - sP.prev).LeftHandNormalVector() * (q1 - q2) > 0 || (p2 - p1).LeftHandNormalVector() * (q1 - q2) > 0;
+                else 
+                    if ((p1 - sP.prev).LeftHandNormalVector() * (p2 - p1) >= 0)
+                        return (((p1 - sP.prev).LeftHandNormalVector() * (q1 - q2) > 0 && (p2 - p1).LeftHandNormalVector() * (q1 - q2) > 0) &&
+                                !((p1 - sP.prev).LeftHandNormalVector() * (q2 - q1) > 0 && (p2 - p1).LeftHandNormalVector() * (q2 - q1) > 0)) ||
+                               (!((p1 - sP.prev).LeftHandNormalVector() * (q1 - q2) > 0 && (p2 - p1).LeftHandNormalVector() * (q1 - q2) > 0) &&
+                                 ((p1 - sP.prev).LeftHandNormalVector() * (q2 - q1) > 0 && (p2 - p1).LeftHandNormalVector() * (q2 - q1) > 0));
+                    else return (((p1 - sP.prev).LeftHandNormalVector() * (q1 - q2) > 0 || (p2 - p1).LeftHandNormalVector() * (q1 - q2) > 0) && 
+                                 !((p1 - sP.prev).LeftHandNormalVector() * (q2 - q1) > 0 || (p2 - p1).LeftHandNormalVector() * (q2 - q1) > 0)) || 
+                                (!((p1 - sP.prev).LeftHandNormalVector() * (q1 - q2) > 0 || (p2 - p1).LeftHandNormalVector() * (q1 - q2) > 0) && 
+                                  ((p1 - sP.prev).LeftHandNormalVector() * (q2 - q1) > 0 || (p2 - p1).LeftHandNormalVector() * (q2 - q1) > 0));
+            // if first edge (chain edge) is cut in p2, cut is processed only if the next edge is parallel with [q1,q2] edge
+            // this cut would not be processed in next edge processing, because of parallelism of next edge and edge [q1, q2] 
+            if (ft.numerator == ft.denominator)
+                if ((sP.next - p2).RightHandNormalVector() * (q2 - q1) == 0)
+                    if (fu.numerator == 0 )
+                        return (sP.next - p2) * (q2 - q1) < 0 && (sP.next - p2) * (p2 - p1).RightHandNormalVector() > 0;
+                    else if (what is MagicFor.TwoSegments && fu.numerator == fu.denominator )
+                        return (sP.next - p2) * (q1 - q2) < 0 && (sP.next - p2) * (p2 - p1).RightHandNormalVector() > 0;
+                    else return (sP.next - p2) * (p2 - p1).RightHandNormalVector() > 0;
+                else return false;
+            if (fu.numerator == 0)
+                return (p2 - p1).RightHandNormalVector() * (q2 - q1) < 0;
+            if (fu.numerator == ft.denominator)
+                return (p2 - p1).RightHandNormalVector() * (q1 - q2) < 0;
+            return true;
+        }
+        private static bool ApplyLeftMagicFor(MagicFor what, (int numerator, int denominator) ft, MapCoordinates p1, MapCoordinates p2, (int numerator, int denominator) fu, MapCoordinates q1, MapCoordinates q2, (MapCoordinates prev, MapCoordinates next) sP)
         {
             // magic:
             // if vertex q1 or q2 falls under (chain) edge <p1, p2>, it is processed as it felt on the left side of this edge
@@ -2078,7 +2064,8 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         {
             var v1 = v1e - v1s;
             var v2 = v2e - v2s;
-            double angle = Math.Acos((v1 * v2)/(v1.Length()*v2.Length()));
+            var cosValue = (v1 * v2)/(v1.Length()*v2.Length());
+            double angle = Math.Acos(cosValue < -1? -1 : cosValue > 1 ? 1 : cosValue);
             // if scalar product of vector 2 and right side normal vector of vector 1 is positive, computed angle is inverted 
             var v1RightNorm = v1.RightHandNormalVector(); 
             return v1RightNorm * v2 > 0 ? 2*Math.PI - angle : angle;
@@ -2159,28 +2146,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 {
                     vertex.BoundaryEdges.Remove(overlappedVertex);
                     overlappedVertex.BoundaryEdges.Remove(vertex); 
-                    foreach (var (neighbor, edgeAttributesWithNeighbor) in vertex.NonBoundaryEdges)
-                    {
-                        overlappedVertex.NonBoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
-                        if (neighbor is BoundaryVertexBuilder boundaryNeighbor)
-                        {
-                            boundaryNeighbor.NonBoundaryEdges[overlappedVertex] = boundaryNeighbor.NonBoundaryEdges[vertex];
-                            boundaryNeighbor.NonBoundaryEdges.Remove(vertex);
-                        }
-                        else if (neighbor is NetVertexBuilder netNeighbor)
-                        {
-                            netNeighbor.NonBoundaryEdges[overlappedVertex] = netNeighbor.NonBoundaryEdges[vertex];
-                            netNeighbor.NonBoundaryEdges.Remove(vertex);
-                        }
-                    }
-                    vertex.NonBoundaryEdges.Clear();
-                    foreach (var (neighbor, edgeAttributesWithNeighbor) in vertex.BoundaryEdges)
-                    {
-                        overlappedVertex.BoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
-                        neighbor.BoundaryEdges[overlappedVertex] = neighbor.BoundaryEdges[vertex];
-                        neighbor.BoundaryEdges.Remove(vertex);
-                    }
-                    vertex.BoundaryEdges.Clear();
+                    ReplaceBoundaryVertexForTheOtherOne(vertex, overlappedVertex);
                     if (overlappedVertex == vertex2 && lastVertex != vertex2)
                     {
                         lastVertex = vertex2;
@@ -2190,6 +2156,35 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 else
                     chain.Insert(++chainIndex, vertex);
             }
+        }
+        
+        public static void ReplaceBoundaryVertexForTheOtherOne(BoundaryVertexBuilder vertex, BoundaryVertexBuilder theOtherOne)
+        {
+            // all edges of the boundary vertex are added to the other one, so if the other one has some same edge as vertex, it is overwritten
+            foreach (var (neighbor, edgeAttributesWithNeighbor) in vertex.NonBoundaryEdges)
+            {
+                if (neighbor == vertex) continue; // TODO: resolve issue with self-pointing edges
+                theOtherOne.NonBoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
+                if (neighbor is BoundaryVertexBuilder boundaryNeighbor)
+                {
+                    boundaryNeighbor.NonBoundaryEdges[theOtherOne] = boundaryNeighbor.NonBoundaryEdges[vertex];
+                    boundaryNeighbor.NonBoundaryEdges.Remove(vertex);
+                }
+                else if (neighbor is NetVertexBuilder netNeighbor)
+                {
+                    netNeighbor.NonBoundaryEdges[theOtherOne] = netNeighbor.NonBoundaryEdges[vertex];
+                    netNeighbor.NonBoundaryEdges.Remove(vertex);
+                }
+            }
+            vertex.NonBoundaryEdges.Clear();
+            foreach (var (neighbor, edgeAttributesWithNeighbor) in vertex.BoundaryEdges)
+            {
+                if (neighbor == vertex) continue; // TODO: resolve issue with self-pointing edges
+                theOtherOne.BoundaryEdges[neighbor] = edgeAttributesWithNeighbor;
+                neighbor.BoundaryEdges[theOtherOne] = neighbor.BoundaryEdges[vertex];
+                neighbor.BoundaryEdges.Remove(vertex);
+            }
+            vertex.BoundaryEdges.Clear();
         }
         
         #endregion
@@ -2308,9 +2303,10 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             {
                 if (neighbor is BoundaryVertexBuilder boundaryNeighbor && edgeAttributes == new Orienteering_ISOM_2017_2.EdgeAttributes())
                 {
-                    var attributesOfTheClosesLefHandedEdge = FindAttributesOfClosestLeftHandedBoundaryEdgeOfChainVertexTo(boundaryNeighbor, chainVertex);
-                    chainVertex.NonBoundaryEdges[boundaryNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosesLefHandedEdge.RightSurroundings);
-                    boundaryNeighbor.NonBoundaryEdges[chainVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosesLefHandedEdge.RightSurroundings);
+                    // if (chainVertex.Position == new MapCoordinates(776100, 2535)){} // for debugging
+                    var attributesOfTheClosestLefHandedEdge = FindAttributesOfClosestLeftHandedBoundaryEdgeOfChainVertexTo(boundaryNeighbor, chainVertex);
+                    chainVertex.NonBoundaryEdges[boundaryNeighbor] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosestLefHandedEdge.RightSurroundings);
+                    boundaryNeighbor.NonBoundaryEdges[chainVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes(attributesOfTheClosestLefHandedEdge.RightSurroundings);
                 }
             }
         }
