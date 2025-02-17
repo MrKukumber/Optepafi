@@ -33,7 +33,7 @@ public partial class PathFindingSessionWindow : ReactiveWindow<PathFindingSessio
         
         this.WhenActivated(d =>
         {
-            d(ViewModel!.PathFindingSettings.MapRepreCreationInteraction.RegisterHandler( DoShowMapRepreCreatingDialogAsync));
+            d(ViewModel!.PathFindingSettings.MapRepreCreationInteraction.RegisterHandler(DoShowMapRepreCreatingDialogAsync));
             d(ViewModel!.PathFinding.ExitCommand.Subscribe(_ => Close()));
             d(ViewModel.MainSettingsProvider.WhenAnyValue(x => x.CurrentCulture)
                 .Subscribe(_ =>
@@ -80,7 +80,7 @@ public partial class PathFindingSessionWindow : ReactiveWindow<PathFindingSessio
     /// Result is then set as na output of the interaction.  
     /// </summary>
     /// <param name="interaction">Interaction to be handled.</param>
-    private async Task DoShowMapRepreCreatingDialogAsync(InteractionContext<MapRepreCreatingViewModel, bool> interaction)
+    private async Task DoShowMapRepreCreatingDialogAsync(IInteractionContext<MapRepreCreatingViewModel, bool> interaction)
     {
         var dialog = new MapRepreCreatingDialogWindow
         {

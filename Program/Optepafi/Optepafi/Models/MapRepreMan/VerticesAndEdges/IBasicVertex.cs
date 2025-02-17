@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
+namespace Optepafi.Models.MapRepreMan.VerticesAndEdges;
 
 /// <summary>
 /// Basic vertex whose type of hold edges is assign to be of type <see cref="IBasicEdge{TVertex,TEdgeAttributes}"/>.

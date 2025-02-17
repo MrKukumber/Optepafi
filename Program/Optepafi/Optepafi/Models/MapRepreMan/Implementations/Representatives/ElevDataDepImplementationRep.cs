@@ -4,7 +4,7 @@ using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs;
-using Optepafi.Models.MapRepreMan.VertecesAndEdges;
+using Optepafi.Models.MapRepreMan.VerticesAndEdges;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.Utils;

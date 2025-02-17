@@ -1,4 +1,4 @@
-using Optepafi.Models.MapRepreMan.VertecesAndEdges;
+using Optepafi.Models.MapRepreMan.VerticesAndEdges;
 
 namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 

@@ -48,7 +48,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     /// Result is then set as an output of the interaction.  
     /// </summary>
     /// <param name="interaction">Interaction to be handled.</param>
-    private async Task DoShowElevConfigAsync(InteractionContext<ElevConfigViewModel, ElevDataDistributionViewModel?> interaction)
+    private async Task DoShowElevConfigAsync(IInteractionContext<ElevConfigViewModel, ElevDataDistributionViewModel?> interaction)
     {
         AutoResetEvent returningEvent = new AutoResetEvent(false);
         ElevDataDistributionViewModel? result = null;
@@ -76,7 +76,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     /// Response is then set as result of interaction.  
     /// </summary>
     /// <param name="interaction">Interaction to be handled.</param>
-    private async Task DoShowYesNoDialog(InteractionContext<YesNoDialogWindowViewModel, bool> interaction)
+    private async Task DoShowYesNoDialog(IInteractionContext<YesNoDialogWindowViewModel, bool> interaction)
     {
         var dialog = new YesNoDialogWindow()
         {

@@ -198,7 +198,7 @@ Skladá sa z~dvoch častí: hlavného okna a session-u pre vyhľadávanie ciest 
 \begin{itemize}
     \item spúšťanie jednotlivých session-ov
     \item nastavenie jazyka aplikácie
-    \item nastavenie konfiguráci mapových reprezentácií, vyhľadávacích algoritmov a užívateľských modelov
+    \item nastavenie konfiguráci mapových reprezentácií, vyhľadávacích algoritmov a~užívateľských modelov
     \item nastavenie implicitnej distribúcie výškových dát a~konfigurácia výškových dát
     \item ukončenie aplikácie zatvorením okna
 \end{itemize}
@@ -213,11 +213,11 @@ Session vyhľadávajúci cesty v~mapách zabezpečuje:
 
 \subsubsection{\underline{Spustenie aplikácie}}
 
-Aplikácia sa spúšťa pomocou spustitelného súboru \textit{Optepafi.exe}, vytvoreného kompiláciou zdrojového kódu projektu \textit{Optepafi.csproj} v prostredí operačného systému Windows. Po spustení sa na~obrazovke objaví hlavé okno s~hlavným menu.
+Aplikácia sa spúšťa pomocou spustitelného súboru \textit{Optepafi.exe}, vytvoreného kompiláciou zdrojového kódu projektu \textit{Optepafi.csproj} v~prostredí operačného systému Windows. Po spustení sa na~obrazovke objaví hlavé okno s~hlavným menu.
 
 \subsubsection{\underline{Ukončenie behu aplikácie}}
 
-Aplikácia sa ukončuje pomocou zatvorenia hlavného okna. To sa v~prípade otvorených session-ov môže užívateľa dotázať pomocou dialógového okna, či naozaj chce aplikáciu opustiť.
+Aplikácia sa ukončuje pomocou zatvorenia hlavného okna. To sa v~prípade otvorených session-ov môže užívateľa dotázať pomocou dialógového okna, či~naozaj chce aplikáciu opustiť.
 
 \pagebreak
 
@@ -243,11 +243,11 @@ V hlavnom menu je možné vidieť dve tlačidlá:
 
 V hlavných nastaveniach môžeme:
 \begin{itemize}
-    \item vybrať jazyk, ktorým chceme aby~na~nás aplikácia rozprávala. Je možné zvoliť buď slovenskú alebo anglickú lokalizáciu aplikácie.
+    \item vybrať jazyk, ktorým~chceme aby~na~nás aplikácia rozprávala. Je možné zvoliť buď slovenskú alebo~anglickú lokalizáciu aplikácie.
     \item prejsť stlačením príslušného tlačidla do~konfigurácie výškových dát. Pod týmto tlačidlom môžeme vidieť aktuálne vybranú, implicitne využívanú distribúciu výškových dát.
-    \item nastaviť konkrétnemu typu mapovej reprezentácie, vyhľadávacieho algoritmu alebo užívateľského modelu parametre, podľa ktorých sa bude pri vyhľadávaní ciest riadiť. V tejto chvíli sú nastaviteľné parametre dostupné iba pre mapovú reprezentáciu \textit{Complete, net intertwining map representation}. 
+    \item nastaviť konkrétnemu typu mapovej reprezentácie, vyhľadávacieho algoritmu alebo~užívateľského modelu parametre, podľa ktorých~sa~bude pri~vyhľadávaní ciest riadiť. V tejto chvíli sú~nastaviteľné parametre dostupné iba pre~mapovú reprezentáciu \textit{Complete, net intertwining map representation}. 
     
-    Pre tú je možné nastaviť štandardnú dĺžku hrán vo vytvorenom grafe a pomer najkratších povolených hrán ku štandardnej dĺžke hrany v retiazkach vrcholov hraníc mapových objektov vpletených do siete grafu. Tvar siete grafu je možné v tejto chvíli nastaviť ib na \textit{Triangular}. 
+    Pre tú je možné nastaviť štandardnú dĺžku hrán vo~vytvorenom grafe a~pomer najkratších povolených hrán ku~štandardnej dĺžke hrany v~retiazkach vrcholov hraníc mapových objektov vpletených do~siete grafu. Tvar siete grafu je možné v~tejto chvíli nastaviť iba na \textit{Triangular}. 
     \item stlačením tlačidla v~pravom dolnom rohu sa opäť vrátiť do~hlavného menu aplikácie.
 \end{itemize}
 
@@ -300,24 +300,24 @@ Session pre vyhľadávanie ciest je možné vytvoriť v hlavnom menu hlavného o
 \frame{\includegraphics[width=300px]{usr_img/path_finding_settings}}
 \end{figure}
 
-V nastaveniach parametrov je možné vybrať template, mapový súbor, typ mapovej reprezentácie, súbor s~užívateľským modelom a~vyhľadávací algoritmus, ktoré budú použité v procesu vyhľadávania ciest. Na začiatku sú tieto zdroje implicitne nastavené na posledne použité v~predchádzajúcej inštancii session-u.
+V nastaveniach parametrov je možné vybrať template, mapový súbor, typ mapovej reprezentácie, súbor s~užívateľským modelom a~vyhľadávací algoritmus, ktoré~budú použité v procesu vyhľadávania ciest. Na začiatku sú tieto zdroje implicitne nastavené na posledne použité v~predchádzajúcej inštancii session-u.
 
 Nastavovanie parametrov sa riadi určitými pravidlami:
 \begin{itemize}
-    \item najprv sa vyberá template a~mapový súbor, následne súbor s~užívateľským modelom a typ mapovej reprezentácie, a~na~koniec vyhľadávací algoritmus
+    \item najprv sa vyberá template a~mapový súbor, následne súbor s~užívateľským modelom a~typ mapovej reprezentácie, a~na~koniec vyhľadávací algoritmus
     \item pre zvolenú kombináciu template-u a~formátu mapového súboru musí platiť:
     \begin{itemize}
         \item musí existovať mapová reprezentácia, ktorá~túto kombináciu dokáže spracovať,
         \item taktiež pre~zvolený template-u musí existovať typ užívateľského modelu, ktorý~dokáže spracovávať atribúty definované týmto template-om,
-        \item nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a~užívateľského modelu, ktorú dokáže využiť aspoň jedna implementácie ľubovoľného vyhľadávacieho algoritmu.
+        \item nakoniec musí existovať aspoň jedna kombinácia takto definovanej mapovej reprezentácie a~užívateľského modelu, ktorú~dokáže využiť aspoň jedna implementácie ľubovoľného vyhľadávacieho algoritmu.
     \end{itemize}
     \item keď je vybraný buďto template alebo~mapový súbor a~výber druhej položky by~spôsobil neplatnú kombináciu, prvá položka sa opäť vynuluje.
-    \item súbor s~užívateľským modelom môže byť vybraný len takého typu, ktorý dokáže spracovávať atribúty definované zvoleným template-om a~ktorý spolu s~vybranou mapovou reprezentáciou, je vhodnou kombináciou pre aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu.
-    \item typ mapovej reprezentácie musí obsahovať implementáciu, ktorá dokáže spracovať dvojicu vybraného template-u a formát vybranej mapy. Zároveň s vybraným užívateľským modelom musia tvoriť kombináciu, ktorú dokáže využiť aspoň jedna implementácia nejakého vyhľadávacieho algoritmu.
+    \item súbor s~užívateľským modelom môže byť vybraný len takého typu, ktorý~dokáže spracovávať atribúty definované zvoleným template-om a~ktorý spolu s~vybranou mapovou reprezentáciou, je vhodnou kombináciou pre~aspoň jednu implementáciu nejakého vyhľadávacieho algoritmu.
+    \item typ mapovej reprezentácie musí obsahovať implementáciu, ktorá dokáže spracovať dvojicu vybraného template-u a~formát vybranej mapy. Zároveň s~vybraným užívateľským modelom musia tvoriť kombináciu, ktorú~dokáže využiť aspoň jedna implementácia nejakého vyhľadávacieho algoritmu.
     \item vyhľadávací algoritmus následne môže byť zvolený len taký, ktorý~podporuje typ vybraného užívateľského modelu a~mapovej reprezentácie.
 \end{itemize}
 
-Na obrazovke je ďalej možné pozorovať názvy vybraných súborov, ako aj grafický náhľad vybranej mapy.
+Na obrazovke je ďalej možné pozorovať názvy vybraných súborov, ako~aj grafický náhľad vybranej mapy.
 
 Po vybraní všetkých parametrov môže užívateľ pomocou stlačenia tlačidla v~dolnom rohu pokračovať do~ďalšej časti mechanizmu, ktorou je vytváranie mapovej reprezentácie.
 
@@ -330,9 +330,9 @@ Je možné vybrať si z~následujúcich parametrov:
         \item \textit{Blank template} - Template, ktorý reprezentuje prázdne vrcholové a~hranové atribúty. Slúži pre~demonštráciu aplikačných mechanizmov.
         \item \textit{Not usable template} - Demonštračný template, ktorý nie je možné využiť pri tvorbe žiadnej mapovej reprezentácie a~ani preňho neexistuje zodpovedajúci typ užívateľského modelu.
     \end{itemize}
-    \item \textbf{Mapa} - pre vyhľadávanie trás v mapách pre orientačný beh je potrebné zvoliť mapový súbor formátu \textit{.omap}. Tento mapový súbor by mal mať symbolový set rovnaký ako je základný symbolový novo vytvorenej mapy aplikáciou \textit{OpenOrienteeringMapper}. Pokiaľ sa symbolový set bude líšiť, je možné, že~sa niektoré mapové značky budú nesprávne interpretovať.
+    \item \textbf{Mapa} - pre~vyhľadávanie trás v~mapách pre~orientačný beh je potrebné zvoliť mapový súbor formátu \textit{.omap}. Tento mapový súbor by mal mať symbolový set rovnaký, ako je základný symbolový novo vytvorenej mapy aplikáciou \textit{OpenOrienteeringMapper}. Pokiaľ sa symbolový set bude líšiť, je možné, že~sa niektoré mapové značky budú nesprávne interpretovať.
     
-    - pre účely demonštrácie funkcionalít aplikácie je taktiež možné vybrať aj klasický \textit{textový} súbor. Na obrazovku budú následne vypísané náhodne všetky slová z~vybraného textového súboru.
+    - pre účely demonštrácie funkcionalít aplikácie je taktiež možné vybrať aj klasický \textit{textový} súbor. Na~obrazovku budú následne vypísané náhodne všetky slová z~vybraného textového súboru.
     \item \textbf{Užívateľský model} - pre vyhľadávanie trás v mapách pre orientačný beh je potrebné vybrať užívateľský model, ktorého suffix tvorí \textit{.ori17UM.json} indikujúci užívateľský model ktorý je viazaný na template \textit{Orienteering (ISOM 2017-2)}. 
     
     - pri použití ukážkového templateu \textit{Blank template} je možné taktiež vybrať užívateľský model typu \textit{Blank user model}. Podobne ako naviazaný template, ani tento užívateľský model nezabezpečuje žiadnu funkcionalitu. Slúži pre demonštráciu aplikačných mechanizmov.
@@ -370,6 +370,8 @@ Vyhľadávanie cesty je cyklus zložený z~troch fáz:
     \item \textbf{vyhľadávanie cesty} - Po výbere trasy prichádza na~rad samotné vyhľadávanie cesty. Proces vyhľadávania môže byť dynamicky zobrazovaný užívateľovi. Užívateľ taktiež môže prerušiť proces vyhľadávania príslušným tlačidlom. Pokiaľ je vyhľadávanie prerušené, je cyklus vyhľadávania cesty navrátený do~prvej fáze výberu trasy. Pokiaľ sa vyhľadávanie úspešne dokončí, prejde sa ku~fáze zobrazenia nájdenej cesty.
     \item \textbf{zobrazenie nájdenej cesty} - Po úspešnom dokončení vyhľadávania je užívateľovi zobrazená nájdená cesta a~jej doplňujúce informácie. Po dokončení prezerania výslednej cesty sa užívateľ stlačením príslušného tlačidla môže navrátiť do~prvej fáze vyhľadávacieho cyklu.
 \end{enumerate}
+
+Pokiaľ sa vo vstupnej mape nachádzala trať tvorená symbolom \textit{Simple Orienteering Course (799)}, bude táto trať pri otvorení vyhľadávacieho okna ihneď nastavená.
 
 Pokiaľ užívateľ hodlá session pre~vyhľadávanie ciest opustiť, môže tak učiniť kedykoľvek pomocou stlačenia tlačidla v~pravom hornom rohu obrazovky. 
 

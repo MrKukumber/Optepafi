@@ -5,7 +5,7 @@ using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Implementations;
 using Optepafi.Models.MapRepreMan.Implementations.Representatives;
 using Optepafi.Models.MapRepreMan.MapRepres;
-using Optepafi.Models.MapRepreMan.VertecesAndEdges;
+using Optepafi.Models.MapRepreMan.VerticesAndEdges;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 using Optepafi.Models.TemplateMan;

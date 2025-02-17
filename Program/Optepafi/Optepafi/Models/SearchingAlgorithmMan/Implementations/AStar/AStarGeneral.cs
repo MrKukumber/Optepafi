@@ -7,7 +7,7 @@ using Avalonia.Controls.Primitives;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 using Optepafi.Models.MapRepreMan.Graphs.Representatives;
-using Optepafi.Models.MapRepreMan.VertecesAndEdges;
+using Optepafi.Models.MapRepreMan.VerticesAndEdges;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Configurations;
 using Optepafi.Models.SearchingAlgorithmMan.Paths;

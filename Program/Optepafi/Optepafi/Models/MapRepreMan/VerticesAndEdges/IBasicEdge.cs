@@ -1,6 +1,6 @@
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
-namespace Optepafi.Models.MapRepreMan.VertecesAndEdges;
+namespace Optepafi.Models.MapRepreMan.VerticesAndEdges;
 
 /// <summary>
 /// Edge that represents basic edge functionality: it can bear attributes of defined type and can hold reference of its destination vertex.

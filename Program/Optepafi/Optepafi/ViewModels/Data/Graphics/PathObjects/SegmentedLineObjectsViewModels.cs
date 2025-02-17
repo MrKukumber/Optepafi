@@ -11,6 +11,6 @@ public class SegmentedLineObjectViewModel(SegmentedLineObject obj, MapCoordinate
     public override CanvasCoordinate Position { get; } = obj.Path.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
     public override int Priority => 100;
     public PathPolygonViewModel Shape { get; } = new (obj.Path, mapsTopLeftVertex);
-    public int LineThickness { get; } =  250;
+    public int LineThickness { get; } =  350;
     public float Opacity { get; } = 0.8f;
 }

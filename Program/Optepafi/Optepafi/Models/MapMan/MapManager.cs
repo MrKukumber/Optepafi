@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.MapRepresentatives;
 using Optepafi.Models.SearchingAlgorithmMan;

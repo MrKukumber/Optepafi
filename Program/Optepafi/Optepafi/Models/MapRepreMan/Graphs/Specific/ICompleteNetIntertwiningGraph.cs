@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 using Optepafi.Models.MapRepreMan.MapRepres.Specific;
-using Optepafi.Models.MapRepreMan.VertecesAndEdges;
+using Optepafi.Models.MapRepreMan.VerticesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.Graphs.Specific;

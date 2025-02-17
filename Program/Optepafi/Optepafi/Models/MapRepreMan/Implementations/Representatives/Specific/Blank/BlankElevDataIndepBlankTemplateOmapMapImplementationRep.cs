@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.MapFormats;
+using Optepafi.Models.MapMan.MapRepresentatives;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.Graphs.Specific;
 using Optepafi.Models.MapRepreMan.Implementations.Specific.Blank;

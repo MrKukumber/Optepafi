@@ -1,7 +1,7 @@
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.MapFormats;
 using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.MapMan.MapRepresentatives;
 
 namespace OptepafiTests.Models.Graphics.Omap;
 

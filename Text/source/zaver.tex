@@ -5,6 +5,18 @@ Cielom tejto bakalárskej práce bolo vytvoriť aplikáciu, v~ktorej bude možn�
 
 Práca mala zahrňovať návrh architektúry aplikácie a~jej samotnú implementáciu, špecifickú implementáciu na~spracovávanie mapových súborov z~oblasti orientačného behu, vytvorenie vyhľadávacieho algoritmu, ktorý~by dokázal vyhľadávať na~vytvorenej mapovej reprezentácii a~možnosť užívateľa zahrnúť svoje preferencie do~procesu vyhľadávania. 
 
-Tieto úlohy boli čiastočne splnené. Bol vytvorený kvalitný návrh aplikácie na~základe MVVM(MV) návrhového vzoru. Na~jeho základe bol následne implementovaný mechanizmus zabezpečujúci logiku za~vyhľadávaním ciest v~mapách a~taktiež mechanizmus hlavného okna, v~ktorom je možné spravovať nastavenia určené pre~celú aplikáciu. Následne bolo vytvorených 9 oblastí slúžiacich ku získavaniu a~spracovávaniu dátových štruktúr. Celý program je navrhnutý takým spôsobom, aby~bol čo najľahšie rozšíriteľný, či~už v~oblasti aplikačnej logiky alebo~typov dátových štruktúr, s~ktorými dokáže aplikácia pracovať. Vďaka MVVM(MV) architektúre je aplikáciu jednoduché udržovať a~modifikovať. 
+Tieto úlohy boli úspešne naplnené. 
+\begin{itemize}
+    \item Bol vytvorený kvalitný návrh aplikácie na~základe MVVM(MV) návrhového vzoru. Na~jeho základe bol následne implementovaný mechanizmus zabezpečujúci logiku za~vyhľadávaním ciest v~mapách a~taktiež mechanizmus hlavného okna, v~ktorom je možné spravovať nastavenia určené pre~celú aplikáciu. Následne bolo vytvorených 9 oblastí slúžiacich ku získavaniu a~spracovávaniu dátových štruktúr. Celý program je navrhnutý takým spôsobom, aby~bol čo najľahšie rozšíriteľný, či~už v~oblasti aplikačnej logiky alebo~typov dátových štruktúr, s~ktorými dokáže aplikácia pracovať. Vďaka MVVM(MV) architektúre je aplikáciu jednoduché udržovať a~modifikovať.
+    \item Pre vyhĽadávanie ciest v mapách pre orientačný beh bol vytvorený
+    \begin{itemize}
+        \item parser pre mapy formátu OMAP a grafické znázornenie týchto máp,
+        \item template zahrňujúci mapové značky dôležité pri vyhľadávaní najrýchlejších ciest v mapách pre orientačný beh,
+        \item užívateľský model, ktorý je možné parametrizovať na základe preferencií užívateľa
+        \item grafová reprezentácia mapy pre orientačný beh, na ktorej sa bude vyhľadávať najrýchlejšia cesta. V tejto chvíli bohužiaľ bez spracovania a aplikovania výškových dát. 
+        \item vyhľadávací algoritmus A*, ktorý je používaný pre vyhľadávanie trás v grafových reprezentáciách máp
+    \end{itemize}
+\end{itemize}
 
-Konečným výsledkom je teda kvalitná, jednoducho rozšíriteľná kostra aplikácie, ktorej chýbajú implementácie špecifických dátových štruktúr a~algoritmov, potrebných na~zabezpečenie vyhľadávania ciest v~mapách pre~orientačný beh.
+Vyhľadávanie samotné dodáva uspokojujúce výsledky. Hlavným problémom, ktorý nebol doposiaľ vyriešený je zakomponovanie informácií o nadmorskej výške do grafovej reprezentácie mapy a spracovanie tejto informácie užívateľským modelom. Preto je vyhľadávanie trás v tejto chvíli možné iba na relatívne plochých mapách, kde dokáže vracať zmysluplné výsledky.\\ 
+O výsledkoch vyhľadávania by bolo vhodné spraviť exaktnejší výskum, založený na názoroch skúsených orientačných bežcov, avšak z časových dôvodov nebolo možné takýto výskum uskutočniť. Samotné uskutočnenie by taktiež bolo celkom zložité, nakoľko kvalita nájdených trás v mnohých ohľadoch závisí na subjektívnom pohľade jednotlivých bežcov. Z tohto dôvodu sú v aplikácii prítomné užívateľské modely, aby si každý užívateľ mohol vyhľadávanie nastaviť podľa vlastných preferencií.

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Optepafi.Models.MapRepreMan.MapRepres.Specific;
-using Optepafi.Models.MapRepreMan.VertecesAndEdges;
+using Optepafi.Models.MapRepreMan.VerticesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.Utils;
 

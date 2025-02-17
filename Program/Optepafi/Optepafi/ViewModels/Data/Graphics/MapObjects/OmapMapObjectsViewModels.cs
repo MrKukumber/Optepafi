@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using Avalonia;
 using Avalonia.Collections;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Shapes;

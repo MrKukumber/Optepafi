@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.MapMan;
-using Optepafi.Models.MapMan.MapFormats;
+using Optepafi.Models.MapMan.MapRepresentatives;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.Configurations;
 using Optepafi.Models.MapRepreMan.Graphs.Specific;
@@ -1852,10 +1852,10 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         
         public static Orienteering_ISOM_2017_2.EdgeAttributes UpdateBothSurroundingsOfEdgeAttributes(Orienteering_ISOM_2017_2.EdgeAttributes edge, decimal symbolCodeOfAddedObject)
         {
-            // both surroundings and second surroundings of edge attributes are updated
-            var newSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.LeftSurroundings, symbolCodeOfAddedObject); 
-            var newSecondSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.RightSurroundings, symbolCodeOfAddedObject); 
-            return new Orienteering_ISOM_2017_2.EdgeAttributes(newSurroundings, newSecondSurroundings);
+            // both left and right surroundings of edge attributes are updated
+            var newLeftSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.LeftSurroundings, symbolCodeOfAddedObject); 
+            var newRightSurroundings = GetUpdatedSurroundingsOfEdgeAttributes(edge.RightSurroundings, symbolCodeOfAddedObject); 
+            return new Orienteering_ISOM_2017_2.EdgeAttributes(newLeftSurroundings, newRightSurroundings);
         }
         
         public static (Orienteering_ISOM_2017_2.Grounds? ground, Orienteering_ISOM_2017_2.Boulders? boulders, Orienteering_ISOM_2017_2.Stones? stones, Orienteering_ISOM_2017_2.Water? water, Orienteering_ISOM_2017_2.VegetationAndManMade? vegetationAndManMade, Orienteering_ISOM_2017_2.VegetationGoodVis? vegetationGoodVis)
@@ -1865,7 +1865,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 403 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOpenLand_403, null),
                 404 or 404.1m => (null , null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOpenLandWithTrees_404, null),
                 413.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughOrchard_413, null),
-                213 => (null, null, Sandyground_213: Orienteering_ISOM_2017_2.Stones.SandyGround_213, null, null, null),
+                213 => (null, null, Orienteering_ISOM_2017_2.Stones.SandyGround_213, null, null, null),
                 414.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.RoughVineyard_414, null),
                 401 => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLand_401, null),
                 402 or 402.1m => (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.OpenLandWithTrees_402, null),

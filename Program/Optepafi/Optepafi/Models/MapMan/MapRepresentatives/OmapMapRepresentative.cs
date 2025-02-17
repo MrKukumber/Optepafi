@@ -6,13 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Xml;
-using DynamicData;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.SearchingAlgorithmMan;
 using Optepafi.Models.Utils;
 
-namespace Optepafi.Models.MapMan.MapFormats;
+namespace Optepafi.Models.MapMan.MapRepresentatives;
 
 //empty coords list is not valid solution, there is always at least one coordinate tuple in objects shape/position 
 //TODO: comment
