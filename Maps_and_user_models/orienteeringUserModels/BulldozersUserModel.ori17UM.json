@@ -1,111 +1,111 @@
 {
   "BrokenGroundCoefficient": {
-    "Value": 0.001
+    "Value": 0.98
   },
   "VeryBrokenGroundCoefficient": {
-    "Value": 0.001
+    "Value": 0.88
   },
   "GiganticBoulderCoefficient": {
     "Value": 0
   },
   "BoulderFieldCoefficient": {
-    "Value": 0.001
+    "Value": 0.85
   },
   "DenseBoulderFieldCoefficient": {
-    "Value": 0.001
+    "Value": 0.7
   },
   "StonyGroundSlowCoefficient": {
-    "Value": 0.001
+    "Value": 0.85
   },
   "StonyGroundWalkCoefficient": {
-    "Value": 0.001
+    "Value": 0.7
   },
   "StonyGroundFightCoefficient": {
-    "Value": 0.001
+    "Value": 0.5
   },
   "SandyGroundCoefficient": {
-    "Value": 0.001
+    "Value": 0.83
   },
   "BareRockCoefficient": {
-    "Value": 0.001
+    "Value": 0.95
   },
   "UncrossableBodyOfWaterCoefficient": {
     "Value": 0
   },
   "ShallowBodyOfWaterCoefficient": {
-    "Value": 0.001
+    "Value": 0.6
   },
   "UncrossableMarshCoefficient": {
     "Value": 0
   },
   "MarshCoefficient": {
-    "Value": 0.001
+    "Value": 0.85
   },
   "IndistinctMarshCoefficient": {
-    "Value": 0.001
+    "Value": 0.95
   },
   "OpenLandCoefficient": {
-    "Value": 0.001
+    "Value": 0.96
   },
   "OpenLandWithTreesCoefficient": {
-    "Value": 0.001
+    "Value": 0.94
   },
   "RoughOpenLandCoefficient": {
-    "Value": 0.001
+    "Value": 0.92
   },
   "RoughOpenLandWithTreesCoefficient": {
-    "Value": 0.001
+    "Value": 0.85
   },
   "ForestCoefficient": {
-    "Value": 0.001
+    "Value": 0.94
   },
   "VegetationSlowCoefficient": {
-    "Value": 0.001
+    "Value": 0.9
   },
   "VegetationSlowGoodVisibilityCoefficient": {
-    "Value": 0.001
+    "Value": 0.92
   },
   "VegetationWalkCoefficient": {
-    "Value": 0.001
+    "Value": 0.75
   },
   "VegetationWalkGoodVisibilityCoefficient": {
-    "Value": 0.001
+    "Value": 0.78
   },
   "VegetationFightCoefficient": {
-    "Value": 0.001
+    "Value": 0.5
   },
   "CultivatedLandCoefficient": {
-    "Value": 0.001
+    "Value": 0.85
   },
   "OrchardCoefficient": {
-    "Value": 0.001
+    "Value": 0.95
   },
   "RoughOrchardCoefficient": {
-    "Value": 0.001
+    "Value": 0.85
   },
   "VineyardCoefficient": {
-    "Value": 0.001
+    "Value": 0.9
   },
   "RoughVineyardCoefficient": {
-    "Value": 0.001
+    "Value": 0.75
   },
   "PavedAreaCoefficient": {
-    "Value": 1
-  },
-  "WideRoadCoefficient": {
-    "Value": 1
-  },
-  "RoadCoefficient": {
-    "Value": 1
-  },
-  "VehicleTrackCoefficient": {
-    "Value": 1
-  },
-  "FootpathCoefficient": {
     "Value": 0.99
   },
-  "SmallFootpathCoefficient": {
+  "WideRoadCoefficient": {
+    "Value": 0.99
+  },
+  "RoadCoefficient": {
+    "Value": 0.99
+  },
+  "VehicleTrackCoefficient": {
     "Value": 0.98
+  },
+  "FootpathCoefficient": {
+    "Value": 0.98
+  },
+  "SmallFootpathCoefficient": {
+    "Value": 0.97
   },
   "LessDistinctSmallFootpathCoefficient": {
     "Value": 1.07
@@ -120,46 +120,46 @@
     "Value": 0
   },
   "StairwayCoefficient": {
-    "Value": 0.93
+    "Value": 0.95
   },
   "EarthBankOvercomeCoefficient": {
-    "Value": 2
+    "Value": 1.5
   },
   "EarthWallOvercomeCoefficient": {
-    "Value": 2
+    "Value": 1.5
   },
   "ErosionGullyOvercomeCoefficient": {
-    "Value": 5
+    "Value": 4
   },
   "ImpassableCliffOvercomeCoefficient": {
     "Value": 1000000
   },
   "CliffOvercomeCoefficient": {
-    "Value": 7
+    "Value": 6
   },
   "TrenchOvercomeCoefficient": {
     "Value": 1
   },
   "CrossableWaterCourseOvercomeCoefficient": {
-    "Value": 3
+    "Value": 2.5
   },
   "SmallCrossableWaterCourseOvercomeCoefficient": {
-    "Value": 2
+    "Value": 1.5
   },
   "WallOvercomeCoefficient": {
-    "Value": 2
+    "Value": 1.5
   },
   "ImpassableWallOvercomeCoefficient": {
     "Value": 1000000
   },
   "FenceOvercomeCoefficient": {
-    "Value": 2
+    "Value": 1.5
   },
   "ImpassableFenceOvercomeCoefficient": {
     "Value": 1000000
   },
   "ProminentLineFeatureOvercomeCoefficient": {
-    "Value": 1.5
+    "Value": 1
   },
   "ImpassableProminentLineFeatureOvercomeCoefficient": {
     "Value": 1000000
