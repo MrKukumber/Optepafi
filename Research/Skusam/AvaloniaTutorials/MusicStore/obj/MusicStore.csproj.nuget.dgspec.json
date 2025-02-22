@@ -1,0 +1,93 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\matej\\Desktop\\Škola\\VÝŠKA\\6.semester\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaTutorials\\MusicStore\\MusicStore.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\matej\\Desktop\\Škola\\VÝŠKA\\6.semester\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaTutorials\\MusicStore\\MusicStore.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\matej\\Desktop\\Škola\\VÝŠKA\\6.semester\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaTutorials\\MusicStore\\MusicStore.csproj",
+        "projectName": "MusicStore",
+        "projectPath": "C:\\Users\\matej\\Desktop\\Škola\\VÝŠKA\\6.semester\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaTutorials\\MusicStore\\MusicStore.csproj",
+        "packagesPath": "C:\\Users\\matej\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\matej\\Desktop\\Škola\\VÝŠKA\\6.semester\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaTutorials\\MusicStore\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\matej\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Avalonia": {
+              "target": "Package",
+              "version": "[11.0.9, )"
+            },
+            "Avalonia.Desktop": {
+              "target": "Package",
+              "version": "[11.0.9, )"
+            },
+            "Avalonia.Diagnostics": {
+              "target": "Package",
+              "version": "[11.0.9, )"
+            },
+            "Avalonia.Fonts.Inter": {
+              "target": "Package",
+              "version": "[11.0.9, )"
+            },
+            "Avalonia.ReactiveUI": {
+              "target": "Package",
+              "version": "[11.0.9, )"
+            },
+            "Avalonia.Themes.Fluent": {
+              "target": "Package",
+              "version": "[11.0.9, )"
+            },
+            "iTunesSearch": {
+              "target": "Package",
+              "version": "[1.0.44, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

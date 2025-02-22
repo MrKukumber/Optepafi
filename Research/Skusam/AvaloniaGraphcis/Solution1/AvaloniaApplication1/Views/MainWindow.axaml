@@ -1,0 +1,127 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaApplication1.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="AvaloniaApplication1.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="AvaloniaApplication1">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <Border BorderBrush="Azure" BorderThickness="4" Width="600" Height="400">
+        <Viewbox>
+            <Canvas VerticalAlignment="Center" HorizontalAlignment="Center" Width="600" Height="400">
+                <Ellipse Fill="Green" Width="5" Height="5" Canvas.Left="5" Canvas.Top="0"/>
+                <Ellipse Fill="Green" Width="5" Height="5" Canvas.Left="5" Canvas.Top="100"/>
+                <Ellipse Fill="Green" Width="5" Height="5" Canvas.Left="5" Canvas.Top="200"/>
+                <Ellipse Fill="Green" Width="5" Height="5" Canvas.Left="5" Canvas.Top="300"/>
+                <Ellipse Fill="Green" Width="5" Height="5" Canvas.Left="5" Canvas.Top="400"/>
+                <Ellipse Fill="Blue" Width="5" Height="5" Canvas.Left="5" Canvas.Bottom="0"/>
+                <Ellipse Fill="Blue" Width="5" Height="5" Canvas.Left="5" Canvas.Bottom="100"/>
+                <Ellipse Fill="Blue" Width="5" Height="5" Canvas.Left="5" Canvas.Bottom="200"/>
+                <Ellipse Fill="Blue" Width="5" Height="5" Canvas.Left="5" Canvas.Bottom="300"/>
+                <Path Fill="Red" Data="M 0,0 c 0,0 50,0 50,-50 c 0,0 50,0 50,50 h -50 v 50 l -50,-50 Z" Canvas.Left="300" Canvas.Bottom="200"/>
+                <Path Fill="Orange" Canvas.Left="300" Canvas.Top="200">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,0" IsClosed="True">
+                                <QuadraticBezierSegment Point1="50,0" Point2="50,-50" />
+                                <QuadraticBezierSegment Point1="100,-50" Point2="100,0" />
+                                <LineSegment Point="50,0" />
+                                <LineSegment Point="50,50" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Canvas.Left="450" Canvas.Top="200" Stroke="Aqua"  StrokeThickness="1" Data="M 0,0 c -100,-100 -200,100 -300,0"></Path>
+                <Path Canvas.Left="450" Canvas.Bottom="200" Stroke="Aqua"  StrokeThickness="1" Data="M 0,0 c -100,-100 -200,100 -300,0"></Path>
+                <Path Canvas.Right="450" Canvas.Top="200" Stroke="Brown"  StrokeThickness="1" Data="M 0,0 c 100,-100 200,100 300,0"></Path>
+                <Path Canvas.Right="450" Canvas.Bottom="200" Stroke="Brown"  StrokeThickness="1" Data="M 0,0 c 100,-100 200,100 300,0"></Path>
+                <Path Canvas.Right="300" Canvas.Top="50" Stroke="Green"  StrokeThickness="1" Data="M 0,0 c -100,100 100,200 0,300"></Path>
+                <Path Canvas.Left="300" Canvas.Top="50" Stroke="Green"  StrokeThickness="1" Data="M 0,0 c -100,100 100,200 0,300"></Path>
+                
+                <Path Canvas.Left="450" Canvas.Top="50" Stroke="Blue"  StrokeThickness="1" Data="M 2,2 c -98,102 102,202 2,302"></Path>
+                <Path Canvas.Left="450" Canvas.Top="50" Stroke="Red"  StrokeThickness="1" Data="M 0,0 c -100,100 100,200 0,300"></Path>
+                <!-- <Path Stroke="Black" StrokeThickness="2"> -->
+                    <!-- <Path.Fill> -->
+                        <!-- <LinearGradientBrush StartPoint="0,0" EndPoint="350,0"> -->
+                            <!-- Creating alternating stripes -->
+                            <!-- <GradientStop Color="Red" Offset="0" /> -->
+                            <!-- <GradientStop Color="Blue" Offset="0.5" /> -->
+                            <!-- <GradientStop Color="Green" Offset="1" /> -->
+                        <!-- </LinearGradientBrush> -->
+                    <!-- </Path.Fill> -->
+                    <!-- <Path.Data> -->
+                        <!-- <PathGeometry> -->
+                            <!-- <PathFigure StartPoint="50,50"> -->
+                                <!-- <LineSegment Point="350,50" /> -->
+                                <!-- <LineSegment Point="350,150" /> -->
+                                <!-- <LineSegment Point="50,150" /> -->
+                                <!-- <LineSegment Point="50,50" /> -->
+                            <!-- </PathFigure> -->
+                        <!-- </PathGeometry> -->
+                    <!-- </Path.Data> -->
+                <!-- </Path>  -->
+                <!-- <Path Stroke="Black" StrokeThickness="2" Canvas.Left="50" Canvas.Top="50"> -->
+                    <!-- <Path.Fill> -->
+                        <!-- <VisualBrush TileMode="Tile"> -->
+                            <!-- <VisualBrush.Visual> -->
+                                <!-- <Rectangle Width="20" Height="20"> -->
+                                    <!-- <Rectangle.Fill> -->
+                                        <!-- <DrawingBrush TileMode="FlipY"> -->
+                                            <!-- <DrawingBrush.Drawing> -->
+                                                <!-- <DrawingGroup> -->
+                                                    <!-- <GeometryDrawing Brush="Red" Geometry="M 0,0 L 10,0 L 10,20 L 0,20 Z"/> -->
+                                                    <!-- <GeometryDrawing Brush="Blue" Geometry="M 10,0 L 20,0 L 20,20 L 10,20 Z"/> -->
+                                                <!-- </DrawingGroup> -->
+                                            <!-- </DrawingBrush.Drawing> -->
+                                        <!-- </DrawingBrush> -->
+                                    <!-- </Rectangle.Fill> -->
+                                <!-- </Rectangle> -->
+                            <!-- </VisualBrush.Visual> -->
+                        <!-- </VisualBrush> -->
+                    <!-- </Path.Fill> -->
+                    <!-- <Path.Data> -->
+                        <!-- <PathGeometry> -->
+                            <!-- <PathFigure StartPoint="0,0"> -->
+                                <!-- <LineSegment Point="200,0" /> -->
+                                <!-- <LineSegment Point="200,100" /> -->
+                                <!-- <LineSegment Point="0,100" /> -->
+                                <!-- <LineSegment Point="0,0" /> -->
+                            <!-- </PathFigure> -->
+                        <!-- </PathGeometry> -->
+                    <!-- </Path.Data> -->
+                <!-- </Path>  -->
+                <Path Stroke="Black" StrokeThickness="2" Canvas.Left="50" Canvas.Top="50">
+                    <Path.Fill>
+                        <DrawingBrush TileMode="Tile">
+                            <!-- <DrawingBrush.Drawing> -->
+                                <!-- <DrawingGroup> -->
+                                    <!-- <GeometryDrawing Brush="Red" Geometry="M 0,0 L 10,0 L 10,20 L 0,20 Z"/> -->
+                                    <!-- <GeometryDrawing Brush="Blue" Geometry="M 10,0 L 20,0 L 20,20 L 10,20 Z"/> -->
+                                <!-- </DrawingGroup> -->
+                            <!-- </DrawingBrush.Drawing> -->
+                        </DrawingBrush>
+                    </Path.Fill>
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,0">
+                                <LineSegment Point="200,0" />
+                                <LineSegment Point="200,100" />
+                                <LineSegment Point="0,100" />
+                                <LineSegment Point="0,0" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Viewbox>
+    </Border>
+    
+</Window>

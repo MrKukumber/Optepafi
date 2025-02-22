@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore", "MusicStore\MusicStore.csproj", "{5677CB5B-DD16-44CC-94C3-F7F6B745190B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoList", "TodoList\ToDoList.csproj", "{C75325FB-9082-4AD7-A9A5-64DEA6F7CD67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5677CB5B-DD16-44CC-94C3-F7F6B745190B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5677CB5B-DD16-44CC-94C3-F7F6B745190B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5677CB5B-DD16-44CC-94C3-F7F6B745190B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5677CB5B-DD16-44CC-94C3-F7F6B745190B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C75325FB-9082-4AD7-A9A5-64DEA6F7CD67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C75325FB-9082-4AD7-A9A5-64DEA6F7CD67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C75325FB-9082-4AD7-A9A5-64DEA6F7CD67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C75325FB-9082-4AD7-A9A5-64DEA6F7CD67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,167 @@
+{
+  "BrokenGroundCoefficient": {
+    "Value": 0.001
+  },
+  "VeryBrokenGroundCoefficient": {
+    "Value": 0.001
+  },
+  "GiganticBoulderCoefficient": {
+    "Value": 0
+  },
+  "BoulderFieldCoefficient": {
+    "Value": 0.001
+  },
+  "DenseBoulderFieldCoefficient": {
+    "Value": 0.001
+  },
+  "StonyGroundSlowCoefficient": {
+    "Value": 0.001
+  },
+  "StonyGroundWalkCoefficient": {
+    "Value": 0.001
+  },
+  "StonyGroundFightCoefficient": {
+    "Value": 0.001
+  },
+  "SandyGroundCoefficient": {
+    "Value": 0.001
+  },
+  "BareRockCoefficient": {
+    "Value": 0.001
+  },
+  "UncrossableBodyOfWaterCoefficient": {
+    "Value": 0
+  },
+  "ShallowBodyOfWaterCoefficient": {
+    "Value": 0.001
+  },
+  "UncrossableMarshCoefficient": {
+    "Value": 0
+  },
+  "MarshCoefficient": {
+    "Value": 0.001
+  },
+  "IndistinctMarshCoefficient": {
+    "Value": 0.001
+  },
+  "OpenLandCoefficient": {
+    "Value": 0.001
+  },
+  "OpenLandWithTreesCoefficient": {
+    "Value": 0.001
+  },
+  "RoughOpenLandCoefficient": {
+    "Value": 0.001
+  },
+  "RoughOpenLandWithTreesCoefficient": {
+    "Value": 0.001
+  },
+  "ForestCoefficient": {
+    "Value": 0.001
+  },
+  "VegetationSlowCoefficient": {
+    "Value": 0.001
+  },
+  "VegetationSlowGoodVisibilityCoefficient": {
+    "Value": 0.001
+  },
+  "VegetationWalkCoefficient": {
+    "Value": 0.001
+  },
+  "VegetationWalkGoodVisibilityCoefficient": {
+    "Value": 0.001
+  },
+  "VegetationFightCoefficient": {
+    "Value": 0.001
+  },
+  "CultivatedLandCoefficient": {
+    "Value": 0.001
+  },
+  "OrchardCoefficient": {
+    "Value": 0.001
+  },
+  "RoughOrchardCoefficient": {
+    "Value": 0.001
+  },
+  "VineyardCoefficient": {
+    "Value": 0.001
+  },
+  "RoughVineyardCoefficient": {
+    "Value": 0.001
+  },
+  "PavedAreaCoefficient": {
+    "Value": 1
+  },
+  "WideRoadCoefficient": {
+    "Value": 1
+  },
+  "RoadCoefficient": {
+    "Value": 1
+  },
+  "VehicleTrackCoefficient": {
+    "Value": 1
+  },
+  "FootpathCoefficient": {
+    "Value": 0.99
+  },
+  "SmallFootpathCoefficient": {
+    "Value": 0.98
+  },
+  "LessDistinctSmallFootpathCoefficient": {
+    "Value": 1.07
+  },
+  "NarrowRideCoefficient": {
+    "Value": 1.07
+  },
+  "AreaThatShallNotBeEnteredCoefficient": {
+    "Value": 0
+  },
+  "BuildingCoefficient": {
+    "Value": 0
+  },
+  "StairwayCoefficient": {
+    "Value": 0.93
+  },
+  "EarthBankOvercomeCoefficient": {
+    "Value": 2
+  },
+  "EarthWallOvercomeCoefficient": {
+    "Value": 2
+  },
+  "ErosionGullyOvercomeCoefficient": {
+    "Value": 5
+  },
+  "ImpassableCliffOvercomeCoefficient": {
+    "Value": 1000000
+  },
+  "CliffOvercomeCoefficient": {
+    "Value": 7
+  },
+  "TrenchOvercomeCoefficient": {
+    "Value": 1
+  },
+  "CrossableWaterCourseOvercomeCoefficient": {
+    "Value": 3
+  },
+  "SmallCrossableWaterCourseOvercomeCoefficient": {
+    "Value": 2
+  },
+  "WallOvercomeCoefficient": {
+    "Value": 2
+  },
+  "ImpassableWallOvercomeCoefficient": {
+    "Value": 1000000
+  },
+  "FenceOvercomeCoefficient": {
+    "Value": 2
+  },
+  "ImpassableFenceOvercomeCoefficient": {
+    "Value": 1000000
+  },
+  "ProminentLineFeatureOvercomeCoefficient": {
+    "Value": 1.5
+  },
+  "ImpassableProminentLineFeatureOvercomeCoefficient": {
+    "Value": 1000000
+  }
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="MusicStore/App.axaml" value="MusicStore/MusicStore.csproj" />
+        <entry key="MusicStore/Ions.axaml" value="MusicStore/MusicStore.csproj" />
+        <entry key="MusicStore/Views/AlbumView.axaml" value="MusicStore/MusicStore.csproj" />
+        <entry key="MusicStore/Views/MainWindow.axaml" value="MusicStore/MusicStore.csproj" />
+        <entry key="MusicStore/Views/MusiStoreWindow.axaml" value="MusicStore/MusicStore.csproj" />
+        <entry key="MusicStore/Views/MusicStoreView.axaml" value="MusicStore/MusicStore.csproj" />
+        <entry key="MusicStore/Views/MusicStoreWindow.axaml" value="MusicStore/MusicStore.csproj" />
+        <entry key="TodoList/Views/AddItemView.axaml" value="TodoList/ToDoList.csproj" />
+        <entry key="TodoList/Views/MainWindow.axaml" value="TodoList/ToDoList.csproj" />
+        <entry key="TodoList/Views/TemplatedControl1.axaml" value="TodoList/ToDoList.csproj" />
+        <entry key="TodoList/Views/ToDoListView.axaml" value="TodoList/ToDoList.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

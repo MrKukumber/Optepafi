@@ -1,0 +1,14 @@
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\bin\Debug\net8.0\SRTMFirstApp.exe
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\bin\Debug\net8.0\SRTMFirstApp.deps.json
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\bin\Debug\net8.0\SRTMFirstApp.runtimeconfig.json
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\bin\Debug\net8.0\SRTMFirstApp.dll
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\bin\Debug\net8.0\SRTMFirstApp.pdb
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\SRTMFirstApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\SRTMFirstApp.AssemblyInfoInputs.cache
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\SRTMFirstApp.AssemblyInfo.cs
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\SRTMFirstApp.csproj.CoreCompileInputs.cache
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\SRTMFirstApp.dll
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\refint\SRTMFirstApp.dll
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\SRTMFirstApp.pdb
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\SRTMFirstApp.genruntimeconfig.cache
+C:\Users\matej\Desktop\Škola\VÝŠKA\6.semester\Rocnikovy_projekt\Praca\Research\Skusam\Solution1\SRTMFirstApp\obj\Debug\net8.0\ref\SRTMFirstApp.dll
