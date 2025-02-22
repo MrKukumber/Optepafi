@@ -1,0 +1,226 @@
+\chapter{Vyhľadávanie trás v~mapách pre~orientačný beh}
+
+Ako už bolo spomenuté v~sekcii~\ref{Aspekty_hladania}, vyhľadávanie trás v~mapách je výsledkom kombinácie viacerých konceptov. V~tejto kapitole sa bližšie pozrieme na~implementácie týchto konceptov, ktoré~sa spoločne podieľajú na~vyhľadávaní najrýchlejších trás v~mapách z~prostredia orientačného behu.
+
+\section{Orienteering (ISOM 2017-2) template}
+
+Tento template definuje vrcholové a~hranové atribúty, ktorými dokážeme detailne popísať miesto na~mape využívanej v~orientačnom behu. Je potrebné, aby dokázali zachytiť topológiu mapy, prostredie, v~ktorom sa daný vrchol/hrana nachádza a nadmorskú výšku konkrétneho bodu na~mape.  
+
+Čo sa mapových značiek týka, využíva sa sada mapových značiek definovaná normou ISOM 2017-2. \uv{Cieľom Medzinárodnej špecifikácie máp pre~orientačné športy (ISOM) je poskytnúť mapovú špecifikáciu, ktorú možno používať na~celom svete pre~rôzne typy terénu, ktoré~sú vhodné pre~orientačné športy. Táto špecifikácia by sa mala používať v~spojení s~pravidlami Medzinárodnej federácie orientačných športov (IOF) pre~orientačné preteky.}\cite{ISOM20172}
+
+Vrcholové atribúty samotné nesú informáciu o~polohe vrcholov grafu na~mape a~indikujú nadmorskú výšku v~mieste daného vrcholu. V~aktuálnom stave aplikácie nie je možné získať informáciu o~nadmorskej výške vrcholov grafu a~teda je nadmorská výška všetkých vrcholov v grafoch nastavená na~hodnotu 0. To znamená, že pri~výbere najrýchlejších trás v~mape sa nebude brať do~úvahy informácia o~prevýšení, ktoré~musí bežec na~danej ceste prekonať.
+
+Informáciu o~okolitom teréne a~prostredí následne nesú hranové atribúty, ktoré~popisujú okolie jednotlivých hrán grafu. Okolím hrany sa myslí prostredie na~ľavej a~pravej strane konkrétnej hrany (les, vegetácia, lúka, vodné teleso, mokraď, atď) a~prípadná cesta alebo líniová prekážka, ktorá cez danú hranu prechádza.
+
+Okolité prostredie hrany je reprezentované kombináciou indikátorov plošných mapových značiek (rastrov), ktorá zodpovedá korektnej kombinácii taktiež definovanej normou ISOM 2017-2. Pre~ľavé a~pravé prostredie hrany sú v~hranových atribútoch vytvorené dve premenné, v~ktorých je možné uložiť akúkoľvek korektnú kombináciu týchto indikátorov. Korektnosť kombinácie indikátorov si musí užívateľ týchto atribútov zabezpečiť sám.  
+
+Pre indikovanie toho, že hrana zodpovedá ceste alebo toho, že cez hranu prechádza líniová prekážka, v~hranových atribútoch slúži jediná premenná, v~ktorej je možné uložiť informáciu o~kombinácii jednej cesty, jednej človekom vytvorenej líniovej prekážky a~jednej \uv{prírodnej} líniovej prekážky. 
+
+\section{Complete, net intertwining map representation}
+
+Pre grafovú reprezentáciu máp pre~orientačný beh bola vytvorená takzvaná \textit{sieť-prepletajúca} mapová reprezentácia. Tvorba orientovaného ohodnoteného grafu tejto mapovej reprezentácie spočíva vo vytvorení siete z~vrcholov a~hrán vo veľkosti dodanej mapy, a~následného korektného postupného vkladania jednotlivých objektov z~mapovej reprezentácie do~tejto vytvorenej siete. Táto forma tvorby grafu je vhodná pre~mapy, ktoré~vznikli z~mapových formátov, ktoré~reprezentujú mapu pomocou množiny geometrických útvarov, ktoré~popisujú tvary jednotlivých objektov na~mape.\\
+Práve takým formátom je napríklad \textit{OMAP}, ktorý je jedným z~formátov využívaných pre~reprezentáciu máp orientačného behu a~je možné ho v~aplikácii spracovať do~podoby z~ktorej sa bude následne dať vytvoriť sieť-prepletajúca mapová reprezentácia. 
+
+V následujúcej pod-sekcii popíšeme proces, ktorým je mapa  získaná zo súboru formátu OMAP postupne spracovávaná do~grafovej podoby.
+
+\subsection{Postup spracovania mapy na~jej grafovú reprezentáciu}
+
+Na začiatku sa vytvorí spomínaná sieť vrcholov, do~ktorej sa budú následne ukladať jednotlivé objekty mapy. Dĺžka hrán v~tejto sieti je daná konfiguračným parametrom \uv{štandardná dĺžka hrany}. Na~Obrázku \ref{obr20:just_net} je možné nahliadnuť vytvorenú sieť nad testovacou mapou.
+
+Následne sa začnú spracovávať jednotlivé mapové objekty a~to v~následujúcom poradí: polygony, cesty a~líniové prekážky.
+Objekty sa postupne vkladajú do~vytváraného grafu. Popri tom sa nastavujú atribúty na~jednotlivých hranách grafu tak, aby správne zodpovedali značkám vkladaných objektov.
+
+Pridávanie objektov vyzerá následovne:
+
+\begin{itemize}
+    \item V~prvom rade sa vytvorí retiazka vrcholov spojených hranami odpovedajúca celému obvodu polygonu. Táto vytvorená retiazka však môže na~viacerých miestach krížiť samú seba a~teda je potrebné aby sa všetky tieto kríženia odstránili. Kríženia odstránime správnymi výmenami križujúcich sa hrán. Z~tohto procesu nám môže vyjsť viac disjunktných retiazok, ktoré~si následne pozberáme a~budeme ich naďalej spracovávať separátne. Taktiež nesmieme kvôli následnému spracovávaniu zabudnúť skontrolovať, či sú vytvorené retiazky \uv{pravotočivé}, teda či pravá strana každej hrany je vnútorná. Pokiaľ tomu u nejakej vytvorenej retiazky nie je, otočíme list retiazkových vrcholov a~tým dostaneme pravotočivú retiazku. Táto vlastnosť bude dôležitá v následujúcom spracovaní.
+    \item V~druhom kroku musíme prerušiť všetky hrany, ktoré~vytvorená retiazka prerušila. Pri~identifikovaní prerušených hrán sa využívajú techniky z~geometrie a~lineárnej algebry. Takýto graf s~prerušenými hranami je možné nahliadnuť v~Obrázku \ref{obr21:cut_edges_by_polygon_chain}. Pre~ďalšie spracovanie sa zapamätajú všetky vrcholy, ktorým bola prerušená nejaká hrana.
+
+\begin{figure}[p]\centering
+\frame{\includegraphics[width=250px]{img/mapRepre/justNet0.jpg}}
+\caption{Sieť grafu zhotovená nad vstupnou mapou. Červené čiary predstavujú grafové hrany.} 
+\label{obr20:just_net}
+\end{figure}
+
+\begin{figure}[p]\centering
+\frame{\includegraphics[width=250px]{img/mapRepre/cutEdgesByPolygonChain1.jpg}}
+\caption{Retiazka vrcholov (objektu zakázaného priestoru) prerušujúca hrany vytváraného grafu. } 
+\label{obr21:cut_edges_by_polygon_chain}
+\end{figure}
+
+    \item V~ďalšom kroku sa pomocou prehľadávania do~hĺbky identifikujú všetky vrcholy, ktoré~spadajú do~vnútra polygonu. Tento spôsob je založený na~tom, že všetky hrany spojujúce vnútorné vrcholy polygonu s~vrcholmi mimo polygonu boli v~predchádzajúcom kroku odstránené a~teda DFS neutečie mimo polygonu. Zároveň je zaručené, že sa nájdu všetky vnútorné vrcholy polygonu a~to tak, že sa sleduje, či boli nájdené všetky vrcholy, ktorým bola prerušená hrana retiazkou. Pokiaľ DFS nenavštívi všetky tieto vrcholy, spúšťa sa znova inicializovaná jedným z~takýchto vrcholov. Hranám týchto vnútorných vrcholov sa upravia atribúty na~základe mapovej značky ktorej objekt sa aktuálne spracováva ako je možné nahliadnuť v~Obrázku \ref{obr22:inner_edges_attributes_set}.
+    \item V~posledných krokoch sa retiazka vrcholov pripojí na~vrcholy, ktorým bola prerušená aspoň jedna hrana a~správne sa na~týchto hranách nastavia ích atribúty. Následne sa taktiež nastavia atribúty na~hranách samotnej retiazky a~retiazka je vložená do~grafu. Toto nastavenie atribútov je korektné, teda vytvára iba normou ISOM 2017-2 povolené kombinácie mapových značiek. Proces nastavovania komentárov je zložitý a~vysvetľovaný detailnejšie priamo v~komentároch programu. Využíva sa pri~ňom pravotočivosť retiazok zabezpečená v~prvom kroku vytvorenia retiazky. Kompletne pridaný objekt do~grafu je možné nahliadnuť v~Obrázku \ref{obr23:connect_polygon_chain_to_vertices_of_cut_edges}
+\end{itemize}
+
+Aktuálne vytváraná mapová reprezentácia nedokáže zachytiť rôzne rýchlosti behu v~mapových značkách ako sú \textit{vegetácie s~lepšou rýchlosťou behu v~jednom smere} alebo \textit{vinohrady a~podobné kultúry}. Pre~správne zabezpečenie určenie rýchlostí v~týchto značkách by musela byť v~procese prítomná zložitá procedúra na~vytvorenie správne orientovanej siete vrcholov, v~ktorej by sa táto vlastnosť spomínaných značiek dala vyjadriť. V~tejto chvíli sú rýchlosti behu v~takýchto mapových značkách brané uniformne. 
+
+Keď sú všetky polygonálne objekty pridané, prichádzajú na~rad cesty. Tie sú pridávané veľmi podobným spôsobom ako polygony, avšak je upustené od~kroku, v~ktorom sa hľadajú vnútorné vrcholy polygonu a~nastavujú sa ich hranám atribúty. Tento krok u ciest nie je potrebný, nakoľko pri~pridávaní ciest sa nemení prostredie, v~ktorom sa daná cesta nachádza.\\ 
+Po pripojení cesty do~grafu sa nastavia na~hranách retiazky cesty atribúty indikujúce existenciu cesty na~danej hrane. Na~Obrázku \ref{obr24:connect_path_chain_to_vertices_of_cut_edges} je možné nahliadnuť plne pridanú cestu do~grafu
+
+V poslednom rade sa postupne spracujú všetky líniové prekážky, ktoré~sú schopné spomaliť alebo dokonca znemožniť bežcov postup. V~tomto prípade sa nebudú ako v~predošlých prípadoch pridávať retiazky týchto objektov do~grafu. Postup spracovania týchto objektov je následovný:
+\begin{itemize}
+    \item V~prvom rade sa opäť vytvorí retiazka vrcholov pospájaných hranami pozdĺž celej dĺžky línie objektu.
+    \item V~ďalšom kroku sa nájdu všetky hrany, ktoré~táto retiazka kríži, avšak tentokrát sa tieto hrany neodstránia.
+    \item Nakoniec sa iba upravia týmto hranám atribúty tak, aby indikovali, že cez ne prechádza líniová prekážka.
+\end{itemize}
+
+Výsledok vloženia líniovej prekážky do~grafu je možné nahliadnuť v~Obr. \ref{obr25:added_linear_obstacle}
+
+\begin{figure}[p]\centering
+\frame{\includegraphics[width=250px]{img/mapRepre/innerEdgesAttributesSet2.jpg}}
+\caption{Nastavenie atribútov hrán vrcholov vnútri polygonu(objektu zakázaného priestoru). Atribúty sú na~hranách vyznačené farebnými škvrnami vo farbách reprezentovaných mapových značiek.} 
+\label{obr22:inner_edges_attributes_set}
+\end{figure}
+
+\begin{figure}[p]\centering
+\frame{\includegraphics[width=250px]{img/mapRepre/connectPolygonChainToVerticesOfCutEdges3.jpg}}
+\caption{Pridanie hrán medzi retiazkou a~vrcholmi, ktorým bola preseknutá aspoň jedna hrana a~nastavenie atribútov na~týchto hranách ako aj na~hranách retiazky. Atribúty sú na~hranách vyznačené farebnými škvrnami vo farbách reprezentovaných mapových značiek.} 
+\label{obr23:connect_polygon_chain_to_vertices_of_cut_edges}
+\end{figure}
+
+\begin{figure}[p]\centering
+\frame{\includegraphics[width=250px]{img/mapRepre/connectPathChainToVerticesOfCutEdges5.jpg}}
+\caption{Pridaná retiazka cesty do~grafu. Na~hranách pridanej retiazky je možné vidieť malé čierne šmuhy indikujúce atribúty cesty na~daných hranách.} 
+\label{obr24:connect_path_chain_to_vertices_of_cut_edges}
+\end{figure}
+
+\begin{figure}[p]\centering
+\frame{\includegraphics[width=250px]{img/mapRepre/addedLinearObstacle6.jpg}}
+\caption{Pridaná líniová prekážka (objektu neprekonateľného zrázu) do~grafu. Je možné si všimnúť na~hranách, ktoré~táto prekážka kríži, malé čierne šmuhy, ktoré~indikujú, že sa na~danej hrane nachádza atribút neprekonateľného zrázu.} 
+\label{obr25:added_linear_obstacle}
+\end{figure}
+
+\pagebreak
+
+\section{Orienteering (ISOM 2017-2) user model}
+
+Užívateľský model naviazaný na~template \textit{Orienteering (ISOM 2017-2)}. Umožňuje nastaviť veľkosť spomalenia, ktoré~jednotlivé mapové značky pre~bežca vytvárajú. Na~základe tejto parametrizácie následne dokáže vypočítať čas, ktorý bežcovi zaberie prekonanie konkrétnej hrany grafu.
+
+Príklad, ako môže vyzerať parametrizácia tohto užívateľského modelu je možné nahliadnuť v~Prílohe~\ref{uzivatelsky_model}. Táto parametrizácia vznikla v~spolupráci s~aktívnym reprezentantom Slovenskej republiky v~orientačnom behu.
+
+\subsection{Princíp výpočtu váhy prechodu hrany z~poskytnutých atribútov}
+
+Pri výpočte váhy konkrétnej hrany dostane užívateľský model na~vstupe atribúty počiatočného a~koncového vrcholu tejto hrany a~atribúty hrany samotnej.
+
+Výpočet prebieha následovne:
+\begin{itemize}
+    \item V~prvom rade sa na~základe atribútov hrany a~koeficientov spomalenia spočítajú koeficienty spomalenia ľavého a~pravého prostredia hrany. Koeficient spomalenia je číslo medzi 0 a~1 udávajúce pomer medzi najväčšou možnou rýchlosťou behu a~spomalenou rýchlosťou behu daným symbolom na~mape. Prostredia hrany môžu byť kombináciou viacerých mapových značiek. Užívateľský model preto vynásobí koeficienty spomalenia všetkých značiek, ktoré~sa v~ľavom/pravom prostredí nachádzajú a~vráti tento produkt ako výsledný koeficient. Výsledné koeficienty spomalenia ľavého a~pravého prostredia sa následne porovnajú a~vyberie sa ten väčší z nich. Teda bežec si vyberie pre~beh po~hrane to prostredie, ktoré~je preňho efektívnejšie. 
+    \item V~ďalšom kroku sa započíta efekt cesty na~hrane. Pokiaľ je na danej hrane cesta, potom efekt prostredia nehrá pre~beh žiadnu roľu a~riadime sa iba podľa koeficientu spomalenia danej cesty.\\
+    Výnimkou v~tomto pravidle sú mapové značky pre \textit{menej výrazné malé chodníky} a~\textit{prieseky}. Pri~týchto symboloch priebežnosť závisí od~prostredia, v~ktorom sa nachádzajú. Preto podobne ako pri~výpočte kombinácií značiek prostredia hrany sa ich koeficient vynásobí s~vypočítaným koeficientom prostredia a~tým sa získa koeficient spomalenia týchto objektov. Podotýkame, že koeficienty týchto objektov môžu (a mali by) byť väčšie ako 1 pre~zabezpečenie vyššieho koeficientu spomalenia po~danom chodníku/prieseku než je koeficient v~samotnom prostredí. 
+    \item Pokiaľ je výsledný koeficient menší než 0.15, zoberie sa do~následujúcich krokov táto hodnota namiesto vypočítaného koeficientu. Týmto spôsobom predídeme príliš malým koeficientom spomalenia. Táto technika by sa dala nahradiť vážením koeficientu podľa toho, koľko mapových značiek sa podielalo na~jeho výpočte.
+    \item V~treťom kroku dopočítame čas, ktorý je potrebný na~prekonanie danej hrany. 
+    \begin{itemize}
+        \item Najprv zo vstupných vrcholových atribútov dopočítame dĺžku hrany medzi nimi. 
+        \item Následne aplikujeme vypočítaný koeficient z~predošlých krokov na~konštantu predstavujúcu najrýchlejšie tempo, ktoré~bežec dokáže dosiahnuť. Teda túto konštantu predelíme vypočítaným koeficientom, čím dostaneme tempo, ktorým bežec pobeží v~prostredí danom hranovými atribútmi. 
+        \item Nakoniec vynásobíme tempo so vzdialenosťou, ktorú musí bežec prechodom cez~hranu prekonať, a~získame čas na~prechod tejto hrany.  
+    \end{itemize}
+    \item V~poslednom kroku ešte musíme skontrolovať, či cez danú hranu neprechádza nejaká líniová prekážka. Pokiaľ áno, je potrebné ku času pripočítať čas, ktorý zaberie prekonanie tejto prekážky. 
+    \item Výsledný čas sa vráti ako váha hrany.
+    \end{itemize}
+
+Poznámka:\\
+V tejto chvíli užívateľský model pri~výpočtu doby na~prekonanie konkrétnej hrany nezapočítava faktor prevýšenia, ktoré~musí bežec pri~prechode danou hranou prekonať. Tento faktor v~aktuálnej podobe aplikácie nie je potrebné zahrňovať, nakoľko grafová reprezentácia máp nenesie žiadnu informáciu nadmorskej výške jednotlivých vrcholov a~teda nie je možné prekonané prevýšenie dopočítať. Až po~pridaní tejto funkcionality do~grafovej reprezentácie bude potrebné upraviť tento užívateľský model tak, aby dokázal prevýšenie vo svojom výpočte zohľadniť.  
+
+\subsection{Výpočet A* heuristiky}\label{vypocet_a_star_heuristiky}
+
+Užívateľský model je popri výpočtu váh hrán z~ích atribútov zodpovedný taktiež za výpočet heuristickej funkcie pre~A* algoritmus. Dôvodom, prečo práve užívateľský model je zodpovedný za výpočet tejto heuristiky je ten, že heuristika nezávisí iba na~samotnej topológii grafu, ale~taktiež na~rýchlosti, ktorú~dokáže bežec v~závislosti na~parametrizácii užívateľského modelu dosiahnuť na~jednotlivých typoch povrchov / mapových značkách.
+
+Heuristika počítaná užívateľským modelom musí byť \textit{prípustná} a~\textit{monotónna} aby ju bolo možné použiť v~implementovanom A* algoritme. Vysvetlenie týchto dvoch vlastností heuristiky je možné nahliadnuť v~spodnej časti Podsekcie \ref{klasicky_a_star_algoritmus}. 
+
+Pre dosiahnutie prípustnosti heuristickej funkcie potrebujeme, aby funkcia vždy vracala váhu menšiu ako je skutočná cena cesty z~daného vrcholu do~cieľového. Nakoľko váha hrán je počítaná v~čase na~ich prekonanie, najnižšia možná váha cesty z~daného vrcholu do~cieľového je čas, za ktorý bežec prebehne vzdialenosť medzi týmito dvomi vrcholmi po~povrchu, po~ktorom sa mu pobeží čo najlepšie. Nastavíme preto heuristickú funkciu na~hodnotu vypočítanú práve týmto spôsobom. Tým zaručíme, že hodnota heuristiky nikdy nebude vyššia než hodnota skutočnej ceny cesty a~teda zabezpečíme jej prípustnosť.
+
+Vyššie popísaná heuristika bude taktiež monotónna, nakoľko čas, za ktorý sa dostaneme z~vrcholu priamo do~cieľa po~ideálnom povrchu bude určite menší alebo rovný času, ktorý by nám zabralo prejsť do~iného miesta na~mape po~akomkoľvek povrchu a~následne z~daného miesta po~ideálnom povrchu prísť do~cieľa.  
+
+Výpočet heuristickej funkcie užívateľským modelom teda spočíva v:
+\begin{itemize}
+    \item nájdení povrchu, po~ktorom sa bežcovi beží najlepšie
+    \item vypočítaní času, ktorý bežec bude potrebovať na~zdolanie vzdialenosti medzi daným vrcholom a~cieľom tempom, ktoré~dokáže dosiahnuť na~najideálnejšom povrchu 
+\end{itemize}
+
+\section{A* searching algorithm}
+
+Algoritmom výberu pre~vyhľadávanie najrýchlejších ciest v~mapách je algoritmus A*. Tento algoritmus je klasickou prvou volbou pri~úlohách vyhľadávania ciest v~ohodnotených grafoch s~topologickými vlastnosťami. V~našom prípade nepracujeme s~grafom, ktorého váhy na~hranách na~100\% odpovedajú vzdialenostiam medzi jednotlivými vrcholmi, ale za pomoci jednoduchých myšlienok popísaných v~Podsekcii \ref{vypocet_a_star_heuristiky} dokážeme tento problém vyriešiť. 
+
+V následujúcich podsekciách popíšeme najprv klasický pohľad na~algoritmus A* a~potom sa pozrieme na~jeho úpravy, vďaka ktorým dokáže pracovať nad naším grafom s~údajmi od~užívateľského modelu.
+
+\subsection{Klasický A* algoritmus}\label{klasicky_a_star_algoritmus}
+
+Články~\cite{IntrodutionToAStar} and \cite{Heuristics} popisujú A* algoritmus následovne:
+
+A* alogritmus je nepriamou kombináciou Dijkstrovho algoritmu pre~nachádzania najkratších trás v~ohodnotených grafoch a~Greedy Best-First-Search algoritmu využívajúceho metódu na~usmernenie svojho prehľadávania.
+
+Tajomstvo jeho úspechu spočíva v~tom, že kombinuje informácie, ktoré~používa Dijkstrov algoritmus (uprednostňuje vrcholy, ktoré~sú blízko počiatočného bodu) a~informácie, ktoré~používa Greedy Best-First-Search (uprednostňuje vrcholy, ktoré~sú blízko cieľa).
+V štandardnej terminológii používané pri~hovorení o~A* znamená g(n) presné náklady cesty z~počiatočného bodu do~akéhokoľvek vrcholu n, a~h(n) predstavuje heuristický odhad nákladov z~vrcholu n do~cieľa.  A* vyváži tieto dve hodnoty, keď sa pohybuje z~počiatočného bodu do~cieľa. Každý raz v~hlavnej slučke skúma vrchol n, ktorý má najnižšiu hodnotu f(n) = g(n) + h(n).
+
+\bigskip
+
+Je dôležité vybrať korektnú heuristickú funkciu, aby A* hľadal najkratšie cesty v~ohodnotených grafoch. Pri~výbere heuristiky môžu nastať následujúce prípady:
+\begin{itemize}
+    \item Pokiaľ je h(n) = 0 pre~všetky n, potom vo vyhľadávaní zohráva roľu iba g(n) a~A* sa zmen9 na~Dijkstrov algoritmus.
+    \item Pokiaľ je h(n) nižšie (alebo rovné) ceny presunu z~n do~cieľa, potom A* zaručene nájde najkratšiu cestu v~grafe. Čím je h(n) nižšie, tým viac vrcholov grafu A* prehľadá, čo spôsobí jeho spomalenie.
+    \item Pokiaľ je h(n) presne rovné cene presunu z~n do~cieľa, A* bude sledovať práve tú najlepšiu cestu a~neprehľadá žiadny vrchol navyše, čo ho robí veľmi efektívnym. Avšak nie vo všetkých prípadoch je možné takúto presnosť heuristiky dosiahnuť.
+    \item Pokiaľ je h(n) niekedy vyššie ako je cena presunu z~n do~cieľa, A* nezaručuje nájdenie najkratšej cesty v~grafe ale dokáže bežať rýchlejšie.
+    \item Pokiaľ je však h(n) príliš vysoké v~porovnaní s~g(n), potom začne zohrávať úlohu iba váha h(n) a~A* sa stáva Greedy Best-First-Search algoritmom.
+\end{itemize}
+
+Teda pokiaľ vyžadujeme nachádzanie najkratších trás v~ohodnotenom grafe, potrebujeme, aby heuristická funkcia bola z~hora ohraničená skutočnou cenou cesty z~n do~cieľa. O~takto obmedzenej heuristike následne hovoríme, že je \textit{prípustná}.
+
+Pokiaľ však využívame \textit{grafové prehľadávanie}, pre~zabezpečenie nájdenia najkratšej cesty v~grafe je potrebné aby heuristika bola taktiež \textit{monotónna}. Jedná sa o~istú formu trojuholníkovej nerovnosti kedy hodnota heuristiky vo vrchole n musí byť menšia alebo rovná súčtu ceny prechodu z~n do~jeho následníka a~hodnoty heuristiky v~tomto následníkovi. Táto trojuholníková nerovnosť musí platiť vo všetkých vrcholoch a~ich následníkoch. Dá sa dokázať, že každá monotónna heuristika je taktiež prípustná.
+
+\bigskip
+
+V Programe~\ref{AStar} je ku nahliadnutiu pseudokód možnej implementácie algoritmu A*. Tento pseudokód bol prevzatý z~Článku~\cite{AStarWiki}.
+
+\begin{listing}
+\begin{lstlisting}
+
+function A_Star(start, goal, h)
+  openSet := {start}
+
+  cameFrom := an empty map
+
+  gScore := map with default value of Infinity
+  gScore[start] := 0
+
+  fScore := map with default value of Infinity
+  fScore[start] := h(start)
+
+  while openSet is not empty
+    current := pop vertex from openSet with lowest fScore value
+    if current = goal
+      return reconstruct_path(cameFrom, current)
+
+    openSet.Remove(current)
+    for each neighbor of current
+      tentative_gScore := gScore[current] + d(current, neighbor)
+      if tentative_gScore < gScore[neighbor]
+        cameFrom[neighbor] := current
+        gScore[neighbor] := tentative_gScore
+        fScore[neighbor] := tentative_gScore + h(neighbor)
+        if neighbor not in openSet
+          openSet.add(neighbor)
+  return failure
+
+function reconstruct_path(cameFrom, current)
+    total_path := {current}
+    while current in cameFrom.Keys:
+        current := cameFrom[current]
+        total_path.prepend(current)
+    return total_path
+
+\end{lstlisting}
+\caption{A* algoritmus}
+\label{AStar}
+\end{listing}
+
+\pagebreak
+
+\subsection{Špecifické vlastnosti algoritmu A* v~aplikácii.}
+
+Implementácia A* v~aplikácii nesie následujúce špecifiká:
+
+\begin{itemize}
+    \item Algoritmus na~vstupe namiesto heuristickej funkcie dostane inštanciu užívateľského modelu, ktorý bude hodnotu heuristickej funkcie pre~algoritmus počítať. Zároveň tento užívateľský model je zodpovedný za počítanie váh pre~hrany grafu, nakoľko grafová reprezentácia, nad~ktorou~algoritmus pracuje, nesie iba informácie o~vrcholových a~hranových atribútoch, je potrebné, aby užívateľský model tieto atribúty spracoval do~váh, s~ktorými následne už A* dokáže pracovať.   
+    \item A* využívaný v~aplikácii je implementovaný ako graph search. Z~tohto dôvodu je potrebné, aby využívaná heuristika počítaná užívateľským modelom bola okrem \textit{prípustnosti} taktiež \textit{monotónna}.
+    \item Naša implementácia A* si neudržiava kolekciu predchodcov navštívených vrcholov a~teda z~dôvodu možnosti rekonštrukcie nájdenej cesty vyžaduje po~vrcholoch vstupného grafu, aby boli schopné si zapamätať svojho predchodcu. Keď je A* narazí na~cieľový vrchol, začne sa dotazovať postupne vrcholov na~ich predchodcov dokým nenarazí na~počiatočný vrchol. Po~prevrátení postupnosti predchodcov vrcholov získa retiazku reprezentujúcu nájdenú cestu z~počiatku do~cieľa. 
+\end{itemize}
