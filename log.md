@@ -699,3 +699,13 @@ IMPORTANT!!
     - magiu zabezpecuje jedna funkcia plna linearnej algebry - na prvy pohlad vcelku nezrozumitelna hrstka skalarnych sucinov vsak reprezentuje hrstku vcelku priamociarych myslienok z linearnej algebry
     - klasicke prieseky sa pocitaju za pomoci bezierovej formy pre usecky - vypocitaju sa parametre t a u, ktore indikuju miesto prekrivu danych dvoch krivie
   - v kroku 1 spracovania polygonov je riesene krizenie hran jedneho polygonu - teda takzvana zauzlovanost objektov - prekryvy objektov su dostranene
+
+# Po odovzdani bakalarky
+
+## 23.2.25
+
+- napad na opravenie rozdelovania bezierovych kriviek na segmenty - **chord-length parametrization** - vdaka tomu, by sa mali krivky rozdelovat na rovnomernejsie segmenty a zabrani to chybam v takych pripadoch, kedy sa bezierka rozdeli na segmenty s velkostou niektorych segmentov vacsou ako je dlzka hrany...a malo by to byt stale dost rychle. Implementujem zajtra
+
+## 25.2.25
+
+- vyrieseny problem zleho spracovavania bezierovych kriviek, nakoniec sonm nijak neupravoval parametrizaciu kriviek (ziadne pocitanie pre ziskanie rovnomernych dlzok hran), ale len som vytovril podmienku v spracovavani velmi malych segmentov, ze ak je nejaka z vytvorenych hran dlhsia nez standardna dlzka hrany, tak sa proste dany segment ako maly segment nespracuje a pokracuje do kalsickeho spracovania segmentu...sice tymto sposobom je mozne, ze vzniknu nejake velmi male hrany, ale to bude len vo vynimocnych pripadoch velmi zle nakreslenych bezierok a urcite to nevadi tolko, ako prilis dlhe hrany

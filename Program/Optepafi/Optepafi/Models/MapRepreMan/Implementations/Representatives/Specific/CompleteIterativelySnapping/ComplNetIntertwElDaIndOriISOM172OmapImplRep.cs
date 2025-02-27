@@ -17,7 +17,10 @@ using Optepafi.Models.Utils.Shapes.Segments;
 
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.CompleteIterativelySnapping;
 
-//TODO: comment
+/// <summary>
+/// Represents and creates net intertwining graph implementation of OMAP map representation which uses <see cref="Orienteering_ISOM_2017_2"/>
+/// tempalte and does not require elevation data for its creation. It does not include any elevation information in the graph at all.
+/// </summary>
 public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep : 
     ElevDataIndepImplementationRep<Orienteering_ISOM_2017_2, OmapMap, OmapMap, CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation, CompleteNetIntertwiningMapRepreConfiguration, ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge, Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>
 {
@@ -40,12 +43,13 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         private GraphCreator() { }
         
         public int processedObjectsCount;
-        // public int debugLimit = 5000;//1484;//1478;//1334; // for debugging
+        // public int debugLimit = 5000; // for debugging
         public CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation Create(OmapMap map,
             CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
             CancellationToken? cancellationToken)
         {
             List<NetVertexBuilder> netVertices = CreateNet(map, configuration);
+            // List<NetVertexBuilder> netVertices = new(); // for debugging
             if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
             
             IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders = new RadiallySearchableKdTree<VertexBuilder>(netVertices, vb => (vb.Position.XPos, vb.Position.YPos));
@@ -349,27 +353,31 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         {
             SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfCutEdgesWithCorrespondingTemporaryVertices = new();
             List<ChainEntanglementTemporaryVertexBuilder> allCreatedTemporaryVertices = new();
+            
             // For each cross-section of chain edges is created new temporary vertex
             // this vertex is then added to lists of created temporary vertices which are hold in dictionary under the indices of crossed edges
-            for (int i = 0; i < potentiallyEntangledChain.Length - 2; ++i)
-                for (int j = i + 2; j < potentiallyEntangledChain.Length; ++j)
+            for (int i = 0; i < potentiallyEntangledChain.Length - 1; ++i)
+                for (int j = i + 1; j < potentiallyEntangledChain.Length; ++j)
                 {
                     if (i == 0 && j == potentiallyEntangledChain.Length - 1) continue;
                     int js = j == potentiallyEntangledChain.Length - 1 ? 0 : j + 1;
-                    MapCoordinates? crossSectionCoords = Utils.GetLineSegmentsCrossSectionCoordsParallelCrossSectionIncluded(potentiallyEntangledChain[i].Position, potentiallyEntangledChain[i + 1].Position, potentiallyEntangledChain[j].Position, potentiallyEntangledChain[js].Position)  ;
+                    MapCoordinates? crossSectionCoords = Utils.GetLineSegmentsCrossSectionCoordsParallelCrossSectionIncluded( potentiallyEntangledChain[i].Position, potentiallyEntangledChain[i + 1].Position, potentiallyEntangledChain[j].Position, potentiallyEntangledChain[js].Position);
                     if (crossSectionCoords is not null)
                     {
-                        var newTemporaryVertex = new ChainEntanglementTemporaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords.Value));
-                        if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.ContainsKey(i)) indicesOfCutEdgesWithCorrespondingTemporaryVertices[i].Add(newTemporaryVertex);
-                        else indicesOfCutEdgesWithCorrespondingTemporaryVertices[i] = [newTemporaryVertex];
-                        if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.ContainsKey(j)) indicesOfCutEdgesWithCorrespondingTemporaryVertices[j].Add(newTemporaryVertex);
-                        else indicesOfCutEdgesWithCorrespondingTemporaryVertices[j] = [newTemporaryVertex];
-                        allCreatedTemporaryVertices.Add(newTemporaryVertex);
+                        // if cross-section of successive edges is checked, cross-section is valid only if it is not positioned in common vertex of these edges. This happens when these edges are parallel.
+                        if (j != i + 1 || crossSectionCoords != potentiallyEntangledChain[j].Position)
+                        {
+                            var newTemporaryVertex = new ChainEntanglementTemporaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords.Value));
+                            if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.ContainsKey(i)) indicesOfCutEdgesWithCorrespondingTemporaryVertices[i].Add(newTemporaryVertex);
+                            else indicesOfCutEdgesWithCorrespondingTemporaryVertices[i] = [newTemporaryVertex];
+                            if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.ContainsKey(j)) indicesOfCutEdgesWithCorrespondingTemporaryVertices[j].Add(newTemporaryVertex);
+                            else indicesOfCutEdgesWithCorrespondingTemporaryVertices[j] = [newTemporaryVertex];
+                            allCreatedTemporaryVertices.Add(newTemporaryVertex);
+                        }
                     }
                 }
             return (indicesOfCutEdgesWithCorrespondingTemporaryVertices, allCreatedTemporaryVertices);
         }
-
         
         private static void DisconnectCrossingEdgesInChain(BoundaryVertexBuilder[] potentiallyEntangledChain, SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices)
         {
@@ -1346,14 +1354,19 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             // discovers count of edges to which should be segment split, so that all edges had approximately same length not bigger than standard edge length
             // edges will not have the same length
             // with increasing edge count, the variance of length of all edges will be still smaller and smaller
-            int edgesCount = 3;
-            while ((segment.PositionAt(1 / (double)++edgesCount, point0) - point0).Length() > standardEdgeLength ||
-                   (segment.PositionAt((edgesCount / 2 + 1) / (double)edgesCount, point0) - segment.PositionAt(edgesCount / 2 / (double)edgesCount, point0)).Length() > standardEdgeLength ||
-                   (segment.PositionAt(edgesCount / (double)edgesCount, point0) - segment.PositionAt((edgesCount - 1) / (double)edgesCount, point0)).Length() > standardEdgeLength) { }
+            int parametersCount = 5;
+            // var parametrization = GetParametrizationWithUniformDistancesByGradientDescent(segment, point0, parametersCount);
+            var parametrization = GetUniformParametrization(parametersCount);
+            while ((segment.PositionAt(parametrization[1], point0) - point0).Length() > standardEdgeLength ||
+                   (segment.PositionAt(parametrization[parametersCount / 2], point0) - segment.PositionAt(parametrization[parametersCount / 2 - 1], point0)).Length() > standardEdgeLength ||
+                   (segment.PositionAt(parametrization[parametersCount - 1], point0) - segment.PositionAt(parametrization[parametersCount - 2], point0)).Length() > standardEdgeLength)
+                // parametrization = GetParametrizationWithUniformDistancesByGradientDescent(segment, point0, ++parametersCount);
+                parametrization = GetUniformParametrization(++parametersCount);
+
             // iteratively creating edges from uniformly chosen parts of segment
-            for (int i = 1; i <= edgesCount; ++i)
+            for (int i = 1; i <= parametersCount - 1; ++i)
             {
-                BoundaryVertexBuilder newVertex = new( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(i / (double)edgesCount, point0)));
+                BoundaryVertexBuilder newVertex = new( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(parametrization[i], point0)));
                 newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
                 chain.Last().BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
                 chain.Add(newVertex);
@@ -1362,34 +1375,20 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
 
         private static bool HandleSmallSegment(Segment segment, List<BoundaryVertexBuilder> chain, int standardEdgeLength, float minBoundaryEdgeRatio)
         {
-            BoundaryVertexBuilder[]? newVertices;
             // Tries to fit small segment by as many edges as it can.
             // If more than 3 edges can be fit into the segment, return false indicating, that segment is not small one.
-            if ((segment.PositionAt(0.25, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.PositionAt(0.5, chain.Last().Position) - segment.PositionAt(0.25, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.PositionAt(0.75, chain.Last().Position) - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.LastPoint - segment.PositionAt(0.75, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                if ((segment.PositionAt(1 / (double)3, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                    (segment.PositionAt(2 / (double)3, chain.Last().Position) - segment.PositionAt(1 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                    (segment.LastPoint - segment.PositionAt(2 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                    if ((segment.PositionAt(0.5, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                        (segment.LastPoint - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                        if((segment.LastPoint - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio || 
-                           (segment.LastPoint - chain.Last().Position).Length() < microscopicEdgeLength) 
-                            newVertices = [];
-                        else newVertices = [
-                            new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
-                        ];        
-                    else newVertices = [ 
-                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( segment.PositionAt(1 / (double)2, chain.Last().Position))), 
-                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
-                        ];
-                else newVertices = [
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(1 / (double)3, chain.Last().Position))), 
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(2 / (double)3, chain.Last().Position))),
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint))
-                    ];
-            else return false;
+            if (TryGetNNewVerticesForSmallSegment(segment, 4, chain.Last().Position, standardEdgeLength, minBoundaryEdgeRatio, out var newVertices))
+                return false;
+            if (TryGetNNewVerticesForSmallSegment(segment, 3, chain.Last().Position, standardEdgeLength, minBoundaryEdgeRatio, out newVertices)) { }
+            else if (TryGetNNewVerticesForSmallSegment(segment, 2, chain.Last().Position, standardEdgeLength, minBoundaryEdgeRatio, out newVertices)) { }
+            else if (TryGetNNewVerticesForSmallSegment(segment, 1, chain.Last().Position, standardEdgeLength, minBoundaryEdgeRatio, out newVertices)) { }
+            else return true;
+            
+            // if there is a distance between pair of vertices bigger than standard edge length, this segment can not be handled as small one, because this long edge could destroy edge cutting in following processing of object
+            // although there could be some very small edges created, they are not as big problem as very long edges
+            if ((newVertices[0].Position - chain.Last().Position).Length() > standardEdgeLength) return false;
+            for(int i = 1; i <= newVertices.Count-1; ++i) if ((newVertices[i].Position - newVertices[i-1].Position).Length() > standardEdgeLength) return false; 
+            
             foreach (var newVertex in newVertices)
             {
                 newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
@@ -1398,6 +1397,19 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             }
             return true;
         }
+        private static bool TryGetNNewVerticesForSmallSegment(Segment segment, int n, MapCoordinates point0,
+            int standardEdgeLength, float minBoundaryEdgeRatio, out List<BoundaryVertexBuilder> newVertices)
+        {
+            // double[] chordLengthParametrization = GetParametrizationWithUniformDistancesByGradientDescent(segment, point0, n+1);
+            double[] chordLengthParametrization = GetUniformParametrization(n+1);
+            newVertices = new ();
+            for(int i = 1; i <= n; ++i)
+                if ((segment.PositionAt(chordLengthParametrization[i], point0) - segment.PositionAt(chordLengthParametrization[i-1], point0)).Length() < standardEdgeLength * minBoundaryEdgeRatio) return false;
+            for (int i = 1; i <= n; ++i)
+                newVertices.Add(new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(chordLengthParametrization[i], point0))));
+            return true;
+        }
+
 
         public static List<BoundaryVertexBuilder> GetBlankShiftedChainOfSegmentedLine(MapCoordinates firstPosition, IList<Segment> segments,
             int standardEdgeLength, float minBoundaryEdgeRatio, bool leftShift, int shiftSize)
@@ -1425,69 +1437,44 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
             // discovers count of edges to which should be segment split, so that all edges had approximately same length not bigger than standard edge length
             // edges will not have the same length
             // with increasing edge count, the variance of length of all edges will be still smaller and smaller
-            int edgesCount = 3;
-            while ((segment.PositionAt(1 / (double)++edgesCount, point0) - point0).Length() > standardEdgeLength) { }
+            int parametersCount = 5;
+            // var parametrization = GetParametrizationWithUniformDistancesByGradientDescent(segment, point0, parametersCount);
+            var parametrization = GetUniformParametrization(parametersCount);
+            while ((segment.PositionAt(parametrization[1], point0) - point0).Length() > standardEdgeLength ||
+                   (segment.PositionAt(parametrization[parametersCount / 2], point0) - segment.PositionAt(parametrization[parametersCount / 2 - 1], point0)).Length() > standardEdgeLength ||
+                   (segment.PositionAt(parametrization[parametersCount - 1], point0) - segment.PositionAt(parametrization[parametersCount - 2], point0)).Length() > standardEdgeLength)
+                // parametrization = GetParametrizationWithUniformDistancesByGradientDescent(segment, point0, ++parametersCount);
+                parametrization = GetUniformParametrization(++parametersCount);
             // iteratively creating edges from uniformly chosen parts of segment
-            for (int i = 1; i <= edgesCount; ++i)
+            for (int i = 1; i <= parametersCount - 1; ++i)
             {
-                var tangentVectorToSegment = segment.d(i / (double)edgesCount, point0);
+                var tangentVectorToSegment = segment.d(parametrization[i], point0);
                 var normalVectorOfShiftSize = leftShift 
                     ? new MapCoordinates((int)(-tangentVectorToSegment.YPos * shiftSize / tangentVectorToSegment.Length()), (int)(tangentVectorToSegment.XPos * 125 / tangentVectorToSegment.Length()))
                     : new MapCoordinates((int)(tangentVectorToSegment.YPos * shiftSize / tangentVectorToSegment.Length()), (int)(-tangentVectorToSegment.XPos * 125 / tangentVectorToSegment.Length()));
-                BoundaryVertexBuilder newVertex = new( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(i / (double)edgesCount, point0) + normalVectorOfShiftSize));
+                BoundaryVertexBuilder newVertex = new( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(parametrization[i], point0) + normalVectorOfShiftSize));
                 newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
                 chain.Last().BoundaryEdges[newVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
                 chain.Add(newVertex);
             }
-            
         }
-
+        
         private static bool HandleSmallSegmentUsingShifting(Segment segment, List<BoundaryVertexBuilder> chain, int standardEdgeLength, float minBoundaryEdgeRatio, bool leftShift, int shiftSize)
         {
-            var tangentVectorToSegmentInOne = segment.d(1, chain.Last().Position);
-            var normalVectorOfShiftSizeInOne = leftShift 
-                ? new MapCoordinates((int)(-tangentVectorToSegmentInOne.YPos * shiftSize / tangentVectorToSegmentInOne.Length()), (int)(tangentVectorToSegmentInOne.XPos * shiftSize / tangentVectorToSegmentInOne.Length()))
-                : new MapCoordinates((int)(tangentVectorToSegmentInOne.YPos * shiftSize / tangentVectorToSegmentInOne.Length()), (int)(-tangentVectorToSegmentInOne.XPos * shiftSize / tangentVectorToSegmentInOne.Length()));
-            var tangentVectorToSegmentIn1Half = segment.d(1 / (double)2, chain.Last().Position);
-            var normalVectorOfShiftSizeIn1Half = leftShift 
-                ? new MapCoordinates((int)(-tangentVectorToSegmentIn1Half.YPos * shiftSize / tangentVectorToSegmentIn1Half.Length()), (int)(tangentVectorToSegmentIn1Half.XPos * shiftSize / tangentVectorToSegmentIn1Half.Length()))
-                : new MapCoordinates((int)(tangentVectorToSegmentIn1Half.YPos * shiftSize / tangentVectorToSegmentIn1Half.Length()), (int)(-tangentVectorToSegmentIn1Half.XPos * shiftSize / tangentVectorToSegmentIn1Half.Length()));
-            var tangentVectorToSegmentIn1Third = segment.d(1 / (double)3, chain.Last().Position);
-            var normalVectorOfShiftSizeIn1Third = leftShift 
-                ? new MapCoordinates((int)(-tangentVectorToSegmentIn1Third.YPos * shiftSize / tangentVectorToSegmentIn1Third.Length()), (int)(tangentVectorToSegmentIn1Third.XPos * shiftSize / tangentVectorToSegmentIn1Third.Length()))
-                : new MapCoordinates((int)(tangentVectorToSegmentIn1Third.YPos * shiftSize / tangentVectorToSegmentIn1Third.Length()), (int)(-tangentVectorToSegmentIn1Third.XPos * shiftSize / tangentVectorToSegmentIn1Third.Length()));
-            var tangentVectorToSegmentIn2Thirds = segment.d(2 / (double)3, chain.Last().Position);
-            var normalVectorOfShiftSizeIn2Thirds = leftShift 
-                ? new MapCoordinates((int)(-tangentVectorToSegmentIn2Thirds.YPos * shiftSize / tangentVectorToSegmentIn2Thirds.Length()), (int)(tangentVectorToSegmentIn2Thirds.XPos * shiftSize / tangentVectorToSegmentIn2Thirds.Length()))
-                : new MapCoordinates((int)(tangentVectorToSegmentIn2Thirds.YPos * shiftSize / tangentVectorToSegmentIn2Thirds.Length()), (int)(-tangentVectorToSegmentIn2Thirds.XPos * shiftSize / tangentVectorToSegmentIn2Thirds.Length()));
-            BoundaryVertexBuilder[]? newVertices;
             // Tries to fit small segment by as many edges as it can.
             // If more than 3 edges can be fit into the segment, return false indicating, that segment is not small one.
-            if ((segment.PositionAt(0.25, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.PositionAt(0.5, chain.Last().Position) - segment.PositionAt(0.25, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.PositionAt(0.75, chain.Last().Position) - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                (segment.LastPoint - segment.PositionAt(0.75, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                if ((segment.PositionAt(1 / (double)3, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                    (segment.PositionAt(2 / (double)3, chain.Last().Position) - segment.PositionAt(1 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                    (segment.LastPoint - segment.PositionAt(2 / (double)3, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                    if ((segment.PositionAt(0.5, chain.Last().Position) - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                        (segment.LastPoint - segment.PositionAt(0.5, chain.Last().Position)).Length() < standardEdgeLength * minBoundaryEdgeRatio)
-                        if((segment.LastPoint - chain.Last().Position).Length() < standardEdgeLength * minBoundaryEdgeRatio ||
-                           (segment.LastPoint - chain.Last().Position).Length() < microscopicEdgeLength) 
-                            newVertices = [];
-                        else newVertices = [ 
-                            new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint + normalVectorOfShiftSizeInOne))
-                        ];        
-                    else newVertices = [ 
-                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( segment.PositionAt(1 / (double)2, chain.Last().Position) + normalVectorOfShiftSizeIn1Half)), 
-                            new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint + normalVectorOfShiftSizeInOne))
-                        ];
-                else newVertices = [
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(1 / (double)3, chain.Last().Position) + normalVectorOfShiftSizeIn1Third)), 
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(2 / (double)3, chain.Last().Position) + normalVectorOfShiftSizeIn2Thirds)),
-                        new BoundaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(segment.LastPoint + normalVectorOfShiftSizeInOne))
-                    ];
-            else return false;
+            if (TryGetNNewVerticesForSmallSegmentUsingShifting(segment, 4, chain.Last().Position, standardEdgeLength, minBoundaryEdgeRatio, leftShift, shiftSize, out var newVertices))
+                return false;
+            if (TryGetNNewVerticesForSmallSegmentUsingShifting(segment, 3, chain.Last().Position, standardEdgeLength, minBoundaryEdgeRatio, leftShift, shiftSize, out newVertices)) { }
+            else if (TryGetNNewVerticesForSmallSegmentUsingShifting(segment, 2, chain.Last().Position, standardEdgeLength, minBoundaryEdgeRatio, leftShift, shiftSize, out newVertices)) { }
+            else if (TryGetNNewVerticesForSmallSegmentUsingShifting(segment, 1, chain.Last().Position, standardEdgeLength, minBoundaryEdgeRatio, leftShift, shiftSize, out newVertices)) { }
+            else return true;
+            
+            // if there is a distance between pair of vertices bigger than standard edge length, this segment can not be handled as small one, because this long edge could destroy edge cutting in following processing of object
+            // although there could be some very small edges created, they are not as big problem as very long edges
+            if ((newVertices[0].Position - chain.Last().Position).Length() > standardEdgeLength) return false;
+            for(int i = 1; i <= newVertices.Count-1; ++i) if ((newVertices[i].Position - newVertices[i-1].Position).Length() > standardEdgeLength) return false; 
+            
             foreach (var newVertex in newVertices)
             {
                 newVertex.BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
@@ -1495,6 +1482,104 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 chain.Add(newVertex);
             }
             return true;
+        }
+        private static bool TryGetNNewVerticesForSmallSegmentUsingShifting(Segment segment, int n, MapCoordinates point0,
+            int standardEdgeLength, float minBoundaryEdgeRatio, bool leftShift, int shiftSize, out List<BoundaryVertexBuilder> newVertices)
+        {
+            // double[] chordLengthParametrization = GetParametrizationWithUniformDistancesByGradientDescent(segment, point0, n+1);
+            double[] chordLengthParametrization = GetUniformParametrization(n+1);
+            List<MapCoordinates> normalVectorsOfShift = new();
+            for (int i = 1; i <= n; ++i)
+            {
+                var tangentVectorToSegmentInINths = segment.d(chordLengthParametrization[i], point0);
+                normalVectorsOfShift.Add(leftShift 
+                    ? new MapCoordinates((int)(-tangentVectorToSegmentInINths.YPos * shiftSize / tangentVectorToSegmentInINths.Length()), (int)(tangentVectorToSegmentInINths.XPos * shiftSize / tangentVectorToSegmentInINths.Length()))
+                    : new MapCoordinates((int)(tangentVectorToSegmentInINths.YPos * shiftSize / tangentVectorToSegmentInINths.Length()), (int)(-tangentVectorToSegmentInINths.XPos * shiftSize / tangentVectorToSegmentInINths.Length())) );
+            }
+            newVertices = new ();
+            for(int i = 1; i <= n; ++i)
+                if ((segment.PositionAt(chordLengthParametrization[i], point0) - segment.PositionAt(chordLengthParametrization[i-1], point0)).Length() < standardEdgeLength * minBoundaryEdgeRatio) return false;
+            for (int i = 1; i <= n; ++i)
+                newVertices.Add(new BoundaryVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(segment.PositionAt(chordLengthParametrization[i], point0) + normalVectorsOfShift[i-1])));
+            return true;
+        }
+
+        private static double[] GetUniformParametrization(int n)
+        {
+            double[] parameters = new double[n];
+            for (int i = 0; i <= n - 1; ++i) parameters[i] = i / (double)(n - 1);
+            return parameters;
+        }
+
+        private static double[] GetParametrizationWithUniformDistancesByGradientDescent(Segment segment, MapCoordinates point0, int n)
+        {
+            if (n <= 2) return [0, 1];
+            double[] parametrization = new double[n];
+            for (int i = 0; i <= n - 1; ++i) parametrization[i] = i / (double)(n - 1);
+
+            double lR = 0.1d; //learning rate
+            for (int i = 0; i <= 10; ++i)
+            {
+                double[] gradient = dE(parametrization, segment, point0);
+                double gradientLength = Math.Sqrt(gradient.Select(x => Math.Pow(x,2)).Sum());
+                for (int j = 0; j <= n - 1; ++j) gradient[j] /= gradientLength / lR; // normalization * learning rate
+                for (int j = 0; j <= n - 1; ++j) parametrization[j] = Math.Min(Math.Max(parametrization[j] - gradient[j], 0), 1);
+            }
+            return parametrization;
+        }
+
+        private static double[] dE( double[] t, Segment segment, MapCoordinates point0)
+        {
+            if (t.Length <= 2) return [0, 0];
+            double[] gradient = new double[t.Length];
+            gradient[0] = 0;
+            gradient[t.Length - 1] = 0;
+            for (int i = 1; i < t.Length - 1; ++i)
+            {
+                (double x, double y) dL_Sti_Sti1 = dL(segment.PositionAt(t[i], point0) - segment.PositionAt(t[i-1], point0));
+                MapCoordinates dSti = segment.d(t[i], point0);
+                (double x, double y) dL_Sti1_Sti = dL(segment.PositionAt(t[i+1], point0) - segment.PositionAt(t[i], point0));
+                MapCoordinates dS_ti = new MapCoordinates(0,0) - segment.d(t[i], point0);
+                gradient[i] = 2 * ((segment.PositionAt(t[i], point0) - segment.PositionAt(t[i - 1], point0)).Length() - (segment.PositionAt(t[i + 1], point0) - segment.PositionAt(t[i], point0)).Length()) *
+                              (dL_Sti_Sti1.x * dSti.XPos + dL_Sti_Sti1.y * dSti.YPos -
+                               (dL_Sti1_Sti.x * dS_ti.XPos + dL_Sti1_Sti.y * dS_ti.YPos));
+            }
+            return gradient;
+        }
+
+        private static (double x, double y) dL(MapCoordinates vector)
+        {
+            return ( 2 * vector.XPos / (2 * Math.Sqrt(Math.Pow(vector.XPos, 2) + Math.Pow(vector.YPos, 2))), 
+                2 * vector.YPos / (2 * Math.Sqrt(Math.Pow(vector.XPos, 2) + Math.Pow(vector.YPos, 2))));
+        }
+        
+        private static double[] GetParametrizationWithUniformDistances(Segment segment, MapCoordinates point0, int n)
+        {
+            if (n <= 2) return [0, 1];
+            double[] parametrization = new double[n];
+            for (int i = 0; i <= n - 1; ++i) parametrization[i] = i / (double)(n - 1);
+            
+            List<double> distancesOfSuccessivePointsOfParametrization = new();
+            double lengthsSum = 0; 
+            MapCoordinates lastPoint = point0;
+            for (int i = 1; i <= n-1; i++)
+            {
+                var currentPoint = segment.PositionAt(parametrization[i], point0);
+                var chordLength = (currentPoint - lastPoint).Length();
+                distancesOfSuccessivePointsOfParametrization.Add(chordLength);
+                lengthsSum += chordLength;
+                lastPoint = currentPoint;
+            }
+
+            double prevOldParameter = parametrization[0];
+            for (int i = 1; i <= n - 1; ++i)
+            {
+                double currOldParameter = parametrization[i];
+                parametrization[i] = parametrization[i - 1] + (parametrization[i] - prevOldParameter) * (1/(double)(n-1)/(distancesOfSuccessivePointsOfParametrization[i-1] / lengthsSum));
+                    // 2 * (parametrization[i]-prevOldParameter) - distancesOfSuccessivePointsOfParametrization[i-1] / lengthsSum;
+                prevOldParameter = currOldParameter;
+            }
+            return parametrization;
         }
         
         #endregion
@@ -1588,7 +1673,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         {
             HashSet<VertexBuilder> closeVertices = new();
             // find all vertices, which are closer than standard edge length to vertices of chain edge
-            // these vertices are the only ones whose that could be crossed by this edge
+            // these vertices are the only ones whose edges could be crossed by this edge
             foreach (var vertex in allVertices.FindInEuclideanDistanceFrom((point0.XPos, point0.YPos), standardEdgeLength))
                 closeVertices.Add(vertex);
             foreach (var vertex in allVertices.FindInEuclideanDistanceFrom((point1.XPos, point1.YPos), standardEdgeLength))
@@ -1757,7 +1842,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 else return false;
             if (fu.numerator == 0)
                 return (p2 - p1).RightHandNormalVector() * (q2 - q1) < 0;
-            if (fu.numerator == ft.denominator)
+            if (what is MagicFor.TwoSegments && fu.numerator == fu.denominator)
                 return (p2 - p1).RightHandNormalVector() * (q1 - q2) < 0;
             return true;
         }
@@ -1796,7 +1881,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
                 else return false;
             if (fu.numerator == 0)
                 return (p2 - p1).LeftHandNormalVector() * (q2 - q1) < 0;
-            if (fu.numerator == ft.denominator)
+            if (what is MagicFor.TwoSegments && fu.numerator == fu.denominator)
                 return (p2 - p1).LeftHandNormalVector() * (q1 - q2) < 0;
             return true;
         }

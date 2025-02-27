@@ -10,7 +10,12 @@ using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.Blank;
 
-//TODO: comment
+/// <summary>
+/// Represents graph implementation of OMAP map representation which uses blank template and for its creation are not used any
+/// elevation data.
+/// Represented implementation of map representation is not usable because of blank template. It is just demonstrative type
+/// for presenting application functionality.
+/// /// </summary>
 public class BlankElevDataIndepBlankTemplateOmapMapImplementationRep:
     ElevDataIndepImplementationRep<BlankTemplate, OmapMap, OmapMap, BlankElevDataIndepBlankTemplateOmapMapImplementation, NullConfiguration, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>.Vertex, IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>.Edge, BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {
@@ -19,6 +24,7 @@ public class BlankElevDataIndepBlankTemplateOmapMapImplementationRep:
     public override BlankTemplate UsedTemplate { get; } = BlankTemplate.Instance;
     public override IMapFormat<OmapMap> UsedMapFormat { get; } = OmapMapRepresentative.Instance;
 
+    /// <inheritdoc cref="ElevDataIndepImplementationRep{TTemplate,TMap,TUsableSubMap,TGraph,TConfiguration,TVertex,TEdge,TVertexAttributes,TEdgeAttributes}"/> 
     public override BlankElevDataIndepBlankTemplateOmapMapImplementation CreateImplementation(BlankTemplate template, OmapMap map, NullConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
         CancellationToken? cancellationToken)
     {

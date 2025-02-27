@@ -3,6 +3,7 @@ using System.Threading;
 using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Objects.MapRepre;
 using Optepafi.Models.MapRepreMan.Implementations.Specific.CompleteIterativelySnapping;
+using Optepafi.Models.MapRepreMan.Utils;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.Utils;
 
@@ -16,7 +17,7 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
         HashSet<(MapCoordinates, MapCoordinates)> foundEdgeCoordinates = new HashSet<(MapCoordinates, MapCoordinates)>();
-        // foreach (var vertex in implementation.SearchableVertices.FindInEuclideanDistanceFrom((826435, 165544), 50_000)) // for debugging
+        // foreach (var vertex in ((IRadiallySearchableDataStruct<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>)implementation.SearchableVertices).FindInEuclideanDistanceFrom((-3841, 8942), 5000)) // for debugging
         foreach (var vertex in implementation)
         {
             collectorForAggregatedObjects.Add(new VertexObject(vertex.Attributes.Position));

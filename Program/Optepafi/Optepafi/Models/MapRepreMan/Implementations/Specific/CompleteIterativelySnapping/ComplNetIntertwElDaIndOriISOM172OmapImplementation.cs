@@ -13,14 +13,17 @@ using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.MapRepreMan.Implementations.Specific.CompleteIterativelySnapping;
 
-//TODO: comment
+/// <summary>
+/// Complete net intertwining graph implementation of OMAP map representation which uses <see cref="Orienteering_ISOM_2017_2"/>
+/// tempalte and does not require elevation data for its creation. It does not hold any elevation information at all.
+/// </summary>
 public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(INearestNeighborsSearchableDataStructure<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex> searchableVertices, int scale) : 
     ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>, 
     IEnumerable<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>
 {
     public string Name { get; } = "Complete snapping map repre. elev. data independent implementation for Orienteering (ISOM 2017-2) and Omap file format.";
 
-    // public IEditableRadiallySearchableDataStruct<ICompleteNetIntertwiningGraph< Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> SearchableVertices { get; } = searchableVertices; //for debugging
+    // public INearestNeighborsSearchableDataStructure<ICompleteNetIntertwiningGraph< Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> SearchableVertices { get; } = searchableVertices; //for debugging
 
     public void RestoreConsistency()
     {

@@ -24,18 +24,25 @@ using Priority_Queue;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.Implementations.AStar;
 
-//TODO: comment
+/// <summary>
+/// General implementation of A* algorithm.
+/// It does not use predecessor list for remembering found paths, it requires from vertices of map representation to be
+/// able to remember their pre own predecessors.
+/// At this moment, it does not report progress of search. Also, it does not use any configuration of its behaviour.
+/// </summary>
 public class AStarGeneral : 
     ISearchingAlgorithmImplementation<AStarConfiguration>
 {
     public static AStarGeneral Instance { get; } = new AStarGeneral();
     private AStarGeneral() {}
+    /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     public bool DoesRepresentUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRepresentative) 
         where TVertex : IVertex where TEdge : IEdge where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         return graphRepresentative is IGraphRepresentative<IRemembersPredecessors<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>, TVertex, TEdge>;
     }
 
+    /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     public bool DoesRepresentUsableUserModel<TTemplate, TVertexAttributes, TEdgeAttributes>(IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> userModelType) 
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes> where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
@@ -44,12 +51,14 @@ public class AStarGeneral :
             and IUserModelType<IWeightComputing<TTemplate, TVertexAttributes, TEdgeAttributes>, TTemplate> ;
     }
 
+    /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     public bool IsUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(IGraph<TVertex, TEdge> graph) 
         where TVertex : IVertex where TEdge : IEdge where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         return graph is IRemembersPredecessors<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>;
     }
 
+    /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     public bool IsUsableUserModel<TVertexAttributes, TEdgeAttributes>(IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
         return userModel 
@@ -57,6 +66,7 @@ public class AStarGeneral :
             and IWeightComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>;
     }
 
+    /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     public IPath<TVertexAttributes, TEdgeAttributes>[] SearchForPaths<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(Leg[] track, IGraph<TVertex, TEdge> graph, IList<IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>> userModels,
         AStarConfiguration configuration, IProgress<ISearchingReport>? progress, CancellationToken? cancellationToken) where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes where TVertex : IVertex where TEdge : IEdge
     {
@@ -69,6 +79,7 @@ public class AStarGeneral :
         return paths.ToArray();
     }
 
+    /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     public IPath<TVertexAttributes, TEdgeAttributes> ExecutorSearch<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(
         Leg[] track, IGraph<TVertex, TEdge> graph,
         IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>> userModel, AStarConfiguration configuration,
@@ -79,6 +90,7 @@ public class AStarGeneral :
         where TEdge : IEdge
         => Algorithm<TVertexAttributes, TEdgeAttributes>.Instance.Search(track, graph, userModel, configuration, progress, cancellationToken); 
 
+    /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     private class Algorithm<TVertexAttributes, TEdgeAttributes> :
         IRemembersPredecessorsGenericVisitor<SegmentedLinesPath<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes, (Leg, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>, AStarConfiguration, IProgress<ISearchingReport>?, CancellationToken? )> 
         where TVertexAttributes : IVertexAttributes

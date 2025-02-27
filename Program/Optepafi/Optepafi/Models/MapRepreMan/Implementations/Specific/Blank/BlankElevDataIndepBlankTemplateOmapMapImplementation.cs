@@ -7,7 +7,12 @@ using Optepafi.Models.TemplateMan.Templates;
 
 namespace Optepafi.Models.MapRepreMan.Implementations.Specific.Blank;
 
-//TODO: comment
+/// <summary>
+/// Graph implementation of OMAP map representation which uses blank template and for its creation are not used any
+/// elevation data.
+/// This implementation of map representation is not usable because of blank template. It is just demonstrative type
+/// for presenting application functionality.
+/// </summary>
 public class BlankElevDataIndepBlankTemplateOmapMapImplementation :
     IBlankGraph<BlankTemplate.VertexAttributes, BlankTemplate.EdgeAttributes>
 {

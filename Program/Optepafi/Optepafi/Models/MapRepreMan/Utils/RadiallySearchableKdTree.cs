@@ -34,7 +34,7 @@ public class RadiallySearchableKdTree<TValue> :
             (int, int) coords = toCoordsDelegate(value);
             _kdTree.Add([coords.Item1, coords.Item2], value);
         }
-        _kdTree.Balance();
+        if (_kdTree.Count != 0) _kdTree.Balance();
     }
     
     public IReadOnlyList<TValue> FindInEuclideanDistanceFrom((int, int) coords, int distance) => _kdTree

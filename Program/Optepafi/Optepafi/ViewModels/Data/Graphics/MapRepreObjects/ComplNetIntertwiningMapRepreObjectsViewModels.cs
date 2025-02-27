@@ -12,6 +12,7 @@ public class VertexObjectViewModel(VertexObject obj, MapCoordinates mapsTopLeftV
     public override int Priority { get; } = 36;
     public int XCoord { get; } = obj.Position.XPos;
     public int YCoord { get; } = obj.Position.YPos;
+    // public float FontSize { get; } = 0.2f; // size for lengths of edge 500
     public float FontSize { get; } = 0.5f;
     public int Diameter { get; } = 100;
     
@@ -25,7 +26,9 @@ public class EdgeObjectViewModel : GraphicObjectViewModel
     public CanvasCoordinate StartPoint { get; }
     
     public CanvasCoordinate EndPoint { get; } 
+    // public int TopLineThickness { get; } = 24; // size for lengths of edge 500
     public int TopLineThickness { get; } = 80;
+    // public int BottomLineThickness { get; } = 27; // size for lengths of edge 500
     public int BottomLineThickness { get; } = 90;
 
     public EdgeObjectViewModel(EdgeObject obj, MapCoordinates mapsTopLeftVertex)
