@@ -33,7 +33,7 @@ public class SearchingAlgorithmManager :
     ITemplateGenericVisitor<IPath, (Leg[], ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IConfiguration, IProgress<ISearchingReport>?, CancellationToken?)>,
     ITemplateGenericVisitor<ISearchingExecutor, (ISearchingAlgorithm, IMapRepre, IUserModel<ITemplate>, IConfiguration)>,
     ITemplateGenericVisitor<HashSet<ISearchingAlgorithm>,(IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>,ITemplate>)>,
-    ITemplateGenericVisitor<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>,ITemplate>, ISearchingAlgorithm)>,
+    ITemplateGenericVisitor<int, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>,ITemplate>, ISearchingAlgorithm)>,
     IGraphGenericVisitor<(SearchingAlgorithmManager.SearchResult[], IPath?[]), IVertexAttributes, IEdgeAttributes, (Leg[], ISearchingAlgorithm, IUserModel<ITemplate>[], IConfiguration, IProgress<ISearchingReport>?, CancellationToken?)>,
     IGraphGenericVisitor<ISearchingExecutor, IVertexAttributes, IEdgeAttributes, (ISearchingAlgorithm, IUserModel<ITemplate>, IConfiguration)>
 {
@@ -67,12 +67,12 @@ public class SearchingAlgorithmManager :
         HashSet<ISearchingAlgorithm> usableAlgorithms = new();
         if (userModelType is IUserModelType< IComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes>, ITemplate<TVertexAttributes, TEdgeAttributes>> computingUserModelType)
         {
-            var graphCreator = mapRepreRep.GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>();
-            foreach (var searchingAlgorithm in SearchingAlgorithms)
-            {
-                if (graphCreator.RevelationForSearchingAlgorithmMan(this, computingUserModelType, searchingAlgorithm))
-                    usableAlgorithms.Add(searchingAlgorithm);
-            }
+            foreach(var graphCreator in mapRepreRep.GetGraphCreators<TVertexAttributes, TEdgeAttributes>())
+                foreach (var searchingAlgorithm in SearchingAlgorithms)
+                {
+                    if (graphCreator.RevelationForSearchingAlgorithmMan(this, computingUserModelType, searchingAlgorithm))
+                        usableAlgorithms.Add(searchingAlgorithm);
+                }
         }
         return usableAlgorithms;
     }
@@ -107,20 +107,21 @@ public class SearchingAlgorithmManager :
     /// <param name="mapRepreRep">Representative of tested map representation type.</param>
     /// <param name="userModelType">Representative of tested user model type.</param>
     /// <param name="algorithm">Algorithm which tests map representation - user model types combination usability.</param>
-    /// <returns>True, if provided combination of types is usable in provided algorithm. False otherwise.</returns>
-    public bool DoesRepresentUsableMapRepreUserModelCombFor(IMapRepreRepresentative<IMapRepre> mapRepreRep, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType, ISearchingAlgorithm algorithm)
+    /// <returns>Index of relevant graph constructor of map representation, if provided combination of types is usable in provided algorithm. -1 otherwise.</returns>
+    public int GetRelevantGraphCreatorIndexIfRepresentUsableMapRepreUserModelCombFor(IMapRepreRepresentative<IMapRepre> mapRepreRep, IUserModelType<IUserModel<ITemplate>, ITemplate> userModelType, ISearchingAlgorithm algorithm)
     {
-        return userModelType.AssociatedTemplate.AcceptGeneric<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>(this, (mapRepreRep, userModelType, algorithm));
+        return userModelType.AssociatedTemplate.AcceptGeneric<int, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>(this, (mapRepreRep, userModelType, algorithm));
     }
-    bool ITemplateGenericVisitor<bool, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm) otherParams)
+    int ITemplateGenericVisitor<int, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm)>.GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes>(TTemplate template, (IMapRepreRepresentative<IMapRepre>, IUserModelType<IUserModel<ITemplate>, ITemplate>, ISearchingAlgorithm) otherParams)
     {
         var (mapRepreRep, userModelType, algorithm) = otherParams;
         if (userModelType is IUserModelType<IComputing<TTemplate, TVertexAttributes, TEdgeAttributes> , TTemplate> computingUserModelType)
         {
-            var graphCreator = mapRepreRep.GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttributes>();
-            graphCreator.RevelationForSearchingAlgorithmMan(this, computingUserModelType, algorithm);
+            var graphCreators = mapRepreRep.GetGraphCreators<TVertexAttributes, TEdgeAttributes>();
+            for (int i = 0; i < mapRepreRep.GetGraphCreators<TVertexAttributes, TEdgeAttributes>().Length; ++i)
+                if (graphCreators[i].RevelationForSearchingAlgorithmMan(this, computingUserModelType, algorithm)) return i;
         }
-        return false;
+        return -1;
     }
 
     public bool AcceptGraphCreatorsRevelation<TVertex, TEdge, TTemplate, TVertexAttributes, TEdgeAttributes>(

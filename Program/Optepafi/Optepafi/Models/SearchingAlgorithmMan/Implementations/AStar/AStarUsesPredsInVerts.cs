@@ -30,16 +30,16 @@ namespace Optepafi.Models.SearchingAlgorithmMan.Implementations.AStar;
 /// able to remember their pre own predecessors.
 /// At this moment, it does not report progress of search. Also, it does not use any configuration of its behaviour.
 /// </summary>
-public class AStarGeneral : 
+public class AStarUsesPredsInVerts : 
     ISearchingAlgorithmImplementation<AStarConfiguration>
 {
-    public static AStarGeneral Instance { get; } = new AStarGeneral();
-    private AStarGeneral() {}
+    public static AStarUsesPredsInVerts Instance { get; } = new AStarUsesPredsInVerts();
+    private AStarUsesPredsInVerts() {}
     /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     public bool DoesRepresentUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(IGraphRepresentative<IGraph<TVertex, TEdge>, TVertex, TEdge> graphRepresentative) 
         where TVertex : IVertex where TEdge : IEdge where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
-        return graphRepresentative is IGraphRepresentative<IRemembersPredecessors<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>, TVertex, TEdge>;
+        return graphRepresentative is IGraphRepresentative<IRemembersPredecessors<TVertex, TEdge, float, TVertexAttributes, TEdgeAttributes>, TVertex, TEdge>;
     }
 
     /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
@@ -55,7 +55,7 @@ public class AStarGeneral :
     public bool IsUsableGraph<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>(IGraph<TVertex, TEdge> graph) 
         where TVertex : IVertex where TEdge : IEdge where TVertexAttributes : IVertexAttributes where TEdgeAttributes : IEdgeAttributes
     {
-        return graph is IRemembersPredecessors<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>;
+        return graph is IRemembersPredecessors<TVertex, TEdge, float, TVertexAttributes, TEdgeAttributes>;
     }
 
     /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
@@ -90,9 +90,8 @@ public class AStarGeneral :
         where TEdge : IEdge
         => Algorithm<TVertexAttributes, TEdgeAttributes>.Instance.Search(track, graph, userModel, configuration, progress, cancellationToken); 
 
-    /// <inheritdoc cref="ISearchingAlgorithmImplementation{TConfiguration}"/> 
     private class Algorithm<TVertexAttributes, TEdgeAttributes> :
-        IRemembersPredecessorsGenericVisitor<SegmentedLinesPath<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes, (Leg, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>, AStarConfiguration, IProgress<ISearchingReport>?, CancellationToken? )> 
+        IRemembersPredecessorsGenericVisitor<SegmentedLinesPath<TVertexAttributes, TEdgeAttributes>, float, TVertexAttributes, TEdgeAttributes, (Leg, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>, AStarConfiguration, IProgress<ISearchingReport>?, CancellationToken? )> 
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttributes : IEdgeAttributes
     {
@@ -104,7 +103,7 @@ public class AStarGeneral :
         where TVertex : IVertex
         where TEdge : IEdge
         {
-            if (graph is IRemembersPredecessors<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
+            if (graph is IRemembersPredecessors<TVertex, TEdge, float, TVertexAttributes, TEdgeAttributes>
                 graphWhichRemembersPredecessors)
             {
                 SegmentedLinesPath<TVertexAttributes, TEdgeAttributes> path = new();
@@ -118,7 +117,7 @@ public class AStarGeneral :
             throw new ArgumentException("Graph was not convertible to IRemembersPredecessorsGenericVisitor even though it should be checked before call of this method.");
         }
 
-        SegmentedLinesPath<TVertexAttributes, TEdgeAttributes> IRemembersPredecessorsGenericVisitor<SegmentedLinesPath<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes, (Leg, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>, AStarConfiguration, IProgress<ISearchingReport>?, CancellationToken? )>.
+        SegmentedLinesPath<TVertexAttributes, TEdgeAttributes> IRemembersPredecessorsGenericVisitor<SegmentedLinesPath<TVertexAttributes, TEdgeAttributes>, float, TVertexAttributes, TEdgeAttributes, (Leg, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>, AStarConfiguration, IProgress<ISearchingReport>?, CancellationToken? )>.
             GenericVisit<TPredecessorRemembering, TVertex, TEdge>(TPredecessorRemembering predecessorRememberingGraph,
             (Leg, IUserModel<ITemplate<TVertexAttributes, TEdgeAttributes>>, AStarConfiguration, IProgress<ISearchingReport>?, CancellationToken?) otherParams)
         {
@@ -162,12 +161,12 @@ public class AStarGeneral :
 
         private float GetEdgeWeight<TVertex, TEdge>(TVertex vertex, TEdge edge, IWeightComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> weightComputingUserModel)
             where TVertex : IPredecessorRememberingVertex<TVertexAttributes>, IBasicVertex<TEdge, TVertexAttributes>
-            where TEdge : IBasicEdge<TVertex, TEdgeAttributes>
+            where TEdge : IBasicEdge<TVertex, TEdgeAttributes, float>
         {
-            if (vertex.TryGetWeight(edge, out float weight))
-                return weight; 
+            if (edge.GetWeight() is not float.NaN)
+                return edge.GetWeight(); 
             var computedWeight = weightComputingUserModel.ComputeWeight(vertex.Attributes, edge.Attributes, edge.To.Attributes);
-            vertex.SetWeight(computedWeight, edge);
+            edge.SetWeight(computedWeight);
             return computedWeight;
         }
 

@@ -134,7 +134,7 @@ public partial class PathFindingSessionModelView
                     
                     progressInfo.Report("Creating map representation"); //TODO: localize
                     MapRepresentation = await Task.Run(() => 
-                        MapRepreManager.Instance.CreateMapRepre(Template, areaQueryableMap, MapRepreRepresentative, elevData, MapRepresentationConfiguration, mrcProgress, cancellationToken));
+                        MapRepreManager.Instance.CreateMapRepre(Template, areaQueryableMap, RelevantGraphCreatorIndex, MapRepreRepresentative, elevData, MapRepresentationConfiguration, mrcProgress, cancellationToken));
                     if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
                 }
                 else throw new InvalidOperationException("There is some error in prerequisites check method, that allows _useElevData to be set to true, when map is not even IGeoLocatedMap.");
@@ -143,7 +143,7 @@ public partial class PathFindingSessionModelView
             {
                 progressInfo.Report("Creating map representation"); //TODO: localize
                 MapRepresentation = await Task.Run(() =>
-                    MapRepreManager.Instance.CreateMapRepre(Template, Map, MapRepreRepresentative, MapRepresentationConfiguration, mrcProgress, cancellationToken));
+                    MapRepreManager.Instance.CreateMapRepre(Template, Map, RelevantGraphCreatorIndex, MapRepreRepresentative, MapRepresentationConfiguration, mrcProgress, cancellationToken));
                 if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
             }
         }
@@ -168,6 +168,7 @@ public partial class PathFindingSessionModelView
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when representative in settings is not set. When map creating ModelView is used it should be set already.</exception>
         private IMapRepreRepresentative<IMapRepre> MapRepreRepresentative => Settings.MapRepreRepresentative ?? throw new ArgumentNullException( nameof(Settings.MapRepreRepresentative), "Map representation representative should be set before using PFMapRepreCreatingModelView");
+        private int RelevantGraphCreatorIndex => Settings.RelevantGraphCreatorIndex > -1 ? Settings.RelevantGraphCreatorIndex : throw new ArgumentException(nameof(Settings.RelevantGraphCreatorIndex), "Index of relevant graph creator should be set before using PFMapRepreCreatingModelView");
         private IConfiguration MapRepresentationConfiguration => Settings.MapRepresentationConfiguration ?? throw new ArgumentNullException( nameof(Settings.MapRepresentationConfiguration), "Map representation configuration should be set before using PFMapRepreCreatingModelView");
         /// <summary>
         /// Elevation data distribution retrieved from settings ModelView. This distribution is eventually used in map representations creation.

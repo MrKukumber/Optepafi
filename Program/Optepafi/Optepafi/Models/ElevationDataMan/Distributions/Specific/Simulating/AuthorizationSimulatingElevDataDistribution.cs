@@ -43,6 +43,9 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
     public string Name => "Authorization simulating elevation data distribution with name \"Name\" and password \"Password\"";
     /// <inheritdoc cref="IElevDataDistribution.AllTopRegions"/>
     public IReadOnlySet<TopRegion> AllTopRegions { get; }
+
+    public CredentialsType CredType { get; } = CredentialsType.UserNameAndPassword; 
+    
     /// <inheritdoc cref="IElevDataDistribution.Remove"/>
     public void Remove(Region region)
     {

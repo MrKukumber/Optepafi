@@ -1,3 +1,5 @@
+namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.CompleteIterativelySnapping;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,287 +11,262 @@ using Optepafi.Models.MapMan.MapRepresentatives;
 using Optepafi.Models.MapMan.Maps;
 using Optepafi.Models.MapRepreMan.Configurations;
 using Optepafi.Models.MapRepreMan.Graphs.Specific;
+using Optepafi.Models.MapRepreMan.Graphs.Specific.CompleteNetIntertwining;
 using Optepafi.Models.MapRepreMan.Implementations.Specific.CompleteIterativelySnapping;
 using Optepafi.Models.MapRepreMan.Utils;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Shapes.Segments;
-
-namespace Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.CompleteIterativelySnapping;
-
-/// <summary>
-/// Represents and creates net intertwining graph implementation of OMAP map representation which uses <see cref="Orienteering_ISOM_2017_2"/>
-/// tempalte and does not require elevation data for its creation. It does not include any elevation information in the graph at all.
-/// </summary>
-public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep : 
-    ElevDataIndepImplementationRep<Orienteering_ISOM_2017_2, OmapMap, OmapMap, CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation, CompleteNetIntertwiningMapRepreConfiguration, ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex, ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge, Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>
+public class GraphCreator
 {
-    public static CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep Instance { get; } = new();
-    private CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep(){ }
-
-    public override Orienteering_ISOM_2017_2 UsedTemplate { get; } = Orienteering_ISOM_2017_2.Instance;
-    public override IMapFormat<OmapMap> UsedMapFormat { get; } = OmapMapRepresentative.Instance;
-
-    public override CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation CreateImplementation(Orienteering_ISOM_2017_2 template, OmapMap map,
-        CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
+    public static GraphCreator Instance { get; } = new();
+    private GraphCreator() { }
+    
+    public int processedObjectsCount;
+    // public int debugLimit = 5000; // for debugging
+    public IEnumerable<VertexBuilder> Create(OmapMap map,
+        CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
+        CancellationToken? cancellationToken)
     {
-        return GraphCreator.Instance.Create(map, configuration, progress, cancellationToken);
+        List<NetVertexBuilder> netVertices = CreateNet(map, configuration);
+        // List<NetVertexBuilder> netVertices = new(); // for debugging
+        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return [];
+        
+        IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders = new RadiallySearchableKdTree<VertexBuilder>(netVertices, vb => (vb.Position.XPos, vb.Position.YPos));
+        int allObjectsCount = 0;
+        foreach (var crossablePolygonalSymbolCode in OrderedPolygonalSymbolsCodes)
+            if (map.Symbols.Contains(new OmapMap.Symbol(crossablePolygonalSymbolCode)))
+                allObjectsCount += map.Objects[crossablePolygonalSymbolCode].Count;
+        foreach (var pathSymbolCode in OrderedPathsSymbolsCodes)
+            if (map.Symbols.Contains(new OmapMap.Symbol(pathSymbolCode)))
+                allObjectsCount += map.Objects[pathSymbolCode].Count;
+        foreach (var linearobstacleSymbolCode in OrderedLinearObstacleSymbolsCodes)
+            if (map.Symbols.Contains(new OmapMap.Symbol(linearobstacleSymbolCode)))
+                allObjectsCount += map.Objects[linearobstacleSymbolCode].Count;
+        Console.WriteLine(allObjectsCount);
+        processedObjectsCount = 0;
+        foreach (var polygonalSymbolCode in OrderedPolygonalSymbolsCodes)
+        {
+            Console.WriteLine(polygonalSymbolCode);
+            if (map.Symbols.Contains(new OmapMap.Symbol(polygonalSymbolCode)))
+                foreach (var obj in map.Objects[polygonalSymbolCode])
+                {
+                    // if (processedObjectsCount > debugLimit) break; // for debugging
+                    if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
+                    // if (processedObjectsCount == debugLimit) // for debugging
+                    ProcessCrossablePolygonalObject(obj, polygonalSymbolCode, vertexBuilders, configuration, cancellationToken);
+                    ++processedObjectsCount;
+                    if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount / 100) == 0 && progress is not null) progress.Report( new MapRepreConstructionReport(processedObjectsCount / (float)allObjectsCount * 100));
+                    if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return [];
+                }
+        }
+        foreach (var pathSymbolCode in OrderedPathsSymbolsCodes)
+        {
+            Console.WriteLine(pathSymbolCode);
+            if (map.Symbols.Contains(new OmapMap.Symbol(pathSymbolCode)))
+                foreach (var obj in map.Objects[pathSymbolCode])
+                {
+                    // if (processedObjectsCount > debugLimit) break; // for debugging
+                    if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
+                    // if (processedObjectsCount == debugLimit) // for debugging
+                    ProcessPathObject(obj, pathSymbolCode, vertexBuilders, configuration, cancellationToken);
+                    ++processedObjectsCount;
+                    if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount/100) == 0  && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
+                    if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return [];
+                }
+        }
+        foreach (var linearObstacleSymbolCode in OrderedLinearObstacleSymbolsCodes)
+            if (map.Symbols.Contains(new OmapMap.Symbol(linearObstacleSymbolCode)))
+                foreach (var obj in map.Objects[linearObstacleSymbolCode])
+                {
+                    // if (processedObjectsCount > debugLimit) break; // for debugging
+                    if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
+                    // if (processedObjectsCount == debugLimit) // for debugging
+                    ProcessLinearObstacleObject(obj, linearObstacleSymbolCode, vertexBuilders, configuration, cancellationToken);
+                    ++processedObjectsCount;
+                    if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount/100) == 0 && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
+                    if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return [];
+                }
+        return vertexBuilders;
     }
+    
+    private List<decimal> OrderedPolygonalSymbolsCodes =
+    [
+        403, 404, 404.1m, 413.1m, 213, 414.1m, 401, 402, 402.1m, 413, 412, 414, 407, 409, 406, 406.1m, 408, 408.1m, 408.2m,
+        410, 410.1m, 410.2m, 410.3m, 410.4m, 214, 405, 310, 308, 302, 302.1m, 302.5m, 113, 114, 210, 211, 212, 208, 209, 501, 501.1m,
+        520, 307, 307.1m, 301, 301.1m, 301.2m, 301.3m, 206, 521, 521.2m, 521.3m, 520.2m
+    ];
 
+    private List<decimal> OrderedPathsSymbolsCodes =
+    [
+        508, 508.2m, 508.3m, 508.4m, 508.1m, 507, 506, 505, 504, 503, 502, 502.2m, 532 
+    ];
+    
+    private List<decimal> OrderedLinearObstacleSymbolsCodes =
+    [
+        104, 105, 107, 305, 304, 201, 201.3m, 202, 202.2m, 215, 513, 515, 516, 518, 528, 529
+    ];
 
-    private class GraphCreator
+    private List<NetVertexBuilder> CreateNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration) 
+        => configuration.typeOfNet.AllValues[configuration.typeOfNet.IndexOfSelectedValue] switch
     {
-        public static GraphCreator Instance { get; } = new();
-        private GraphCreator() { }
-        
-        public int processedObjectsCount;
-        // public int debugLimit = 5000; // for debugging
-        public CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation Create(OmapMap map,
-            CompleteNetIntertwiningMapRepreConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
-            CancellationToken? cancellationToken)
+        CompleteNetIntertwiningMapRepreConfiguration.NetTypesEnumeration.Triangular => CreateTriangularNet(map, configuration),
+        _ => throw new InvalidEnumArgumentException()
+    };
+
+    private List<NetVertexBuilder> CreateTriangularNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration)
+    {
+        (int left, int top, int right, int bottom) boundaries = (map.WesternmostCoords.XPos, map.NorthernmostCoords.YPos, map.EasternmostCoords.XPos, map.SouthernmostCoords.YPos);
+        int edgeLength = configuration.standardEdgeLength.Value;
+        int colls = (boundaries.right - boundaries.left)/edgeLength + 1;
+        int rows = (int)((boundaries.top - boundaries.bottom)/(Math.Sqrt(3)*edgeLength/2)) + 1;
+        List<NetVertexBuilder> vertices = new ();
+        List<NetVertexBuilder> lastRow = new ();
+        List<NetVertexBuilder> currentRow = new ();
+        (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?) justForest =  (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null);
+        (Orienteering_ISOM_2017_2.NaturalLinearObstacles?, Orienteering_ISOM_2017_2.Paths?, Orienteering_ISOM_2017_2.ManMadeLinearObstacles?) blankLinearFeatures = (null, null, null);
+        for (int coll = 0; coll < colls; ++coll)
+            lastRow.Add(new NetVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( new MapCoordinates(boundaries.left + coll * edgeLength, boundaries.top)))
+                {Surroundings = justForest});
+
+        for (int row = 1; row < rows; ++row)
         {
-            List<NetVertexBuilder> netVertices = CreateNet(map, configuration);
-            // List<NetVertexBuilder> netVertices = new(); // for debugging
-            if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
-            
-            IEditableRadiallySearchableDataStruct<VertexBuilder> vertexBuilders = new RadiallySearchableKdTree<VertexBuilder>(netVertices, vb => (vb.Position.XPos, vb.Position.YPos));
-            int allObjectsCount = 0;
-            foreach (var crossablePolygonalSymbolCode in OrderedPolygonalSymbolsCodes)
-                if (map.Symbols.Contains(new OmapMap.Symbol(crossablePolygonalSymbolCode)))
-                    allObjectsCount += map.Objects[crossablePolygonalSymbolCode].Count;
-            foreach (var pathSymbolCode in OrderedPathsSymbolsCodes)
-                if (map.Symbols.Contains(new OmapMap.Symbol(pathSymbolCode)))
-                    allObjectsCount += map.Objects[pathSymbolCode].Count;
-            foreach (var linearobstacleSymbolCode in OrderedLinearObstacleSymbolsCodes)
-                if (map.Symbols.Contains(new OmapMap.Symbol(linearobstacleSymbolCode)))
-                    allObjectsCount += map.Objects[linearobstacleSymbolCode].Count;
-            Console.WriteLine(allObjectsCount);
-            processedObjectsCount = 0;
-            foreach (var polygonalSymbolCode in OrderedPolygonalSymbolsCodes)
+            for (int coll = 0; coll < colls - 1; ++coll)
             {
-                Console.WriteLine(polygonalSymbolCode);
-                if (map.Symbols.Contains(new OmapMap.Symbol(polygonalSymbolCode)))
-                    foreach (var obj in map.Objects[polygonalSymbolCode])
-                    {
-                        // if (processedObjectsCount > debugLimit) break; // for debugging
-                        if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
-                        // if (processedObjectsCount == debugLimit) // for debugging
-                        ProcessCrossablePolygonalObject(obj, polygonalSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        ++processedObjectsCount;
-                        if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount / 100) == 0 && progress is not null) progress.Report( new MapRepreConstructionReport(processedObjectsCount / (float)allObjectsCount * 100));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation( new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
-                    }
-            }
-            foreach (var pathSymbolCode in OrderedPathsSymbolsCodes)
-            {
-                Console.WriteLine(pathSymbolCode);
-                if (map.Symbols.Contains(new OmapMap.Symbol(pathSymbolCode)))
-                    foreach (var obj in map.Objects[pathSymbolCode])
-                    {
-                        // if (processedObjectsCount > debugLimit) break; // for debugging
-                        if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
-                        // if (processedObjectsCount == debugLimit) // for debugging
-                        ProcessPathObject(obj, pathSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        ++processedObjectsCount;
-                        if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount/100) == 0  && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
-                    }
-            }
-            foreach (var linearObstacleSymbolCode in OrderedLinearObstacleSymbolsCodes)
-                if (map.Symbols.Contains(new OmapMap.Symbol(linearObstacleSymbolCode)))
-                    foreach (var obj in map.Objects[linearObstacleSymbolCode])
-                    {
-                        // if (processedObjectsCount > debugLimit) break; // for debugging
-                        if (processedObjectsCount % 100 == 0) { Console.WriteLine($"Processed objects count is {processedObjectsCount}"); }
-                        // if (processedObjectsCount == debugLimit) // for debugging
-                        ProcessLinearObstacleObject(obj, linearObstacleSymbolCode, vertexBuilders, configuration, cancellationToken);
-                        ++processedObjectsCount;
-                        if (allObjectsCount >= 100 && processedObjectsCount % (allObjectsCount/100) == 0 && progress is not null) progress.Report(new MapRepreConstructionReport(processedObjectsCount/(float)allObjectsCount * 100));
-                        if (cancellationToken is not null && cancellationToken.Value.IsCancellationRequested) return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(new RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>(v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos)), map.Scale);
-                    }
-            RadiallySearchableKdTree<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex> vertices = new (vertexBuilders.Select(vb => vb.Build()), v => (v.Attributes.Position.XPos, v.Attributes.Position.YPos));
-            foreach (var vertexBuilder in vertexBuilders) vertexBuilder.ConnectAfterBuild(); 
-            return new CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(vertices, map.Scale);
-        }
-        
-        private List<decimal> OrderedPolygonalSymbolsCodes =
-        [
-            403, 404, 404.1m, 413.1m, 213, 414.1m, 401, 402, 402.1m, 413, 412, 414, 407, 409, 406, 406.1m, 408, 408.1m, 408.2m,
-            410, 410.1m, 410.2m, 410.3m, 410.4m, 214, 405, 310, 308, 302, 302.1m, 302.5m, 113, 114, 210, 211, 212, 208, 209, 501, 501.1m,
-            520, 307, 307.1m, 301, 301.1m, 301.2m, 301.3m, 206, 521, 521.2m, 521.3m, 520.2m
-        ];
-
-        private List<decimal> OrderedPathsSymbolsCodes =
-        [
-            508, 508.2m, 508.3m, 508.4m, 508.1m, 507, 506, 505, 504, 503, 502, 502.2m, 532 
-        ];
-        
-        private List<decimal> OrderedLinearObstacleSymbolsCodes =
-        [
-            104, 105, 107, 305, 304, 201, 201.3m, 202, 202.2m, 215, 513, 515, 516, 518, 528, 529
-        ];
-
-        private List<NetVertexBuilder> CreateNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration) 
-            => configuration.typeOfNet.AllValues[configuration.typeOfNet.IndexOfSelectedValue] switch
-        {
-            CompleteNetIntertwiningMapRepreConfiguration.NetTypesEnumeration.Triangular => CreateTriangularNet(map, configuration),
-            _ => throw new InvalidEnumArgumentException()
-        };
-
-        private List<NetVertexBuilder> CreateTriangularNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration)
-        {
-            (int left, int top, int right, int bottom) boundaries = (map.WesternmostCoords.XPos, map.NorthernmostCoords.YPos, map.EasternmostCoords.XPos, map.SouthernmostCoords.YPos);
-            int edgeLength = configuration.standardEdgeLength.Value;
-            int colls = (boundaries.right - boundaries.left)/edgeLength + 1;
-            int rows = (int)((boundaries.top - boundaries.bottom)/(Math.Sqrt(3)*edgeLength/2)) + 1;
-            List<NetVertexBuilder> vertices = new ();
-            List<NetVertexBuilder> lastRow = new ();
-            List<NetVertexBuilder> currentRow = new ();
-            (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?) justForest =  (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null);
-            (Orienteering_ISOM_2017_2.NaturalLinearObstacles?, Orienteering_ISOM_2017_2.Paths?, Orienteering_ISOM_2017_2.ManMadeLinearObstacles?) blankLinearFeatures = (null, null, null);
-            for (int coll = 0; coll < colls; ++coll)
-                lastRow.Add(new NetVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes( new MapCoordinates(boundaries.left + coll * edgeLength, boundaries.top)))
-                    {Surroundings = justForest});
-
-            for (int row = 1; row < rows; ++row)
-            {
-                for (int coll = 0; coll < colls - 1; ++coll)
-                {
-                    NetVertexBuilder vertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates( boundaries.left + edgeLength/2 + coll * edgeLength , (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
-                        {Surroundings = justForest};
-                    vertex.NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures ;
-                    lastRow[coll].NonBoundaryEdges[vertex] = blankLinearFeatures;
-                    vertex.NonBoundaryEdges[lastRow[coll + 1]] = blankLinearFeatures ;
-                    lastRow[coll + 1].NonBoundaryEdges[vertex] = blankLinearFeatures ;
-                    lastRow[coll + 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
-                    lastRow[coll].NonBoundaryEdges[lastRow[coll + 1]] = blankLinearFeatures;
-                    currentRow.Add(vertex);
-                }
-                
-                vertices.AddRange(lastRow);
-                lastRow.Clear();
-                lastRow.AddRange(currentRow);
-                currentRow.Clear();
-                ++row;
-                
-                NetVertexBuilder leftVertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates(boundaries.left, (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
+                NetVertexBuilder vertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates( boundaries.left + edgeLength/2 + coll * edgeLength , (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
                     {Surroundings = justForest};
-                leftVertex.NonBoundaryEdges[lastRow[0]] = blankLinearFeatures;
-                lastRow[0].NonBoundaryEdges[leftVertex] = blankLinearFeatures;
-                currentRow.Add(leftVertex);
-                for (int coll = 1; coll < colls - 1; ++coll)
-                {
-                    NetVertexBuilder vertex =  new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates( boundaries.left + coll * edgeLength , (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2)))) 
-                        {Surroundings = justForest};
-                    vertex.NonBoundaryEdges[lastRow[coll - 1]] = blankLinearFeatures;
-                    lastRow[coll - 1].NonBoundaryEdges[vertex] = blankLinearFeatures;
-                    vertex.NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
-                    lastRow[coll].NonBoundaryEdges[vertex] = blankLinearFeatures;
-                    lastRow[coll].NonBoundaryEdges[lastRow[coll-1]] = blankLinearFeatures;
-                    lastRow[coll - 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
-                    currentRow.Add(vertex);
-                }
-                NetVertexBuilder rightVertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates(boundaries.left + (colls - 1) * edgeLength, (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
-                    {Surroundings = justForest};
-                rightVertex.NonBoundaryEdges[lastRow[colls - 2]] = blankLinearFeatures;
-                lastRow[colls - 2].NonBoundaryEdges[rightVertex] = blankLinearFeatures;
-                currentRow.Add(rightVertex);
-                
-                vertices.AddRange(lastRow);
-                lastRow.Clear();
-                lastRow.AddRange(currentRow);
-                currentRow.Clear();
+                vertex.NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures ;
+                lastRow[coll].NonBoundaryEdges[vertex] = blankLinearFeatures;
+                vertex.NonBoundaryEdges[lastRow[coll + 1]] = blankLinearFeatures ;
+                lastRow[coll + 1].NonBoundaryEdges[vertex] = blankLinearFeatures ;
+                lastRow[coll + 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
+                lastRow[coll].NonBoundaryEdges[lastRow[coll + 1]] = blankLinearFeatures;
+                currentRow.Add(vertex);
             }
             
-            for (int coll = 1; coll < colls; ++coll)
-            {
-                lastRow[coll].IsStationary = true;
-                lastRow[coll].NonBoundaryEdges[lastRow[coll - 1]] = blankLinearFeatures;
-                lastRow[coll - 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
-            }
             vertices.AddRange(lastRow);
-            return vertices;
-        }
-        
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void ProcessCrossablePolygonalObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
-            CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
-        {
-            // if(processedObjectsCount == debugLimit) {} // for debugging
-            // 0
-            // symbol of code 410.4m is line symbol that represents very thin polygonal object so it has to be processed separately
-            var potentiallyEntangledChain = symbolCode != 410.4m
-                ? PolygonalObjectsProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value)
-                : PolygonalObjectsProcessing.GetBlankBoundaryChainOfSymbol410_4(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
-            if (potentiallyEntangledChain is null) return;
-            // 1
-            var chains = PolygonalObjectsProcessing.SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(potentiallyEntangledChain, configuration.standardEdgeLength.Value);
-            foreach(var chain in chains)
+            lastRow.Clear();
+            lastRow.AddRange(currentRow);
+            currentRow.Clear();
+            ++row;
+            
+            NetVertexBuilder leftVertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates(boundaries.left, (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
+                {Surroundings = justForest};
+            leftVertex.NonBoundaryEdges[lastRow[0]] = blankLinearFeatures;
+            lastRow[0].NonBoundaryEdges[leftVertex] = blankLinearFeatures;
+            currentRow.Add(leftVertex);
+            for (int coll = 1; coll < colls - 1; ++coll)
             {
-                // 2
-                var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PolygonalObjectsProcessing.CutAllCrossedEdges(chain, allVertices, configuration.standardEdgeLength.Value);
-                // 3
-                var (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices) = PolygonalObjectsProcessing.FindNodesInsideThePolygonByDfs(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, chain); 
-                // 4
-                // if(processedObjectsCount != debugLimit) // for debugging
-                PolygonalObjectsProcessing.UpdateAttributesOfInnerEdges(allInnerVertices, symbolCode);
-                // 5
-                var chainEnrichedByNewCrossSectionVertices = 
-                    // processedObjectsCount == debugLimit ? chain : // for debugging
-                        PolygonalObjectsProcessing.ProcessCutBoundaryEdgesByChain(chain, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCode);
-                // 6
-                // if(processedObjectsCount != debugLimit) // for debugging
-                PolygonalObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, innerVerticesOfCutEdges, allVertices, configuration.standardEdgeLength.Value);
-                // 7
-                // if(processedObjectsCount != debugLimit) // for debugging
-                PolygonalObjectsProcessing.SetAttributesOfChainsEdges(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, symbolCode);
-                // 8
-                PolygonalObjectsProcessing.AddChainVerticesToTheGraph(chainEnrichedByNewCrossSectionVertices, allVertices);
-                // 9
-                // if(processedObjectsCount != debugLimit) // for debugging
-                PolygonalObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chainEnrichedByNewCrossSectionVertices);
+                NetVertexBuilder vertex =  new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates( boundaries.left + coll * edgeLength , (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2)))) 
+                    {Surroundings = justForest};
+                vertex.NonBoundaryEdges[lastRow[coll - 1]] = blankLinearFeatures;
+                lastRow[coll - 1].NonBoundaryEdges[vertex] = blankLinearFeatures;
+                vertex.NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
+                lastRow[coll].NonBoundaryEdges[vertex] = blankLinearFeatures;
+                lastRow[coll].NonBoundaryEdges[lastRow[coll-1]] = blankLinearFeatures;
+                lastRow[coll - 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
+                currentRow.Add(vertex);
             }
+            NetVertexBuilder rightVertex = new NetVertexBuilder(new Orienteering_ISOM_2017_2.VertexAttributes(new MapCoordinates(boundaries.left + (colls - 1) * edgeLength, (int) (boundaries.top - row * Math.Sqrt(3) * edgeLength / 2))))
+                {Surroundings = justForest};
+            rightVertex.NonBoundaryEdges[lastRow[colls - 2]] = blankLinearFeatures;
+            lastRow[colls - 2].NonBoundaryEdges[rightVertex] = blankLinearFeatures;
+            currentRow.Add(rightVertex);
+            
+            vertices.AddRange(lastRow);
+            lastRow.Clear();
+            lastRow.AddRange(currentRow);
+            currentRow.Clear();
         }
         
-        private void ProcessPathObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
-            CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
+        for (int coll = 1; coll < colls; ++coll)
         {
-            // 0
-            var potentiallyEntangledMultiOccuringVerticesChain = PathObjectsProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
-            if (potentiallyEntangledMultiOccuringVerticesChain is null) return;
-            // 1
-            var potentiallyMultiOccuringVerticesChain = PathObjectsProcessing.AddCrossSectionVerticesIfItIsEntangled(potentiallyEntangledMultiOccuringVerticesChain);
+            lastRow[coll].IsStationary = true;
+            lastRow[coll].NonBoundaryEdges[lastRow[coll - 1]] = blankLinearFeatures;
+            lastRow[coll - 1].NonBoundaryEdges[lastRow[coll]] = blankLinearFeatures;
+        }
+        vertices.AddRange(lastRow);
+        return vertices;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void ProcessCrossablePolygonalObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
+        CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
+    {
+        // if(processedObjectsCount == debugLimit) {} // for debugging
+        // 0
+        // symbol of code 410.4m is line symbol that represents very thin polygonal object so it has to be processed separately
+        var potentiallyEntangledChain = symbolCode != 410.4m
+            ? PolygonalObjectsProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value)
+            : PolygonalObjectsProcessing.GetBlankBoundaryChainOfSymbol410_4(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
+        if (potentiallyEntangledChain is null) return;
+        // 1
+        var chains = PolygonalObjectsProcessing.SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(potentiallyEntangledChain, configuration.standardEdgeLength.Value);
+        foreach(var chain in chains)
+        {
             // 2
-            var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PathObjectsProcessing.CutAllCrossedEdges(potentiallyMultiOccuringVerticesChain, allVertices, configuration.standardEdgeLength.Value);
+            var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PolygonalObjectsProcessing.CutAllCrossedEdges(chain, allVertices, configuration.standardEdgeLength.Value);
             // 3
-            var potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices = 
-                // processedObjectsCount == debugLimit ? potentiallyMultiOccuringVerticesChain : // for debugging
-                PathObjectsProcessing.ProcessCutBoundaryEdgesByChain(potentiallyMultiOccuringVerticesChain, verticesOfCutBoundaryEdges);
+            var (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices) = PolygonalObjectsProcessing.FindNodesInsideThePolygonByDfs(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, chain); 
             // 4
             // if(processedObjectsCount != debugLimit) // for debugging
-            PathObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices , verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, allVertices, configuration.standardEdgeLength.Value);
+            PolygonalObjectsProcessing.UpdateAttributesOfInnerEdges(allInnerVertices, symbolCode);
             // 5
-            // if(processedObjectsCount != debugLimit) // for debugging
-            PathObjectsProcessing.SetAttributesOfChainsEdges(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, symbolCode);
+            var chainEnrichedByNewCrossSectionVertices = 
+                // processedObjectsCount == debugLimit ? chain : // for debugging
+                    PolygonalObjectsProcessing.ProcessCutBoundaryEdgesByChain(chain, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCode);
             // 6
-            PathObjectsProcessing.AddChainVerticesToTheGraph(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, allVertices);
+            // if(processedObjectsCount != debugLimit) // for debugging
+            PolygonalObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, innerVerticesOfCutEdges, allVertices, configuration.standardEdgeLength.Value);
             // 7
             // if(processedObjectsCount != debugLimit) // for debugging
-            PathObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices);
+            PolygonalObjectsProcessing.SetAttributesOfChainsEdges(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, symbolCode);
+            // 8
+            PolygonalObjectsProcessing.AddChainVerticesToTheGraph(chainEnrichedByNewCrossSectionVertices, allVertices);
+            // 9
+            // if(processedObjectsCount != debugLimit) // for debugging
+            PolygonalObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chainEnrichedByNewCrossSectionVertices);
         }
-        
-        private void ProcessLinearObstacleObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
-            CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
-        {
-            // 0
-            var chain = LinearObstaclesProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
-            if (chain is null) return;
-            // 1
-            var (verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges) = LinearObstaclesProcessing.FindAllCrossedEdges(chain, allVertices, configuration.standardEdgeLength.Value);
-            // 2
-            LinearObstaclesProcessing.SetLinearObstacleAttributesToAllCrossedEdges(verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges, symbolCode);
-        }
+    }
+    
+    private void ProcessPathObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
+        CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
+    {
+        // 0
+        var potentiallyEntangledMultiOccuringVerticesChain = PathObjectsProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
+        if (potentiallyEntangledMultiOccuringVerticesChain is null) return;
+        // 1
+        var potentiallyMultiOccuringVerticesChain = PathObjectsProcessing.AddCrossSectionVerticesIfItIsEntangled(potentiallyEntangledMultiOccuringVerticesChain);
+        // 2
+        var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PathObjectsProcessing.CutAllCrossedEdges(potentiallyMultiOccuringVerticesChain, allVertices, configuration.standardEdgeLength.Value);
+        // 3
+        var potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices = 
+            // processedObjectsCount == debugLimit ? potentiallyMultiOccuringVerticesChain : // for debugging
+            PathObjectsProcessing.ProcessCutBoundaryEdgesByChain(potentiallyMultiOccuringVerticesChain, verticesOfCutBoundaryEdges);
+        // 4
+        // if(processedObjectsCount != debugLimit) // for debugging
+        PathObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices , verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, allVertices, configuration.standardEdgeLength.Value);
+        // 5
+        // if(processedObjectsCount != debugLimit) // for debugging
+        PathObjectsProcessing.SetAttributesOfChainsEdges(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, symbolCode);
+        // 6
+        PathObjectsProcessing.AddChainVerticesToTheGraph(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices, allVertices);
+        // 7
+        // if(processedObjectsCount != debugLimit) // for debugging
+        PathObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(potentiallyMultiOccuringVerticesChainEnrichedByNewCrossSectionVertices);
+    }
+    
+    private void ProcessLinearObstacleObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder> allVertices,
+        CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
+    {
+        // 0
+        var chain = LinearObstaclesProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
+        if (chain is null) return;
+        // 1
+        var (verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges) = LinearObstaclesProcessing.FindAllCrossedEdges(chain, allVertices, configuration.standardEdgeLength.Value);
+        // 2
+        LinearObstaclesProcessing.SetLinearObstacleAttributesToAllCrossedEdges(verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges, symbolCode);
     }
     
     private static class PolygonalObjectsProcessing
@@ -2502,83 +2479,128 @@ public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMap
         
         #endregion
     }
+}
     
 
-    private abstract class VertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes)
+public abstract class VertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes)
+{
+    public Orienteering_ISOM_2017_2.VertexAttributes Attributes = attributes;
+
+    // public abstract HashSet<VertexBuilder> NonBoundaryEdges { get; }
+    public BuildablePredecessorRememberingVertex? BuiltPredecessorRememberingVertex { get; private set; }
+    public BuildableBasicVertex? BuiltBasicVertex { get; private set; }
+
+    public MapCoordinates Position => Attributes.Position;
+    public abstract bool IsStationary { get; set; }
+
+    public BuildablePredecessorRememberingVertex BuildPredecessorRemembering()
     {
-        public Orienteering_ISOM_2017_2.VertexAttributes Attributes = attributes;
-
-        // public abstract HashSet<VertexBuilder> NonBoundaryEdges { get; }
-        public BuildableVertex? BuiltVertex { get; private set; }
-
-        public MapCoordinates Position => Attributes.Position;
-        public abstract bool IsStationary { get; set; }
-
-        public BuildableVertex Build()
-        {
-            if (BuiltVertex is not null) return BuiltVertex;
-            BuiltVertex = new BuildableVertex(Attributes);
-            return BuiltVertex;
-        }
-
-        public abstract void ConnectAfterBuild();
+        if (BuiltPredecessorRememberingVertex is not null) return BuiltPredecessorRememberingVertex;
+        BuiltPredecessorRememberingVertex = new BuildablePredecessorRememberingVertex(Attributes);
+        return BuiltPredecessorRememberingVertex;
+    }
+    
+    public BuildableBasicVertex BuildBasic()
+    {
+        if (BuiltBasicVertex is not null) return BuiltBasicVertex;
+        BuiltBasicVertex = new BuildableBasicVertex(Attributes);
+        return BuiltBasicVertex;
     }
 
-    private class BoundaryVertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes) : VertexBuilder(attributes)
-    {
-        
-        // public override HashSet<VertexBuilder> NonBoundaryEdges => NonBoundaryAttributeEdges.Keys.ToHashSet();
-        public Dictionary<VertexBuilder, Orienteering_ISOM_2017_2.EdgeAttributes> NonBoundaryEdges { get; } = new ();
-        public Dictionary<BoundaryVertexBuilder, Orienteering_ISOM_2017_2.EdgeAttributes> BoundaryEdges { get; } = new ();
-        public override bool IsStationary { get; set;} = true;
-        // public bool LeftSideIsOuter { get; set; } -> YES
-        public override void ConnectAfterBuild()
-        {
-            if (BuiltVertex is null) return;
-            foreach (var (builder, edgeAttributes) in BoundaryEdges)
-            {
-                BuildableVertex? vertex = builder.BuiltVertex; 
-                if (vertex is null) continue;
-                BuiltVertex.AddEdge(new (edgeAttributes, vertex));
-            }
-            foreach (var (builder, edgeAttributes) in NonBoundaryEdges)
-            {
-                BuildableVertex? vertex = builder.BuiltVertex; 
-                if (vertex is null) continue;
-                BuiltVertex.AddEdge(new (edgeAttributes, vertex));
-            }
-        }
-    }
-
-    private class NetVertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes): VertexBuilder(attributes)
-    {
-        public Dictionary<VertexBuilder, (Orienteering_ISOM_2017_2.NaturalLinearObstacles?, Orienteering_ISOM_2017_2.Paths?, Orienteering_ISOM_2017_2.ManMadeLinearObstacles?)> NonBoundaryEdges { get; } = new();
-
-        public (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?)
-            Surroundings = (null, null, null, null, null, null);
-
-        public override void ConnectAfterBuild()
-        {
-            if (BuiltVertex is null) return;
-            foreach (var (builder, linearFeatures) in NonBoundaryEdges)
-            {
-                BuildableVertex? vertex = builder.BuiltVertex;
-                if (vertex is null) continue;
-                BuiltVertex.AddEdge(new (new Orienteering_ISOM_2017_2.EdgeAttributes(Surroundings, linearFeatures), vertex));
-            }
-        }
-
-        public override bool IsStationary { get; set;} = false;
-    }
-
-    private class BuildableVertex : CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex
-    {
-        public BuildableVertex(Orienteering_ISOM_2017_2.VertexAttributes attributes) : base(attributes, new List<ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge>()) { }
-        public override void AddEdge(ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge) 
-            => _outgoingWeightedEdges[edge] = float.NaN;
-        public override void RemoveEdge(ICompleteNetIntertwiningGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge)
-            => _outgoingWeightedEdges.Remove(edge);
-    }
-
+    public abstract void ConnectPredecessorRememberingAfterBuild();
+    public abstract void ConnectBasicAfterBuild();
 }
 
+public class BoundaryVertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes) : VertexBuilder(attributes)
+{
+    
+    // public override HashSet<VertexBuilder> NonBoundaryEdges => NonBoundaryAttributeEdges.Keys.ToHashSet();
+    public Dictionary<VertexBuilder, Orienteering_ISOM_2017_2.EdgeAttributes> NonBoundaryEdges { get; } = new ();
+    public Dictionary<BoundaryVertexBuilder, Orienteering_ISOM_2017_2.EdgeAttributes> BoundaryEdges { get; } = new ();
+    public override bool IsStationary { get; set;} = true;
+    // public bool LeftSideIsOuter { get; set; } -> YES
+    public override void ConnectPredecessorRememberingAfterBuild()
+    {
+        if (BuiltPredecessorRememberingVertex is null) return;
+        foreach (var (builder, edgeAttributes) in BoundaryEdges)
+        {
+            BuildablePredecessorRememberingVertex? vertex = builder.BuiltPredecessorRememberingVertex; 
+            if (vertex is null) continue;
+            BuiltPredecessorRememberingVertex.AddEdge(new (edgeAttributes, vertex));
+        }
+        foreach (var (builder, edgeAttributes) in NonBoundaryEdges)
+        {
+            BuildablePredecessorRememberingVertex? vertex = builder.BuiltPredecessorRememberingVertex; 
+            if (vertex is null) continue;
+            BuiltPredecessorRememberingVertex.AddEdge(new (edgeAttributes, vertex));
+        }
+    }
+
+    public override void ConnectBasicAfterBuild()
+    {
+         if (BuiltBasicVertex is null) return;
+         foreach (var (builder, edgeAttributes) in BoundaryEdges)
+         {
+             BuildableBasicVertex? vertex = builder.BuiltBasicVertex; 
+             if (vertex is null) continue;
+             BuiltBasicVertex.AddEdge(new (edgeAttributes, vertex));
+         }
+         foreach (var (builder, edgeAttributes) in NonBoundaryEdges)
+         {
+             BuildableBasicVertex? vertex = builder.BuiltBasicVertex; 
+             if (vertex is null) continue;
+             BuiltBasicVertex.AddEdge(new (edgeAttributes, vertex));
+         }       
+    }
+}
+
+public class NetVertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributes): VertexBuilder(attributes)
+{
+    public Dictionary<VertexBuilder, (Orienteering_ISOM_2017_2.NaturalLinearObstacles?, Orienteering_ISOM_2017_2.Paths?, Orienteering_ISOM_2017_2.ManMadeLinearObstacles?)> NonBoundaryEdges { get; } = new();
+
+    public (Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?)
+        Surroundings = (null, null, null, null, null, null);
+
+    public override void ConnectPredecessorRememberingAfterBuild()
+    {
+        if (BuiltPredecessorRememberingVertex is null) return;
+        foreach (var (builder, linearFeatures) in NonBoundaryEdges)
+        {
+            BuildablePredecessorRememberingVertex? vertex = builder.BuiltPredecessorRememberingVertex;
+            if (vertex is null) continue;
+            BuiltPredecessorRememberingVertex.AddEdge(new (new Orienteering_ISOM_2017_2.EdgeAttributes(Surroundings, linearFeatures), vertex));
+        }
+    }
+    
+    public override void ConnectBasicAfterBuild()
+    {
+         if (BuiltBasicVertex is null) return;
+         foreach (var (builder, linearFeatures) in NonBoundaryEdges)
+         {
+             BuildableBasicVertex? vertex = builder.BuiltBasicVertex;
+             if (vertex is null) continue;
+             BuiltBasicVertex.AddEdge(new (new Orienteering_ISOM_2017_2.EdgeAttributes(Surroundings, linearFeatures), vertex));
+         }       
+    }
+
+    public override bool IsStationary { get; set;} = false;
+}
+
+public class BuildablePredecessorRememberingVertex : CompleteNetIntertwiningPredecessorRememberingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex
+{
+    public BuildablePredecessorRememberingVertex(Orienteering_ISOM_2017_2.VertexAttributes attributes) : base(attributes, new List<ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge>()) { }
+    public override void AddEdge(ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge) 
+        => _outgoingWeightedEdges[edge] = float.NaN;
+    public override void RemoveEdge(ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge)
+        => _outgoingWeightedEdges.Remove(edge);
+}
+
+public class BuildableBasicVertex : CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex
+{
+    public BuildableBasicVertex(Orienteering_ISOM_2017_2.VertexAttributes attributes) : base(attributes, new List<ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge>()) { }
+
+    public override void AddEdge( ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge)
+        => _outgoingEdges.Add(edge);
+    public override void RemoveEdge(ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge)
+        => _outgoingEdges.Remove(edge);
+}

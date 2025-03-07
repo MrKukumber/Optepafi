@@ -1,5 +1,6 @@
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.Graphs.Specific;
+using Optepafi.Models.MapRepreMan.Graphs.Specific.Blank;
 using Optepafi.Models.MapRepreMan.MapRepres;
 using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;

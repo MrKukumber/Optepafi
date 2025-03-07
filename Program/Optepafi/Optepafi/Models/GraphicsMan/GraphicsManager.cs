@@ -46,7 +46,9 @@ public class GraphicsManager :
     /// Collection of aggregators for specific map representation/graph implementation types. It is searched when map representation graphics is to be aggregated.
     /// </summary>
     public IReadOnlySet<IGraphicsAggregator> MapRepreGraphicsAggregators { get; } = 
-        ImmutableHashSet.Create<IGraphicsAggregator>(CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator.Instance);
+        ImmutableHashSet.Create<IGraphicsAggregator>(
+            CompleteNetIntertwiningPredecessorRememberingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator.Instance, 
+            CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator.Instance);
     
     public enum AggregationResult {Aggregated, NoUsableAggregatorFound, Cancelled}
 

@@ -7,6 +7,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.ModelViews.Main;
 using Optepafi.ViewModels.Data.Representatives;
 using ReactiveUI;
@@ -73,9 +74,22 @@ public class ElevConfigViewModel : ViewModelBase
                    result =  await ElevDataModelView.Instance.DownloadAsync(cnredtvm, currentSelectedRegion);
                    break;
                 case CredentialsRequiringElevDataDistributionViewModel credtvm :
-                    var userName = UserName; var password = Password;
-                    UserName = ""; Password = "";
-                    result = await ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new NetworkCredential(userName, password));
+                    var userName = "";
+                    var password = "";
+                    switch (credtvm.CredType)
+                    {
+                        case CredentialsTypeViewModel.UserNameAndPassword:
+                            userName = UserName; password = Password;
+                            result = await ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new NetworkCredential(userName, password));
+                            break;
+                        case CredentialsTypeViewModel.AuthenticationToken:
+                            //TODO:
+                            userName = UserName;
+                            result = await ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new NetworkCredential(userName, ""));
+                            break;
+                        default:
+                            throw new InvalidEnumArgumentException(nameof(credtvm.CredType));
+                    }
                     break;
                 default:
                     throw new ArgumentException("Not supported " + nameof(ElevDataDistributionViewModel)+" ancestor type given.");
@@ -88,7 +102,7 @@ public class ElevConfigViewModel : ViewModelBase
                 case ElevDataManager.DownloadingResult.Canceled:    
                     break;
                 case ElevDataManager.DownloadingResult.WrongCredentials:
-                    //TODO: nejake upozornenie, ze zadane kredencialy neboli platne
+                    //TODO: nejake upozornenie, ze zadane kredencialy neboli platn
                     break;
                 case ElevDataManager.DownloadingResult.UnableToDownload:
                     //TODO: nejake upozornenie, ze sa stahovanie nepodarilo
@@ -117,17 +131,23 @@ public class ElevConfigViewModel : ViewModelBase
             SelectedRegion!.DownloadingCancellationTokenSource.Cancel();   
         }, isRegionSelectedDownloading);
         
-        ReturnCommand = ReactiveCommand.Create(() => _currentElevDataDist);
+        ReturnCommand = ReactiveCommand.Create(() =>
+        {
+            UserName = ""; Password = "";
+            return _currentElevDataDist;
+        });
         
         _currentAvailableRegions = this.WhenAnyValue(x => x.CurrentElevDataDist)
             .Select(ceds => ceds is null 
                 ? null : ElevDataModelView.Instance.TopRegionsOfAllDistributions[ceds]
                     .SelectMany(topRegion => GetAllSubRegions(topRegion))) 
             .ToProperty(this, nameof(CurrentAvailableRegions));
-        _credentialsAreRequired = this.WhenAnyValue( x => x.CurrentElevDataDist)
-            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel)
-            .ToProperty(this, nameof(CredentialsAreRequired));
-        
+        _requriedCredentialsTypeIsUserNameAndPassword = this.WhenAnyValue(x => x.CurrentElevDataDist)
+            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel credReqElevDataDist && credReqElevDataDist.CredType == CredentialsTypeViewModel.UserNameAndPassword)
+            .ToProperty(this, nameof(RequiredCredentialsTypeIsUserNameAndPassword));
+        _requiredCredentialsTypeIsAuthenticationToken = this.WhenAnyValue(x => x.CurrentElevDataDist)
+            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel credReqElevDataDist && credReqElevDataDist.CredType == CredentialsTypeViewModel.AuthenticationToken)
+            .ToProperty(this, nameof(RequiredCredentialsTypeIsAuthenticationToken));
         ElevDataDistributions = ElevDataModelView.Instance.GetElevDataSources()
             .SelectMany(elevDataSource => elevDataSource.ElevDataDistributions);
         CurrentElevDataDist = ElevDataDistributions.Contains(selectedElevDataDist) ? selectedElevDataDist : null;
@@ -218,7 +238,7 @@ public class ElevConfigViewModel : ViewModelBase
     public IEnumerable<ElevDataDistributionViewModel> ElevDataDistributions { get; } 
 
     /// <summary>
-    /// User name part of credentials used for accessing of elevation data from distributions which demand it.
+    /// Username part of credentials used for accessing of elevation data from distributions which demand it.
     /// </summary>
     public string? UserName
     {
@@ -238,10 +258,18 @@ public class ElevConfigViewModel : ViewModelBase
     private string? _password;
 
     /// <summary>
-    /// Indicates whether providing of credentials for accessing elevation data form distribution which demand it from user is required.
+    /// Indicates whether providing of credentials for accessing elevation data form distribution which demand it from user are required
+    /// and whether the credentials are username and password
     /// </summary>
-    public bool CredentialsAreRequired => _credentialsAreRequired.Value;
-    private ObservableAsPropertyHelper<bool> _credentialsAreRequired;
+    public bool RequiredCredentialsTypeIsUserNameAndPassword => _requriedCredentialsTypeIsUserNameAndPassword.Value;
+    private ObservableAsPropertyHelper<bool> _requriedCredentialsTypeIsUserNameAndPassword;
+    
+    /// <summary>
+    /// Indicates whether providing of credentials for accessing elevation data form distribution which demand it from user are required
+    /// and whether the credentials are authentication token.
+    /// </summary>
+    public bool RequiredCredentialsTypeIsAuthenticationToken => _requiredCredentialsTypeIsAuthenticationToken.Value;
+    private ObservableAsPropertyHelper<bool> _requiredCredentialsTypeIsAuthenticationToken;
     
     /// <summary>
     /// Reactive command used for downloading of elevation data for currently selected region.

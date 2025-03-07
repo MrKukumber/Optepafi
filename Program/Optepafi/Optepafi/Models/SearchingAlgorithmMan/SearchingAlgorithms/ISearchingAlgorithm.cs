@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Optepafi.Models.MapRepreMan.Graphs;
 using Optepafi.Models.MapRepreMan.Graphs.Representatives;
-using Optepafi.Models.MapRepreMan.MapRepres;
-using Optepafi.Models.MapRepreMan.MapRepres.Representatives;
 using Optepafi.Models.MapRepreMan.VerticesAndEdges;
 using Optepafi.Models.ReportMan.Reports;
 using Optepafi.Models.SearchingAlgorithmMan.Implementations;
@@ -14,7 +12,6 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
-using Optepafi.Models.Utils;
 using Optepafi.Models.Utils.Configurations;
 
 namespace Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
@@ -26,7 +23,7 @@ namespace Optepafi.Models.SearchingAlgorithmMan.SearchingAlgorithms;
 /// Searching is done upon graph which satisfies functionality conditions.  
 /// Computing of weights for edges is done by provided user model to the algorithm. Weights of graphs edges are not computed before algorithm execution. Every algorithm should check at first that weight of specific edge is computed already. If it is not, it has to let user model to compute this weight and set it to the edge during run of its execution.
 /// Execution of the algorithm can be adjusted by providing configuration object of specific type.
-/// Before execution of algorithm should be run <see cref="DoesRepresentUsableGraphUserModelCombination{TVertexAttributes,TEdgeAttributes}"/> method to check if given graph - user model combination is usable for this algorithm.  
+/// Before execution of algorithm should be run <see cref="DoesRepresentUsableGraphUserModelCombination{TVertex,TEdge,TTemplate,TVertexAttributes,TEdgeAttributes}"/> method to check if given graph - user model combination is usable for this algorithm.  
 /// Methods of searching algorithm should not be called directly from logic of application (ModelViews/ViewModels). <see cref="SearchingAlgorithmManager"/> should be used instead.  
 /// Each searching algorithm should be singleton and its instance presented in <see cref="SearchingAlgorithmManager"/> as viable option.
 /// 
@@ -42,6 +39,8 @@ public interface ISearchingAlgorithm
     string Name { get; }
     /// <summary>
     /// Collection of usable implementations of the algorithm.
+    /// Implementations should be in collection sorted in a way such that implementation which are the fastest and simplest 
+    /// are at the beginning, and implementations which are the slowest and most complicated are at the end.
     /// </summary>
     protected ISearchingAlgorithmImplementationRequirementsIndicator[] Implementations { get; }
     
@@ -84,6 +83,8 @@ public interface ISearchingAlgorithm
     /// <param name="cancellationToken">Token for search cancellation.</param>
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
+    /// <typeparam name="TVertex">Type of vertices used in graph used in algorithms execution.</typeparam>
+    /// <typeparam name="TEdge">Type of edges used in graph used in algorithms execution.</typeparam>
     /// <returns>Collection of resulting found paths. Merged paths for legs of track are returned in order of corresponding user models.</returns>
     /// <exception cref="ArgumentException">When no implementation is able to use provided graph or any of provided user models.</exception>
     IPath<TVertexAttributes, TEdgeAttributes>[] ExecuteSearch<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(
@@ -106,7 +107,9 @@ public interface ISearchingAlgorithm
     /// <param name="userModel">Computing user model which executor uses for path finding.</param>
     /// <param name="configuration">Configuration adjusting execution of the algorithm.</param>
     /// <typeparam name="TVertexAttributes">Type of vertex attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
-    /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They  are used for retrieving weights of edges from user models.</typeparam>
+    /// <typeparam name="TEdgeAttributes">Type of edge attributes used in algorithms execution. They are used for retrieving weights of edges from user models.</typeparam>
+    /// <typeparam name="TVertex">Type of vertices used in graph used in algorithms execution.</typeparam>
+    /// <typeparam name="TEdge">Type of edges used in graph used in algorithms execution.</typeparam>
     /// <returns>Executor of this searching algorithm.</returns>
     /// <exception cref="ArgumentException">When no implementation is able to use provided graph or user model.</exception>
     ISearchingExecutor GetExecutor<TVertexAttributes, TEdgeAttributes, TVertex, TEdge>(

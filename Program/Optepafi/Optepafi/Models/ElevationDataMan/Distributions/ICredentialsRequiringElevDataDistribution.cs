@@ -23,4 +23,9 @@ public interface ICredentialsRequiringElevDataDistribution : IElevDataDistributi
     /// <param name="cancellationToken">Token for cancelling the process of downloading or region.</param>
     /// <returns>Result about success of download.</returns>
     public ElevDataManager.DownloadingResult Download(Region region, NetworkCredential credential, CancellationToken? cancellationToken);
+    
+    public CredentialsType CredType { get; }
 }
+
+public enum CredentialsType {UserNameAndPassword, AuthenticationToken}
+

@@ -41,6 +41,9 @@
           <Generator>PublicResXFileCodeGenerator</Generator>
           <LastGenOutput>MainWindowLocal.Designer.cs</LastGenOutput>
         </AvaloniaResource>
+        <AvaloniaResource Include="Assets\Localization\MainWindowLocal.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+        </AvaloniaResource>
         <EmbeddedResource Update="Assets\Localization\MainWindowLocal.resx">
           <Generator>PublicResXFileCodeGenerator</Generator>
         </EmbeddedResource>

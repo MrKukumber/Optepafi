@@ -97,7 +97,7 @@ public class MapRepreViewingModelView
                 if (cancellationToken.IsCancellationRequested) return;
                 
                 MapRepresentation = await Task.Run(() => 
-                    MapRepreManager.Instance.CreateMapRepre(Template, areaQueryableMap, MapRepreRepresentative, elevData, mapRepresentationConfiguration, null, cancellationToken));
+                    MapRepreManager.Instance.CreateMapRepre(Template, areaQueryableMap, 0, MapRepreRepresentative, elevData, mapRepresentationConfiguration, null, cancellationToken));
                 if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
             }
             else throw new InvalidOperationException("There is some error in prerequisites check method, that allows _useElevData to be set to true, when map is not even IGeoLocatedMap.");
@@ -105,7 +105,7 @@ public class MapRepreViewingModelView
         else
         {
             MapRepresentation = await Task.Run(() =>
-                MapRepreManager.Instance.CreateMapRepre(Template, MapForUse, MapRepreRepresentative, mapRepresentationConfiguration, null, cancellationToken));
+                MapRepreManager.Instance.CreateMapRepre(Template, MapForUse, 0, MapRepreRepresentative, mapRepresentationConfiguration, null, cancellationToken));
             if (cancellationToken.IsCancellationRequested) MapRepresentation = null;
         }
     }

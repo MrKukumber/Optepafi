@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using Optepafi.Models.MapRepreMan.MapRepres.Specific;
 using Optepafi.Models.MapRepreMan.VerticesAndEdges;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
-using Optepafi.Models.Utils;
 
-namespace Optepafi.Models.MapRepreMan.Graphs.Specific;
+namespace Optepafi.Models.MapRepreMan.Graphs.Specific.Blank;
 
 /// <summary>
 /// Blank graph. It will contain no objects representing provided map, nor implement any functionality at all.

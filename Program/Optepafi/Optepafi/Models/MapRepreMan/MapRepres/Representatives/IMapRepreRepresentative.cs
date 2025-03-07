@@ -40,10 +40,12 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     IImplementationIndicator<ITemplate, IMap, IMapRepre>[] ImplementationIndicators { get; }
     
     /// <summary>
-    /// Returns graph creator which represents corresponding graph derived from represented map representation.
+    /// Returns collection of graph creators which construct corresponding graphs derived from represented map representation.
+    /// These creators should be in collection sorted in a way such that creators which creates the fastest and the lightest
+    /// graphs are at the beginning, and creators which creates the heaviest and the slowest ones are at the end.
     /// </summary>
     /// <returns>Creator of corresponding graph to the map representation.</returns>
-    IGraphCreator<TMapRepre> GetCorrespondingGraphCreator<TVertexAttributes, TEdgeAttriubtes>()
+    IGraphCreator<TMapRepre>[] GetGraphCreators<TVertexAttributes, TEdgeAttriubtes>()
         where TVertexAttributes : IVertexAttributes
         where TEdgeAttriubtes : IEdgeAttributes;
 
@@ -61,6 +63,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// </summary>
     /// <param name="template">Used template in map representation creation.</param>
     /// <param name="map">Used map in map representation creation.</param>
+    /// <param name="graphCreatorIndex">Index of graph constructor, which is used for creation of graph reprezentation of map.</param>
     /// <param name="configuration">Configuration of created map representation. Type of configuration must match with <c>TConfiguration</c> type parameter of corresponding graph representative.</param>
     /// <param name="progress">Object by which can be progress of construction subscribed .</param>
     /// <param name="cancellationToken">Token for cancelling construction.</param>
@@ -69,8 +72,8 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <typeparam name="TVertexAttributes">Type of vertex attributes represented by provided template.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes represented by provided template.</typeparam>
     /// <returns>Created map representation.</returns>
-    IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IConfiguration configuration,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
+    IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, int graphCreatorIndex, 
+        IConfiguration configuration, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IMap
         where TVertexAttributes : IVertexAttributes
@@ -84,6 +87,7 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// </summary>
     /// <param name="template">Used template in map representation creation.</param>
     /// <param name="map">Used map in map representation creation.</param>
+    /// <param name="graphCreatorIndex">Index of graph constructor, which is used for creation of graph reprezentation of map.</param>
     /// <param name="elevData">Elevation data corresponding to map area used in map representation creation.</param>
     /// <param name="configuration">Configuration of created map representation. Type of configuration must match with <c>TConfiguration</c> type parameter of corresponding graph representative.</param>
     /// <param name="progress">Object by which can be progress of construction subscribed .</param>
@@ -93,8 +97,8 @@ public interface IMapRepreRepresentative<out TMapRepre> where TMapRepre : IMapRe
     /// <typeparam name="TVertexAttributes">Type of vertex attributes represented by provided template.</typeparam>
     /// <typeparam name="TEdgeAttributes">Type of edge attributes represented by provided template.</typeparam>
     /// <returns>Created map representation.</returns>
-    IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData, IConfiguration configuration,
-        IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
+    IMapRepre CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, int graphCreatorIndex, 
+        IElevData elevData, IConfiguration configuration, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IGeoLocatedMap
         where TVertexAttributes : IVertexAttributes

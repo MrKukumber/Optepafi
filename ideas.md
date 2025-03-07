@@ -148,7 +148,6 @@
 - zlepsit uzivatelsku privetivost
 - pridat spravne spracovavanie dier v polygonoch v omap file-och - nateraz diery v polygonoch ignorujem - upravit aj vykreslovanie map aj vytvaranie mapovych reprezentacii + pri vytvarani chainov spracovavat nove vytvorene diery vzniknute specifickym zapletenim polygonu objektu (neprocesovat novo vzniknute chainy oddelene ale naraz)
 - v tejto chvili by malo byt mozne vo vytvarani mapovej reprezentacie pripajat chain-u na vsetky blizke vrcholy grafu, nie len na tie, ktorym bola pretata hrana - malo by sa este overit
-- nechat nech mapovu reprezentaciu moze implementovat viac grafov, ktore budu mat rozne vlastnosti a teda bude mozne otestovat viac moznosti vo vyhladavcom algoritme, ci aspon jedna z grafovych reprezentacii je pouzitelna. Vsetky grafove reprezentacie pritom budu dodrzovat podstatu mapovej reprezentacie.
 - spracovat vinohrady a jednosmernu vegetaciu
 - upravit parsovanie mapy - pokial by na vstupe bol obrovitansky objekt, ktory moze zmrazit program, odignorovat ho - dajme tomu, ze by mal viac ako 100_000 suradnic - je mozne, ze zmrazenie dojde uz pri citani daneho objektu zo suboru, ale to neviem ako by som riesil...mozem pozriet, ci ta kniznica na parsovanie xml to nejak handluje
 
@@ -157,6 +156,7 @@
 - nech kazda mapa moze po svojom znazornovat trat zadanu uzivatelom...nejako tak ze sa grafickemu managerovi predaju pozicie trate a mapa pre ktoru ma byt grafika vytvorena a on to za pomocou aggregatoru vytvori...v podstate vsetky graficke objekty budu dost podobne...az potom datatemplate vo view-u podla typu objektu urci jak sa to nakresli
 - vacsiu custom-izaciu toho, ktora implementacia sa kedy pouzije, moznost viacerych implementacii algoritmov pre rovnake kombinacie mapovych reprezentacii s uzivatelskymi modelmi a uzivatel bude moct vybrat nejakym sposobom preferovanu implementaciu...to iste pre mapove reprezentacie a ich implementacie - implementovane pomocou konfiguracii kotre mozu upravovat beh algoritmu
 - spracovanie trate zo vstupneho suboru
+- nechat nech mapovu reprezentaciu moze implementovat viac grafov, ktore budu mat rozne vlastnosti a teda bude mozne otestovat viac moznosti vo vyhladavcom algoritme, ci aspon jedna z grafovych reprezentacii je pouzitelna. Vsetky grafove reprezentacie pritom budu dodrzovat podstatu mapovej reprezentacie.
 
 ## Myslienky do buducna
 
@@ -210,3 +210,5 @@ Předpokládá se možnost parametrizace vyhledávácích algoritmů např. úda
 - TODO:
   - doriesit edge case-y s prekryvom vrocholov a hran a vrcholov
   - zmenit to vytvaranie retiazky pre prekazky a znak 410_4 tak, aby sa obidve bocne retiazky vytvarali subezne - tym sa zabezpeci ze kazdy vrchol v lavej retiazke bude mat suseda v pravej - pre znak 410_4 to nieje az tak treba ale preco mat dve metody z ktorych jedna robi v podstate menej prace + lomena ciara objektu s bude spracovavat len raz, tak to zlepsi aj vykon troska :)
+
+  USGS token IQxxyxYxTJSjzs1iOzKOg8Js7foNcu2JYo_CcTDxTDA1z@ukq_cX!FKMmsosIWjA

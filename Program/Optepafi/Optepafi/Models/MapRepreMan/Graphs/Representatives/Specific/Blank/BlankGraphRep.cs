@@ -1,8 +1,6 @@
-using System;
-using System.Threading;
-using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.MapRepreMan.Graphs.Specific;
+using Optepafi.Models.MapRepreMan.Graphs.Specific.Blank;
 using Optepafi.Models.MapRepreMan.Implementations.Representatives;
 using Optepafi.Models.MapRepreMan.Implementations.Representatives.Specific.Blank;
 using Optepafi.Models.MapRepreMan.MapRepres;
@@ -12,9 +10,8 @@ using Optepafi.Models.TemplateMan;
 using Optepafi.Models.TemplateMan.TemplateAttributes;
 using Optepafi.Models.UserModelMan.UserModelReps;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
-using Optepafi.Models.Utils;
 
-namespace Optepafi.Models.MapRepreMan.Graphs.Representatives.Specific;
+namespace Optepafi.Models.MapRepreMan.Graphs.Representatives.Specific.Blank;
 
 /// <summary>
 /// Singleton class which represents blank graph.

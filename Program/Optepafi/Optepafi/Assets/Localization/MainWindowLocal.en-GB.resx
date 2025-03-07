@@ -66,4 +66,7 @@
     <data name="Settings_MainSettingsHeader" xml:space="preserve">
         <value>Main settings</value>
     </data>
+    <data name="ElevConfig_AuthenticationTokenTextBlock_Watermark" xml:space="preserve">
+        <value>Authentication token</value>
+    </data>
 </root>

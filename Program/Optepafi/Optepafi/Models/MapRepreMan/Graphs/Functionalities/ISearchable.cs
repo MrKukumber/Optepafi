@@ -11,23 +11,23 @@ namespace Optepafi.Models.MapRepreMan.Graphs.Functionalities;
 /// Represents searchable graph. 
 /// This interface should not be implemented. Its successor <see cref="ISearchable{TVertex,TEdge}"/> should be implemented instead.
 /// </summary>
-public interface ICanBeSearched<out TVertex, out TEdge, TVertexAttributes, TEdgeAttributes> : IGraph<TVertex, TEdge>
+public interface ICanBeSearched<out TVertex, out TEdge, TWeight, TVertexAttributes, TEdgeAttributes> : IGraph<TVertex, TEdge>
     where TVertex : IVertex
     where TEdge : IEdge
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
-    public TOut AcceptGeneric<TOut, TOtherParams>(ICanBeSearchedGenericVisitor<TOut, TVertexAttributes, TEdgeAttributes, TOtherParams> genericVisitor, TOtherParams otherParams);
+    public TOut AcceptGeneric<TOut, TOtherParams>(ICanBeSearchedGenericVisitor<TOut, TWeight, TVertexAttributes, TEdgeAttributes, TOtherParams> genericVisitor, TOtherParams otherParams);
 }
 
-public interface ICanBeSearchedGenericVisitor<TOut, TVertexAttributes, TEdgeAttributes, TOtherParams>
+public interface ICanBeSearchedGenericVisitor<TOut, TWeight, TVertexAttributes, TEdgeAttributes, TOtherParams>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {
     public TOut GenericVisit<TGraph, TVertex, TEdge>(TGraph graph, TOtherParams otherParams)
-        where TGraph : ISearchable<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>
+        where TGraph : ISearchable<TVertex, TEdge, TWeight, TVertexAttributes, TEdgeAttributes>
         where TVertex : class, IBasicVertex<TEdge, TVertexAttributes>
-        where TEdge : IBasicEdge<TVertex, TEdgeAttributes>;
+        where TEdge : IBasicEdge<TVertex, TEdgeAttributes, TWeight>;
 }
 
 
@@ -36,9 +36,12 @@ public interface ICanBeSearchedGenericVisitor<TOut, TVertexAttributes, TEdgeAttr
 /// </summary>
 /// <typeparam name="TVertex">Type of vertices used by graph.</typeparam>
 /// <typeparam name="TEdge">Type of edges used by graph.</typeparam>
-public interface ISearchable<out TVertex, out TEdge, TVertexAttributes, TEdgeAttributes> : ICanBeSearched<TVertex, TEdge, TVertexAttributes, TEdgeAttributes>, IGraph<TVertex, TEdge>
+/// <typeparam name="TVertexAttributes">Type of attributes used in vertices of a graph.</typeparam>
+/// <typeparam name="TEdgeAttributes">Type of attributes used in edges of a graph.</typeparam>
+/// <typeparam name="TWeight">Type, that is used for representing weight of the edge.</typeparam>
+public interface ISearchable<out TVertex, out TEdge, TWeight, TVertexAttributes, TEdgeAttributes> : ICanBeSearched<TVertex, TEdge, TWeight, TVertexAttributes, TEdgeAttributes>, IGraph<TVertex, TEdge>
     where TVertex : class, IBasicVertex<TEdge, TVertexAttributes>
-    where TEdge : IBasicEdge<TVertex, TEdgeAttributes>
+    where TEdge : IBasicEdge<TVertex, TEdgeAttributes, TWeight>
     where TVertexAttributes : IVertexAttributes
     where TEdgeAttributes : IEdgeAttributes
 {

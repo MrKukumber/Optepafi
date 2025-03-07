@@ -7,7 +7,9 @@ namespace Optepafi.Models.MapRepreMan.VerticesAndEdges;
 /// </summary>
 /// <typeparam name="TVertex">Type of hold destination vertex.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of borne edge attributes.</typeparam>
-public interface IBasicEdge<out TVertex, out TEdgeAttributes> :
+/// <typeparam name="TWeight">Type, that is used for representing weight of the edge.</typeparam>
+public interface IBasicEdge<out TVertex, out TEdgeAttributes, TWeight> :
+    IWeightedEdge<TWeight>,
     IDestVertexContainingEdge<TVertex>,
     IAttributesBearingEdge<TEdgeAttributes>
     where TEdgeAttributes : IEdgeAttributes
@@ -34,6 +36,24 @@ public interface IAttributesBearingEdge<out TEdgeAttributes> : IEdge
     where TEdgeAttributes : IEdgeAttributes
 {
     TEdgeAttributes Attributes { get; }
+}
+
+/// <summary>
+/// Oriented, weighted edge of some graph.
+/// </summary>
+/// <typeparam name="TWeight">Type, that is used for representing weight of the edge.</typeparam>
+public interface IWeightedEdge<TWeight> : IEdge
+{
+    /// <summary>
+    /// Sets weight of this edge.
+    /// </summary>
+    /// <param name="weight">Weight to be set.</param>
+    void SetWeight(TWeight weight);
+    /// <summary>
+    /// Method weight of this edge.
+    /// </summary>
+    /// <returns>Value of the weight of the edge. <c>float.NaN</c>, if weight was not set for this edge yet.</returns>
+    TWeight GetWeight();
 }
 
 /// <summary>

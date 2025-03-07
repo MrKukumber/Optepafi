@@ -202,5 +202,15 @@ namespace Optepafi.Assets.Localization {
                 return ResourceManager.GetString("Settings_MainSettingsHeader", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authentication token.
+        /// </summary>
+        public static string ElevConfig_AuthenticationTokenTextBlock_Watermark{
+            get {
+                return ResourceManager.GetString("ElevConfig_AuthenticationTokenTextBlock_Watermark", resourceCulture);
+            }
+        }
+        
     }
 }

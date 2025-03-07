@@ -68,8 +68,7 @@ public interface IGraphCreator<out TMapRepre>
     /// <returns>Created graph tide to some map representation.</returns>
     /// <exception cref="ArgumentException">When none of provided indicators is usable implementation constructor.</exception>
     TMapRepre CreateGraph<TTemplate, TMap, TConfiguration, TVertexAttributes, TEdgeAttributes>(TTemplate template, TMap map, IElevData elevData,
-        TConfiguration configuration, IProgress<MapRepreConstructionReport>? progress,
-        CancellationToken? cancellationToken)
+        TConfiguration configuration, IProgress<MapRepreConstructionReport>? progress, CancellationToken? cancellationToken)
         where TTemplate : ITemplate<TVertexAttributes, TEdgeAttributes>
         where TMap : IGeoLocatedMap
         where TConfiguration : IConfiguration

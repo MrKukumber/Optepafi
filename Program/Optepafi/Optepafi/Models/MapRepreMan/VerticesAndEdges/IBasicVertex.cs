@@ -10,11 +10,11 @@ namespace Optepafi.Models.MapRepreMan.VerticesAndEdges;
 /// </summary>
 /// <typeparam name="TVertexAttributes">Type of borne vertex attributes.</typeparam>
 /// <typeparam name="TEdgeAttributes">Type of edge attributes borne by assigned type of hold edges.</typeparam>
-public interface IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes> :
-    IBasicVertex<IBasicEdge<IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>,
-        TVertexAttributes>
-    where TVertexAttributes : IVertexAttributes
-    where TEdgeAttributes : IEdgeAttributes;
+// public interface IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes> :
+    // IBasicVertex<IBasicEdge<IBasicEdgeCoupledBasicVertex<TVertexAttributes, TEdgeAttributes>, TEdgeAttributes>,
+        // TVertexAttributes>
+    // where TVertexAttributes : IVertexAttributes
+    // where TEdgeAttributes : IEdgeAttributes;
 
 /// <summary>
 /// Vertex that presents basic vertex functionality: it can bear attributes of defined type and can hold outgoing edges of defined type.
@@ -41,20 +41,6 @@ public interface IEdgesContainingVertex<TEdge> : IVertex
     /// </summary>
     /// <returns>Collection of edges originated in vertex.</returns>
     IEnumerable<TEdge> GetEdges();
-    
-    /// <summary>
-    /// Sets weight of provided edge. If edge is not present in vertex, it sets nothing.
-    /// </summary>
-    /// <param name="weight">Weight to be set for edge.</param>
-    /// <param name="edge">Edge the weight is going to be set for.</param>
-    void SetWeight(float weight, TEdge edge);
-    
-    /// <summary>
-    /// Method for getting the weight of some edge. If edges wight is not computed yet or it is not present in vertex, returns null.
-    /// </summary>
-    /// <param name="edge">Edge which weight is proposed.</param>
-    /// <returns>Weight of given edge. Float.Nan, if given edges weight is not computed yet or it is not present in vertex.</returns>
-    bool TryGetWeight(TEdge edge, out float weight);
 }
 
 /// <summary>

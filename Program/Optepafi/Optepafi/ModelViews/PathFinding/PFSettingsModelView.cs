@@ -184,7 +184,7 @@ public abstract class PFSettingsModelView : ModelViewBase
     {
         var usableMapRepreReps = MapRepreManager.Instance.GetUsableMapRepreRepsFor(templateViewModel.Template, mapFormatViewModel.MapFormat);
         var usableUserModelTypes = UserModelManager.Instance.GetCorrespondingUserModelTypesTo(templateViewModel.Template);
-        return (SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, usableUserModelTypes) .Count > 0);
+        return (SearchingAlgorithmManager.Instance.GetUsableAlgorithmsFor(usableMapRepreReps, usableUserModelTypes).Count > 0);
     }
 
     public bool AreTheyUsableCombination(MapRepreRepresentativeViewModel mapRepreRepresentativeViewModel, UserModelTypeViewModel userModelTypeViewModel)
@@ -331,6 +331,7 @@ public partial class PathFindingSessionModelView
         {
             SearchingAlgorithm = searchingAlgorithmViewModel?.SearchingAlgorithm;
             SearchingAlgorithmConfiguration = searchingAlgorithmConfigurationViewModel?.Configuration.DeepCopy();
+            RelevantGraphCreatorIndex = MapRepreRepresentative is null || UserModelType is null || SearchingAlgorithm is null ? -1 : SearchingAlgorithmManager.Instance.GetRelevantGraphCreatorIndexIfRepresentUsableMapRepreUserModelCombFor(MapRepreRepresentative, UserModelType, SearchingAlgorithm);
         }
 
         public override void SetMapRepreRep(MapRepreRepresentativeViewModel? mapRepreRepViewModel, ConfigurationViewModel? configurationViewModel)
@@ -451,6 +452,10 @@ public partial class PathFindingSessionModelView
         /// Selected map representation representative. Other ModelViews may use it for further work.
         /// </summary>
         public IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; private set; }
+        /// <summary>
+        /// Index of graph creator, which should be used for creating graph representation of map. Other ModelViews may use it for further work.
+        /// </summary>
+        public int RelevantGraphCreatorIndex { get; private set; } = -1;
         /// <summary>
         /// Chosen searching algorithm. Other ModelViews may use it for further work.
         /// </summary>

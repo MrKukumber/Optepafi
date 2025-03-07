@@ -27,10 +27,10 @@ namespace Optepafi.Models.MapRepreMan;
 /// All operations provided by this class are thread safe as long as same method arguments are not used concurrently multiple times.  
 /// </summary>
 public class MapRepreManager : 
-    IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
-    IGeoLocatedMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
-    ITemplateGenericVisitor<IMapRepre, IMap, (IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
-    ITemplateGenericVisitor<IMapRepre, IGeoLocatedMap, (IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
+    IMapGenericVisitor<IMapRepre, (ITemplate, int, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
+    IGeoLocatedMapGenericVisitor<IMapRepre, (ITemplate, int, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<IMapRepre, IMap, (int, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>,
+    ITemplateGenericVisitor<IMapRepre, IGeoLocatedMap, (int, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
 {
     public static MapRepreManager Instance { get; } = new();
     private MapRepreManager() { }
@@ -126,7 +126,7 @@ public class MapRepreManager :
     {
         HashSet<IMapRepreRepresentative<IMapRepre>> usableMapRepreReps = new();
         foreach (var mapRepreRep in MapRepreReps)
-            if(SearchingAlgorithmManager.Instance.DoesRepresentUsableMapRepreUserModelCombFor(mapRepreRep,  userModelType, algorithm))
+            if(SearchingAlgorithmManager.Instance.GetRelevantGraphCreatorIndexIfRepresentUsableMapRepreUserModelCombFor(mapRepreRep,  userModelType, algorithm) > -1)
                     usableMapRepreReps.Add(mapRepreRep);
         return usableMapRepreReps;
     }
@@ -164,33 +164,34 @@ public class MapRepreManager :
     /// </summary>
     /// <param name="template">Used template in creation of map representation.</param>
     /// <param name="map">Used map in creation of map representation.</param>
+    /// <param name="graphCreatorIndex">Index of graph constructor, which is used for creation of graph reprezentation of map.</param>
     /// <param name="mapRepreRep">Representative of created map representation.</param>
     /// <param name="configuration">Configuration of created map representation. Type of configuration must match with <c>TConfiguration</c> type parameter of graph representative which corresponds to provided map repre. representative.</param>
     /// <param name="constructionProgress">Object by which can be progress of construction subscribed .</param>
     /// <param name="cancellationToken">Token for cancelling construction.</param>
     /// <returns>Created map representation.</returns>
-    public IMapRepre CreateMapRepre(ITemplate template, IMap map, IMapRepreRepresentative<IMapRepre> mapRepreRep, IConfiguration configuration,
+    public IMapRepre CreateMapRepre(ITemplate template, IMap map, int graphCreatorIndex, IMapRepreRepresentative<IMapRepre> mapRepreRep, IConfiguration configuration,
         IProgress<MapRepreConstructionReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric(this, (template, mapRepreRep, configuration, constructionProgress, cancellationToken));
+        return map.AcceptGeneric(this, (template, graphCreatorIndex, mapRepreRep, configuration, constructionProgress, cancellationToken));
     }
 
-    IMapRepre IMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
+    IMapRepre IMapGenericVisitor<IMapRepre, (ITemplate, int, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
         .GenericVisit<TMap>(TMap map,
-        (ITemplate, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams)
+        (ITemplate, int, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams)
     {
-        var (template, mapRepreRepresentativ, configuration, progress, cancellationToken) = otherParams;
+        var (template, graphCreatorIndex, mapRepreRepresentativ, configuration, progress, cancellationToken) = otherParams;
         return template
-            .AcceptGeneric<IMapRepre, TMap, IMap, (IMapRepreRepresentative<IMapRepre>, IConfiguration,
+            .AcceptGeneric<IMapRepre, TMap, IMap, (int, IMapRepreRepresentative<IMapRepre>, IConfiguration,
                 IProgress<MapRepreConstructionReport>?, CancellationToken?)>(this, map,
-                (mapRepreRepresentativ, configuration, progress, cancellationToken));
+                (graphCreatorIndex, mapRepreRepresentativ, configuration, progress, cancellationToken));
     }
-    IMapRepre ITemplateGenericVisitor<IMapRepre, IMap, (IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
+    IMapRepre ITemplateGenericVisitor<IMapRepre, IMap, (int, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
         .GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes, TMap>(TTemplate template, TMap map, 
-        ( IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams) 
+        ( int, IMapRepreRepresentative<IMapRepre>, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams) 
     {
-        var (mapRepreRepresentativ, configuration, progress, cancellationToken) = otherParams;
-        return mapRepreRepresentativ.CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(template, map, configuration, progress, cancellationToken);
+        var (graphCreatorIndex, mapRepreRepresentativ, configuration, progress, cancellationToken) = otherParams;
+        return mapRepreRepresentativ.CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(template, map, graphCreatorIndex, configuration, progress, cancellationToken);
     }
 
     /// <summary>
@@ -202,35 +203,36 @@ public class MapRepreManager :
     /// </summary>
     /// <param name="template">Used template in creation of map representation.</param>
     /// <param name="map">Used map in creation of map representation.</param>
+    /// <param name="graphCreatorIndex">Index of graph constructor, which is used for creation of graph reprezentation of map.</param>
     /// <param name="mapRepreRep">Representative of created map representation.</param>
     /// <param name="elevData">Elevation data corresponding to map area used in map representation creation.</param>
     /// <param name="configuration">Configuration of created map representation. Type of configuration must match with <c>TConfiguration</c> type parameter of graph representative which corresponds to provided map repre. representative.</param>
     /// <param name="constructionProgress">Object by which can be progress of construction subscribed .</param>
     /// <param name="cancellationToken">Token for cancelling construction.</param>
     /// <returns>Created map representation.</returns>
-    public IMapRepre CreateMapRepre(ITemplate template, IGeoLocatedMap map, IMapRepreRepresentative<IMapRepre> mapRepreRep, IElevData elevData, IConfiguration configuration, IProgress<MapRepreConstructionReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
+    public IMapRepre CreateMapRepre(ITemplate template, IGeoLocatedMap map, int graphCreatorIndex, IMapRepreRepresentative<IMapRepre> mapRepreRep, IElevData elevData, IConfiguration configuration, IProgress<MapRepreConstructionReport>? constructionProgress = null, CancellationToken? cancellationToken = null)
     {
-        return map.AcceptGeneric(this, (template, mapRepreRep, elevData, configuration, constructionProgress, cancellationToken));
+        return map.AcceptGeneric(this, (template, graphCreatorIndex, mapRepreRep, elevData, configuration, constructionProgress, cancellationToken));
 
     }
-    IMapRepre IGeoLocatedMapGenericVisitor<IMapRepre, (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
+    IMapRepre IGeoLocatedMapGenericVisitor<IMapRepre, (ITemplate, int, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?)>
         .GenericVisit<TMap>(TMap geoLocatedMap,
-        (ITemplate, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams)
+        (ITemplate, int, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams)
     {
-        var (template, mapRepreRepresentativ, elevData, configuration, progress, cancellationToken) = otherParams;
+        var (template, graphCreatorIndex, mapRepreRepresentativ, elevData, configuration, progress, cancellationToken) = otherParams;
         return template
-            .AcceptGeneric<IMapRepre, TMap, IGeoLocatedMap, (IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, 
-                IProgress<MapRepreConstructionReport>?, CancellationToken?)>(this, geoLocatedMap,
-                (mapRepreRepresentativ, elevData, configuration, progress, cancellationToken));
+            .AcceptGeneric<IMapRepre, TMap, IGeoLocatedMap, (int, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, 
+                IProgress<MapRepreConstructionReport>?, CancellationToken?)>(this, geoLocatedMap, 
+                (graphCreatorIndex, mapRepreRepresentativ, elevData, configuration, progress, cancellationToken));
     }
 
-    IMapRepre ITemplateGenericVisitor<IMapRepre, IGeoLocatedMap, (IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration,
+    IMapRepre ITemplateGenericVisitor<IMapRepre, IGeoLocatedMap, (int, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration,
             IProgress<MapRepreConstructionReport>?, CancellationToken?)>
         .GenericVisit<TTemplate, TVertexAttributes, TEdgeAttributes, TMap>(TTemplate template, TMap map,
-            (IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams)
+            (int, IMapRepreRepresentative<IMapRepre>, IElevData, IConfiguration, IProgress<MapRepreConstructionReport>?, CancellationToken?) otherParams)
     {
-        var (mapRepreRepresentativ, elevData, configuration, progress, cancellationToken) = otherParams;
-        return mapRepreRepresentativ.CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(template, map,
+        var (graphCreatorIndex, mapRepreRepresentativ, elevData, configuration, progress, cancellationToken) = otherParams;
+        return mapRepreRepresentativ.CreateMapRepre<TTemplate, TMap, TVertexAttributes, TEdgeAttributes>(template, map, graphCreatorIndex,
             elevData, configuration, progress, cancellationToken);
     }
 }

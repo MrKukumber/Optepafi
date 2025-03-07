@@ -27,7 +27,7 @@ public class ElevDataManager
     /// Set of usable elevation data sources.
     /// </summary>
     public IReadOnlySet<IElevDataSource> ElevDataSources { get; } =
-        ImmutableHashSet.Create<IElevDataSource>( SimulatingElevDataSource.Instance, NotSufficientElevDataSource.Instance); //TODO: este premysliet ako reprezentovat, mozno skor nejakym listom koli poradiu
+        ImmutableHashSet.Create<IElevDataSource>(SimulatingElevDataSource.Instance, NotSufficientElevDataSource.Instance); //TODO: este premysliet ako reprezentovat, mozno skor nejakym listom koli poradiu
     
     public enum DownloadingResult {Downloaded, Canceled, UnableToDownload, WrongCredentials}
 
@@ -68,7 +68,6 @@ public class ElevDataManager
         elevDataDistribution.Remove(region);
     }
 
-
     public enum ElevDataObtainability {Obtainable, ElevDataNotPresent, NotSupportedMap, Cancelled}
     /// <summary>
     /// Method which tests whether elevation data for given geo located map are acquirable.
@@ -100,5 +99,5 @@ public class ElevDataManager
     {
         return elevDataDistribution.GetElevDataFor(map, cancellationToken);
     }
-
+    
 }

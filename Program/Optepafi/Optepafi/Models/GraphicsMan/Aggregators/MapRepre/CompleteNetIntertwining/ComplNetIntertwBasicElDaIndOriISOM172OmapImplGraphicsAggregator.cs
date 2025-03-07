@@ -3,17 +3,17 @@ using System.Threading;
 using Optepafi.Models.GraphicsMan.Collectors;
 using Optepafi.Models.GraphicsMan.Objects.MapRepre;
 using Optepafi.Models.MapRepreMan.Implementations.Specific.CompleteIterativelySnapping;
-using Optepafi.Models.MapRepreMan.Utils;
-using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.GraphicsMan.Aggregators.MapRepre.CompleteNetIntertwining;
 
-public class CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator : IMapRepreGraphicsAggregator<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation>
+public class CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator 
+    : IMapRepreGraphicsAggregator<CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation>
 {
-    public static CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator Instance { get; } = new();
-    private CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator(){}
-    public void AggregateGraphics(CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation implementation,
+    public static CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator Instance { get; } = new();
+    private CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator(){}
+    public void AggregateGraphics(
+        CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation implementation,
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
         HashSet<(MapCoordinates, MapCoordinates)> foundEdgeCoordinates = new HashSet<(MapCoordinates, MapCoordinates)>();
