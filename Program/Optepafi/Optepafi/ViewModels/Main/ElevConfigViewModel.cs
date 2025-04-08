@@ -6,9 +6,12 @@ using System.Net;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Distributions;
+using Optepafi.Models.ElevationDataMan.Distributions.Specific.USGS;
 using Optepafi.ModelViews.Main;
+using Optepafi.ViewModels.Data.Credentials;
 using Optepafi.ViewModels.Data.Representatives;
 using ReactiveUI;
 
@@ -40,6 +43,24 @@ public class ElevConfigViewModel : ViewModelBase
     /// <param name="selectedElevDataDist">Argument according to which is currently used elevation data distribution set.</param>
     public ElevConfigViewModel(ElevDataDistributionViewModel? selectedElevDataDist)
     {
+        
+        _currentAvailableRegions = this.WhenAnyValue(x => x.CurrentElevDataDist)
+            .Select(ceds => ceds is null ? null : ElevDataModelView.Instance.TopRegionsOfAllDistributions[ceds] 
+                .SelectMany(topRegion => GetAllSubRegions(topRegion))) 
+            .ToProperty(this, nameof(CurrentAvailableRegions));
+        _requriedCredentialsTypeIsUserNameAndPassword = this.WhenAnyValue(x => x.CurrentElevDataDist)
+            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel credReqElevDataDist && credReqElevDataDist.CredType == CredentialsTypeViewModel.UserNameAndPassword)
+            .ToProperty(this, nameof(RequiredCredentialsTypeIsUserNameAndPassword));
+        _requiredCredentialsTypeIsAuthenticationToken = this.WhenAnyValue(x => x.CurrentElevDataDist)
+            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel credReqElevDataDist && credReqElevDataDist.CredType == CredentialsTypeViewModel.AuthenticationToken)
+            .ToProperty(this, nameof(RequiredCredentialsTypeIsAuthenticationToken));
+        _requiredCredentialsTypeIsUserNameAndAuthenticationToken = this.WhenAnyValue(x => x.CurrentElevDataDist)
+            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel credReqElevDataDist && credReqElevDataDist.CredType == CredentialsTypeViewModel.UserNameAndAuthenticationToken)
+            .ToProperty(this, nameof(RequiredCredentialsTypeIsUserNameAndAuthenticationToken));
+        _isRegionSelectedNotDownloaded = this.WhenAnyValue(x => x.SelectedRegion.Presence)
+            .Select(presence => presence is RegionViewModel.PresenceState.NotDownloaded)
+            .ToProperty(this, nameof(IsSelectedRegionNotDownloaded));
+        
         IObservable<bool> isRegionSelectedNotDownloaded = this.WhenAnyValue(
             x => x.SelectedRegion.Presence,
             region => region == RegionViewModel.PresenceState.NotDownloaded);
@@ -52,13 +73,24 @@ public class ElevConfigViewModel : ViewModelBase
         IObservable<bool> areCredentialsSet = this.WhenAnyValue(
             x => x.UserName,
             x => x.Password,
-            (userName, password) => !string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password));
+            x => x.AuthenticationToken,
+            (userName, password, authToken) =>
+            {
+                if (RequiredCredentialsTypeIsUserNameAndPassword)
+                    return !string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password);
+                if (RequiredCredentialsTypeIsUserNameAndAuthenticationToken)
+                    return !string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(authToken);
+                if (RequiredCredentialsTypeIsAuthenticationToken)
+                    return !string.IsNullOrEmpty(authToken);
+                return false;
+            });
         IObservable<bool> areCredentialsRequired = this.WhenAnyValue(
             x => x.CurrentElevDataDist,
             (ElevDataDistributionViewModel? elevDataDist) => elevDataDist is CredentialsRequiringElevDataDistributionViewModel);
-        
+
+        this.WhenAnyValue(x => x.CurrentElevDataDist)
+            .Subscribe(_ => { UserName = ""; Password = ""; AuthenticationToken = ""; }); 
             
-        
         DownloadRegionCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             var currentSelectedRegion = SelectedRegion;
@@ -67,39 +99,42 @@ public class ElevConfigViewModel : ViewModelBase
             foreach(var subRegion in currentSelectedRegion.SubRegions ) 
                 SetRecursivelySubRegionsPresenceToIsDownloadingAsSubregion(subRegion);
             currentSelectedRegion.DownloadingCancellationTokenSource = new CancellationTokenSource();
-            ElevDataManager.DownloadingResult result;
             switch (currentElevDataDist)
             {
                 case CredentialsNotRequiringElevDataDistributionViewModel cnredtvm :
-                   result =  await ElevDataModelView.Instance.DownloadAsync(cnredtvm, currentSelectedRegion);
-                   break;
+                   return (currentSelectedRegion, ElevDataModelView.Instance.DownloadAsync(cnredtvm, currentSelectedRegion));
                 case CredentialsRequiringElevDataDistributionViewModel credtvm :
-                    var userName = "";
-                    var password = "";
                     switch (credtvm.CredType)
                     {
                         case CredentialsTypeViewModel.UserNameAndPassword:
-                            userName = UserName; password = Password;
-                            result = await ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new NetworkCredential(userName, password));
-                            break;
+                            return (currentSelectedRegion, ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new CredentialsViewModel() { UserName = UserName, Password = Password }));
                         case CredentialsTypeViewModel.AuthenticationToken:
-                            //TODO:
-                            userName = UserName;
-                            result = await ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new NetworkCredential(userName, ""));
-                            break;
+                             return (currentSelectedRegion, ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new CredentialsViewModel(){AuthenticationToken = AuthenticationToken}));
+                        case CredentialsTypeViewModel.UserNameAndAuthenticationToken:
+                            return (currentSelectedRegion, ElevDataModelView.Instance.DownloadAsync(credtvm, currentSelectedRegion, new CredentialsViewModel(){UserName = UserName, AuthenticationToken = AuthenticationToken}));
                         default:
                             throw new InvalidEnumArgumentException(nameof(credtvm.CredType));
                     }
-                    break;
                 default:
                     throw new ArgumentException("Not supported " + nameof(ElevDataDistributionViewModel)+" ancestor type given.");
             }
-            UpdateRecursivelySubRegionsPresence(currentSelectedRegion);
+
+        }, isRegionSelectedNotDownloaded.CombineLatest(
+            areCredentialsRequired.CombineLatest(areCredentialsSet, 
+                (x,y) => !x || y), 
+            (x,y) => x && y));
+
+        DownloadRegionCommand.Subscribe(async input =>
+        {
+            var result = await input.Item2;
+            var selectedRegion = input.Item1;
+
+            UpdateRecursivelySubRegionsPresence(selectedRegion);
             switch (result)
             {
                 case ElevDataManager.DownloadingResult.Downloaded:
                     break;
-                case ElevDataManager.DownloadingResult.Canceled:    
+                case ElevDataManager.DownloadingResult.Canceled:
                     break;
                 case ElevDataManager.DownloadingResult.WrongCredentials:
                     //TODO: nejake upozornenie, ze zadane kredencialy neboli platn
@@ -108,23 +143,26 @@ public class ElevConfigViewModel : ViewModelBase
                     //TODO: nejake upozornenie, ze sa stahovanie nepodarilo
                     break;
                 default:
-                    throw new InvalidEnumArgumentException("result", (int) result, typeof(ElevDataManager.DownloadingResult));
+                    throw new InvalidEnumArgumentException("result", (int)result, typeof(ElevDataManager.DownloadingResult));
             }
-
-        }, isRegionSelectedNotDownloaded.CombineLatest(
-            areCredentialsRequired.CombineLatest(areCredentialsSet, 
-                (x,y) => !x || y), 
-            (x,y) => x && y));
+        });
+        
         DeleteRegionCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             var currentSelectedRegion = SelectedRegion;
             var currentElevDataDist = CurrentElevDataDist;
             SetRecursivelySubRegionsPresenceToIsDeletingIfNotDeletedAlready(currentSelectedRegion!);
             SetRecursivelyUpperRegionsPresenceToIsDeletingIfNotDeletedAlready(currentSelectedRegion!);
-            await ElevDataModelView.Instance.RemoveAsync(currentElevDataDist!, currentSelectedRegion!);
-            UpdateRecursivelySubRegionsPresence(currentSelectedRegion!);
-            UpdateRecursivelyUpperRegionsPresence(currentSelectedRegion!);
+            return (currentSelectedRegion!, ElevDataModelView.Instance.RemoveAsync(currentElevDataDist!, currentSelectedRegion!));
         }, isRegionSelectedDownloaded);
+
+        DeleteRegionCommand.Subscribe(async input =>
+        {
+            await input.Item2;
+            var selectedRegion = input.Item1;
+            UpdateRecursivelySubRegionsPresence(selectedRegion);
+            UpdateRecursivelyUpperRegionsPresence(selectedRegion);
+        });
         
         CancelDownloadingCommand = ReactiveCommand.Create(() =>
         {
@@ -133,21 +171,11 @@ public class ElevConfigViewModel : ViewModelBase
         
         ReturnCommand = ReactiveCommand.Create(() =>
         {
-            UserName = ""; Password = "";
+            UserName = ""; Password = ""; AuthenticationToken = "";
             return _currentElevDataDist;
         });
         
-        _currentAvailableRegions = this.WhenAnyValue(x => x.CurrentElevDataDist)
-            .Select(ceds => ceds is null 
-                ? null : ElevDataModelView.Instance.TopRegionsOfAllDistributions[ceds]
-                    .SelectMany(topRegion => GetAllSubRegions(topRegion))) 
-            .ToProperty(this, nameof(CurrentAvailableRegions));
-        _requriedCredentialsTypeIsUserNameAndPassword = this.WhenAnyValue(x => x.CurrentElevDataDist)
-            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel credReqElevDataDist && credReqElevDataDist.CredType == CredentialsTypeViewModel.UserNameAndPassword)
-            .ToProperty(this, nameof(RequiredCredentialsTypeIsUserNameAndPassword));
-        _requiredCredentialsTypeIsAuthenticationToken = this.WhenAnyValue(x => x.CurrentElevDataDist)
-            .Select(elevDataDist => elevDataDist is CredentialsRequiringElevDataDistributionViewModel credReqElevDataDist && credReqElevDataDist.CredType == CredentialsTypeViewModel.AuthenticationToken)
-            .ToProperty(this, nameof(RequiredCredentialsTypeIsAuthenticationToken));
+        
         ElevDataDistributions = ElevDataModelView.Instance.GetElevDataSources()
             .SelectMany(elevDataSource => elevDataSource.ElevDataDistributions);
         CurrentElevDataDist = ElevDataDistributions.Contains(selectedElevDataDist) ? selectedElevDataDist : null;
@@ -256,6 +284,16 @@ public class ElevConfigViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _password, value);
     }
     private string? _password;
+    
+    /// <summary>
+    /// Authentication token part of credentials used for accessing of elevation data from distributions which demand it.
+    /// </summary>
+    public string? AuthenticationToken
+    {
+        get => _authenticationToken;
+        set => this.RaiseAndSetIfChanged(ref _authenticationToken, value);
+    }
+    private string? _authenticationToken;
 
     /// <summary>
     /// Indicates whether providing of credentials for accessing elevation data form distribution which demand it from user are required
@@ -270,6 +308,19 @@ public class ElevConfigViewModel : ViewModelBase
     /// </summary>
     public bool RequiredCredentialsTypeIsAuthenticationToken => _requiredCredentialsTypeIsAuthenticationToken.Value;
     private ObservableAsPropertyHelper<bool> _requiredCredentialsTypeIsAuthenticationToken;
+
+    /// <summary>
+    /// Indicates whether providing of credentials for accessing elevation data form distribution which demand it from user are required
+    /// and whether the credentials are user name and authentication token.
+    /// </summary>
+    public bool RequiredCredentialsTypeIsUserNameAndAuthenticationToken => _requiredCredentialsTypeIsUserNameAndAuthenticationToken.Value;
+    private ObservableAsPropertyHelper<bool> _requiredCredentialsTypeIsUserNameAndAuthenticationToken;
+    
+    /// <summary>
+    /// Indicates whether selected region is not downloaded.
+    /// </summary>
+    public bool IsSelectedRegionNotDownloaded  => _isRegionSelectedNotDownloaded.Value; 
+    private ObservableAsPropertyHelper<bool> _isRegionSelectedNotDownloaded;
     
     /// <summary>
     /// Reactive command used for downloading of elevation data for currently selected region.
@@ -281,7 +332,7 @@ public class ElevConfigViewModel : ViewModelBase
     /// In the end it processes result of download so that user could be informed about it.  
     /// Downloading of elevation data is enabled only in case that selected region is not downloaded yet and current distribution does not requires credentials or if it does, they are set.  
     /// </summary>
-    public ReactiveCommand<Unit, Unit> DownloadRegionCommand { get; }
+    public ReactiveCommand<Unit, (RegionViewModel,Task<ElevDataManager.DownloadingResult>)> DownloadRegionCommand { get; }
     /// <summary>
     /// Reactive command used for deleting of downloaded elevation data for currently selected region.
     /// 
@@ -292,7 +343,7 @@ public class ElevConfigViewModel : ViewModelBase
     /// After it finishes, selected regions sub-regions and upper-regions are let to update their presence status.  
     /// Removing of selected regions elevation data is enabled only if they are downloaded already.  
     /// </summary>
-    public ReactiveCommand<Unit, Unit> DeleteRegionCommand { get; }
+    public ReactiveCommand<Unit, (RegionViewModel, Task)> DeleteRegionCommand { get; }
     /// <summary>
     /// Reactive command for cancelling of elevation data download
     /// </summary>

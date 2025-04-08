@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\Solution1\\ConsoleApp1\\ConsoleApp1.csproj": {}
+    "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\Solution1\\ConsoleApp1\\ConsoleApp1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\Solution1\\ConsoleApp1\\ConsoleApp1.csproj": {
+    "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\Solution1\\ConsoleApp1\\ConsoleApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\Solution1\\ConsoleApp1\\ConsoleApp1.csproj",
+        "projectUniqueName": "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\Solution1\\ConsoleApp1\\ConsoleApp1.csproj",
         "projectName": "ConsoleApp1",
-        "projectPath": "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\Solution1\\ConsoleApp1\\ConsoleApp1.csproj",
+        "projectPath": "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\Solution1\\ConsoleApp1\\ConsoleApp1.csproj",
         "packagesPath": "C:\\Users\\matej\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\Solution1\\ConsoleApp1\\obj\\",
+        "outputPath": "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\Solution1\\ConsoleApp1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\matej\\AppData\\Roaming\\NuGet\\NuGet.Config"

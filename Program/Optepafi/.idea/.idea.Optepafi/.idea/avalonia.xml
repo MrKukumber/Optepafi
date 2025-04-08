@@ -53,6 +53,7 @@
         <entry key="Optepafi/Views/Main/ElevConfigView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/ElevConfigWindow.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/ElevConfingWindow.axaml" value="Optepafi/Optepafi.csproj" />
+        <entry key="Optepafi/Views/Main/InitializationView.axaml" value="MapRepreViewer/MapRepreViewer.csproj" />
         <entry key="Optepafi/Views/Main/MainMenuView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/MainSettingsView.axaml" value="Optepafi/Optepafi.csproj" />
         <entry key="Optepafi/Views/Main/MainWindow.axaml" value="Optepafi/Optepafi.csproj" />

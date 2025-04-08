@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using Optepafi.Models.ElevationDataMan.Distributions;
 
 namespace Optepafi.Models.ElevationDataMan.ElevSources;
@@ -12,4 +13,10 @@ public interface IElevDataSource
 {
     public string Name { get; }
     public IReadOnlySet<IElevDataDistribution> ElevDataDistributions { get; }
+
+    public void Initialize()
+    {
+        foreach (var distr in ElevDataDistributions)
+            distr.Initialize();
+    }
 }

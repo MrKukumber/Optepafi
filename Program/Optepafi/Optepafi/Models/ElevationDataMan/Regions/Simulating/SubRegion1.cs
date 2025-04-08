@@ -5,21 +5,24 @@ namespace Optepafi.Models.ElevationDataMan.Regions.Simulating;
 /// <summary>
 /// Demonstrating subregion used for presenting application functionalities.
 /// 
-/// For more information on subregions see <see cref="SubRegion"/>.  
+/// For more information on subregions see <see cref="ISubRegion"/>.  
 /// </summary>
-public class SubRegion1 : SubRegion
+public class SubRegion1 : ISubRegion
 {
-    /// <inheritdoc cref="Region.Name"/>
-    public override string Name => "Subregion 1";
+    /// <inheritdoc cref="IRegion.Name"/>
+    public string Name => "Subregion 1";
 
-    public SubRegion1(Region upperRegion)
+    public SubRegion1(TopRegion0 upperRegion)
     {
         UpperRegion = upperRegion;
-        upperRegion.SubRegions.Add(this);
+        upperRegion.SubRegionsSet.Add(this);
     }
-    /// <inheritdoc cref="Region.SubRegions"/> 
-    public override HashSet<SubRegion> SubRegions { get; } = new();
+    /// <inheritdoc cref="IRegion.SubRegions"/> 
+    public IReadOnlyCollection<ISubRegion> SubRegions { get; } = new HashSet<ISubRegion>();
     
-    /// <inheritdoc cref="SubRegion.UpperRegion"/> 
-    public override Region UpperRegion { get; }
+    /// <inheritdoc cref="ISubRegion.UpperRegion"/> 
+    public IRegion UpperRegion { get; }
+    
+    public bool IsDownloaded { get; set; }
+    
 }

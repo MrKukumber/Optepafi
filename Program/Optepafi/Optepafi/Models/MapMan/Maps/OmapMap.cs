@@ -86,18 +86,13 @@ public abstract class OmapMap : IMap, IPartitionableMap
            return ResolveLineSegment(point0, point3);
         }
     }
-    
-    public abstract MapCoordinates NorthernmostCoords { get; }
-    public abstract MapCoordinates SouthernmostCoords { get; }
-    public abstract MapCoordinates WesternmostCoords { get; }
-    public abstract MapCoordinates EasternmostCoords { get; }
-
+    public abstract MapCoordinates BottomLeftBoundingCorner { get; }
+    public abstract MapCoordinates TopRightBoundingCorner { get; }
     public abstract IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned);
 }
 
-public abstract class GeoLocatedOmapMap : OmapMap, IMostNSWECoordQueryableGeoRefMap
+public abstract class GeoLocatedOmapMap : OmapMap, IBoxBoundedGeoRefMap
 {
-    //TODO: implement
     public abstract GeoCoordinates RepresentativeLocation { get; }
     public TOut AcceptGeneric<TOut, TOtherParams>(IGeoLocatedMapGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams)
     { return genericVisitor.GenericVisit(this, otherParams); }

@@ -66,36 +66,51 @@
             <!-- </StackPanel> -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="4">
                 <TextBlock Name="RegionNameTextBlock" Text="{x:Static local:MainWindowLocal.ElevConfig_RegionNameTextBlock}" Margin="20"/>
-                <Button Name="DownloadButton" Content="{x:Static local:MainWindowLocal.ElevConfig_DownloadButton}" Margin="0 0 20 0" Command="{Binding DownloadRegionCommand}"/>
+                <Button Name="DownloadButton" Content="{x:Static local:MainWindowLocal.ElevConfig_DownloadButton}" Margin="0 0 20 0" Command="{Binding DownloadRegionCommand}" />
                 <Button Name="RemoveButton" Content="{x:Static local:MainWindowLocal.ElevConfig_RemoveButton}" Command="{Binding DeleteRegionCommand}"/>
                 <Button Name="CancelButton" Content="{x:Static local:MainWindowLocal.ElevConfig_CancelButton}" Command="{Binding CancelDownloadingCommand}"/>
                 <Panel>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                        <TextBox Name="UserNameTextBlock" Watermark="{x:Static local:MainWindowLocal.ElevConfig_UserNameTextBlock_Watermark}" Text="{Binding UserName, Mode=OneWayToSource}">
-                            <TextBox.IsVisible>
-                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <TextBox Name="UserNameTextBlock" Watermark="{x:Static local:MainWindowLocal.ElevConfig_UserNameTextBlock_Watermark}" Text="{Binding UserName}">
+                        <TextBox.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                     <Binding Path="RequiredCredentialsTypeIsUserNameAndPassword"/>
-                                    <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"></Binding>
+                                    <Binding Path="RequiredCredentialsTypeIsUserNameAndAuthenticationToken"/>
                                 </MultiBinding>
-                            </TextBox.IsVisible>
-                        </TextBox>
-                        <TextBox Name="PasswordTextBlock" Watermark="{x:Static local:MainWindowLocal.ElevConfig_PasswordTextBlock_Watermark}" Text="{Binding Password, Mode=OneWayToSource}" PasswordChar="*">
-                            <TextBox.IsVisible>
-                                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                    <Binding Path="RequiredCredentialsTypeIsUserNameAndPassword"/>
-                                    <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"/>
-                                </MultiBinding>
-                            </TextBox.IsVisible>
-                        </TextBox>    
-                    </StackPanel>
-                    <TextBox Name="AuthenticationTokenTextBlock" Watermark="{x:Static local:MainWindowLocal.ElevConfig_AuthenticationTokenTextBlock_Watermark}" Text="{Binding UserName, Mode=OneWayToSource}">
+                                <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="IsSelectedRegionNotDownloaded"/>
+                            </MultiBinding>
+                        </TextBox.IsVisible>
+                    </TextBox>
+                    <TextBox Name="AuthenticationTokenTextBlock1" Watermark="{x:Static local:MainWindowLocal.ElevConfig_AuthenticationTokenTextBlock_Watermark}" Text="{Binding AuthenticationToken}">
                         <TextBox.IsVisible>
                             <MultiBinding Converter="{x:Static BoolConverters.And}">
                                 <Binding Path="RequiredCredentialsTypeIsAuthenticationToken"/>
                                 <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="IsSelectedRegionNotDownloaded"/>
                             </MultiBinding>
                         </TextBox.IsVisible>
                     </TextBox>
+                </Panel>
+                <Panel>
+                    <TextBox Name="PasswordTextBlock" Watermark="{x:Static local:MainWindowLocal.ElevConfig_PasswordTextBlock_Watermark}" Text="{Binding Password}" PasswordChar="*">
+                        <TextBox.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="RequiredCredentialsTypeIsUserNameAndPassword"/>
+                                <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="IsSelectedRegionNotDownloaded"/>
+                            </MultiBinding>
+                        </TextBox.IsVisible>
+                    </TextBox>    
+                    <TextBox Name="AuthenticationTokenTextBlock2" Watermark="{x:Static local:MainWindowLocal.ElevConfig_AuthenticationTokenTextBlock_Watermark}" Text="{Binding AuthenticationToken}">
+                        <TextBox.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="RequiredCredentialsTypeIsUserNameAndAuthenticationToken"/>
+                                <Binding Path="SelectedRegion" Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                                <Binding Path="IsSelectedRegionNotDownloaded"/>
+                            </MultiBinding>
+                        </TextBox.IsVisible>
+                    </TextBox>    
                 </Panel>
             </StackPanel>
         </Grid>

@@ -22,7 +22,7 @@ public interface IDirectlyAreaIntersectionQueryableMap : IAreaQueryableMap
 /// 
 /// In this case, coordinates of provided polygon are of <see cref="MapCoordinates"/> type.
 /// </summary>
-public interface IByReferenceAreaIntersectionQueryableMap : IAreaQueryableMap
+public interface IByReferenceAreaIntersectionQueryableMap : IAreaQueryableMap, IScaledMap
 {
     /// <summary>
     /// Method for resolution of intersection of map and provided polygon.

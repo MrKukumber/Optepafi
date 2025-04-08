@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Distributions;
+using Optepafi.Models.Utils.Credentials;
+using Optepafi.ViewModels.Data.Credentials;
 
 namespace Optepafi.ViewModels.Data.Representatives;
 
@@ -55,9 +57,8 @@ public class CredentialsRequiringElevDataDistributionViewModel : ElevDataDistrib
         {
             CredentialsType.UserNameAndPassword => CredentialsTypeViewModel.UserNameAndPassword,
             CredentialsType.AuthenticationToken => CredentialsTypeViewModel.AuthenticationToken,
+            CredentialsType.UserNameAndAuthenticationToken => CredentialsTypeViewModel.UserNameAndAuthenticationToken ,
             _ => throw new InvalidEnumArgumentException(nameof(elevDataDistribution.CredType))
         };
     }
 }
-
-public enum CredentialsTypeViewModel {UserNameAndPassword, AuthenticationToken}

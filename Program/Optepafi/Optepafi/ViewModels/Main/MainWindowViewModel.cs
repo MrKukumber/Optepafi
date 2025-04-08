@@ -19,8 +19,14 @@ public class MainWindowViewModel : ViewModelBase
     /// Corresponding ModelView to this ViewModel
     /// </summary>
     private MainWindowModelView _mainWindowModelView;
+    
     /// <summary>
-    /// Main menu ViewModel. It is the first ViewModel which corresponding View is shown to user on start of application.
+    /// Initialization ViewModel. It is the first ViewModel which corresponding View is shown to user on start of application.
+    /// While it is on screen, application has space to initialize its resources. After initialization the main menu is shown to user.
+    /// </summary>
+    public InitializationViewModel Initialization{ get; }
+    /// <summary>
+    /// Main menu ViewModel. It is the first ViewModel which corresponding View is shown to user after applications initialization.
     /// </summary>
     public MainMenuViewModel MainMenu { get; }
     /// <summary>
@@ -30,19 +36,21 @@ public class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Constructs new instance of this ViewModel.
     /// 
-    /// It initialize all reactive constructs and initialize with main window associated ViewModels.  
+    /// It initializes all reactive constructs and initialize with main window associated ViewModels.  
     /// </summary>
     /// <param name="mainWindowModelView">Main window ModelView which contains ModelViews of all parts of application that are associated with main window.</param>
     public MainWindowViewModel(MainWindowModelView mainWindowModelView )
     {
         _mainWindowModelView = mainWindowModelView;
+        Initialization = new InitializationViewModel(_mainWindowModelView.Initialization);
         MainSettings = new MainSettingsViewModel(_mainWindowModelView.MainSettings); 
         MainMenu = new MainMenuViewModel(MainSettings.ProviderOfSettings);
-        CurrentViewModel = MainMenu;
 
         this.WhenAnyObservable(x => x.MainMenu.GoToSettingsCommand)
             .Subscribe(_ => CurrentViewModel = MainSettings);
         this.WhenAnyObservable(x => x.MainSettings.GoToMainMenuCommand)
+            .Subscribe(_ => CurrentViewModel = MainMenu);
+        this.WhenAnyObservable(x => x.Initialization.InitializeCommand)
             .Subscribe(_ => CurrentViewModel = MainMenu);
         
         YesNoInteraction = new Interaction<YesNoDialogWindowViewModel, bool>();
@@ -59,7 +67,11 @@ public class MainWindowViewModel : ViewModelBase
         {
             _mainWindowModelView.SaveParams();
         });
+        
+        CurrentViewModel = Initialization;
     }
+
+
     /// <summary>
     /// Property which contains currently used ViewModel in main window.
     /// 
@@ -68,7 +80,7 @@ public class MainWindowViewModel : ViewModelBase
     public ViewModelBase CurrentViewModel
     {
         get => _currentViewModel;
-        set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
+        private set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
     private ViewModelBase _currentViewModel;
 

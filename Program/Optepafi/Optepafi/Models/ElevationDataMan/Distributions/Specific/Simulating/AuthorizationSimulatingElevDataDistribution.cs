@@ -8,6 +8,7 @@ using Optepafi.Models.ElevationDataMan.Regions.Simulating;
 using Optepafi.Models.MapMan;
 using Optepafi.Models.MapMan.MapInterfaces;
 using Optepafi.Models.Utils;
+using Optepafi.Models.Utils.Credentials;
 
 namespace Optepafi.Models.ElevationDataMan.Distributions.Specific.Simulating;
 
@@ -25,7 +26,7 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
     /// </summary>
     private AuthorizationSimulatingElevDataDistribution()
     {
-        TopRegion notRealRegion = new TopRegion0()
+        TopRegion0 notRealRegion = new TopRegion0()
         {
             IsDownloaded = false
         };
@@ -37,23 +38,23 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
         {
             IsDownloaded = true
         };
-        AllTopRegions = new HashSet<TopRegion>{ notRealRegion };
+        AllTopRegions = new HashSet<ITopRegion>{ notRealRegion };
     }
     /// <inheritdoc cref="IElevDataDistribution.Name"/>
     public string Name => "Authorization simulating elevation data distribution with name \"Name\" and password \"Password\"";
     /// <inheritdoc cref="IElevDataDistribution.AllTopRegions"/>
-    public IReadOnlySet<TopRegion> AllTopRegions { get; }
+    public IReadOnlyCollection<ITopRegion> AllTopRegions { get; }
 
     public CredentialsType CredType { get; } = CredentialsType.UserNameAndPassword; 
     
     /// <inheritdoc cref="IElevDataDistribution.Remove"/>
-    public void Remove(Region region)
+    public void Remove(IRegion region)
     {
         Thread.Sleep(500); //Lot of work with removing of regions data
         RemoveRecursivelySubRegions(region);
         SetRecursivelyUpperRegionsToNotDownloaded(region);
     }
-    private void RemoveRecursivelySubRegions(Region region)
+    private void RemoveRecursivelySubRegions(IRegion region)
     {
         region.IsDownloaded = false;
         foreach (var subRegion in region.SubRegions)
@@ -61,10 +62,10 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
             RemoveRecursivelySubRegions(subRegion);
         }
     }
-    private void SetRecursivelyUpperRegionsToNotDownloaded(Region region)
+    private void SetRecursivelyUpperRegionsToNotDownloaded(IRegion region)
     {
         region.IsDownloaded = false;
-        if(region is SubRegion subRegion) SetRecursivelyUpperRegionsToNotDownloaded(subRegion.UpperRegion);
+        if(region is ISubRegion subRegion) SetRecursivelyUpperRegionsToNotDownloaded(subRegion.UpperRegion);
     }
 
     /// <inheritdoc cref="IElevDataDistribution.AreElevDataObtainableFor"/>
@@ -90,11 +91,11 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
     /// Then it tries to download all subregions with small probability of unsuccessful download.
     /// Responds to cancellation of downloading.
     /// </remarks>
-    public ElevDataManager.DownloadingResult Download(Region region, NetworkCredential credential, CancellationToken? cancellationToken)
+    public ElevDataManager.DownloadingResult Download(IRegion region, Credentials credentials, CancellationToken? cancellationToken)
     {
         Random rnd = new Random();
-        if (credential.UserName != "Name" || credential.Password != "Password") return ElevDataManager.DownloadingResult.WrongCredentials;
-        List<Region> subRegionsWhichWereSuccessfulyDownloaded = new();
+        if (credentials.UserName != "Name" || credentials.Password != "Password") return ElevDataManager.DownloadingResult.WrongCredentials;
+        List<IRegion> subRegionsWhichWereSuccessfulyDownloaded = new();
         foreach (var subRegion in region.SubRegions)
         {
             if (!subRegion.IsDownloaded)
@@ -128,7 +129,7 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
         }
         return ElevDataManager.DownloadingResult.UnableToDownload;
     }
-    private void SetRecursivelySubRegionsToDownloaded(Region region)
+    private void SetRecursivelySubRegionsToDownloaded(IRegion region)
     {
         region.IsDownloaded = true;
         foreach (var subRegion in region.SubRegions)
@@ -136,6 +137,9 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
             SetRecursivelySubRegionsToDownloaded(subRegion);
         }
     }
+    
+    /// <inheritdoc cref="IElevDataDistribution.Initialize"/>
+    public void Initialize(){}
 
     /// <summary>
     /// Demonstrating elevation data type. It returns elevation for every coordinate equal to 3.14.
@@ -150,7 +154,7 @@ public class AuthorizationSimulatingElevDataDistribution : ICredentialsRequiring
         }
 
         /// <inheritdoc cref="IElevData.GetElevation(MapCoordinates,GeoCoordinates)"/>
-        public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference)
+        public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference, int scale)
         {
             return 3.14;
         }

@@ -65,7 +65,7 @@ public static class OmapMapParser
             bool isGeoLocated;
             Dictionary<int, OmapMap.Symbol> symbols;
             Dictionary<decimal, List<OmapMap.Object>> objects;
-            (MapCoordinates, MapCoordinates, MapCoordinates, MapCoordinates) extremeCoords;
+            (MapCoordinates tc, MapCoordinates bc, MapCoordinates lc, MapCoordinates rc) extremeCoords;
 
             int readsSinceLastCancelCheck = 0;
             
@@ -88,9 +88,9 @@ public static class OmapMapParser
             List<OmapMap.Symbol> mapSymbols = symbols.Select(kv => kv.Value).ToList();
             
             map = isGeoLocated 
-                ? new InnerGeoLocatedOmapMap(scale, mapSymbols, objects, geoLocation, extremeCoords) 
+                ? new InnerGeoLocatedOmapMap(scale, mapSymbols, objects, geoLocation, (new(extremeCoords.lc.XPos, extremeCoords.bc.YPos), new(extremeCoords.rc.XPos, extremeCoords.tc.YPos))) 
                     { FilePath = input.path, FileName = Path.GetFileName(input.path) } 
-                : map = new InnerOmapMap(scale, mapSymbols, objects, extremeCoords) 
+                : map = new InnerOmapMap(scale, mapSymbols, objects, (new(extremeCoords.lc.XPos, extremeCoords.bc.YPos), new(extremeCoords.rc.XPos, extremeCoords.tc.YPos))) 
                     { FilePath = input.path, FileName = Path.GetFileName(input.path) };
             return res;
         }
@@ -201,7 +201,7 @@ public static class OmapMapParser
 
     private static ParseResult TryGetAllObjects(XmlReader reader, 
         Dictionary<int, OmapMap.Symbol> symbols, CancellationToken? cancellationToken, ref int readsSinceLastCancelCheck, out Dictionary<decimal, List<OmapMap.Object>> objects, 
-         out (MapCoordinates nc,MapCoordinates sc,MapCoordinates wc,MapCoordinates ec) extremeCoords)
+         out (MapCoordinates tc, MapCoordinates bc, MapCoordinates lc, MapCoordinates rc) extremeCoords)
     {
         objects = new();
         foreach (var symbol in symbols) if (!objects.ContainsKey(symbol.Value.Code)) objects[symbol.Value.Code] = new List<OmapMap.Object>();
@@ -228,7 +228,7 @@ public static class OmapMapParser
                     if (int.TryParse(reader.GetAttribute("symbol"), out int id) && symbols.ContainsKey(id))
                     {
                         bool firstgetRotationFound = float.TryParse(reader.GetAttribute("rotation"), CultureInfo.InvariantCulture, out float rotation);
-                        switch (TryGetCoords(reader, cancellationToken, ref readsSinceLastCancelCheck, out var typedCoords, out (MapCoordinates nc, MapCoordinates sc, MapCoordinates wc, MapCoordinates ec) objectsExtremCoords))
+                        switch (TryGetCoords(reader, cancellationToken, ref readsSinceLastCancelCheck, out var typedCoords, out (MapCoordinates tc, MapCoordinates bc, MapCoordinates lc, MapCoordinates rc) objectsExtremCoords))
                         {
                             case ParseResult.Ok:
                                 if (!firstgetRotationFound)
@@ -238,10 +238,10 @@ public static class OmapMapParser
                                 }
                                 objects[symbols[id].Code].Add(new OmapMap.Object(typedCoords, rotation));
                                 
-                                extremeCoords.nc = objectsExtremCoords.nc.YPos > extremeCoords.nc.YPos ? objectsExtremCoords.nc : extremeCoords.nc;
-                                extremeCoords.sc = objectsExtremCoords.sc.YPos < extremeCoords.sc.YPos ? objectsExtremCoords.sc : extremeCoords.sc;
-                                extremeCoords.wc = objectsExtremCoords.wc.XPos < extremeCoords.wc.XPos ? objectsExtremCoords.wc : extremeCoords.wc;
-                                extremeCoords.ec = objectsExtremCoords.ec.XPos > extremeCoords.ec.XPos ? objectsExtremCoords.ec : extremeCoords.ec;
+                                extremeCoords.tc = objectsExtremCoords.tc.YPos > extremeCoords.tc.YPos ? objectsExtremCoords.tc : extremeCoords.tc;
+                                extremeCoords.bc = objectsExtremCoords.bc.YPos < extremeCoords.bc.YPos ? objectsExtremCoords.bc : extremeCoords.bc;
+                                extremeCoords.lc = objectsExtremCoords.lc.XPos < extremeCoords.lc.XPos ? objectsExtremCoords.lc : extremeCoords.lc;
+                                extremeCoords.rc = objectsExtremCoords.rc.XPos > extremeCoords.rc.XPos ? objectsExtremCoords.rc : extremeCoords.rc;
                                 break;
                             case ParseResult.OmapError:
                                 complete = false;
@@ -261,7 +261,7 @@ public static class OmapMapParser
     }
     
     private static ParseResult TryGetCoords(XmlReader reader, CancellationToken? cancellationToken, ref int readsSinceLastCancelCheck, 
-        out (MapCoordinates, byte)[] typedCoords, out (MapCoordinates nc, MapCoordinates sc, MapCoordinates wc, MapCoordinates ec) extremeCoords)
+        out (MapCoordinates, byte)[] typedCoords, out (MapCoordinates tc, MapCoordinates bc, MapCoordinates lc, MapCoordinates rc) extremeCoords)
     {
         typedCoords = [];
         extremeCoords = new();
@@ -305,7 +305,7 @@ public static class OmapMapParser
     }
 
     private static bool TryParseCoords(string strAllCoords, CancellationToken? cancellationToken, ref int readsOrParsesSinceLastCheck,
-        out (MapCoordinates, byte)[] typedCoords, out (MapCoordinates nc, MapCoordinates sc, MapCoordinates wc, MapCoordinates ec) extremeCoords)
+        out (MapCoordinates, byte)[] typedCoords, out (MapCoordinates tc, MapCoordinates bc, MapCoordinates lc, MapCoordinates rc) extremeCoords)
     {
         typedCoords = [];
         extremeCoords = (new MapCoordinates(0, int.MinValue), new MapCoordinates(0, int.MaxValue), new MapCoordinates(int.MaxValue,0), new MapCoordinates(int.MinValue, 0));
@@ -330,10 +330,10 @@ public static class OmapMapParser
             if (x == -14731 && y == 8283)
                 Console.WriteLine();
             y = -y; //y-axis values are saved in omap files other way than we use them in map coordinates
-            if (y > extremeCoords.nc.YPos) extremeCoords.nc = new MapCoordinates(x, y);
-            if (y < extremeCoords.sc.YPos) extremeCoords.sc = new MapCoordinates(x, y);
-            if (x < extremeCoords.wc.XPos) extremeCoords.wc = new MapCoordinates(x, y);
-            if (x > extremeCoords.ec.XPos) extremeCoords.ec = new MapCoordinates(x, y);
+            if (y > extremeCoords.tc.YPos) extremeCoords.tc = new MapCoordinates(x, y);
+            if (y < extremeCoords.bc.YPos) extremeCoords.bc = new MapCoordinates(x, y);
+            if (x < extremeCoords.lc.XPos) extremeCoords.lc = new MapCoordinates(x, y);
+            if (x > extremeCoords.rc.XPos) extremeCoords.rc = new MapCoordinates(x, y);
             coordsList.Add((new MapCoordinates(x,y), type));
         }
         if (coordsList.Count == 0) return false; //empty coords list is not valid
@@ -360,35 +360,30 @@ public static class OmapMapParser
         return false;
     }
 
-    private class InnerOmapMap(int scale, List<OmapMap.Symbol> symbols, Dictionary<decimal, List<OmapMap.Object>> objects, 
-        (MapCoordinates nc, MapCoordinates sc,MapCoordinates wc,MapCoordinates ec) extremeCoords) : OmapMap
+    private class InnerOmapMap(int scale, List<OmapMap.Symbol> symbols, Dictionary<decimal, List<OmapMap.Object>> objects, (MapCoordinates blc, MapCoordinates trc) boundingRectCorners) : OmapMap
     {
         public override int Scale => scale;
 
         public override List<Symbol> Symbols => symbols;
         public override Dictionary<decimal, List<Object>> Objects => objects;
         
-        public override MapCoordinates NorthernmostCoords => extremeCoords.nc;
-        public override MapCoordinates SouthernmostCoords => extremeCoords.sc;
-        public override MapCoordinates WesternmostCoords => extremeCoords.wc;
-        public override MapCoordinates EasternmostCoords => extremeCoords.ec;
+        public override MapCoordinates BottomLeftBoundingCorner { get; } = boundingRectCorners.blc;
+        public override MapCoordinates TopRightBoundingCorner { get; } = boundingRectCorners.trc;
 
         public override IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned)
         {
             var (newSymbols, newObjects) = GetNewSymbolsAndObjects(size, cancellationToken, symbols, objects, out wholeMapReturned);
-            return new InnerOmapMap(Scale, newSymbols, newObjects, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
+            return new InnerOmapMap(Scale, newSymbols, newObjects, (BottomLeftBoundingCorner, TopRightBoundingCorner))
             { FilePath = FilePath, FileName = FileName };
         }
     }
 
     private class InnerGeoLocatedOmapMap(int scale,   List<OmapMap.Symbol> symbols, Dictionary<decimal, List<OmapMap.Object>> objects, 
-        GeoCoordinates representativeLocation, (MapCoordinates nc, MapCoordinates sc,MapCoordinates wc,MapCoordinates ec) extremeCoords) : GeoLocatedOmapMap
+        GeoCoordinates representativeLocation, (MapCoordinates blc, MapCoordinates trc) boundingRectCorners) : GeoLocatedOmapMap
     {
         public override GeoCoordinates RepresentativeLocation => representativeLocation;
-        public override MapCoordinates NorthernmostCoords => extremeCoords.nc;
-        public override MapCoordinates SouthernmostCoords => extremeCoords.sc;
-        public override MapCoordinates WesternmostCoords => extremeCoords.wc;
-        public override MapCoordinates EasternmostCoords => extremeCoords.ec;
+        public override MapCoordinates BottomLeftBoundingCorner { get; } = boundingRectCorners.blc;
+        public override MapCoordinates TopRightBoundingCorner { get; } = boundingRectCorners.trc;
 
         public override int Scale => scale;
         public override List<Symbol> Symbols => symbols;
@@ -397,7 +392,7 @@ public static class OmapMapParser
         public override IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned)
         {
             var (newSymbols, newObjects) = GetNewSymbolsAndObjects(size, cancellationToken, symbols, objects, out wholeMapReturned);
-            return new InnerGeoLocatedOmapMap(Scale, newSymbols, newObjects, representativeLocation, (NorthernmostCoords, SouthernmostCoords, WesternmostCoords, EasternmostCoords))
+            return new InnerGeoLocatedOmapMap(Scale, newSymbols, newObjects, representativeLocation, (BottomLeftBoundingCorner, TopRightBoundingCorner))
             { FilePath = FilePath, FileName = FileName };
         }
     }

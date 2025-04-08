@@ -153,9 +153,9 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
             .ToProperty(this, nameof(IsAwaitingElevDataDistributionAbsenceResolution));
         ReturnCommand = ReactiveCommand.Create(() => false, isAwaitingResolution);
         
-        this.WhenActivated(disposalbes =>
+        this.WhenActivated(disposables =>
         {
-            CheckPrerequisitesCommand.Execute().Subscribe().DisposeWith(disposalbes);
+            CheckPrerequisitesCommand.Execute().Subscribe().DisposeWith(disposables);
         });
     }
 

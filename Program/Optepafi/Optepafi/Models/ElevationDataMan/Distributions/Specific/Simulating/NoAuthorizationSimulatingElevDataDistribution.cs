@@ -26,7 +26,7 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
     /// </summary>
     private NoAuthorizationSimulatingElevDataDistribution()
     {
-        TopRegion topRegion = new TopRegion0()
+        TopRegion0 topRegion = new TopRegion0()
         {
             IsDownloaded = false
         };
@@ -38,23 +38,23 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
         {
             IsDownloaded = false
         };
-        AllTopRegions = new HashSet<TopRegion>{ topRegion };
+        AllTopRegions = new HashSet<ITopRegion>{ topRegion };
     }
     
     /// <inheritdoc cref="IElevDataDistribution.Name"/>
     public string Name => "No authorization simulating elevation data distribution";
     
     /// <inheritdoc cref="IElevDataDistribution.AllTopRegions"/>
-    public IReadOnlySet<TopRegion> AllTopRegions { get; }
+    public IReadOnlyCollection<ITopRegion> AllTopRegions { get; }
     
     /// <inheritdoc cref="IElevDataDistribution.Remove"/>
-    public void Remove(Region region)
+    public void Remove(IRegion region)
     {
         Thread.Sleep(500); //Lot of work with removing of regions data
         RemoveRecursivelySubRegions(region);
         SetRecursivelyUpperRegionsToNotDownloaded(region);
     }
-    private void RemoveRecursivelySubRegions(Region region)
+    private void RemoveRecursivelySubRegions(IRegion region)
     {
         region.IsDownloaded = false;
         foreach (var subRegion in region.SubRegions)
@@ -62,10 +62,10 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
             RemoveRecursivelySubRegions(subRegion);
         }
     }
-    private void SetRecursivelyUpperRegionsToNotDownloaded(Region region)
+    private void SetRecursivelyUpperRegionsToNotDownloaded(IRegion region)
     {
         region.IsDownloaded = false;
-        if(region is SubRegion subRegion) SetRecursivelyUpperRegionsToNotDownloaded(subRegion.UpperRegion);
+        if(region is ISubRegion subRegion) SetRecursivelyUpperRegionsToNotDownloaded(subRegion.UpperRegion);
     }
 
     
@@ -92,10 +92,10 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
     /// It tries to download all subregions with small probability of unsuccessful download.
     /// Responds to cancellation of downloading.
     /// </remarks>
-    public ElevDataManager.DownloadingResult Download(Region region, CancellationToken? cancellationToken)
+    public ElevDataManager.DownloadingResult Download(IRegion region, CancellationToken? cancellationToken)
     {
         Random rnd = new Random();
-        List<Region> subRegionsWhichWereSuccessfulyDownloaded = new();
+        List<IRegion> subRegionsWhichWereSuccessfulyDownloaded = new();
         foreach (var subRegion in region.SubRegions)
         {
             if (!subRegion.IsDownloaded)
@@ -130,7 +130,7 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
         return ElevDataManager.DownloadingResult.UnableToDownload;
     }
 
-    private void SetRecursivelySubRegionsToDownloaded(Region region)
+    private void SetRecursivelySubRegionsToDownloaded(IRegion region)
     {
         region.IsDownloaded = true;
         foreach (var subRegion in region.SubRegions)
@@ -138,6 +138,10 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
             SetRecursivelySubRegionsToDownloaded(subRegion);
         }
     }
+    
+    
+    /// <inheritdoc cref="IElevDataDistribution.Initialize"/>
+    public void Initialize(){}
 
     /// <summary>
     /// Demonstrating elevation data type. It returns elevation for every coordinate equal to 3.14.
@@ -151,7 +155,7 @@ public class NoAuthorizationSimulatingElevDataDistribution : ICredentialsNotRequ
         }
 
         /// <inheritdoc cref="IElevData.GetElevation(MapCoordinates,GeoCoordinates)"/>
-        public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference)
+        public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference, int scale)
         {
             return 3.14;
         }

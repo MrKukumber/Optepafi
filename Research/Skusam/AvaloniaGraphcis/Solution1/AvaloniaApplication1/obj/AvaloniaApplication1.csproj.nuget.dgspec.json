@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\AvaloniaApplication1.csproj": {}
+    "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\AvaloniaApplication1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\AvaloniaApplication1.csproj": {
+    "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\AvaloniaApplication1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
+        "projectUniqueName": "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
         "projectName": "AvaloniaApplication1",
-        "projectPath": "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
+        "projectPath": "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
         "packagesPath": "C:\\Users\\matej\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\matej\\OneDrive\\Rocnikovy_projekt\\Praca\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\obj\\",
+        "outputPath": "C:\\Users\\matej\\Desktop\\Skola\\VYSKA\\Magister\\Bakalarka_pokracovanie\\Optepafi\\Research\\Skusam\\AvaloniaGraphcis\\Solution1\\AvaloniaApplication1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\matej\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -56,6 +56,10 @@
               "version": "[11.1.0, )"
             },
             "Avalonia.Fonts.Inter": {
+              "target": "Package",
+              "version": "[11.1.0, )"
+            },
+            "Avalonia.ReactiveUI": {
               "target": "Package",
               "version": "[11.1.0, )"
             },

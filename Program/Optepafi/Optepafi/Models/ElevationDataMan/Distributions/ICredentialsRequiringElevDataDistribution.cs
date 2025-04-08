@@ -1,6 +1,7 @@
 using System.Net;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan.Regions;
+using Optepafi.Models.Utils.Credentials;
 
 namespace Optepafi.Models.ElevationDataMan.Distributions;
 
@@ -19,13 +20,12 @@ public interface ICredentialsRequiringElevDataDistribution : IElevDataDistributi
     /// This method should be able to download elevation data asynchronously. So if two requests for download of the same region are raised concurrently, it will not download those data two times.   
     /// </summary>
     /// <param name="region">Region that should be downloaded.</param>
-    /// <param name="credential">Credentials which are used for authorising the access to database.</param>
+    /// <param name="credentials">Credentials which are used for authorising the access to database.</param>
     /// <param name="cancellationToken">Token for cancelling the process of downloading or region.</param>
     /// <returns>Result about success of download.</returns>
-    public ElevDataManager.DownloadingResult Download(Region region, NetworkCredential credential, CancellationToken? cancellationToken);
+    public ElevDataManager.DownloadingResult Download(IRegion region, Credentials credentials, CancellationToken? cancellationToken);
     
     public CredentialsType CredType { get; }
 }
 
-public enum CredentialsType {UserNameAndPassword, AuthenticationToken}
 

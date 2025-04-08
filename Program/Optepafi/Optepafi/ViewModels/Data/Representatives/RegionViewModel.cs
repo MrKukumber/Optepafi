@@ -13,15 +13,15 @@ namespace Optepafi.ViewModels.Data.Representatives;
 /// 
 /// For more information on wrapping data view models see <see cref="WrappingDataViewModel{TData}"/>.
 /// </summary>
-public abstract class RegionViewModel : WrappingDataViewModel<Region>
+public abstract class RegionViewModel : WrappingDataViewModel<IRegion>
 {
     
     /// <inheritdoc cref="WrappingDataViewModel{TData}.Data"/>
-    protected override Region Data => Region;
+    protected override IRegion Data => Region;
     /// <summary>
     /// Coupled region instance.
     /// </summary>
-    public Region Region { get; }
+    public IRegion Region { get; }
 
     /// <summary>
     /// Construction of new region ViewModel.
@@ -29,7 +29,7 @@ public abstract class RegionViewModel : WrappingDataViewModel<Region>
     /// It is fine, that it does not initialize <c>SubRegions</c> property, because it is initialized in constructors of all successors of this type.
     /// </summary>
     /// <param name="region">Region to which will be coupled new ViewModel.</param>
-    protected RegionViewModel(Region region) 
+    protected RegionViewModel(IRegion region) 
     {
         // SubRegions property will be initialized in successor constructor.
         Region = region;
@@ -93,7 +93,7 @@ public class SubRegionViewModel : RegionViewModel
     /// <param name="upperRegionViewModel">View model of the upper region of sub-region coupled to this ViewModel.</param>
     /// <param name="subRegion">Region to which will be coupled new ViewModel .</param>
     /// <param name="alreadyVisitedRegions">Stack of previously visited regions for which their ViewModels were created. It is used for infinite loop prevention.</param>
-    public SubRegionViewModel(RegionViewModel upperRegionViewModel, SubRegion subRegion, Stack<Region> alreadyVisitedRegions) : base(subRegion)
+    public SubRegionViewModel(RegionViewModel upperRegionViewModel, ISubRegion subRegion, Stack<IRegion> alreadyVisitedRegions) : base(subRegion)
     {
         UpperRegion = upperRegionViewModel;
         SubRegions = subRegion.SubRegions
@@ -125,9 +125,9 @@ public class TopRegionViewModel : RegionViewModel
     /// Construction of new top region ViewModel.
     /// </summary>
     /// <param name="topRegion">Region to which will be coupled new ViewModel .</param>
-    public TopRegionViewModel(TopRegion topRegion) : base(topRegion)
+    public TopRegionViewModel(ITopRegion topRegion) : base(topRegion)
     {
         SubRegions = topRegion.SubRegions
-            .Select(subRegion => new SubRegionViewModel(this, subRegion, new Stack<Region>()) ).ToArray();
+            .Select(subRegion => new SubRegionViewModel(this, subRegion, new Stack<IRegion>()) ).ToArray();
     }
 }

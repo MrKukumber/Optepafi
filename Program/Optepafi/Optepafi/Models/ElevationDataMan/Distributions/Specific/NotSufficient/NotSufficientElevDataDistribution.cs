@@ -19,7 +19,7 @@ public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDat
     public static NotSufficientElevDataDistribution Instance { get; } = new();
     private NotSufficientElevDataDistribution()
     {
-        AllTopRegions = new HashSet<TopRegion>();
+        AllTopRegions = new HashSet<ITopRegion>();
     }
 
     
@@ -27,13 +27,13 @@ public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDat
     public string Name => "Not sufficient elevation data distribution";
     
     /// <inheritdoc cref="IElevDataDistribution.AllTopRegions"/> 
-    public IReadOnlySet<TopRegion> AllTopRegions { get; }
+    public IReadOnlyCollection<ITopRegion> AllTopRegions { get; }
     
     /// <inheritdoc cref="IElevDataDistribution.Remove"/>
     /// <remarks>
     /// Because distribution does not define any region, it does not have to bother with their removal.
     /// </remarks>
-    public void Remove(Region region) { }
+    public void Remove(IRegion region) { }
 
     /// <inheritdoc cref="IElevDataDistribution.AreElevDataObtainableFor"/>
     /// <remarks>
@@ -55,10 +55,13 @@ public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDat
     /// <remarks>
     /// Distribution is not able to download any region because it does not define any. 
     /// </remarks>
-    public ElevDataManager.DownloadingResult Download(Region region, CancellationToken? cancellationToken)
+    public ElevDataManager.DownloadingResult Download(IRegion region, CancellationToken? cancellationToken)
     {
         return ElevDataManager.DownloadingResult.UnableToDownload;
     }
+    
+    /// <inheritdoc cref="IElevDataDistribution.Initialize"/>
+    public void Initialize(){}
     
     /// <summary>
     /// Represents elevation data, which does not contain any information.
@@ -73,7 +76,7 @@ public class NotSufficientElevDataDistribution : ICredentialsNotRequiringElevDat
         }
 
         /// <inheritdoc cref="IElevData.GetElevation(MapCoordinates,GeoCoordinates)"/>
-        public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference)
+        public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference, int scale)
         {
             return null;
         }

@@ -10,7 +10,7 @@ namespace Optepafi.Models.MapMan.Maps;
 /// For more information about map classes see <see cref="IMap"/>.  
 /// For more information on geo-located map classes see <see cref="IGeoLocatedMap"/>.  
 /// </summary>
-public abstract class TextMap : IMostNSWECoordQueryableGeoRefMap
+public abstract class TextMap : IBoxBoundedGeoRefMap
 {
     /// <inheritdoc cref="IMap.FileName "/>
     public required string FileName { get; init; }
@@ -41,30 +41,20 @@ public abstract class TextMap : IMostNSWECoordQueryableGeoRefMap
     /// Every text map is located in Prague, on the river side.
     /// </summary>
     public GeoCoordinates RepresentativeLocation { get; } = new GeoCoordinates(50.088391, 14.413755);
+    
+    /// <inheritdoc cref="IBoxBoundedGeoRefMap.BottomLeftBoundingCorner"/>
+    /// <remarks>
+    /// Height of every text map is 100000 micrometers, and it is centered on coordinate (0,0).
+    /// </remarks>
+    public MapCoordinates BottomLeftBoundingCorner { get; } = new MapCoordinates(-50000, -50000);
 
-    /// <inheritdoc cref="IMostNSWECoordQueryableGeoRefMap.NorthernmostCoords"/>
+    /// <inheritdoc cref="IBoxBoundedGeoRefMap.TopRightBoundingCorner"/>
     /// <remarks>
-    /// Height of every text map is 100000 micrometers and it is centered on coordinate (0,0).
+    /// Height of every text map is 100000 micrometers, and it is centered on coordinate (0,0).
     /// </remarks>
-    public MapCoordinates NorthernmostCoords { get; } = new MapCoordinates(0, 50000);
+    public MapCoordinates TopRightBoundingCorner { get; } = new MapCoordinates(50000, 50000);
     
-    /// <inheritdoc cref="IMostNSWECoordQueryableGeoRefMap.SouthernmostCoords"/>
-    /// <remarks>
-    /// Height of every text map is 100000 micrometers and it is centered on coordinate (0,0).
-    /// </remarks>
-    public MapCoordinates SouthernmostCoords { get; } = new MapCoordinates(0, -50000);
-    
-    /// <inheritdoc cref="IMostNSWECoordQueryableGeoRefMap.WesternmostCoords"/>
-    /// <remarks>
-    /// Width of every text map is 100000 micrometers and it is centered on coordinate (0,0).
-    /// </remarks>
-    public MapCoordinates WesternmostCoords { get; } = new MapCoordinates(-50000, 0);
-    
-    /// <inheritdoc cref="IMostNSWECoordQueryableGeoRefMap.EasternmostCoords"/>
-    /// <remarks>
-    /// Width of every text map is 100000 micrometers and it is centered on coordinate (0,0).
-    /// </remarks>
-    public MapCoordinates EasternmostCoords { get; } = new MapCoordinates(50000, 0);
+    public int Scale { get; } = 10_000;
 
     /// <summary>
     /// Text of represented text file.

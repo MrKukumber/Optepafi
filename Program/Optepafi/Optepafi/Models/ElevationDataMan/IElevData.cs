@@ -23,5 +23,5 @@ public interface IElevData
     /// <param name="coordinates">Coordinate for which elevation is returned.</param>
     /// <param name="geoReference">Geo reference of origin of map coordinate system.</param>
     /// <returns>Elevation.</returns>
-    public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference);
+    public double? GetElevation(MapCoordinates coordinates, GeoCoordinates geoReference, int scale);
 }

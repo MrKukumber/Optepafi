@@ -69,4 +69,7 @@
     <data name="ElevConfig_AuthenticationTokenTextBlock_Watermark" xml:space="preserve">
         <value>Autentikačný token</value>
     </data>
+    <data name="Initialization_MainLabel" xml:space="preserve">
+        <value>Inicializácia aplikácie</value>
+    </data>
 </root>

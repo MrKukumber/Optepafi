@@ -23,22 +23,22 @@ public interface IElevDataDistribution
     public string Name { get; }
     
     /// <summary>
-    /// Set of all <see cref="TopRegion"/>s that are provided by this data distribution.
+    /// Set of all <see cref="ITopRegion"/>s that are provided by this data distribution.
     /// </summary>
-    public IReadOnlySet<TopRegion> AllTopRegions { get; }
+    public IReadOnlyCollection<ITopRegion> AllTopRegions { get; }
     
     /// <summary>
     /// Method used for removing of defined region. If given region is not provided by this distribution, exception is thrown.
     /// </summary>
     /// <param name="region">Region to be removed.</param>
     // TODO: ci by som nemal odstranovanie a downloadovanie genericke cez regiony aby sa nemohlo stat ze sa do tejto metody lozi nespravny typ regionu a zaroven to zaruci, ze si tieto regiony nebudu musiet distribucie castovat
-    public void Remove(Region region);
+    public void Remove(IRegion region);
     
     /// <summary>
     /// Testing method for receiving of information whether for provided map there are available corresponding elevation data in this data distribution.
     /// 
     /// If this method returns positive response, it should be ensured that in the near future will be questioned data ready for delivery.  
-    /// Each implementation of methods should support at least maps, which implement interface <see cref="IMostNSWECoordQueryableGeoLocMap"/> or interface <see cref="IMostNSWECoordQueryableGeoRefMap"/>.  
+    /// Each implementation of methods should support at least maps, which implement interface <see cref="IBoxBoundedGeoLocMap"/> or interface <see cref="IBoxBoundedGeoRefMap"/>.  
     /// </summary>
     /// <param name="map">Map for which test for elevation data obtainability is requested.</param>
     /// <param name="cancellationToken">Token for cancellation of testing process.</param>
@@ -56,5 +56,11 @@ public interface IElevDataDistribution
     /// <param name="cancellationToken">Token for cancellation of elevation data delivery.</param>
     /// <returns>Elevation data object which is able to provide required data.</returns>
     public IElevData GetElevDataFor(IAreaQueryableMap map, CancellationToken? cancellationToken);
+    
+    /// <summary>
+    /// Method which can be used for initializing of elevation data distribution.
+    /// Initialization of each distribution should be performed on aplication start.
+    /// </summary>
+    public void Initialize();
 }
 

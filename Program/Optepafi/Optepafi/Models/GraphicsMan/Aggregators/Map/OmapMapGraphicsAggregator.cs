@@ -37,7 +37,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
         return;
     }
     public GraphicsArea GetAreaOf(OmapMap map) 
-        => new(new MapCoordinates(map.WesternmostCoords.XPos, map.SouthernmostCoords.YPos), new MapCoordinates(map.EasternmostCoords.XPos, map.NorthernmostCoords.YPos));
+        => new(map.BottomLeftBoundingCorner, map.TopRightBoundingCorner);
 
     public void AggregateGraphicsOfTrack(IList<MapCoordinates> track, IGraphicObjectCollector collectorForAggregatedObjects)
     {

@@ -116,7 +116,7 @@ public class GraphCreator
 
     private List<NetVertexBuilder> CreateTriangularNet(OmapMap map, CompleteNetIntertwiningMapRepreConfiguration configuration)
     {
-        (int left, int top, int right, int bottom) boundaries = (map.WesternmostCoords.XPos, map.NorthernmostCoords.YPos, map.EasternmostCoords.XPos, map.SouthernmostCoords.YPos);
+        (int left, int top, int right, int bottom) boundaries = (map.BottomLeftBoundingCorner.XPos, map.TopRightBoundingCorner.YPos, map.TopRightBoundingCorner.XPos, map.BottomLeftBoundingCorner.YPos);
         int edgeLength = configuration.standardEdgeLength.Value;
         int colls = (boundaries.right - boundaries.left)/edgeLength + 1;
         int rows = (int)((boundaries.top - boundaries.bottom)/(Math.Sqrt(3)*edgeLength/2)) + 1;
@@ -2599,7 +2599,7 @@ public class BuildableBasicVertex : CompleteNetIntertwiningBasicElevDataIndepOri
 {
     public BuildableBasicVertex(Orienteering_ISOM_2017_2.VertexAttributes attributes) : base(attributes, new List<ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge>()) { }
 
-    public override void AddEdge( ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge)
+    public override void AddEdge(ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge)
         => _outgoingEdges.Add(edge);
     public override void RemoveEdge(ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge edge)
         => _outgoingEdges.Remove(edge);

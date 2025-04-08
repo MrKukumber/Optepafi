@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.ElevationDataMan.Distributions.Specific.NotSufficient;
 
-namespace Optepafi.Models.ElevationDataMan.ElevSources.NotSufficient;
+namespace Optepafi.Models.ElevationDataMan.ElevSources;
 
 /// <summary>
 /// Source of elevation data, which never contains elevation data for provided map.

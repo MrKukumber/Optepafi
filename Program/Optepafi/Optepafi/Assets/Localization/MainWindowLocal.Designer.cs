@@ -212,5 +212,14 @@ namespace Optepafi.Assets.Localization {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Initialization of application.
+        /// </summary>
+        public static string Initialization_MainLabel{
+            get {
+                return ResourceManager.GetString("Initialization_MainLabel", resourceCulture);
+            }
+        }
+        
     }
 }

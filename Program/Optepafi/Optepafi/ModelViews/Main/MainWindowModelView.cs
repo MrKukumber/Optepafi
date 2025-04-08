@@ -10,6 +10,7 @@ namespace Optepafi.ModelViews.Main;
 /// </summary>
 public class MainWindowModelView : ModelViewBase
 {
+    public InitializationModelView Initialization { get; } = new InitializationModelView();
     /// <summary>
     /// ModelView of main settings. Used for managing of parameters used in whole application.
     /// </summary>

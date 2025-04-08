@@ -4,10 +4,9 @@ using System.Net;
 using System.Threading;
 using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.ElevationDataMan.ElevSources;
-using Optepafi.Models.ElevationDataMan.ElevSources.NotSufficient;
-using Optepafi.Models.ElevationDataMan.ElevSources.Simulating;
 using Optepafi.Models.ElevationDataMan.Regions;
 using Optepafi.Models.MapMan.MapInterfaces;
+using Optepafi.Models.Utils.Credentials;
 
 namespace Optepafi.Models.ElevationDataMan;
 
@@ -27,9 +26,15 @@ public class ElevDataManager
     /// Set of usable elevation data sources.
     /// </summary>
     public IReadOnlySet<IElevDataSource> ElevDataSources { get; } =
-        ImmutableHashSet.Create<IElevDataSource>(SimulatingElevDataSource.Instance, NotSufficientElevDataSource.Instance); //TODO: este premysliet ako reprezentovat, mozno skor nejakym listom koli poradiu
+        ImmutableHashSet.Create<IElevDataSource>(USGS.Instance, SimulatingElevDataSource.Instance, NotSufficientElevDataSource.Instance); //TODO: este premysliet ako reprezentovat, mozno skor nejakym listom koli poradiu
     
     public enum DownloadingResult {Downloaded, Canceled, UnableToDownload, WrongCredentials}
+
+    public void Initialize()
+    {
+        foreach (var source in ElevDataSources)
+            source.Initialize();
+    }
 
     /// <summary>
     /// Method for downloading specified region of specified elevation data distribution from elevation data source with no need of credentials for accessing those data.
@@ -38,7 +43,7 @@ public class ElevDataManager
     /// <param name="region">Region that should be downloaded.</param>
     /// <param name="cancellationToken">Token for cancelling loading of data when they are not needed anymore.</param>
     /// <returns>Result of downloading.</returns>
-    public DownloadingResult DownloadRegion(ICredentialsNotRequiringElevDataDistribution elevDataDistribution, Region region,
+    public DownloadingResult DownloadRegion(ICredentialsNotRequiringElevDataDistribution elevDataDistribution, IRegion region,
         CancellationToken? cancellationToken = null)
     {
         return elevDataDistribution.Download(region, cancellationToken);
@@ -52,7 +57,7 @@ public class ElevDataManager
     /// <param name="credential">Credentials for accessing the elevation data.</param>
     /// <param name="cancellationToken">Token for cancelling loading of data when they are not needed anymore.</param>
     /// <returns>Result of downloading.</returns>
-    public DownloadingResult DownloadRegion(ICredentialsRequiringElevDataDistribution elevDataDistribution, Region region, NetworkCredential credential,
+    public DownloadingResult DownloadRegion(ICredentialsRequiringElevDataDistribution elevDataDistribution, IRegion region, Credentials credential,
         CancellationToken? cancellationToken)
     {
         return elevDataDistribution.Download(region, credential, cancellationToken);
@@ -63,7 +68,7 @@ public class ElevDataManager
     /// </summary>
     /// <param name="elevDataDistribution">Eevation data distribution whose data should be removed.</param>
     /// <param name="region">Region whose data should be removed.</param>
-    public void RemoveRegion(IElevDataDistribution elevDataDistribution, Region region)
+    public void RemoveRegion(IElevDataDistribution elevDataDistribution, IRegion region)
     {
         elevDataDistribution.Remove(region);
     }
@@ -73,7 +78,8 @@ public class ElevDataManager
     /// Method which tests whether elevation data for given geo located map are acquirable.
     ///
     /// If this method returns positive response, it will be ensured, that elevation data for provided map will be guaranteed.  
-    /// This test can start asynchronous retrieving and preparing of data so they were ready for their retrieval. 
+    /// This test can start asynchronous retrieving and preparing of data so they were ready for their retrieval.
+    /// Therefore, retrieval should/must be invoked subsequently.
     /// </summary>
     /// <param name="map">Map for which test for elevation data obtainability is requested.</param>
     /// <param name="elevDataDistribution">Elevation data distribution asked for its ability to deliver requested data.</param>

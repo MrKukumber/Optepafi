@@ -32,10 +32,7 @@ public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
         foreach (var word in words)
         {
             collectorForAggregatedObjects.Add(new WordObject(
-                new MapCoordinates(
-                    generator.Next(map.WesternmostCoords.XPos,map.EasternmostCoords.XPos), 
-                    generator.Next(map.SouthernmostCoords.YPos,map.NorthernmostCoords.YPos)), 
-                word));
+                new MapCoordinates( generator.Next(map.BottomLeftBoundingCorner.XPos,map.TopRightBoundingCorner.XPos), generator.Next(map.BottomLeftBoundingCorner.YPos,map.TopRightBoundingCorner.YPos)), word));
             if (cancellationToken?.IsCancellationRequested ?? false) return;
         }
     }
@@ -57,6 +54,6 @@ public class TextMapGraphicsAggregator : IMapGraphicsAggregator<TextMap>
     /// <inheritdoc cref="IMapGraphicsAggregator{TMap}.GetAreaOf"/>
     public GraphicsArea GetAreaOf(TextMap map)
     {
-        return new GraphicsArea(new MapCoordinates(map.WesternmostCoords.XPos, map.SouthernmostCoords.YPos), new MapCoordinates(map.EasternmostCoords.XPos, map.NorthernmostCoords.YPos));
+        return new GraphicsArea(map.BottomLeftBoundingCorner, map.TopRightBoundingCorner);
     }
 }

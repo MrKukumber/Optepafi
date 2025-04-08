@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.ElevationDataMan.Distributions.Specific.Simulating;
 
-namespace Optepafi.Models.ElevationDataMan.ElevSources.Simulating;
+namespace Optepafi.Models.ElevationDataMan.ElevSources;
 
 /// <summary>
 /// Elevation data source that simulates work of real data source.

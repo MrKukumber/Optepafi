@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Optepafi.Models.ElevationDataMan;
+using Optepafi.Models.Utils.Credentials;
+using Optepafi.ViewModels.Data.Credentials;
 using Optepafi.ViewModels.Data.Representatives;
 
 namespace Optepafi.ModelViews.Main;
@@ -74,14 +76,14 @@ public sealed class ElevDataModelView : ModelViewBase
     /// </summary>
     /// <param name="elevDataDistributionViewModel">Elevation data distribution from which elevation data of requested region should be downloaded.</param>
     /// <param name="regionViewModel">Region which corresponding elevation data should be downloaded.</param>
-    /// <param name="credential">Credentials for downloading of elevation data.</param>
+    /// <param name="credentials">Credentials for downloading of elevation data.</param>
     /// <returns>Task with result of data download.</returns>
     public async Task<ElevDataManager.DownloadingResult> DownloadAsync(CredentialsRequiringElevDataDistributionViewModel elevDataDistributionViewModel,
-        RegionViewModel regionViewModel, NetworkCredential credential)
+        RegionViewModel regionViewModel, CredentialsViewModel credentials)
     {
         var elevDataDistribution = elevDataDistributionViewModel.ElevDataDistribution;
         var region = regionViewModel.Region;
-        return await Task.Run(() => ElevDataManager.Instance.DownloadRegion(elevDataDistribution, region, credential,
+        return await Task.Run(() => ElevDataManager.Instance.DownloadRegion(elevDataDistribution, region, new Credentials(){UserName = credentials.UserName, Password = credentials.Password, AuthenticationToken = credentials.AuthenticationToken},
             regionViewModel.DownloadingCancellationTokenSource.Token));
     }
     
