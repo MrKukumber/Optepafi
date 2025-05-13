@@ -22,7 +22,11 @@ public class CompleteNetIntertwiningBasicGraphRep<TVertexAttributes, TEdgeAttrib
     public static CompleteNetIntertwiningBasicGraphRep<TVertexAttributes, TEdgeAttributes> Instance { get; } = new();
     private CompleteNetIntertwiningBasicGraphRep() { }
 
-    public override IImplementationIndicator<ITemplate, IMap, IMapRepre>[] CreateableImplementationsIndicators { get; } = [CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep.Instance];
+    public override IImplementationIndicator<ITemplate, IMap, IMapRepre>[] CreateableImplementationsIndicators { get; } = 
+        [
+/*Indep*/   CompleteNetIntertwiningBasicElevDataDepOrienteering_ISOM_2017_2OmapMapImplementationRep.Instance, 
+/*Dep*/     CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationRep.Instance
+        ];
 
     public override bool RevelationForSearchingAlgorithmMan<TTemplate, TVertexAttributes1, TEdgeAttributes1>(
         SearchingAlgorithmManager searchingAlgorithmMan, IUserModelType<IComputing<TTemplate, TVertexAttributes1, TEdgeAttributes1>, TTemplate> userModelType, ISearchingAlgorithm algorithm)

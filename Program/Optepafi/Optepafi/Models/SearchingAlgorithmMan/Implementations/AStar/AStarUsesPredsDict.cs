@@ -106,7 +106,7 @@ public class AStarUsesPredsDict : ISearchingAlgorithmImplementation<AStarConfigu
                 Dictionary<TVertex, float> frontierVerticesCosts = new();
                 HashSet<TVertex> visited = new();
                 Dictionary<TVertex, TVertex> predecessors = new();
-                frontier.Enqueue(startVertex, aStarHeuristicsComputingUserModel.GetWeightFromHeuristics(startVertex.Attributes, finishVertex.Attributes) + 0);
+                frontier.Enqueue(startVertex, aStarHeuristicsComputingUserModel.GetWeightFromHeuristics(startVertex.Attributes, finishVertex.Attributes, basicGraph.Scale) + 0);
                 frontierVerticesCosts.Add(startVertex, 0);
                 int timeSinceLastCancellationCheck = 0;
                 while (frontier.TryDequeue(out TVertex vertex))
@@ -119,8 +119,8 @@ public class AStarUsesPredsDict : ISearchingAlgorithmImplementation<AStarConfigu
                     foreach (TEdge edge in vertex.GetEdges())
                         if (!visited.Contains(edge.To))
                         {
-                            float g = frontierVerticesCosts[vertex] + GetEdgeWeight(vertex, edge, weightComputingUserModel);
-                            float f = g + aStarHeuristicsComputingUserModel.GetWeightFromHeuristics(edge.To.Attributes, finishVertex.Attributes);
+                            float g = frontierVerticesCosts[vertex] + GetEdgeWeight(vertex, edge, weightComputingUserModel, basicGraph.Scale);
+                            float f = g + aStarHeuristicsComputingUserModel.GetWeightFromHeuristics(edge.To.Attributes, finishVertex.Attributes, basicGraph.Scale);
                             if (frontier.Contains(edge.To))
                                 if (frontier.GetPriority(edge.To) < f) continue;
                                 else frontier.UpdatePriority(edge.To, f);
@@ -135,13 +135,13 @@ public class AStarUsesPredsDict : ISearchingAlgorithmImplementation<AStarConfigu
             throw new ArgumentException("User model does not provided required functionality.");
         }
 
-        private float GetEdgeWeight<TVertex, TEdge>(TVertex vertex, TEdge edge, IWeightComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> weightComputingUserModel)
+        private float GetEdgeWeight<TVertex, TEdge>(TVertex vertex, TEdge edge, IWeightComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> weightComputingUserModel, int mapScale)
             where TVertex : IBasicVertex<TEdge, TVertexAttributes>
             where TEdge : IBasicEdge<TVertex, TEdgeAttributes, float>
         {
             if (edge.GetWeight() is not float.NaN)
                 return edge.GetWeight(); 
-            var computedWeight = weightComputingUserModel.ComputeWeight(vertex.Attributes, edge.Attributes, edge.To.Attributes);
+            var computedWeight = weightComputingUserModel.ComputeWeight(vertex.Attributes, edge.Attributes, edge.To.Attributes, mapScale);
             edge.SetWeight(computedWeight);
             return computedWeight;
         }
@@ -151,11 +151,9 @@ public class AStarUsesPredsDict : ISearchingAlgorithmImplementation<AStarConfigu
             where TEdge : IBasicEdge<TVertex, TEdgeAttributes, float>
         {
             List<TVertexAttributes> reversedPathCoordinates = new();
-            while (lastVertex != null)
-            {
+            reversedPathCoordinates.Add(lastVertex.Attributes);
+            while(predecessors.TryGetValue(lastVertex, out lastVertex))
                 reversedPathCoordinates.Add(lastVertex.Attributes);
-                lastVertex = predecessors[lastVertex];
-            }
             reversedPathCoordinates.Reverse();
             return new SegmentedLinesPath<TVertexAttributes, TEdgeAttributes>(reversedPathCoordinates);
         }

@@ -23,6 +23,9 @@ public class BlankElevDataIndepBlankTemplateOmapMapImplementation :
     /// <inheritdoc cref="IMapRepre.Name"/>
     public string Name { get; } = "Blank map representation.";
 
+    /// <inheritdoc cref="IGraph{TVertex,TEdge}.Scale"/> 
+    public int Scale { get; } = 1;
+
     /// <inheritdoc cref="IMapRepre.AcceptGeneric{TOut,TOtherParams}"/>
     TOut IMapRepre.AcceptGeneric<TOut, TOtherParams>(IMapRepreGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
     public TOut AcceptGeneric<TOut, TGenericParam1, TGenericParam2, TGenericConstraint1, TGenericConstraint2, TOtherParams>(

@@ -23,6 +23,7 @@ public interface IWeightComputing<out TTemplate, in TVertexAttributes, in TEdgeA
     /// <param name="from">Vertex attributes from start position vertex.</param>
     /// <param name="through">Edge attributes of edge, for which is weight computed.</param>
     /// <param name="to">Vertex attributes from destination vertex.</param>
+    /// <param name="scale">Scale of graph whose vertex and edge attributes are provided.</param>
     /// <returns>Weight of edge.</returns>
-    float ComputeWeight(TVertexAttributes from, TEdgeAttributes through, TVertexAttributes to);
+    float ComputeWeight(TVertexAttributes from, TEdgeAttributes through, TVertexAttributes to, int scale = 1);
 }

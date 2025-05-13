@@ -20,7 +20,7 @@ public class CompleteNetIntertwiningPredecessorRememberingElevDataIndepOrienteer
         // foreach (var vertex in ((IRadiallySearchableDataStruct<CompleteNetIntertwiningElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex>)implementation.SearchableVertices).FindInEuclideanDistanceFrom((-3841, 8942), 5000)) // for debugging
         foreach (var vertex in implementation)
         {
-            collectorForAggregatedObjects.Add(new VertexObject(vertex.Attributes.Position));
+            collectorForAggregatedObjects.Add(new VertexObject(vertex.Attributes.Position, vertex.Attributes.Elevation));
             foreach (var edge in vertex.GetEdges())
                 if (!foundEdgeCoordinates.Contains((edge.To.Attributes.Position, vertex.Attributes.Position)))
                 {

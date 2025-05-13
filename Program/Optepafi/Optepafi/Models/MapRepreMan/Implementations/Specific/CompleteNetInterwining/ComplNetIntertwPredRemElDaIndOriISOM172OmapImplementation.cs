@@ -18,40 +18,17 @@ namespace Optepafi.Models.MapRepreMan.Implementations.Specific.CompleteIterative
 /// Complete net intertwining graph implementation of OMAP map representation which uses <see cref="Orienteering_ISOM_2017_2"/>
 /// tempalte and does not require elevation data for its creation. It does not hold any elevation information at all.
 /// </summary>
-public class CompleteNetIntertwiningPredecessorRememberingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(INearestNeighborsSearchableDataStructure<CompleteNetIntertwiningPredecessorRememberingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation.EdgesEditableVertex> searchableVertices, int scale) : 
+public abstract class CompleteNetIntertwiningPredecessorRememberingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementation(INearestNeighborsSearchableDataStructure<ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> searchableVertices, int scale) : 
     ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>, 
     IEnumerable<ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>
 {
     public string Name { get; } = "Complete net intertwining map repre. elev. data independent predecessors remembering implementation for Orienteering (ISOM 2017-2) and Omap file format.";
 
-    // public INearestNeighborsSearchableDataStructure<ICompleteNetIntertwiningGraph< Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> SearchableVertices { get; } = searchableVertices; //for debugging
+    // public INearestNeighborsSearchableDataStructure<ICompleteNetIntertwiningPredecessorRememberingGraph< Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> SearchableVertices { get; } = searchableVertices; //for debugging
 
-    public void RestoreConsistency()
-    {
-        foreach (var (graphVertexConnectedToNewVertex, connectingEdge) in _graphVerticesConnectedToNewVerticesByEdge)
-        {
-            graphVertexConnectedToNewVertex.RemoveEdge(connectingEdge);
-        }
-        _graphVerticesConnectedToNewVerticesByEdge.Clear();
-        foreach (var vertex in searchableVertices)
-        {
-            vertex.Predecessor = null;
-            foreach (var edge in vertex.GetEdges())
-                edge.SetWeight(float.NaN);
-        }
-    }
-
-    private List<(EdgesEditableVertex, ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes,Orienteering_ISOM_2017_2.EdgeAttributes>.Edge)> _graphVerticesConnectedToNewVerticesByEdge = [];
-    public ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex GetVertexFor(MapCoordinates coords)
-    {
-        var nearestVertices = searchableVertices.GetNearestNeighbors((coords.XPos, coords.YPos), 1);
-        if (nearestVertices.Length == 0) throw new InvalidDataException("No vertices in graph found."); 
-        var newVertex = new ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex(new Orienteering_ISOM_2017_2.VertexAttributes(coords), [new ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge( new Orienteering_ISOM_2017_2.EdgeAttributes((null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null), (null, null, null)), nearestVertices[0])]);
-        var edgeToNewVertex = new ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge( new Orienteering_ISOM_2017_2.EdgeAttributes( (null, null, null, null, Orienteering_ISOM_2017_2.VegetationAndManMade.Forest_405, null), (null, null, null)), newVertex);
-        nearestVertices[0].AddEdge(edgeToNewVertex);
-        _graphVerticesConnectedToNewVerticesByEdge.Add((nearestVertices[0], edgeToNewVertex)); 
-        return newVertex;
-    }
+    public abstract void RestoreConsistency();
+    public abstract ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex GetVertexFor(MapCoordinates coords);
+    
     
     public int Scale { get; } = scale;
 
@@ -68,11 +45,4 @@ public class CompleteNetIntertwiningPredecessorRememberingElevDataIndepOrienteer
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public IEnumerator<ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex> GetEnumerator() => searchableVertices.GetEnumerator();
-
-    public abstract class EdgesEditableVertex(Orienteering_ISOM_2017_2.VertexAttributes attributes, IEnumerable<ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge> outgoingEdges) 
-        : ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex(attributes, outgoingEdges)
-    {
-        public abstract void AddEdge(ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge newEdge);
-        public abstract void RemoveEdge(ICompleteNetIntertwiningPredecessorRememberingGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Edge newEdge);
-    }
 }

@@ -48,6 +48,7 @@ public class UsgsSrtm1ArcSecondGlobalTests
     {
         public string FileName { get; init; } = "";
         public string FilePath { get; init; } = "";
+        public int Scale { get; } = 1;
 
         public TOut AcceptGeneric<TOut, TOtherParams>(IMapGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);
         public TOut AcceptGeneric<TOut>(IMapGenericVisitor<TOut> genericVisitor)=> genericVisitor.GenericVisit(this);

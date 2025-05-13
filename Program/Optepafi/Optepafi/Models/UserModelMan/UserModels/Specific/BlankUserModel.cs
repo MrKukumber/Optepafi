@@ -44,7 +44,7 @@ public class BlankUserModel :
     }
 
     /// <inheritdoc cref="IWeightComputing{TTemplate,TVertexAttributes,TEdgeAttributes}.ComputeWeight"/>
-    public float ComputeWeight(BlankTemplate.VertexAttributes from, BlankTemplate.EdgeAttributes through, BlankTemplate.VertexAttributes to)
+    public float ComputeWeight(BlankTemplate.VertexAttributes from, BlankTemplate.EdgeAttributes through, BlankTemplate.VertexAttributes to, int scale = 1)
     {
         return VoidAdjust.Value * 13;
     }

@@ -26,6 +26,11 @@ public interface IMap
     /// </summary>
     string FilePath { get; init; }
     
+    /// <summary>
+    /// Scale of the map.
+    /// </summary>
+    int Scale { get; }
+    
     // public TOut AcceptGeneric<TOut, TGenericParam, TConstraint, TOtherParams>(
         // IMapGenericVisitor<TOut, TConstraint, TOtherParams> genericVisitor,
         // TGenericParam genericParam, TOtherParams otherParams)

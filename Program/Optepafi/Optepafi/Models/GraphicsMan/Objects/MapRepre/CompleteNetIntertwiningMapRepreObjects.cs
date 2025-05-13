@@ -4,7 +4,7 @@ using Optepafi.Models.Utils;
 namespace Optepafi.Models.GraphicsMan.Objects.MapRepre;
 
 
-public record VertexObject(MapCoordinates Position) : IGraphicObject
+public record VertexObject(MapCoordinates Position, double Elevation) : IGraphicObject
 {
     
     public TOut AcceptGeneric<TOut, TOtherParams>(IGraphicObjectGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams) => genericVisitor.GenericVisit(this, otherParams);

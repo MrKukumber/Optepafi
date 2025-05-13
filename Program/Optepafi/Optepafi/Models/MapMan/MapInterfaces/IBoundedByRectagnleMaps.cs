@@ -19,7 +19,7 @@ public interface IBoxBoundedGeoLocMap : IAreaQueryableMap
 /// 
 /// This locations are provided by <see cref="MapCoordinates"/>.
 /// </summary>
-public interface IBoxBoundedGeoRefMap : IAreaQueryableMap, IScaledMap
+public interface IBoxBoundedGeoRefMap : IAreaQueryableMap
 {
     public MapCoordinates BottomLeftBoundingCorner { get; }
     public MapCoordinates TopRightBoundingCorner { get; }

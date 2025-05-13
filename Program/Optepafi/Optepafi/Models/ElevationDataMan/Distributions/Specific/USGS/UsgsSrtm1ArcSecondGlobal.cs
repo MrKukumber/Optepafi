@@ -237,7 +237,7 @@ public class UsgsSrtm1ArcSecondGlobal : ICredentialsRequiringElevDataDistributio
             int longitudeDegree = (int)coordinates.Longitude;
             if (relevantElevData.ContainsKey((latitudeDegree, longitudeDegree)))
             {
-                double row = (1 - (coordinates.Latitude - latitudeDegree)) * (relevantElevData[(latitudeDegree, longitudeDegree)].GetLength(0)-1);
+                double row = (1-(coordinates.Latitude - latitudeDegree)) * (relevantElevData[(latitudeDegree, longitudeDegree)].GetLength(0)-1);
                 double coll = (coordinates.Longitude - longitudeDegree) * (relevantElevData[(latitudeDegree, longitudeDegree)].GetLength(1)-1);
                 return BilinearInterpolation(relevantElevData[(latitudeDegree, longitudeDegree)], row, coll);
             }

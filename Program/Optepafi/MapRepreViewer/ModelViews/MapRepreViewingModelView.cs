@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Markup.Xaml.Templates;
@@ -8,6 +9,7 @@ using MapRepreViewer.Models.MapPartitioningMan;
 using Optepafi.Models.ElevationDataMan;
 using Optepafi.Models.ElevationDataMan.Distributions;
 using Optepafi.Models.ElevationDataMan.Distributions.Specific.Simulating;
+using Optepafi.Models.ElevationDataMan.Distributions.Specific.USGS;
 using Optepafi.Models.GraphicsMan;
 using Optepafi.Models.GraphicsMan.Sources;
 using Optepafi.Models.MapMan;
@@ -82,7 +84,7 @@ public class MapRepreViewingModelView
         return (false, false);
     }
 
-    private bool _useElevData = false;
+    private bool _useElevData = true;
     public async Task CreateMapRepreAsync(ConfigurationViewModel mapRepresentationConfigurationVm, CancellationToken cancellationToken)
     {
         if (MapForUse is null || MapRepreRepresentative is null) throw new NullReferenceException(nameof(MapForUse) + " and  " + nameof(MapRepreRepresentative) + " property should be instantiated before calling this method.");
@@ -92,6 +94,7 @@ public class MapRepreViewingModelView
             if (ElevDataDistribution is null) throw new NullReferenceException(nameof(ElevDataDistribution) + " property should be instantiated before calling this method.");
             if (MapForUse is IAreaQueryableMap areaQueryableMap)
             {
+                ElevDataManager.Instance.AreElevDataFromDistObtainableFor(areaQueryableMap, ElevDataDistribution, cancellationToken);
                 IElevData elevData = await Task.Run(() =>
                     ElevDataManager.Instance.GetElevDataFromDistFor(areaQueryableMap, ElevDataDistribution, cancellationToken));
                 if (cancellationToken.IsCancellationRequested) return;
@@ -145,6 +148,6 @@ public class MapRepreViewingModelView
     private IGroundGraphicsSource? MapGraphics { get; set; }
     private ITemplate Template { get; set; } = Orienteering_ISOM_2017_2.Instance;
     private IMapRepreRepresentative<IMapRepre>? MapRepreRepresentative { get; set; } = CompleteNetIntertwiningMapRepreRep.Instance;
-    private IElevDataDistribution? ElevDataDistribution { get; set; }
+    private IElevDataDistribution? ElevDataDistribution { get; set; } = UsgsSrtm1ArcSecondGlobal.Instance;
 
 }

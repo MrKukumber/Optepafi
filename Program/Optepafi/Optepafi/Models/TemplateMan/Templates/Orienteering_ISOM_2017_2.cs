@@ -56,10 +56,10 @@ public class Orienteering_ISOM_2017_2 : ITemplate<Orienteering_ISOM_2017_2.Verte
     // 3 bits
     public enum ManMadeLinearObstacles {Trench_215 = 1, Wall_513, ImpassableWall_515, Fence_516, ImpassableFence_518, ProminentLineFeature_528, ImpassableProminentLineFeature_529}
 
-    public struct VertexAttributes(MapCoordinates position, short elevation = 0) : IVertexAttributes
+    public struct VertexAttributes(MapCoordinates position, double elevation = 0) : IVertexAttributes
     {
         public readonly MapCoordinates Position = position;
-        public readonly short Elevation = elevation;
+        public readonly double Elevation = elevation;
     }
 
     public struct EdgeAttributes((Grounds? ground, Boulders? boulders, Stones? stones, Water? water, VegetationAndManMade? vegetationAndManMade, VegetationGoodVis? vegetationGoodVis) leftSurrounding, 

@@ -86,10 +86,10 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
                     await _mapRepreCreatingMv.CreateMapRepreAsync(progressInfo, mapCreationProgress, ct);
                     return true;
                 })
-                .TakeUntil(CancelMapRepreCreationCommand));
+                .TakeUntil(OnClosedCommand));
         
         CancelMapRepreCreationCommand = ReactiveCommand.Create(() => false, CreateMapRepreCommand.IsExecuting);
-        
+        OnClosedCommand = ReactiveCommand.Create(() => { });
         
         CheckPrerequisitesCommand.Subscribe(prereqCheckResult =>
         {
@@ -270,4 +270,6 @@ public class MapRepreCreatingViewModel : PathFindingViewModelBase, IActivatableV
     /// It represents ability for user to exit map repre. creation part of path finding session and return to settings.  
     /// </summary>
     public ReactiveCommand<Unit, bool> ReturnCommand { get; }
+
+    public override ReactiveCommand<Unit, Unit>? OnClosedCommand { get; }
 }

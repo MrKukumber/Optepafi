@@ -130,7 +130,7 @@ public class AStarUsesPredsInVerts :
                 SimplePriorityQueue<TVertex, float> frontier = new();
                 Dictionary<TVertex, float> frontierVerticesCosts = new();
                 HashSet<TVertex> visited = new();
-                frontier.Enqueue(startVertex, aStarHeuristicsComputingUserModel.GetWeightFromHeuristics(startVertex.Attributes, finishVertex.Attributes) + 0);
+                frontier.Enqueue(startVertex, aStarHeuristicsComputingUserModel.GetWeightFromHeuristics(startVertex.Attributes, finishVertex.Attributes, predecessorRememberingGraph.Scale) + 0);
                 frontierVerticesCosts.Add(startVertex, 0);
                 int timeSinceLastCancellationCheck = 0;
                 while (frontier.TryDequeue(out TVertex vertex))
@@ -143,8 +143,8 @@ public class AStarUsesPredsInVerts :
                     foreach (TEdge edge in vertex.GetEdges())
                         if (!visited.Contains(edge.To))
                         {
-                            float g = frontierVerticesCosts[vertex] + GetEdgeWeight(vertex, edge, weightComputingUserModel);
-                            float f = g + aStarHeuristicsComputingUserModel.GetWeightFromHeuristics(edge.To.Attributes, finishVertex.Attributes);
+                            float g = frontierVerticesCosts[vertex] + GetEdgeWeight(vertex, edge, weightComputingUserModel, predecessorRememberingGraph.Scale);
+                            float f = g + aStarHeuristicsComputingUserModel.GetWeightFromHeuristics(edge.To.Attributes, finishVertex.Attributes, predecessorRememberingGraph.Scale);
                             if (frontier.Contains(edge.To))
                                 if (frontier.GetPriority(edge.To) < f) continue;
                                 else frontier.UpdatePriority(edge.To, f);
@@ -159,13 +159,13 @@ public class AStarUsesPredsInVerts :
             throw new ArgumentException("User model does not provided required functionality.");
         }
 
-        private float GetEdgeWeight<TVertex, TEdge>(TVertex vertex, TEdge edge, IWeightComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> weightComputingUserModel)
+        private float GetEdgeWeight<TVertex, TEdge>(TVertex vertex, TEdge edge, IWeightComputing<ITemplate<TVertexAttributes, TEdgeAttributes>, TVertexAttributes, TEdgeAttributes> weightComputingUserModel, int mapScale)
             where TVertex : IPredecessorRememberingVertex<TVertexAttributes>, IBasicVertex<TEdge, TVertexAttributes>
             where TEdge : IBasicEdge<TVertex, TEdgeAttributes, float>
         {
             if (edge.GetWeight() is not float.NaN)
                 return edge.GetWeight(); 
-            var computedWeight = weightComputingUserModel.ComputeWeight(vertex.Attributes, edge.Attributes, edge.To.Attributes);
+            var computedWeight = weightComputingUserModel.ComputeWeight(vertex.Attributes, edge.Attributes, edge.To.Attributes, mapScale);
             edge.SetWeight(computedWeight);
             return computedWeight;
         }

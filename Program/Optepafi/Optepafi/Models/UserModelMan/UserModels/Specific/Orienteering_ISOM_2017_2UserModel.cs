@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using Optepafi.Models.GraphicsMan.Objects.Map;
 using Optepafi.Models.TemplateMan.Templates;
 using Optepafi.Models.UserModelMan.UserModels.Functionalities;
+using Optepafi.Models.UserModelMan.Utils;
 using Optepafi.Models.Utils;
 
 namespace Optepafi.Models.UserModelMan.UserModels.Specific;
@@ -96,8 +97,8 @@ public class Orienteering_ISOM_2017_2UserModel :
     }
 
     private const float coefficientLowerBound = 0.15f;
-    private const float topPaceInSecondsPerCentimeter = 0.0024f;
-    public float ComputeWeight(Orienteering_ISOM_2017_2.VertexAttributes from, Orienteering_ISOM_2017_2.EdgeAttributes through, Orienteering_ISOM_2017_2.VertexAttributes to)
+    // private const float topPaceInSecondsPerCentimeter = 0.0024f;
+    public float ComputeWeight(Orienteering_ISOM_2017_2.VertexAttributes from, Orienteering_ISOM_2017_2.EdgeAttributes through, Orienteering_ISOM_2017_2.VertexAttributes to, int scale = 1)
     {
         var surroundingsCoef = ComputeCoeficientOfSurroundings(through.LeftSurroundings);
         var secondSurroundingsCoef = ComputeCoeficientOfSurroundings(through.RightSurroundings);
@@ -106,9 +107,12 @@ public class Orienteering_ISOM_2017_2UserModel :
         
         var moreEfficientSurroundingsWithPathCoef = ApplyPathToSurroundingsCoef(through.LineFeatures, moreEfficientSurroundingsCoef);
         if (moreEfficientSurroundingsWithPathCoef < coefficientLowerBound) moreEfficientSurroundingsWithPathCoef = coefficientLowerBound;
+
+        var pace = ComputePaceForElevatedPositions(from, to, scale);
+        // var pace = 0.24;
         
-        var fromToTimeInMoreEfficientSurroundingsWithPath = (float)(topPaceInSecondsPerCentimeter / moreEfficientSurroundingsWithPathCoef * (to.Position - from.Position).Length());
-        return AddTimeForLinearObstacles(through.LineFeatures, fromToTimeInMoreEfficientSurroundingsWithPath);
+        var timeInMoreEfficientSurroundingsWithPath = (float)(pace / moreEfficientSurroundingsWithPathCoef * (to.Position - from.Position).Length() * scale / 1_000_000);
+        return AddTimeForLinearObstacles(through.LineFeatures, timeInMoreEfficientSurroundingsWithPath);
     }
 
     private float ComputeCoeficientOfSurroundings((Orienteering_ISOM_2017_2.Grounds?, Orienteering_ISOM_2017_2.Boulders?, Orienteering_ISOM_2017_2.Stones?, Orienteering_ISOM_2017_2.Water?, Orienteering_ISOM_2017_2.VegetationAndManMade?, Orienteering_ISOM_2017_2.VegetationGoodVis?) surroundings)
@@ -139,7 +143,16 @@ public class Orienteering_ISOM_2017_2UserModel :
                (manMadeLinearObstacles is null ? 0 : ManMadeLinearObstaclesMappings[manMadeLinearObstacles.Value].Value);
     }
 
-    public float GetWeightFromHeuristics(Orienteering_ISOM_2017_2.VertexAttributes from, Orienteering_ISOM_2017_2.VertexAttributes to)
+    private double ComputePaceForElevatedPositions(Orienteering_ISOM_2017_2.VertexAttributes from, Orienteering_ISOM_2017_2.VertexAttributes to, int mapScale)
+    {
+        var horizontalDistance = (to.Position - from.Position).Length() * mapScale / 1_000_000;
+        var verticalDistance = to.Elevation - from.Elevation;
+        var gradient = verticalDistance / horizontalDistance;
+        var paceInSecPerMeter = AnthonyKaysPaceForHillRunnersModel.GetPace(gradient, false);
+        return paceInSecPerMeter;
+    }
+
+    public float GetWeightFromHeuristics(Orienteering_ISOM_2017_2.VertexAttributes from, Orienteering_ISOM_2017_2.VertexAttributes to, int scale)
     {
         float surroundingsMaxCoefficient = 0;
         foreach (var (_,adjustable) in GroundMappings)
@@ -160,8 +173,10 @@ public class Orienteering_ISOM_2017_2UserModel :
             if (path == Orienteering_ISOM_2017_2.Paths.LessDistinctSmallFootpath_507 || path == Orienteering_ISOM_2017_2.Paths.NarrowRide_508)
                 pathMaxCoefficient = Math.Max(adjustable.Value * surroundingsMaxCoefficient, pathMaxCoefficient);
             else pathMaxCoefficient = Math.Max(adjustable.Value, pathMaxCoefficient);
-        
-        return (float)(topPaceInSecondsPerCentimeter / Math.Max(surroundingsMaxCoefficient, pathMaxCoefficient) * (to.Position - from.Position).Length());
+
+        var pace = AnthonyKaysPaceForHillRunnersModel.GetMinimalPace();
+        // var pace = 0.24;
+        return (float)(pace / Math.Max(surroundingsMaxCoefficient, pathMaxCoefficient) * (to.Position - from.Position).Length() * scale / 1_000_000);
     }
     
     public MapCoordinates RetrievePosition(Orienteering_ISOM_2017_2.VertexAttributes vertexAttributes)

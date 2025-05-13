@@ -44,5 +44,5 @@ public partial class MapRepreCreatingDialogWindow : ReactiveWindow<MapRepreCreat
     /// </summary>
     /// <param name="sender">Sender of th <c>OnClosed</c> event.</param>
     /// <param name="e"><c>OnClosed</c> events arguments.</param>
-    private void MapRepreCreatingWindow_OnClosed(object? sender, EventArgs e) { ViewModel!.OnClosedCommand?.Execute(); }
+    private void MapRepreCreatingWindow_OnClosed(object? sender, EventArgs e) { ViewModel!.OnClosedCommand?.Execute().Subscribe(); }
 }

@@ -28,7 +28,7 @@ public class MapManager :
     /// <summary>
     /// Set of all usable map formats in application.
     /// </summary>
-    public ISet<IMapFormat<IMap>> MapFormats { get; } = ImmutableHashSet.Create<IMapFormat<IMap>>(TextMapRepresentative.Instance, OmapMapRepresentative.Instance);
+    public ISet<IMapFormat<IMap>> MapFormats { get; } = ImmutableHashSet.Create<IMapFormat<IMap>>(OmapMapRepresentative.Instance, TextMapRepresentative.Instance);
 
     /// <summary>
     /// Returns map format for a specified map. It do it so by use of "generic visitor pattern" on map.

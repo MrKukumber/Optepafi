@@ -8,6 +8,7 @@
                 <StackPanel>
                 <TextBlock Text="{Binding XCoord}" FontSize="{Binding FontSize}"/>
                 <TextBlock Text="{Binding YCoord}" FontSize="{Binding FontSize}"/>
+                <TextBlock Text="{Binding Elevation}" FontSize="{Binding FontSize}"/>
                 </StackPanel>
             </Canvas>
         </DataTemplate>

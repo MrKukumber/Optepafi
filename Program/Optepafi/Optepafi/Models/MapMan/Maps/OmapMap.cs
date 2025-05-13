@@ -93,6 +93,7 @@ public abstract class OmapMap : IMap, IPartitionableMap
 
 public abstract class GeoLocatedOmapMap : OmapMap, IBoxBoundedGeoRefMap
 {
+    public abstract double Declination { get; }
     public abstract GeoCoordinates RepresentativeLocation { get; }
     public TOut AcceptGeneric<TOut, TOtherParams>(IGeoLocatedMapGenericVisitor<TOut, TOtherParams> genericVisitor, TOtherParams otherParams)
     { return genericVisitor.GenericVisit(this, otherParams); }

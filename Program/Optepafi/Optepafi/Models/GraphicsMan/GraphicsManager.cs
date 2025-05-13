@@ -48,7 +48,8 @@ public class GraphicsManager :
     public IReadOnlySet<IGraphicsAggregator> MapRepreGraphicsAggregators { get; } = 
         ImmutableHashSet.Create<IGraphicsAggregator>(
             CompleteNetIntertwiningPredecessorRememberingElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator.Instance, 
-            CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator.Instance);
+            CompleteNetIntertwiningBasicElevDataIndepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator.Instance,
+            CompleteNetIntertwiningBasicElevDataDepOrienteering_ISOM_2017_2OmapMapImplementationGraphicsAggregator.Instance);
     
     public enum AggregationResult {Aggregated, NoUsableAggregatorFound, Cancelled}
 

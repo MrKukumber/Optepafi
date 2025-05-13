@@ -12,6 +12,8 @@ public class VertexObjectViewModel(VertexObject obj, MapCoordinates mapsTopLeftV
     public override int Priority { get; } = 36;
     public int XCoord { get; } = obj.Position.XPos;
     public int YCoord { get; } = obj.Position.YPos;
+
+    public int Elevation { get; } = (int) obj.Elevation;
     // public float FontSize { get; } = 0.2f; // size for lengths of edge 500
     public float FontSize { get; } = 0.5f;
     public int Diameter { get; } = 100;

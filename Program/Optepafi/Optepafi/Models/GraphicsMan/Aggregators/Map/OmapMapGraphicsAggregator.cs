@@ -23,6 +23,7 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
     public void AggregateGraphics(OmapMap map, IGraphicObjectCollector collectorForAggregatedObjects,
         CancellationToken? cancellationToken)
     {
+        // int i = 0;
         foreach (OmapMap.Symbol symbol in map.Symbols)
         {
             if (symbol.Code == 799) continue;
@@ -30,11 +31,15 @@ public class OmapMapGraphicsAggregator : IMapGraphicsAggregator<OmapMap>
             {
                 foreach (OmapMap.Object obj in map.Objects[symbol.Code])
                 {
-                   collectorForAggregatedObjects.AddRange(constructor.Construct(obj)); 
+                    // i++;
+                    // if (i == 725)
+                        // Console.WriteLine();
+                    // if (i > 725) 
+                        // break;
+                    collectorForAggregatedObjects.AddRange(constructor.Construct(obj)); 
                 }
             }
         }
-        return;
     }
     public GraphicsArea GetAreaOf(OmapMap map) 
         => new(map.BottomLeftBoundingCorner, map.TopRightBoundingCorner);

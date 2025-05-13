@@ -21,10 +21,10 @@ public class PathPolygonViewModel :
 {
     public PathPolygonViewModel(Path path, MapCoordinates mapsTopLeftVertex)
     {
-        if (path.StartPoint.XPos == 213590)
-        {
-            Console.WriteLine();
-        }
+        // if (path.StartPoint.XPos == 15732)
+        // {
+            // Console.WriteLine();
+        // }
         StartPoint = new CanvasCoordinate(0, 0);     
         Position = path.StartPoint.ToCanvasCoordinate(mapsTopLeftVertex);
         Segments = path.Segments.Select(segment => segment.Accept(this, (Position, mapsTopLeftVertex)));

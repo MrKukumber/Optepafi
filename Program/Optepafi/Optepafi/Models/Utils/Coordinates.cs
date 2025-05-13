@@ -31,7 +31,7 @@ public record struct MapCoordinates(int XPos, int YPos)
     public double Length() => Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2));
 
     //TODO: comment
-    public MapCoordinates Rotate(double angle, MapCoordinates center)
+    public MapCoordinates RotateCounterClockwise(double angle, MapCoordinates center = new ())
     {
         int translatedX = XPos - center.XPos;
         int translatedY = YPos - center.YPos;
@@ -58,6 +58,10 @@ public record struct MapCoordinates(int XPos, int YPos)
                                           Math.Sin(xInM / (2 * earthRadInM)) 
                                           / Math.Cos(double.DegreesToRadians(referencePoint.Latitude)))) 
                                       + referencePoint.Longitude; 
+
+        // double overflowingLongitude = double.RadiansToDegrees(
+                                          // xInM / (earthRadInM * Math.Cos(double.DegreesToRadians(referencePoint.Latitude)))) 
+                                      // + referencePoint.Longitude;
         
         double longitude = overflowingLongitude > 180 
             ?  overflowingLongitude % 360 - 360

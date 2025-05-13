@@ -61,6 +61,7 @@ public static class OmapMapParser
         using (XmlReader reader = XmlReader.Create(input.mapStream))
         { 
             int scale;
+            double declination;
             GeoCoordinates geoLocation;
             bool isGeoLocated;
             Dictionary<int, OmapMap.Symbol> symbols;
@@ -73,7 +74,7 @@ public static class OmapMapParser
             if (res is not ParseResult.Ok) return res;
             if (version != 9) return ParseResult.UnsupportedVersion;
 
-            res = TryGetScale(reader, cancellationToken, ref readsSinceLastCancelCheck, out scale);
+            res = TryGetScaleAndDeclination(reader, cancellationToken, ref readsSinceLastCancelCheck, out scale, out declination);
             if (res is not ParseResult.Ok) return res;
 
             res = TryGetGeoLocation(reader, cancellationToken, ref readsSinceLastCancelCheck, out isGeoLocated, out geoLocation);
@@ -88,7 +89,7 @@ public static class OmapMapParser
             List<OmapMap.Symbol> mapSymbols = symbols.Select(kv => kv.Value).ToList();
             
             map = isGeoLocated 
-                ? new InnerGeoLocatedOmapMap(scale, mapSymbols, objects, geoLocation, (new(extremeCoords.lc.XPos, extremeCoords.bc.YPos), new(extremeCoords.rc.XPos, extremeCoords.tc.YPos))) 
+                ? new InnerGeoLocatedOmapMap(scale, declination, mapSymbols, objects, geoLocation, (new(extremeCoords.lc.XPos, extremeCoords.bc.YPos), new(extremeCoords.rc.XPos, extremeCoords.tc.YPos))) 
                     { FilePath = input.path, FileName = Path.GetFileName(input.path) } 
                 : map = new InnerOmapMap(scale, mapSymbols, objects, (new(extremeCoords.lc.XPos, extremeCoords.bc.YPos), new(extremeCoords.rc.XPos, extremeCoords.tc.YPos))) 
                     { FilePath = input.path, FileName = Path.GetFileName(input.path) };
@@ -117,17 +118,21 @@ public static class OmapMapParser
             }
         }
     
-    private static ParseResult TryGetScale(XmlReader reader, CancellationToken? cancellationToken, ref int readsSinceLastCancelCheck, out int scale)
+    private static ParseResult TryGetScaleAndDeclination(XmlReader reader, CancellationToken? cancellationToken, ref int readsSinceLastCancelCheck, out int scale, out double declination)
     {
         scale = 0;
+        declination = 0;
         try
         {
             while (reader.Read())
             {
                 if (IsCancellationRequested(cancellationToken, ref readsSinceLastCancelCheck)) return ParseResult.Cancelled;
-                if (reader.NodeType is XmlNodeType.Element && reader.Name == "georeferencing" &&
-                    int.TryParse(reader.GetAttribute("scale"), out scale)) 
-                    return ParseResult.Ok;
+                if (reader.NodeType is XmlNodeType.Element && reader.Name == "georeferencing")
+                {
+                    double.TryParse(reader.GetAttribute("declination"), CultureInfo.InvariantCulture, out declination);
+                    if (int.TryParse(reader.GetAttribute("scale"), out scale))
+                        return ParseResult.Ok;
+                }
             }
             return ParseResult.OmapError;
         }
@@ -149,6 +154,7 @@ public static class OmapMapParser
                 if (reader.NodeType is XmlNodeType.Element && reader.Name == "projected_crs")
                 {
                     if (reader.GetAttribute("id") != "Local") break;
+                    isGeoLocated = false;
                     return ParseResult.Ok;
                 }
                 if (reader.NodeType is XmlNodeType.EndElement && reader.Name == "georeferencing") return ParseResult.OmapError;
@@ -378,13 +384,14 @@ public static class OmapMapParser
         }
     }
 
-    private class InnerGeoLocatedOmapMap(int scale,   List<OmapMap.Symbol> symbols, Dictionary<decimal, List<OmapMap.Object>> objects, 
+    private class InnerGeoLocatedOmapMap(int scale, double declination,  List<OmapMap.Symbol> symbols, Dictionary<decimal, List<OmapMap.Object>> objects, 
         GeoCoordinates representativeLocation, (MapCoordinates blc, MapCoordinates trc) boundingRectCorners) : GeoLocatedOmapMap
     {
         public override GeoCoordinates RepresentativeLocation => representativeLocation;
         public override MapCoordinates BottomLeftBoundingCorner { get; } = boundingRectCorners.blc;
         public override MapCoordinates TopRightBoundingCorner { get; } = boundingRectCorners.trc;
 
+        public override double Declination => declination;
         public override int Scale => scale;
         public override List<Symbol> Symbols => symbols;
         public override Dictionary<decimal, List<Object>> Objects => objects;
@@ -392,7 +399,7 @@ public static class OmapMapParser
         public override IMap GetPartitionOfSize(int size, CancellationToken? cancellationToken, out bool wholeMapReturned)
         {
             var (newSymbols, newObjects) = GetNewSymbolsAndObjects(size, cancellationToken, symbols, objects, out wholeMapReturned);
-            return new InnerGeoLocatedOmapMap(Scale, newSymbols, newObjects, representativeLocation, (BottomLeftBoundingCorner, TopRightBoundingCorner))
+            return new InnerGeoLocatedOmapMap(Scale, Declination, newSymbols, newObjects, representativeLocation, (BottomLeftBoundingCorner, TopRightBoundingCorner))
             { FilePath = FilePath, FileName = FileName };
         }
     }

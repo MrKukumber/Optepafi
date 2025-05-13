@@ -1,4 +1,5 @@
 ﻿using MapRepreViewer.ModelViews;
+using Optepafi.Models.ElevationDataMan;
 using ReactiveUI;
 
 namespace MapRepreViewer.ViewModels;
@@ -14,6 +15,7 @@ public class MainWindowViewModel : ViewModelBase
         _mainWindowModelView = mainWindowModelView;
         MapRepreViewing = new MapRepreViewingViewModel(_mainWindowModelView.MapRepreViewing);
         CurrentViewModel = MapRepreViewing;
+        _mainWindowModelView.Initialize();
     }
     
     public ViewModelBase CurrentViewModel

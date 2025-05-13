@@ -9,30 +9,47 @@ using Optepafi.Models.TemplateMan.TemplateAttributes;
 
 namespace Optepafi.Models.MapRepreMan.Graphs.Specific.CompleteNetIntertwining;
 
-public interface ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttibutes> :
+public interface ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttributes> :
     ICompleteNetIntertwiningMapRepre,
-    ISearchable<ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttibutes>.Vertex, ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttibutes>.Edge, float, TVertexAttributes, TEdgeAttibutes>,
-    IScaled<ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttibutes>.Vertex, ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttibutes>.Edge>
+    ISearchable<ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttributes>.Edge, float, TVertexAttributes, TEdgeAttributes>,
+    IScaled<ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttributes>.Vertex, ICompleteNetIntertwiningBasicGraph<TVertexAttributes, TEdgeAttributes>.Edge>
     where TVertexAttributes : IVertexAttributes
-    where TEdgeAttibutes : IEdgeAttributes
+    where TEdgeAttributes : IEdgeAttributes
 {
-    public class Vertex(TVertexAttributes attributes, IEnumerable<Edge> outgoingEdges) :
+    public class Vertex :
         IBasicVertex<Edge, TVertexAttributes>
     {
-        protected HashSet<Edge> _outgoingEdges = outgoingEdges.ToHashSet();
-        protected TVertexAttributes _attributes = attributes;
+        public Vertex() { }
+        public Vertex(TVertexAttributes attributes, IEnumerable<Edge> outgoingEdges)
+        {
+            _outgoingEdges = outgoingEdges;
+            _attributes = attributes;
+        }
+        protected IEnumerable<Edge> _outgoingEdges;
+        protected TVertexAttributes _attributes;
         
         public TVertexAttributes Attributes => _attributes;
         public IEnumerable<Edge> GetEdges() => _outgoingEdges;
     }
 
-    public class Edge(TEdgeAttibutes attributes, Vertex destination) :
-        IBasicEdge<Vertex, TEdgeAttibutes, float>
+    public class Edge :
+        IBasicEdge<Vertex, TEdgeAttributes, float>
     {
+        
+        public Edge(){}
+        public Edge(TEdgeAttributes attributes, Vertex destination)
+        {
+            _to  = destination;
+            _attributes = attributes;
+        }
+        protected Vertex _to;
+        protected TEdgeAttributes _attributes;
+        /// initially all weights are set to float.NaN
         protected float _weight = float.NaN;
+        
         public void SetWeight(float weight) => _weight = weight;
         public float GetWeight() => _weight;
-        public TEdgeAttibutes Attributes { get; } = attributes;
-        public Vertex To { get; } = destination;
+        public TEdgeAttributes Attributes => _attributes;
+        public Vertex To => _to;
     }
 }
