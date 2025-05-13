@@ -8,7 +8,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="MapRepreViewer" Width="1000" Height="800"
-        Content="{Binding CurrentViewModel, Mode=OneWay}">
+        Content="{Binding CurrentViewModel, Mode=OneWay}"
+        WindowStartupLocation="CenterScreen">
     
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,

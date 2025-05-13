@@ -43,5 +43,5 @@ public record struct CanvasCoordinate(int LeftPos, int TopPos)
         return new CanvasCoordinate(rotatedTransposedLeft, rotatedTransposedTop);
     }
 
-    public double Size() => Math.Sqrt(LeftPos * LeftPos + TopPos * TopPos);
+    public double GetSize() => Math.Sqrt((double)LeftPos * LeftPos + (double)TopPos * TopPos);
 }
