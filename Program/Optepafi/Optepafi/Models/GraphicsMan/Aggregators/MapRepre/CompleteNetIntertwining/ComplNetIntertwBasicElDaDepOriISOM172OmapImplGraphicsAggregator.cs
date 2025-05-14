@@ -20,7 +20,7 @@ public class CompleteNetIntertwiningBasicElevDataDepOrienteering_ISOM_2017_2Omap
         IGraphicObjectCollector collectorForAggregatedObjects, CancellationToken? cancellationToken)
     {
         HashSet<(MapCoordinates, MapCoordinates)> foundEdgeCoordinates = new HashSet<(MapCoordinates, MapCoordinates)>();
-        // foreach (var vertex in ((IRadiallySearchableDataStruct<ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>)implementation.SearchableVertices).FindInEuclideanDistanceFrom((15732, -129352), 5000)) // for debugging
+        // foreach (var vertex in ((IRadiallySearchableDataStruct<ICompleteNetIntertwiningBasicGraph<Orienteering_ISOM_2017_2.VertexAttributes, Orienteering_ISOM_2017_2.EdgeAttributes>.Vertex>)implementation.SearchableVertices).FindInEuclideanDistanceFrom((-22740, -39020), 5000)) // for debugging
         foreach (var vertex in implementation)
         {
             collectorForAggregatedObjects.Add(new VertexObject(vertex.Attributes.Position, vertex.Attributes.Elevation));

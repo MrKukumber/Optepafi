@@ -84,7 +84,7 @@ public class MapRepreViewingModelView
         return (false, false);
     }
 
-    private bool _useElevData = true;
+    private bool _useElevData = false;
     public async Task CreateMapRepreAsync(ConfigurationViewModel mapRepresentationConfigurationVm, CancellationToken cancellationToken)
     {
         if (MapForUse is null || MapRepreRepresentative is null) throw new NullReferenceException(nameof(MapForUse) + " and  " + nameof(MapRepreRepresentative) + " property should be instantiated before calling this method.");

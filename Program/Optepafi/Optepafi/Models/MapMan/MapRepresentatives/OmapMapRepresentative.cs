@@ -333,8 +333,8 @@ public static class OmapMapParser
                 if (j >= strCoord.Length || !IsCancellationRequested(cancellationToken, ref readsOrParsesSinceLastCheck)) return false;
             while (!byte.TryParse(GetWordTill(strCoord, ' ', ref j, strBuilder), out type) && j < strCoord.Length && !IsCancellationRequested(cancellationToken, ref readsOrParsesSinceLastCheck)){}
 
-            if (x == -14731 && y == 8283)
-                Console.WriteLine();
+            // if (x == -14731 && y == 8283) // for debugging
+                // Console.WriteLine(); // for debugging
             y = -y; //y-axis values are saved in omap files other way than we use them in map coordinates
             if (y > extremeCoords.tc.YPos) extremeCoords.tc = new MapCoordinates(x, y);
             if (y < extremeCoords.bc.YPos) extremeCoords.bc = new MapCoordinates(x, y);

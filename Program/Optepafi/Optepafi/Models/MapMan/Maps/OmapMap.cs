@@ -41,7 +41,49 @@ public abstract class OmapMap : IMap, IPartitionableMap
                 Console.WriteLine();
             }
         }
-        public List<Segment> CollectSegments(bool asPolygon)
+
+        public List<List<Segment>> CollectSegmentsForMultiPolygon()
+        {
+            List<List<Segment>> collectedSegments = new();
+            collectedSegments.Add(new List<Segment>());
+            MapCoordinates? firstCoordOfCurrentPolygon = TypedCoords[0].coords;
+            if (TypedCoords.Length == 1)
+            {
+                collectedSegments.Last().Add(new LineSegment(TypedCoords[0].coords));
+                return collectedSegments;
+            }
+            int i = 0;
+            while(i < TypedCoords.Length)
+            {
+                switch (TypedCoords[i].type % 32)
+                {
+                    case 0:
+                        if (i + 1 >= TypedCoords.Length) { i = TypedCoords.Length; break; }
+                        collectedSegments.Last().Add(ResolveLineSegment(TypedCoords[i].coords, TypedCoords[++i].coords));
+                        break;
+                    case 1:
+                        if (i + 3 >= TypedCoords.Length) { i = TypedCoords.Length; break; }
+                        collectedSegments.Last().Add(ResolveCubicBezierSegment(TypedCoords[i].coords, TypedCoords[++i].coords, TypedCoords[++i].coords, TypedCoords[++i].coords));
+                        break;
+                    case 2:
+                    case 16:    
+                    case 18:
+                       if (firstCoordOfCurrentPolygon != collectedSegments.Last().Last().LastPoint) // Handles cases, when current polygon is not enclosed. It encloses particular polygon of multipolygon.
+                           collectedSegments.Last().Add(new LineSegment(TypedCoords.First().coords)); 
+                       if (i + 1 >= TypedCoords.Length) { ++i; break; } 
+                       collectedSegments.Add(new List<Segment>());
+                       firstCoordOfCurrentPolygon = TypedCoords[++i].coords; 
+                       break;
+                    default:
+                       Console.WriteLine("Unknown type of coordinate detected."); //TODO: log
+                       i = TypedCoords.Length; break;
+                }
+            }
+            if (firstCoordOfCurrentPolygon != collectedSegments.Last().Last().LastPoint) // If polygon definition was not correct and parsing of object ended in prematurely, it must be check in case of polygon parsing, whether parsed segments are enclosed.
+                collectedSegments.Last().Add(new LineSegment(TypedCoords.First().coords));
+            return collectedSegments;
+        }
+        public List<Segment> CollectSegmentsForPath()
         {
             List<Segment> collectedSegments = new();
             if (TypedCoords.Length == 1)
@@ -65,13 +107,13 @@ public abstract class OmapMap : IMap, IPartitionableMap
                     case 2:
                     case 16:    
                     case 18:
-                        i = TypedCoords.Length; break;
+                        i = TypedCoords.Length;
+                        break;
                     default:
+                       Console.WriteLine("Unknown type of coordinate detected."); //TODO: log
                         i = TypedCoords.Length; break;
                 }
             }
-            if (asPolygon && TypedCoords[0].coords != TypedCoords.Last().coords)
-                collectedSegments.Add(new LineSegment(TypedCoords[0].coords));
             return collectedSegments;
         }
         

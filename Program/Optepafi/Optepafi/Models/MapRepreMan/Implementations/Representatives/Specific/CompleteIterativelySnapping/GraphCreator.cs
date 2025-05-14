@@ -196,43 +196,47 @@ public class GraphCreator<TVertex, TEdge>
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void ProcessCrossablePolygonalObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices,
+    private void ProcessCrossablePolygonalObject(OmapMap.Object obj, decimal symbolCode,
+        IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices,
         CompleteNetIntertwiningMapRepreConfiguration configuration, CancellationToken? cancellationToken)
     {
         // if(processedObjectsCount == debugLimit) {} // for debugging
         // 0
         // symbol of code 410.4m is line symbol that represents very thin polygonal object so it has to be processed separately
-        var potentiallyEntangledChain = symbolCode != 410.4m
-            ? PolygonalObjectsProcessing.GetBlankBoundaryChain(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value)
-            : PolygonalObjectsProcessing.GetBlankBoundaryChainOfSymbol410_4(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
-        if (potentiallyEntangledChain is null) return;
-        // 1
-        var chains = PolygonalObjectsProcessing.SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(potentiallyEntangledChain, configuration.standardEdgeLength.Value);
-        foreach(var chain in chains)
+        BoundaryVertexBuilder<TVertex, TEdge>[][] potentiallyEntangledChains;
+        if (symbolCode != 410.4m)
+            potentiallyEntangledChains = PolygonalObjectsProcessing.GetBlankBoundaryChains(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
+        else
         {
-            // 2
-            var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PolygonalObjectsProcessing.CutAllCrossedEdges(chain, allVertices, configuration.standardEdgeLength.Value);
-            // 3
-            var (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices) = PolygonalObjectsProcessing.FindNodesInsideThePolygonByDfs(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, chain); 
-            // 4
-            // if(processedObjectsCount != debugLimit) // for debugging
-            PolygonalObjectsProcessing.UpdateAttributesOfInnerEdges(allInnerVertices, symbolCode);
-            // 5
-            var chainEnrichedByNewCrossSectionVertices = 
-                // processedObjectsCount == debugLimit ? chain : // for debugging
-                    PolygonalObjectsProcessing.ProcessCutBoundaryEdgesByChain(chain, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCode);
-            // 6
-            // if(processedObjectsCount != debugLimit) // for debugging
-            PolygonalObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, innerVerticesOfCutEdges, allVertices, configuration.standardEdgeLength.Value);
-            // 7
-            // if(processedObjectsCount != debugLimit) // for debugging
-            PolygonalObjectsProcessing.SetAttributesOfChainsEdges(chainEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, symbolCode);
-            // 8
-            PolygonalObjectsProcessing.AddChainVerticesToTheGraph(chainEnrichedByNewCrossSectionVertices, allVertices);
-            // 9
-            // if(processedObjectsCount != debugLimit) // for debugging
-            PolygonalObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chainEnrichedByNewCrossSectionVertices);
+            var potentiallyEntangledChain = PolygonalObjectsProcessing.GetBlankBoundaryChainOfSymbol410_4(obj, configuration.standardEdgeLength.Value, configuration.minBoundaryEdgeRatio.Value);
+            potentiallyEntangledChains = potentiallyEntangledChain is not null ? [potentiallyEntangledChain]: [];
         }
+
+        if (potentiallyEntangledChains.Length == 0) return;
+        // 1
+        var chains = PolygonalObjectsProcessing.SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(potentiallyEntangledChains, configuration.standardEdgeLength.Value);
+        // 2
+        var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = PolygonalObjectsProcessing.CutAllCrossedEdges(chains, allVertices, configuration.standardEdgeLength.Value);
+        // 3
+        var (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices) = PolygonalObjectsProcessing.FindNodesInsideThePolygonByDfs(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, chains); 
+        // 4
+        // if(processedObjectsCount != debugLimit) // for debugging
+        PolygonalObjectsProcessing.UpdateAttributesOfInnerEdges(allInnerVertices, symbolCode);
+        // 5
+        var chainsEnrichedByNewCrossSectionVertices = 
+            // processedObjectsCount == debugLimit ? chain : // for debugging
+                PolygonalObjectsProcessing.ProcessCutBoundaryEdgesByChain(chains, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCode);
+        // 6
+        // if(processedObjectsCount != debugLimit) // for debugging
+        PolygonalObjectsProcessing.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chainsEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, innerVerticesOfCutEdges, allVertices, configuration.standardEdgeLength.Value);
+        // 7
+        // if(processedObjectsCount != debugLimit) // for debugging
+        PolygonalObjectsProcessing.SetAttributesOfChainsEdges(chainsEnrichedByNewCrossSectionVertices, outerVerticesOfCutEdges, symbolCode);
+        // 8
+        PolygonalObjectsProcessing.AddChainVerticesToTheGraph(chainsEnrichedByNewCrossSectionVertices, allVertices);
+        // 9
+        // if(processedObjectsCount != debugLimit) // for debugging
+        PolygonalObjectsProcessing.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chainsEnrichedByNewCrossSectionVertices);
     }
     
     private void ProcessPathObject(OmapMap.Object obj, decimal symbolCode, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices,
@@ -278,25 +282,30 @@ public class GraphCreator<TVertex, TEdge>
     {
         #region 0 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         
-        public static BoundaryVertexBuilder<TVertex, TEdge>[]? GetBlankBoundaryChain(OmapMap.Object obj, int standardEdgeLength, float minBoundaryEdgeRatio)
+        public static BoundaryVertexBuilder<TVertex, TEdge>[][] GetBlankBoundaryChains(OmapMap.Object obj, int standardEdgeLength, float minBoundaryEdgeRatio)
         {
-            var segments = obj.CollectSegments(true);
+            var multiPolygonalSegments = obj.CollectSegmentsForMultiPolygon();
+            List<BoundaryVertexBuilder<TVertex, TEdge>[]> boundaryChains = new List<BoundaryVertexBuilder<TVertex, TEdge>[]>();
             // last and first vertices will be on the same position
-            var boundaryChain = Utils.GetBlankChainOfSegmentedLine(segments.Last().LastPoint, segments, standardEdgeLength, minBoundaryEdgeRatio);
-            if (boundaryChain.Count <= 2) return null;
-            //connects last and second vertex of chain for polygonal shape, removes first one
-            boundaryChain.Last().BoundaryEdges[boundaryChain[1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-            boundaryChain[1].BoundaryEdges[boundaryChain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
-            boundaryChain[1].BoundaryEdges.Remove(boundaryChain[0]);
-            boundaryChain.RemoveAt(0);
-            if (boundaryChain.Count <= 2) return null;
-            return boundaryChain.ToArray();
+            foreach (var polygonalSegments in multiPolygonalSegments)
+            {
+                var boundaryChain = Utils.GetBlankChainOfSegmentedLine(polygonalSegments.Last().LastPoint, polygonalSegments, standardEdgeLength, minBoundaryEdgeRatio);
+                if (boundaryChain.Count <= 2)  continue; 
+                //connects last and second vertex of chain for polygonal shape, removes first one
+                boundaryChain.Last().BoundaryEdges[boundaryChain[1]] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                boundaryChain[1].BoundaryEdges[boundaryChain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes();
+                boundaryChain[1].BoundaryEdges.Remove(boundaryChain[0]);
+                boundaryChain.RemoveAt(0);
+                if (boundaryChain.Count <= 2)  continue; 
+                boundaryChains.Add(boundaryChain.ToArray());
+            }
+            return boundaryChains.ToArray();
         }
         
         public static BoundaryVertexBuilder<TVertex, TEdge>[]? GetBlankBoundaryChainOfSymbol410_4(OmapMap.Object obj,
             int standardEdgeLength, float minBoundaryEdgeRatio)
         {
-            var segments = obj.CollectSegments(false);
+            var segments = obj.CollectSegmentsForPath();
             var leftBoundaryChain = Utils.GetBlankShiftedChainOfSegmentedLine(obj.TypedCoords[0].coords, segments, standardEdgeLength, minBoundaryEdgeRatio, true, 125);
             var rightBoundaryChain = Utils.GetBlankShiftedChainOfSegmentedLine(obj.TypedCoords[0].coords, segments, standardEdgeLength, minBoundaryEdgeRatio, false, 125);   
             if (leftBoundaryChain.Count + rightBoundaryChain.Count <= 2) return null;
@@ -314,73 +323,97 @@ public class GraphCreator<TVertex, TEdge>
         #endregion
         
         #region 1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        
-        public static List<BoundaryVertexBuilder<TVertex, TEdge>[]> SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(BoundaryVertexBuilder<TVertex, TEdge>[] potentiallyEntangledChain, int standardEdgeLength)
+
+        public static BoundaryVertexBuilder<TVertex, TEdge>[][] SplitChainToMoreIfItIsEntangledAndMakeThemTurnRight(
+            BoundaryVertexBuilder<TVertex, TEdge>[][] potentiallyEntangledChains, int standardEdgeLength)
         {
-            var(indicesOfCutEdgesWithCorrespondingTemporaryVertices, allTemporaryVertices) = CreateTemporaryVertices(potentiallyEntangledChain);
-            // if no cross-sections of edges are found, chain is not entangled so we can return it whole
-            // we just have to check its orientation
+            var (indicesOfCutEdgesWithCorrespondingTemporaryVertices, allTemporaryVertices) = CreateTemporaryVertices(potentiallyEntangledChains);
+            List<BoundaryVertexBuilder<TVertex, TEdge>[]> collectedChains;
+            // if no cross-sections of edges are found, chains are not entangled so we can return them whole
+            // we just have to check their orientation
             if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.Count == 0)
-                if (!Utils.IsRightSideInner(potentiallyEntangledChain[0], potentiallyEntangledChain.Last().Position, potentiallyEntangledChain[1].Position, potentiallyEntangledChain)) 
-                    return [potentiallyEntangledChain.Reverse().ToArray()];
-                else return [potentiallyEntangledChain];
-            DisconnectCrossingEdgesInChain(potentiallyEntangledChain, indicesOfCutEdgesWithCorrespondingTemporaryVertices);
-            InterconnectTemporaryVertices(indicesOfCutEdgesWithCorrespondingTemporaryVertices, potentiallyEntangledChain);
-            ProcessTemporaryVertices(allTemporaryVertices);
-            return CollectRightTurningChains(potentiallyEntangledChain.ToHashSet(), standardEdgeLength);
+                collectedChains = TurnThemRight(potentiallyEntangledChains);
+            else
+            {
+                DisconnectCrossingEdgesInChain(potentiallyEntangledChains, indicesOfCutEdgesWithCorrespondingTemporaryVertices);
+                InterconnectTemporaryVertices(indicesOfCutEdgesWithCorrespondingTemporaryVertices, potentiallyEntangledChains);
+                ProcessTemporaryVertices(allTemporaryVertices); 
+                collectedChains = CollectRightTurningChains(potentiallyEntangledChains.SelectMany(chain => chain).ToHashSet(), standardEdgeLength);
+            }
+            // we have to reverse chains which creates holes in multipolygon, so that the right side of these chains was inner.
+            return ReverseChainsOfHoles(collectedChains).ToArray();
+        }
+
+        private static List<BoundaryVertexBuilder<TVertex, TEdge>[]> TurnThemRight(BoundaryVertexBuilder<TVertex, TEdge>[][] chains)
+        {
+            var chainsTurnedRight = new List<BoundaryVertexBuilder<TVertex, TEdge>[]>();
+            for (int i = 0; i < chains.Length; ++i)
+                if (!Utils.IsRightSideInner(chains[i][0], chains[i].Last().Position, chains[i][1].Position, chains[i])) chainsTurnedRight.Add(chains[i].Reverse().ToArray());
+                else chainsTurnedRight.Add(chains[i]);
+            return chainsTurnedRight;
         }
         
 
-        private static (SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>>, List<ChainEntanglementTemporaryVertexBuilder>) CreateTemporaryVertices(BoundaryVertexBuilder<TVertex, TEdge>[] potentiallyEntangledChain)
+        private static (SortedList<(int, int), List<ChainEntanglementTemporaryVertexBuilder>>, List<ChainEntanglementTemporaryVertexBuilder>) CreateTemporaryVertices(BoundaryVertexBuilder<TVertex, TEdge>[][] potentiallyEntangledChains)
         {
-            SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfCutEdgesWithCorrespondingTemporaryVertices = new();
+            SortedList<(int, int), List<ChainEntanglementTemporaryVertexBuilder>> indicesOfCutEdgesWithCorrespondingTemporaryVertices = new();
             List<ChainEntanglementTemporaryVertexBuilder> allCreatedTemporaryVertices = new();
             
             // For each cross-section of chain edges is created new temporary vertex
             // this vertex is then added to lists of created temporary vertices which are hold in dictionary under the indices of crossed edges
-            for (int i = 0; i < potentiallyEntangledChain.Length - 1; ++i)
-                for (int j = i + 1; j < potentiallyEntangledChain.Length; ++j)
+            for (int ich = 0; ich < potentiallyEntangledChains.Length; ++ich)
+                for (int ie = 0; ie < potentiallyEntangledChains[ich].Length - 1; ++ie)
                 {
-                    if (i == 0 && j == potentiallyEntangledChain.Length - 1) continue;
-                    int js = j == potentiallyEntangledChain.Length - 1 ? 0 : j + 1;
-                    MapCoordinates? crossSectionCoords = Utils.GetLineSegmentsCrossSectionCoordsParallelCrossSectionIncluded( potentiallyEntangledChain[i].Position, potentiallyEntangledChain[i + 1].Position, potentiallyEntangledChain[j].Position, potentiallyEntangledChain[js].Position);
-                    if (crossSectionCoords is not null)
-                    {
-                        // if cross-section of successive edges is checked, cross-section is valid only if it is not positioned in common vertex of these edges. This happens when these edges are parallel.
-                        if (j != i + 1 || crossSectionCoords != potentiallyEntangledChain[j].Position)
-                        {
-                            var newTemporaryVertex = new ChainEntanglementTemporaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords.Value));
-                            if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.ContainsKey(i)) indicesOfCutEdgesWithCorrespondingTemporaryVertices[i].Add(newTemporaryVertex);
-                            else indicesOfCutEdgesWithCorrespondingTemporaryVertices[i] = [newTemporaryVertex];
-                            if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.ContainsKey(j)) indicesOfCutEdgesWithCorrespondingTemporaryVertices[j].Add(newTemporaryVertex);
-                            else indicesOfCutEdgesWithCorrespondingTemporaryVertices[j] = [newTemporaryVertex];
-                            allCreatedTemporaryVertices.Add(newTemporaryVertex);
-                        }
-                    }
+                    for (int je = ie + 1; je < potentiallyEntangledChains[ich].Length; ++je)
+                        AddTemporaryVertexIfEdgesAreCrossing(potentiallyEntangledChains, indicesOfCutEdgesWithCorrespondingTemporaryVertices, allCreatedTemporaryVertices, ich, ie, ich, je);
+                    for (int jch = ich + 1; jch < potentiallyEntangledChains.Length; ++jch)
+                        for (int je = 0; je < potentiallyEntangledChains[jch].Length; ++je)
+                            AddTemporaryVertexIfEdgesAreCrossing(potentiallyEntangledChains, indicesOfCutEdgesWithCorrespondingTemporaryVertices, allCreatedTemporaryVertices, ich, ie, jch, je);
+                            
                 }
             return (indicesOfCutEdgesWithCorrespondingTemporaryVertices, allCreatedTemporaryVertices);
         }
+
+        private static void AddTemporaryVertexIfEdgesAreCrossing(BoundaryVertexBuilder<TVertex, TEdge>[][] potentiallyEntangledChains, SortedList<(int, int), List<ChainEntanglementTemporaryVertexBuilder>> indicesOfCutEdgesWithCorrespondingTemporaryVertices, List<ChainEntanglementTemporaryVertexBuilder> allCreatedTemporaryVertices, int ich, int ie, int jch, int je)
+        {
+            // if (i == 0 && j == potentiallyEntangledChains.Length - 1) return;
+            int jes = je == potentiallyEntangledChains[jch].Length - 1 ? 0 : je + 1;
+            MapCoordinates? crossSectionCoords = Utils.GetLineSegmentsCrossSectionCoordsParallelCrossSectionIncluded( potentiallyEntangledChains[ich][ie].Position, potentiallyEntangledChains[ich][ie + 1].Position, potentiallyEntangledChains[jch][je].Position, potentiallyEntangledChains[jch][jes].Position);
+            if (crossSectionCoords is not null)
+            {
+                // if cross-section of successive edges is checked, cross-section is valid only if it is not positioned in common vertex of these edges (vertex on position je). This happens when these edges are parallel.
+                if (ich != jch || je != ie + 1 || crossSectionCoords != potentiallyEntangledChains[jch][je].Position)
+                {
+                    var newTemporaryVertex = new ChainEntanglementTemporaryVertexBuilder( new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords.Value));
+                    if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.ContainsKey((ich, ie))) indicesOfCutEdgesWithCorrespondingTemporaryVertices[(ich, ie)].Add(newTemporaryVertex);
+                    else indicesOfCutEdgesWithCorrespondingTemporaryVertices[(ich, ie)] = [newTemporaryVertex];
+                    if (indicesOfCutEdgesWithCorrespondingTemporaryVertices.ContainsKey((jch, je))) indicesOfCutEdgesWithCorrespondingTemporaryVertices[(jch, je)].Add(newTemporaryVertex);
+                    else indicesOfCutEdgesWithCorrespondingTemporaryVertices[(jch, je)] = [newTemporaryVertex];
+                    allCreatedTemporaryVertices.Add(newTemporaryVertex);
+                }
+            }
+        }
         
-        private static void DisconnectCrossingEdgesInChain(BoundaryVertexBuilder<TVertex, TEdge>[] potentiallyEntangledChain, SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices)
+        private static void DisconnectCrossingEdgesInChain(BoundaryVertexBuilder<TVertex, TEdge>[][] potentiallyEntangledChains, SortedList<(int, int), List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices)
         {
             // every edge, that was crossing some other edge will be removed from chain
-            foreach (var index in indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices.Keys)
+            foreach (var (chainIndex, edgeIndex) in indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices.Keys)
             {
-                int indexSuccessor = index == potentiallyEntangledChain.Length - 1 ? 0 : index + 1; 
-                potentiallyEntangledChain[index].BoundaryEdges.Remove(potentiallyEntangledChain[indexSuccessor]);
-                potentiallyEntangledChain[indexSuccessor].BoundaryEdges.Remove(potentiallyEntangledChain[index]);
+                int edgeIndexSuccessor = edgeIndex == potentiallyEntangledChains[chainIndex].Length - 1 ? 0 : edgeIndex + 1; 
+                potentiallyEntangledChains[chainIndex][edgeIndex].BoundaryEdges.Remove(potentiallyEntangledChains[chainIndex][edgeIndexSuccessor]);
+                potentiallyEntangledChains[chainIndex][edgeIndexSuccessor].BoundaryEdges.Remove(potentiallyEntangledChains[chainIndex][edgeIndex]);
             }
         }
 
-        private static void InterconnectTemporaryVertices(SortedList<int, List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices, BoundaryVertexBuilder<TVertex, TEdge>[] chainWithoutEntangledEdges)
+        private static void InterconnectTemporaryVertices(SortedList<(int, int), List<ChainEntanglementTemporaryVertexBuilder>> indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices, BoundaryVertexBuilder<TVertex, TEdge>[][] chainWithoutEntangledEdges)
         {
             // temporary vertices are one by one correctly interconnected, so then new edges of chains could be correctly deduced
-            foreach (var (chainVertexIndex, correspondingTemporaryVertices) in indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices)
+            foreach (var ((chainIndex, edgeIndex), correspondingTemporaryVertices) in indicesOfVerticesWhoseEdgesWereCutWithCorrespondingTemporaryVertices)
             {
-                int chainVertexIndexSuccessor = chainVertexIndex == chainWithoutEntangledEdges.Length - 1 ? 0 : chainVertexIndex + 1;
+                int edgeIndexSuccessor = edgeIndex == chainWithoutEntangledEdges[chainIndex].Length - 1 ? 0 : edgeIndex + 1;
                 // at first, we need to order created temporary vertices in the way they are positioned on cut edge 
-                var correspondingSortedTemporaryVertices = Utils.SortVerticesCorrectly(chainWithoutEntangledEdges[chainVertexIndex], chainWithoutEntangledEdges[chainVertexIndexSuccessor], correspondingTemporaryVertices);
-                var lastVertex = chainWithoutEntangledEdges[chainVertexIndex];
+                var correspondingSortedTemporaryVertices = Utils.SortVerticesCorrectly(chainWithoutEntangledEdges[chainIndex][edgeIndex], chainWithoutEntangledEdges[chainIndex][edgeIndexSuccessor], correspondingTemporaryVertices);
+                var lastVertex = chainWithoutEntangledEdges[chainIndex][edgeIndex];
                 // iteratively we set income and outcome neighbors of temporary vertices
                 // logic of temporary vertices will ensure correct coupling of income and outcome neighbors
                 for (int i = 0; i < correspondingSortedTemporaryVertices.Count - 1; i++)
@@ -388,7 +421,7 @@ public class GraphCreator<TVertex, TEdge>
                     correspondingSortedTemporaryVertices[i].SetFromToVertex(lastVertex, correspondingSortedTemporaryVertices[i + 1]);
                     lastVertex = correspondingSortedTemporaryVertices[i];
                 }
-                correspondingSortedTemporaryVertices.Last().SetFromToVertex(lastVertex, chainWithoutEntangledEdges[chainVertexIndexSuccessor]);
+                correspondingSortedTemporaryVertices.Last().SetFromToVertex(lastVertex, chainWithoutEntangledEdges[chainIndex][edgeIndexSuccessor]);
             }
         }
         
@@ -482,6 +515,26 @@ public class GraphCreator<TVertex, TEdge>
                 }
             }
         }
+
+        private static List<BoundaryVertexBuilder<TVertex, TEdge>[]> ReverseChainsOfHoles( List<BoundaryVertexBuilder<TVertex, TEdge>[]> collectedChains)
+        {
+            int[] countOfOuterChainsForCollectedChains = new int[collectedChains.Count];
+            for(int i = 0; i < collectedChains.Count; ++i) 
+            {
+                foreach (var otherChain in collectedChains)
+                {
+                    if (collectedChains[i] == otherChain) continue;
+                    if (IsInnerVertex(collectedChains[i].First(), otherChain)) countOfOuterChainsForCollectedChains[i]++;
+                }
+            }
+
+            for (int i = 0; i < collectedChains.Count; ++i)
+            {
+                if (countOfOuterChainsForCollectedChains[i] % 2 == 1)
+                    collectedChains[i] = collectedChains[i].Reverse().ToArray();
+            }
+            return collectedChains;
+        }
         
         private class ChainEntanglementTemporaryVertexBuilder(Orienteering_ISOM_2017_2.VertexAttributes attributesNoElev) : BoundaryVertexBuilder<TVertex, TEdge>(attributesNoElev)
         {
@@ -554,13 +607,11 @@ public class GraphCreator<TVertex, TEdge>
         
         #region 2 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static (Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>>, Dictionary<(
-                BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes
-                cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)>)
-            CutAllCrossedEdges(BoundaryVertexBuilder<TVertex, TEdge>[] chain,
+        public static (Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>>, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int, int)> crossSectionsWithChainsAndEdgesIndices)>)
+            CutAllCrossedEdges(BoundaryVertexBuilder<TVertex, TEdge>[][] chains,
                 IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength)
         {
-           var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = Utils.FindAllCrossedEdges(chain, allVertices, standardEdgeLength, true);   
+           var (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges) = Utils.FindAllCrossedEdges(chains, allVertices, standardEdgeLength, true);   
            Utils.CutAllFoundCrossedEdges(verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges);
            return (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges);
         }
@@ -570,7 +621,7 @@ public class GraphCreator<TVertex, TEdge>
         #region 3 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         public static (List<VertexBuilder<TVertex, TEdge>> outerVerticesOfCutEdges, List<VertexBuilder<TVertex, TEdge>> innerVerticesOfCutEdges, List<VertexBuilder<TVertex, TEdge>> allInnerVertices) 
-            FindNodesInsideThePolygonByDfs(Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges, BoundaryVertexBuilder<TVertex, TEdge>[] chain)
+            FindNodesInsideThePolygonByDfs(Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int, int)>)> verticesOfCutBoundaryEdges, BoundaryVertexBuilder<TVertex, TEdge>[][] chains)
         {
             var outerVerticesOfCutEdges = new List<VertexBuilder<TVertex, TEdge>>();
             var innerVerticesOfCutEdges = new List<VertexBuilder<TVertex, TEdge>>();
@@ -595,7 +646,7 @@ public class GraphCreator<TVertex, TEdge>
             // while there are some vertices, that were not included neither in outer nor inner vertices, repeat dfs process for their correct classification
             while(verticesOfCutEdgesWithNeighbors.Count > 0)
             {
-                SortEdgesByDfs(verticesOfCutEdgesWithNeighbors,  outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices, chain);
+                SortEdgesByDfs(verticesOfCutEdgesWithNeighbors,  outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices, chains);
             }
             return (outerVerticesOfCutEdges, innerVerticesOfCutEdges, allInnerVertices);
         }
@@ -603,12 +654,12 @@ public class GraphCreator<TVertex, TEdge>
         private static void SortEdgesByDfs(
             Dictionary<VertexBuilder<TVertex, TEdge>, List<(int edgeCutsCount, VertexBuilder<TVertex, TEdge> neighbor)>> verticesOfCutEdgesWithNeighbors,
             List<VertexBuilder<TVertex, TEdge>> outerVerticesOfCutEdges, List<VertexBuilder<TVertex, TEdge>> innerVerticesOfCutEdges, 
-            List<VertexBuilder<TVertex, TEdge>> allInnerVertices, BoundaryVertexBuilder<TVertex, TEdge>[] chain)
+            List<VertexBuilder<TVertex, TEdge>> allInnerVertices, BoundaryVertexBuilder<TVertex, TEdge>[][] chains)
         {
             if (verticesOfCutEdgesWithNeighbors.Count > 0)
             {
                 // selection of first inner vertex on which will dfs start its search
-                var vertex = FindSomeInnerVertex(verticesOfCutEdgesWithNeighbors, chain);
+                var vertex = FindSomeInnerVertex(verticesOfCutEdgesWithNeighbors, chains);
                 // if there is no such vertex, there can not be any vertex inside of polygon defined by chain
                 if (vertex is null)
                 {
@@ -652,11 +703,11 @@ public class GraphCreator<TVertex, TEdge>
             }
         }
 
-        private static VertexBuilder<TVertex, TEdge>? FindSomeInnerVertex(Dictionary<VertexBuilder<TVertex, TEdge>, List<(int, VertexBuilder<TVertex, TEdge>)>> verticesOfCutEdgesWithNeighbors, BoundaryVertexBuilder<TVertex, TEdge>[] chain)
+        private static VertexBuilder<TVertex, TEdge>? FindSomeInnerVertex(Dictionary<VertexBuilder<TVertex, TEdge>, List<(int, VertexBuilder<TVertex, TEdge>)>> verticesOfCutEdgesWithNeighbors, BoundaryVertexBuilder<TVertex, TEdge>[][] chains)
         {
             foreach (var (vertex, _) in verticesOfCutEdgesWithNeighbors)
             {
-                if (IsInnerVertex(vertex, chain)) return vertex;
+                if (IsInnerVertex(vertex, chains)) return vertex;
             }
             return null;
         }
@@ -699,6 +750,19 @@ public class GraphCreator<TVertex, TEdge>
             if (Utils.AreLineSegmentAndRayCrossingWithMagic(chain.Last().Position, chain[0].Position, vertex.Position, vertex.Position + new MapCoordinates(1, 1), (chain[chain.Length - 2].Position, chain[1].Position)) ) crossSectionsCount++;
             return crossSectionsCount % 2 == 1;
         }
+
+        private static bool IsInnerVertex(VertexBuilder<TVertex, TEdge> vertex, BoundaryVertexBuilder<TVertex, TEdge>[][] chains)
+        {
+            // if count of crossed chain edges by ray is odd, vertex, from which ray started is inside of multipolygon defined by chain
+            int crossSectionsCount = 0;
+            foreach (var chain in chains)
+            {
+                for (int i = 0; i < chain.Length - 1; i++)
+                    if (Utils.AreLineSegmentAndRayCrossingWithMagic(chain[i].Position, chain[i + 1].Position, vertex.Position, vertex.Position + new MapCoordinates(1, 1), (chain[i - 1 >= 0 ? i - 1 : chain.Length - 1].Position, chain[i + 2 <= chain.Length - 1 ? i + 2 : 0].Position))) crossSectionsCount++;
+                if (Utils.AreLineSegmentAndRayCrossingWithMagic(chain.Last().Position, chain[0].Position, vertex.Position, vertex.Position + new MapCoordinates(1, 1), (chain[chain.Length - 2].Position, chain[1].Position))) crossSectionsCount++;
+            }
+            return crossSectionsCount % 2 == 1;
+        }
         
         #endregion
         
@@ -725,20 +789,20 @@ public class GraphCreator<TVertex, TEdge>
         
         #region 5 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static BoundaryVertexBuilder<TVertex, TEdge>[] ProcessCutBoundaryEdgesByChain(BoundaryVertexBuilder<TVertex, TEdge>[] chain, 
-            Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCutBoundaryEdges, 
+        public static BoundaryVertexBuilder<TVertex, TEdge>[][] ProcessCutBoundaryEdgesByChain(BoundaryVertexBuilder<TVertex, TEdge>[][] chains, 
+            Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int, int)> crossSectionsWithChainsAndEdgesIndices)> verticesOfCutBoundaryEdges, 
             List<VertexBuilder<TVertex, TEdge>> outerVerticesOfCutEdges, decimal symbolCodeOfAddedObject)
         {
             // at first create vertex for every cross-section, then connect them correctly to the vertices of cut boundary edges and to the vertices of chain and in the end add the vertices to the chain
-            var listChain = chain.ToList();
-            var (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices) = 
-                Utils.CreateCrossSectionVertices(listChain, verticesOfCutBoundaryEdges);
+            var (chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices) = 
+                Utils.CreateCrossSectionVertices(chains, verticesOfCutBoundaryEdges);
             ConnectNewVerticesToVerticesOfCutBoundaryEdges(verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, verticesOfCutBoundaryEdges, outerVerticesOfCutEdges, symbolCodeOfAddedObject);
-            Utils.ConnectAndAddNewVerticesToChain(chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, listChain);
-            return listChain.ToArray();
+            var listChains = chains.Select(chain => chain.ToList()).ToArray();
+            Utils.ConnectAndAddNewVerticesToChain(chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex, listChains);
+            return listChains.Select(chain => chain.ToArray()).ToArray();
         }
         
-        public static void ConnectNewVerticesToVerticesOfCutBoundaryEdges(Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges, List<VertexBuilder<TVertex, TEdge>> outerVerticesOfCutEdges, decimal symbolCodeOfAddedObject)
+        public static void ConnectNewVerticesToVerticesOfCutBoundaryEdges(Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int, int)>)> verticesOfCutBoundaryEdges, List<VertexBuilder<TVertex, TEdge>> outerVerticesOfCutEdges, decimal symbolCodeOfAddedObject)
         {
             foreach(var ((vertex1, vertex2), newVertices) in verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices)
             {
@@ -782,50 +846,56 @@ public class GraphCreator<TVertex, TEdge>
         
         #region 6 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder<TVertex, TEdge>[] chain, List<VertexBuilder<TVertex, TEdge>> outerVerticesOfCutEdges, List<VertexBuilder<TVertex, TEdge>> innerVerticesOfCutEdges, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength)
-            => Utils.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chain, chain.Concat(outerVerticesOfCutEdges).Concat(innerVerticesOfCutEdges), allVertices, standardEdgeLength); 
+        public static void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder<TVertex, TEdge>[][] chains, List<VertexBuilder<TVertex, TEdge>> outerVerticesOfCutEdges, List<VertexBuilder<TVertex, TEdge>> innerVerticesOfCutEdges, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength)
+            => Utils.ConnectChainVerticesToVerticesOfCutEdgesAndOtherVerticesOfChain(chains.SelectMany(chain => chain).ToArray(), outerVerticesOfCutEdges.Concat(innerVerticesOfCutEdges), allVertices, standardEdgeLength); 
         
         #endregion
         
         #region 7 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static void SetAttributesOfChainsEdges(BoundaryVertexBuilder<TVertex, TEdge>[] chain, List<VertexBuilder<TVertex, TEdge>> outerVertices, decimal symbolCodeOfAddedObject)
+        public static void SetAttributesOfChainsEdges(BoundaryVertexBuilder<TVertex, TEdge>[][] chains, List<VertexBuilder<TVertex, TEdge>> outerVertices, decimal symbolCodeOfAddedObject)
         {
             // at first, we will obtain indices of new cross-section vertices added to chain, together with their closest outer neighbor angle-wise
             // these vertices will be used for determining of correct attribute setting of chains edges 
-            var indicesAndOuterBoundaryNeighborsOfCrossSectionVertices = GetIndicesAndTheClosestOuterNeighborsOfVerticesOfCrossedBoundaryEdges(chain);
-            // if count of cross-section vertices is less than 2, it means that all edges of the chain has surly the same attributes
-            if (indicesAndOuterBoundaryNeighborsOfCrossSectionVertices.Count < 2)
-                SetAttributesOfChainBoundaryEdgesUniformly(chain, outerVertices, symbolCodeOfAddedObject);
-            else
-                SetAttributesOfChainBoundaryEdgesNonUniformly(chain, indicesAndOuterBoundaryNeighborsOfCrossSectionVertices, symbolCodeOfAddedObject);
+            var indicesAndOuterBoundaryNeighborsOfCrossSectionVertices = GetIndicesAndTheClosestOuterNeighborsOfVerticesOfCrossedBoundaryEdges(chains);
+            for (int i = 0; i < indicesAndOuterBoundaryNeighborsOfCrossSectionVertices.Count; ++i)
+            {
+                // if count of cross-section vertices is less than 2, it means that all edges of the chain has surly the same attributes
+                if (indicesAndOuterBoundaryNeighborsOfCrossSectionVertices[i].Count < 2) SetAttributesOfChainBoundaryEdgesUniformly(chains[i], outerVertices, symbolCodeOfAddedObject);
+                else SetAttributesOfChainBoundaryEdgesNonUniformly(chains[i], indicesAndOuterBoundaryNeighborsOfCrossSectionVertices[i], symbolCodeOfAddedObject);
+            }
         }
         
-        private static List<(int, BoundaryVertexBuilder<TVertex, TEdge>)> GetIndicesAndTheClosestOuterNeighborsOfVerticesOfCrossedBoundaryEdges(BoundaryVertexBuilder<TVertex, TEdge>[] chain)
+        private static List<List<(int, BoundaryVertexBuilder<TVertex, TEdge>)>> GetIndicesAndTheClosestOuterNeighborsOfVerticesOfCrossedBoundaryEdges(BoundaryVertexBuilder<TVertex, TEdge>[][] chains)
         {
-            List<(int, BoundaryVertexBuilder<TVertex, TEdge>)> indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries = new();
+            List<List<(int, BoundaryVertexBuilder<TVertex, TEdge>)>> indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries = new();
             
             // we will iteratively determine the closest left-handed boundary neighbor of each vertex
-            for (int i = 0; i < chain.Length; i++)
+            foreach(var chain in chains)
             {
-                int iP = i == 0 ? chain.Length - 1 : i - 1; 
-                int iS = i == chain.Length - 1 ? 0 : i + 1;
-                // closest left-handed neighbor is set at first to the previous chain vertex
-                // this will ensure, that found closest left-handed boundary vertex will be outer vertex  
-                var angleOfTheClosestNeighborToNextEdgeSoFar = Utils.ComputeLeftHandedAngleBetween(chain[i].Position, chain[iS].Position, chain[i].Position, chain[iP].Position);
-                var closestNeighbor = chain[iP];
-                foreach (var (neighbor, _) in chain[i].BoundaryEdges)
+                indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries.Add(new List<(int, BoundaryVertexBuilder<TVertex, TEdge>)>());
+                for (int j = 0; j < chain.Length; ++j)
                 {
-                    if (neighbor == chain[iS]) continue;
-                    double angleOfTheNeighborToNextEdge = Utils.ComputeLeftHandedAngleBetween(chain[i].Position, chain[iS].Position, chain[i].Position, neighbor.Position);
-                    if (angleOfTheNeighborToNextEdge < angleOfTheClosestNeighborToNextEdgeSoFar)
+                    int iP = j == 0 ? chain.Length - 1 : j - 1;
+                    int iS = j == chain.Length - 1 ? 0 : j + 1;
+                    // closest left-handed neighbor is set at first to the previous chain vertex
+                    // this will ensure, that found closest left-handed boundary vertex will be outer vertex  
+                    var angleOfTheClosestNeighborToNextEdgeSoFar = Utils.ComputeLeftHandedAngleBetween( chain[j].Position, chain[iS].Position, chain[j].Position, chain[iP].Position);
+                    var closestNeighbor = chain[iP];
+                    foreach (var (neighbor, _) in chain[j].BoundaryEdges)
                     {
-                        angleOfTheClosestNeighborToNextEdgeSoFar = angleOfTheNeighborToNextEdge;
-                        closestNeighbor = neighbor;
+                        if (neighbor == chain[iS]) continue;
+                        double angleOfTheNeighborToNextEdge = Utils.ComputeLeftHandedAngleBetween(chain[j].Position, chain[iS].Position, chain[j].Position, neighbor.Position);
+                        if (angleOfTheNeighborToNextEdge < angleOfTheClosestNeighborToNextEdgeSoFar)
+                        {
+                            angleOfTheClosestNeighborToNextEdgeSoFar = angleOfTheNeighborToNextEdge;
+                            closestNeighbor = neighbor;
+                        }
                     }
+
+                    // if the closest left-handed vertex is the previous chain vertex, current vertex is not added into final collection
+                    if (closestNeighbor != chain[iP]) indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries.Last().Add((j, closestNeighbor));
                 }
-                // if the closest left-handed vertex is the previous chain vertex, current vertex is not added into final collection
-                if(closestNeighbor != chain[iP]) indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries.Add((i, closestNeighbor));
             }
             return indicesAndOuterNeighborsOfVerticesOfCrossedBoundaries;
         }
@@ -838,7 +908,7 @@ public class GraphCreator<TVertex, TEdge>
             Utils.SetAttributesOfChainBoundaryEdgesBasedOnGivenLeftSurroundingsOnGivenInterval(chain, outerEdgeSurroundingsForWholeChain, symbolCodeOfAddedObject, 0, chain.Length - 1);
             var innerSurroundings = Utils.GetUpdatedSurroundingsOfEdgeAttributes(outerEdgeSurroundingsForWholeChain, symbolCodeOfAddedObject);
             chain.Last().BoundaryEdges[chain[0]] = new Orienteering_ISOM_2017_2.EdgeAttributes(outerEdgeSurroundingsForWholeChain, innerSurroundings);
-            chain[0].BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes(innerSurroundings, outerEdgeSurroundingsForWholeChain); 
+            chain[0].BoundaryEdges[chain.Last()] = new Orienteering_ISOM_2017_2.EdgeAttributes(innerSurroundings, outerEdgeSurroundingsForWholeChain);
         }
 
         private static void SetAttributesOfChainBoundaryEdgesNonUniformly(BoundaryVertexBuilder<TVertex, TEdge>[] chain,  List<(int index, BoundaryVertexBuilder<TVertex, TEdge> neighbor)> indicesAndClosestOuterBoundaryNeighborsOfCrossSectionVertices, decimal symbolCodeOfAddedObject)
@@ -870,15 +940,15 @@ public class GraphCreator<TVertex, TEdge>
         #endregion
 
         #region 8 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
-            public static void AddChainVerticesToTheGraph(BoundaryVertexBuilder<TVertex, TEdge>[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices)
-                => Utils.AddChainVerticesToTheGraph(chain, allVertices);
+            public static void AddChainVerticesToTheGraph(BoundaryVertexBuilder<TVertex, TEdge>[][] chains, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices)
+                => Utils.AddChainVerticesToTheGraph(chains.SelectMany(chain => chain), allVertices);
         
         #endregion
         
         #region 9 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(BoundaryVertexBuilder<TVertex, TEdge>[] chain)
-            => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chain);
+        public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(BoundaryVertexBuilder<TVertex, TEdge>[][] chains)
+            => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainVerticesAndBoundaryVertices(chains.SelectMany(chain => chain));
 
         #endregion 
         
@@ -890,7 +960,7 @@ public class GraphCreator<TVertex, TEdge>
         
         public static List<BoundaryVertexBuilder<TVertex, TEdge>>? GetBlankBoundaryChain(OmapMap.Object obj, int standardEdgeLength, float minBoundaryEdgeRatio)
         {
-            var segments = obj.CollectSegments(false);
+            var segments = obj.CollectSegmentsForPath();
             var boundaryChain = Utils.GetBlankChainOfSegmentedLine(obj.TypedCoords[0].coords, segments, standardEdgeLength, minBoundaryEdgeRatio);
             if (boundaryChain.Count <= 1) return null;
             // it could happen that path has polygonal shape - it is closed segmented line
@@ -1049,11 +1119,11 @@ public class GraphCreator<TVertex, TEdge>
         
         #region 2 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static (Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>>, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)>)
+        public static (Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>>, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates coords, int chainIndex, int edgeIndex)> crossSectionsWithChainsAndEdgesIndices)>)
             CutAllCrossedEdges(BoundaryVertexBuilder<TVertex, TEdge>[] potentiallyMultiOccuringVerticesChain,
             IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength)
         {
-           var (verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges) = Utils.FindAllCrossedEdges(potentiallyMultiOccuringVerticesChain, allVertices, standardEdgeLength, false);   
+           var (verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges) = Utils.FindAllCrossedEdges([potentiallyMultiOccuringVerticesChain], allVertices, standardEdgeLength, false);   
            Utils.CutAllFoundCrossedEdges(verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges);
            return (verticesOfCrossedNonBoundaryEdges, verticesOfCrossedBoundaryEdges);
         }
@@ -1062,19 +1132,19 @@ public class GraphCreator<TVertex, TEdge>
         
         #region 3 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static BoundaryVertexBuilder<TVertex, TEdge>[] ProcessCutBoundaryEdgesByChain(BoundaryVertexBuilder<TVertex, TEdge>[] potentiallyMultiOccuringVerticesChain, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges)
+        public static BoundaryVertexBuilder<TVertex, TEdge>[] ProcessCutBoundaryEdgesByChain(BoundaryVertexBuilder<TVertex, TEdge>[] potentiallyMultiOccuringVerticesChain, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int, int)>)> verticesOfCutBoundaryEdges)
         {
             // at first create vertex for every cross-section, then connect them correctly to the vertices of cut boundary edges and to the vertices of chain and in the end add the vertices to the chain
             var listChain = potentiallyMultiOccuringVerticesChain.ToList();
             var (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices) = 
-                Utils.CreateCrossSectionVertices(listChain, verticesOfCutBoundaryEdges);
+                Utils.CreateCrossSectionVertices([potentiallyMultiOccuringVerticesChain], verticesOfCutBoundaryEdges);
             ConnectNewVerticesToVerticesOfCutBoundaryEdges(verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, verticesOfCutBoundaryEdges);
-            Utils.ConnectAndAddNewVerticesToChain(chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, listChain);
+            Utils.ConnectAndAddNewVerticesToChain(chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, [listChain]);
             return listChain.ToArray();
             
         }
         
-        public static void ConnectNewVerticesToVerticesOfCutBoundaryEdges(Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates,int)>)> verticesOfCutBoundaryEdges)
+        public static void ConnectNewVerticesToVerticesOfCutBoundaryEdges(Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int, int)>)> verticesOfCutBoundaryEdges)
         {
             foreach(var ((vertex1, vertex2), newVertices) in verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices)
             {
@@ -1108,12 +1178,12 @@ public class GraphCreator<TVertex, TEdge>
         
         #region 4 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder<TVertex, TEdge>[] chain, Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength)
+        public static void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder<TVertex, TEdge>[] chain, Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int, int)>)> verticesOfCutBoundaryEdges, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength)
         {
             HashSet<VertexBuilder<TVertex, TEdge>> verticesOfCutEdges = new();
             foreach (var ((vertex1, vertex2), _) in verticesOfCutNonBoundaryEdges) { verticesOfCutEdges.Add(vertex1); verticesOfCutEdges.Add(vertex2); }
             foreach (var ((vertex1, vertex2), _) in verticesOfCutBoundaryEdges) { verticesOfCutEdges.Add(vertex1); verticesOfCutEdges.Add(vertex2); }
-            Utils.ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(chain, verticesOfCutEdges, allVertices, standardEdgeLength);
+            Utils.ConnectChainVerticesToVerticesOfCutEdgesAndOtherVerticesOfChain(chain, verticesOfCutEdges, allVertices, standardEdgeLength);
         }
         
         #endregion
@@ -1229,7 +1299,7 @@ public class GraphCreator<TVertex, TEdge>
         #region 7 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(BoundaryVertexBuilder<TVertex, TEdge>[] chain)
-            => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices(chain);
+            => Utils.SetAttributesOfNonBoundaryEdgesBetweenChainVerticesAndBoundaryVertices(chain);
 
         #endregion
     }
@@ -1241,7 +1311,7 @@ public class GraphCreator<TVertex, TEdge>
         public static BoundaryVertexBuilder<TVertex, TEdge>[]? GetBlankBoundaryChain(OmapMap.Object obj, int standardEdgeLength,
             float minBoundaryEdgeRatio)
         {
-            var segments = obj.CollectSegments(false);
+            var segments = obj.CollectSegmentsForPath();
             var boundaryChain = Utils.GetBlankChainOfSegmentedLine(obj.TypedCoords[0].coords, segments, standardEdgeLength, minBoundaryEdgeRatio);
             if (boundaryChain.Count <= 1) return null;
             // it could happen that linear obstacle has polygonal shape - it is closed segmented line
@@ -1268,16 +1338,16 @@ public class GraphCreator<TVertex, TEdge>
         
         #region 1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         
-        public static (Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>>, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)>)
+        public static (Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>>, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int, int)> crossSectionsWithChainsAndEdgesIndices)>)
             
             FindAllCrossedEdges(BoundaryVertexBuilder<TVertex, TEdge>[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength) 
-            => Utils.FindAllCrossedEdges(chain, allVertices, standardEdgeLength, false);
+            => Utils.FindAllCrossedEdges([chain], allVertices, standardEdgeLength, false);
         
         #endregion
         
         #region 2 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public static void SetLinearObstacleAttributesToAllCrossedEdges(Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCrossedNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCrossedBoundaryEdges, decimal symbolCodeOfAddedObject)
+        public static void SetLinearObstacleAttributesToAllCrossedEdges(Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCrossedNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int, int)> crossSectionsWithChainsAndEdgesIndices)> verticesOfCrossedBoundaryEdges, decimal symbolCodeOfAddedObject)
         {
             foreach (var ((vertex1, vertex2), _) in verticesOfCrossedNonBoundaryEdges)
             {
@@ -1618,21 +1688,25 @@ public class GraphCreator<TVertex, TEdge>
         
         #region Finding and cutting all crossed edges by chain \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         
-        public static (Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>>, Dictionary<( BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)>) 
-            FindAllCrossedEdges(BoundaryVertexBuilder<TVertex, TEdge>[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength, bool polygonalChain)
+        public static (Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>>, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int, int)> crossSectionsWithChainsAndEdgesIndices)>) 
+            FindAllCrossedEdges(BoundaryVertexBuilder<TVertex, TEdge>[][] chains, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength, bool polygonalChain)
         {
             Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges = new();
-            Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges = new();
-            // at first collects all edges, which are crossed by this chain
-            for (int i = 0; i < chain.Length - 1; ++i)
-                AddCrossedEdgesBy(chain[i].Position, chain[i + 1].Position, chain[i -  1 >= 0 ? i - 1 : chain.Length - 1].Position,  chain[i + 2 <= chain.Length - 1 ? i + 2 : 0].Position, i, allVertices, verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, standardEdgeLength);
-            if (polygonalChain)
-                AddCrossedEdgesBy(chain.Last().Position, chain[0].Position, chain[chain.Length - 2].Position, chain[1].Position, chain.Length - 1, allVertices, verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, standardEdgeLength);
+            Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int, int)>)> verticesOfCutBoundaryEdges = new();
+            // at first collects all edges, which are crossed by any chain
+            for (int i = 0; i < chains.Length; ++i)
+            {
+                for (int j = 0; j < chains[i].Length - 1; ++j)
+                    AddCrossedEdgesBy(chains[i][j].Position, chains[i][j + 1].Position, chains[i][j - 1 >= 0 ? j - 1 : chains[i].Length - 1].Position, chains[i][j + 2 <= chains[i].Length - 1 ? j + 2 : 0].Position, i, j, allVertices, verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, standardEdgeLength);
+                if (polygonalChain)
+                    AddCrossedEdgesBy(chains[i].Last().Position, chains[i][0].Position, chains[i][chains[i].Length - 2].Position, chains[i][1].Position, i, chains[i].Length - 1, allVertices, verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges, standardEdgeLength);
+            }
+
             return (verticesOfCutNonBoundaryEdges, verticesOfCutBoundaryEdges);
         }
         
         public static void
-            CutAllFoundCrossedEdges(Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<( BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCutBoundaryEdges)
+            CutAllFoundCrossedEdges(Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int, int)> crossSectionsWithChainsAndEdgesIndices)> verticesOfCutBoundaryEdges)
         {
             // at second cut out all crossed edges from the graph
             foreach (var ((vertex1, vertex2), _) in verticesOfCutNonBoundaryEdges)
@@ -1651,7 +1725,7 @@ public class GraphCreator<TVertex, TEdge>
         }
 
 
-        private static void AddCrossedEdgesBy(MapCoordinates point0, MapCoordinates point1, MapCoordinates prevPoint, MapCoordinates nextPoint,int edgeIndex, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCutBoundaryEdges, int standardEdgeLength)
+        private static void AddCrossedEdgesBy(MapCoordinates point0, MapCoordinates point1, MapCoordinates prevPoint, MapCoordinates nextPoint,int chainIndex, int edgeIndex, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, Dictionary<(VertexBuilder<TVertex, TEdge>, VertexBuilder<TVertex, TEdge>), List<MapCoordinates>> verticesOfCutNonBoundaryEdges, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int, int)> crossSectionsWithChainsAndEdgesIndices)> verticesOfCutBoundaryEdges, int standardEdgeLength)
         {
             HashSet<VertexBuilder<TVertex, TEdge>> closeVertices = new();
             // find all vertices, which are closer than standard edge length to vertices of chain edge
@@ -1677,7 +1751,7 @@ public class GraphCreator<TVertex, TEdge>
                     {
                         if (processedEdges.Contains((neighbor, closeBoundaryVertex))) continue;
                         if (GetLineSegmentsCrossSectionCoordsWithMagic(point0, point1, closeBoundaryVertex.Position, neighbor.Position, (prevPoint, nextPoint)) is MapCoordinates crossSection)
-                            AddSortedBoundaryVerticesTo(verticesOfCutBoundaryEdges, closeBoundaryVertex, neighbor, edgeIndex, crossSection);
+                            AddSortedBoundaryVerticesTo(verticesOfCutBoundaryEdges, closeBoundaryVertex, neighbor, chainIndex, edgeIndex, crossSection);
                         processedEdges.Add((closeBoundaryVertex, neighbor));
                     }
                 }
@@ -1709,16 +1783,16 @@ public class GraphCreator<TVertex, TEdge>
                 else verticesOfCutNonBoundaryEdges[(vertex2, vertex1)] = [crossSectionCoords];
         }
         
-        private static void AddSortedBoundaryVerticesTo(Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int)> crossSectionsWithChainEdgesIndices)> verticesOfCutBoundaryEdges, BoundaryVertexBuilder<TVertex, TEdge> vertex1, BoundaryVertexBuilder<TVertex, TEdge> vertex2, int edgeIndex, MapCoordinates crossSectionCoords)
+        private static void AddSortedBoundaryVerticesTo(Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes cutEdgeAttributes, List<(MapCoordinates, int, int)> crossSectionsWithChainsAndEdgesIndices)> verticesOfCutBoundaryEdges, BoundaryVertexBuilder<TVertex, TEdge> vertex1, BoundaryVertexBuilder<TVertex, TEdge> vertex2, int chainIndex, int edgeIndex, MapCoordinates crossSectionCoords)
         {
             // dictionary is indexed by couples of vertices in specific order, first vertex of couple has always lower sum of its position axis values than the other one
             // this ensures, that edges defined by couples of vertices are in the dictionary always present only one time
             // it should be mentioned that in this sense edges are thought as not oriented
             if (vertex1.Position.XPos < vertex2.Position.XPos || (vertex1.Position.XPos == vertex2.Position.XPos && vertex1.Position.YPos < vertex2.Position.YPos))
-                if (verticesOfCutBoundaryEdges.ContainsKey((vertex1, vertex2))) verticesOfCutBoundaryEdges[(vertex1, vertex2)].crossSectionsWithChainEdgesIndices.Add((crossSectionCoords, edgeIndex));
-                else verticesOfCutBoundaryEdges[(vertex1, vertex2)] = (vertex1.BoundaryEdges[vertex2], new List<(MapCoordinates, int)>{(crossSectionCoords, edgeIndex)});
-            else if (verticesOfCutBoundaryEdges.ContainsKey((vertex2, vertex1))) verticesOfCutBoundaryEdges[(vertex2, vertex1)].crossSectionsWithChainEdgesIndices .Add((crossSectionCoords, edgeIndex));
-                else verticesOfCutBoundaryEdges[(vertex2, vertex1)] = (vertex2.BoundaryEdges[vertex1], new List<(MapCoordinates, int)>{(crossSectionCoords, edgeIndex)});
+                if (verticesOfCutBoundaryEdges.ContainsKey((vertex1, vertex2))) verticesOfCutBoundaryEdges[(vertex1, vertex2)].crossSectionsWithChainsAndEdgesIndices.Add((crossSectionCoords, chainIndex,edgeIndex));
+                else verticesOfCutBoundaryEdges[(vertex1, vertex2)] = (vertex1.BoundaryEdges[vertex2], new List<(MapCoordinates, int, int)>{(crossSectionCoords, chainIndex, edgeIndex)});
+            else if (verticesOfCutBoundaryEdges.ContainsKey((vertex2, vertex1))) verticesOfCutBoundaryEdges[(vertex2, vertex1)].crossSectionsWithChainsAndEdgesIndices .Add((crossSectionCoords, chainIndex, edgeIndex));
+                else verticesOfCutBoundaryEdges[(vertex2, vertex1)] = (vertex2.BoundaryEdges[vertex1], new List<(MapCoordinates, int, int)>{(crossSectionCoords, chainIndex, edgeIndex)});
         }
         
         #endregion
@@ -2143,40 +2217,40 @@ public class GraphCreator<TVertex, TEdge>
         
         #region Cross-section of chain and boundary edges vertices retrieving and their connection to chain vertices \\\
         
-        public static (Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>>, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>>) 
-            CreateCrossSectionVertices( List<BoundaryVertexBuilder<TVertex, TEdge>> chain, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int)>)> verticesOfCutBoundaryEdges)
+        public static (Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (List<BoundaryVertexBuilder<TVertex, TEdge>>, int)>, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>>) 
+            CreateCrossSectionVertices(BoundaryVertexBuilder<TVertex, TEdge>[][] chains, Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (Orienteering_ISOM_2017_2.EdgeAttributes, List<(MapCoordinates, int, int)>)> verticesOfCutBoundaryEdges)
         {
-            Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>> chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices = new();
+            Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (List<BoundaryVertexBuilder<TVertex, TEdge>>, int)> chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex = new();
             Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>> verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices = new();
             // process every boundary vertex couple whose edge was cut by the chain
-            foreach (var ((vertex1, vertex2), (_, crossSectionsWithChainEdgesIndices)) in verticesOfCutBoundaryEdges)
+            foreach (var ((vertex1, vertex2), (_, crossSectionsWithChainsAndEdgesIndices)) in verticesOfCutBoundaryEdges)
             {
-                foreach (var (crossSectionCoords, crossedChainEdgeIndex) in crossSectionsWithChainEdgesIndices)
+                foreach (var (crossSectionCoords, crossedChainIndex, crossedEdgeIndex) in crossSectionsWithChainsAndEdgesIndices)
                 {
-                    var chainVertex1 = chain[crossedChainEdgeIndex];
+                    var chainVertex1 = chains[crossedChainIndex][crossedEdgeIndex];
                     // crossed chain edge index will never be equal to chain.Count - 1, if chain is segmented line and not polygon
-                    var chainVertex2 = crossedChainEdgeIndex == chain.Count - 1 ? chain[0] : chain[crossedChainEdgeIndex + 1];
+                    var chainVertex2 = crossedEdgeIndex == chains[crossedChainIndex].Length - 1 ? chains[crossedChainIndex][0] : chains[crossedChainIndex][crossedEdgeIndex + 1];
                     // creation of cross-section vertex and its addition to list of added vertices and list of added vertices for given cut boundary edge and chain edge
                     var newVertex = new BoundaryVertexBuilder<TVertex, TEdge>(new Orienteering_ISOM_2017_2.VertexAttributes(crossSectionCoords));
-                    if (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices.ContainsKey((chainVertex1, chainVertex2))) chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices[(chainVertex1, chainVertex2)].Add(newVertex);
-                    else chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices[(chainVertex1, chainVertex2)] = [newVertex];
+                    if (chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex.ContainsKey((chainVertex1, chainVertex2))) chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex[(chainVertex1, chainVertex2)].Item1.Add(newVertex);
+                    else chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex[(chainVertex1, chainVertex2)] = ([newVertex], crossedChainIndex);
                     if (verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices.ContainsKey((vertex1, vertex2))) verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices[(vertex1, vertex2)].Add(newVertex);
                     else verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices[(vertex1, vertex2)] = [newVertex];
                 }
             }
-            return (chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices);
+            return (chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex, verticesOfCrossedBoundaryEdgesWithTheirCrossSectionVertices);
         }
         
 
 
-        public static void ConnectAndAddNewVerticesToChain( Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), List<BoundaryVertexBuilder<TVertex, TEdge>>> chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices, List<BoundaryVertexBuilder<TVertex, TEdge>> chain)
+        public static void ConnectAndAddNewVerticesToChain( Dictionary<(BoundaryVertexBuilder<TVertex, TEdge>, BoundaryVertexBuilder<TVertex, TEdge>), (List<BoundaryVertexBuilder<TVertex, TEdge>>, int)> chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex, List<BoundaryVertexBuilder<TVertex, TEdge>>[] chains)
         {
-            foreach (var ((vertex1, vertex2), newVertices) in chainVerticesOfCrossedEdgesWithTheirCrossSectionVertices)
+            foreach (var ((vertex1, vertex2), (newVertices, chainIndex)) in chainVerticesOfCrossedEdgesWithTheirCrossSectionVerticesAndChainIndex)
             {
                 // at first, we have to sort cross-section vertices so they could be correctly connected to the chain vertices
                 var newSortedVertices = SortVerticesCorrectly(vertex1, vertex2, newVertices);
                 ConnectNewVerticesToChain(newSortedVertices,  vertex1, vertex2);
-                AddNewVerticesToChain(newSortedVertices, vertex1, vertex2, chain);
+                AddNewVerticesToChain(newSortedVertices, vertex1, vertex2, chains, chainIndex);
             }
         }
 
@@ -2197,9 +2271,9 @@ public class GraphCreator<TVertex, TEdge>
             vertex2.BoundaryEdges[lastVertex] = new Orienteering_ISOM_2017_2.EdgeAttributes();
         }
 
-        private static void AddNewVerticesToChain(List<BoundaryVertexBuilder<TVertex, TEdge>> sortedVertices, BoundaryVertexBuilder<TVertex, TEdge> vertex1, BoundaryVertexBuilder<TVertex, TEdge> vertex2, List<BoundaryVertexBuilder<TVertex, TEdge>> chain)
+        private static void AddNewVerticesToChain(List<BoundaryVertexBuilder<TVertex, TEdge>> sortedVertices, BoundaryVertexBuilder<TVertex, TEdge> vertex1, BoundaryVertexBuilder<TVertex, TEdge> vertex2, List<BoundaryVertexBuilder<TVertex, TEdge>>[] chains, int chainIndex)
         {
-            int chainIndex = chain.IndexOf(vertex1); 
+            int vertexIndex = chains[chainIndex].IndexOf(vertex1); 
             var lastVertex = vertex1;
             // newly created cross-section vertices are added to the chain
             foreach (var vertex in sortedVertices)
@@ -2218,11 +2292,11 @@ public class GraphCreator<TVertex, TEdge>
                     if (overlappedVertex == vertex2 && lastVertex != vertex2)
                     {
                         lastVertex = vertex2;
-                        chainIndex++;
+                        vertexIndex++;
                     }
                 }
                 else
-                    chain.Insert(++chainIndex, vertex);
+                    chains[chainIndex].Insert(++vertexIndex, vertex);
             }
         }
         
@@ -2258,36 +2332,36 @@ public class GraphCreator<TVertex, TEdge>
         #endregion
         
         #region Connecting of chain vertices to vertices of cut edges and to itself by non boundary edges \\\\\\\\\\\\\\
-        public static void ConnectChainToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder<TVertex, TEdge>[] chain, IEnumerable<VertexBuilder<TVertex, TEdge>> verticesOfCutEdges, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength)
+        public static void ConnectChainVerticesToVerticesOfCutEdgesAndOtherVerticesOfChain(BoundaryVertexBuilder<TVertex, TEdge>[] chainVertices, IEnumerable<VertexBuilder<TVertex, TEdge>> verticesOfCutEdges, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices, int standardEdgeLength)
         {
             // connectable vertices consists of chain vertices and all vertices of edges, which were cut by chain
-            IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> connectableVertices = new RadiallySearchableKdTree<VertexBuilder<TVertex, TEdge>>(chain.Concat(verticesOfCutEdges), vertexBuilder => (vertexBuilder.Position.XPos, vertexBuilder.Position.YPos));
+            IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> connectableVertices = new RadiallySearchableKdTree<VertexBuilder<TVertex, TEdge>>(chainVertices.Concat(verticesOfCutEdges), vertexBuilder => (vertexBuilder.Position.XPos, vertexBuilder.Position.YPos));
             
             // at first, we have to find all boundary vertices in standard edge length distance from vertices of chain
             // these boundary vertices will also include chain vertices
             // we will need them so we could test, whether newly added edges does not cross some boundary edge of previously added objects or currently processed object
-            var closeBoundaryVerticesToChainsVertices = FindCloseBoundaryVerticesToChain(chain, allVertices, standardEdgeLength);
-            for (int i = 0; i < chain.Length; ++i)
+            var closeBoundaryVerticesToChainsVertices = FindCloseBoundaryVerticesToChainVertices(chainVertices, allVertices, standardEdgeLength);
+            for (int i = 0; i < chainVertices.Length; ++i)
             {
-                var closeVertices = connectableVertices.FindInEuclideanDistanceFrom((chain[i].Position.XPos, chain[i].Position.YPos), standardEdgeLength);
+                var closeVertices = connectableVertices.FindInEuclideanDistanceFrom((chainVertices[i].Position.XPos, chainVertices[i].Position.YPos), standardEdgeLength);
                 foreach (var closeVertex in closeVertices)
                     // we do not connect vertices by non boundary edges to vertices which are connected to current vertex by boundary edge already 
-                    if (closeVertex is not BoundaryVertexBuilder<TVertex, TEdge> boundaryCloseVertex || !chain[i].BoundaryEdges.ContainsKey(boundaryCloseVertex))
+                    if (closeVertex is not BoundaryVertexBuilder<TVertex, TEdge> boundaryCloseVertex || !chainVertices[i].BoundaryEdges.ContainsKey(boundaryCloseVertex))
                         // check, if created edge does not cut any boundary edge 
-                        if (DoesNotCrossSomeBoundaryEdge(chain[i], closeVertex, closeBoundaryVerticesToChainsVertices[i]))
+                        if (DoesNotCrossSomeBoundaryEdge(chainVertices[i], closeVertex, closeBoundaryVerticesToChainsVertices[i]))
                             if (closeVertex is NetVertexBuilder<TVertex, TEdge> closeNetVertex)
-                                ConnectBoundaryVertexAndNetVertex(chain[i], closeNetVertex);
-                            else if (closeVertex is BoundaryVertexBuilder<TVertex, TEdge> closeBoundaryVertex && !chain[i].BoundaryEdges.ContainsKey(closeBoundaryVertex))
-                                ConnectTwoBoundaryVerticesWithNonBoundaryEdge(chain[i], closeBoundaryVertex);
+                                ConnectBoundaryVertexAndNetVertex(chainVertices[i], closeNetVertex);
+                            else if (closeVertex is BoundaryVertexBuilder<TVertex, TEdge> closeBoundaryVertex && !chainVertices[i].BoundaryEdges.ContainsKey(closeBoundaryVertex))
+                                ConnectTwoBoundaryVerticesWithNonBoundaryEdge(chainVertices[i], closeBoundaryVertex);
             }
             
         }
         
-        private static List<List<BoundaryVertexBuilder<TVertex, TEdge>>> FindCloseBoundaryVerticesToChain(BoundaryVertexBuilder<TVertex, TEdge>[] chain, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices,  int standardEdgeLength)
+        private static List<List<BoundaryVertexBuilder<TVertex, TEdge>>> FindCloseBoundaryVerticesToChainVertices(BoundaryVertexBuilder<TVertex, TEdge>[] chainVertices, IEditableRadiallySearchableDataStruct<VertexBuilder<TVertex, TEdge>> allVertices,  int standardEdgeLength)
         {
             List<List<BoundaryVertexBuilder<TVertex, TEdge>>> closeBoundaryVerticesToChainsVertices = new List<List<BoundaryVertexBuilder<TVertex, TEdge>>>();
-            IRadiallySearchableDataStruct<BoundaryVertexBuilder<TVertex, TEdge>> searchableChain = new RadiallySearchableKdTree<BoundaryVertexBuilder<TVertex, TEdge>>(chain, vertexBuilder => (vertexBuilder.Position.XPos, vertexBuilder.Position.YPos));
-            foreach (var chainVertex in chain)
+            IRadiallySearchableDataStruct<BoundaryVertexBuilder<TVertex, TEdge>> searchableChain = new RadiallySearchableKdTree<BoundaryVertexBuilder<TVertex, TEdge>>(chainVertices, vertexBuilder => (vertexBuilder.Position.XPos, vertexBuilder.Position.YPos));
+            foreach (var chainVertex in chainVertices)
             {
                 var allCloseVerticesToChainVertex = allVertices.FindInEuclideanDistanceFrom((chainVertex.Position.XPos, chainVertex.Position.YPos), standardEdgeLength);
                 closeBoundaryVerticesToChainsVertices.Add(allCloseVerticesToChainVertex.OfType<BoundaryVertexBuilder<TVertex, TEdge>>().ToList());
@@ -2357,9 +2431,9 @@ public class GraphCreator<TVertex, TEdge>
         
         #region Setting non boundary attributes between chain and boundary vertices \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         
-        public static void SetAttributesOfNonBoundaryEdgesBetweenChainAndBoundaryVertices( BoundaryVertexBuilder<TVertex, TEdge>[] chain)
+        public static void SetAttributesOfNonBoundaryEdgesBetweenChainVerticesAndBoundaryVertices( IEnumerable<BoundaryVertexBuilder<TVertex, TEdge>> chainVertices)
         {
-            foreach (var chainVertex in chain)
+            foreach (var chainVertex in chainVertices)
             {
                 SetAttributesOfNonBoundaryEdgesDirectedToBoundaryVertices(chainVertex);
             }

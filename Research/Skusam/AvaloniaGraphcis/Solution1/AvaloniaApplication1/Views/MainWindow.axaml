@@ -31,6 +31,7 @@
                     <Ellipse Fill="Blue" Width="5" Height="5" Canvas.Left="5" Canvas.Bottom="100"/>
                     <Ellipse Fill="Blue" Width="5" Height="5" Canvas.Left="5" Canvas.Bottom="200"/>
                     <Ellipse Fill="Blue" Width="5" Height="5" Canvas.Left="5" Canvas.Bottom="300"/>
+                    <Path Fill="GreenYellow" Data="M 0,0 v 150 h 150 v -150 h -150 l 25,25 v 100 h 100 v -100 h -100 l 25,25 v 50 h 50 v -50 h -50 l -50,-50 Z" Canvas.Left="100" Canvas.Bottom="50"/>
                     <Path Fill="Red" Data="M 0,0 c 0,0 50,0 50,-50 c 0,0 50,0 50,50 h -50 v 50 l -50,-50 Z" Canvas.Left="300" Canvas.Bottom="200"/>
                     <Path Fill="Orange" Canvas.Left="300" Canvas.Top="200">
                         <Path.Data>
@@ -103,7 +104,7 @@
                             <!-- </PathGeometry> -->
                         <!-- </Path.Data> -->
                     <!-- </Path>  -->
-                    <Path Stroke="Black" StrokeThickness="2" Canvas.Left="50" Canvas.Top="50">
+                    <Path Stroke="Yellow" StrokeThickness="2" Canvas.Left="50" Canvas.Top="50">
                         <Path.Fill>
                             <DrawingBrush TileMode="Tile">
                                 <!-- <DrawingBrush.Drawing> -->
